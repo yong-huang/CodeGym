@@ -364,6 +364,10 @@ func CategoryPlan() []CategoryPair {
 		{Tech: "docker", Sub: "高级"},
 		{Tech: "docker", Sub: "实战"},
 		{Tech: "docker", Sub: "web"},
+		{Tech: "prometheus", Sub: "基础"},
+		{Tech: "prometheus", Sub: "高级"},
+		{Tech: "prometheus", Sub: "实战"},
+		{Tech: "prometheus", Sub: "web"},
 	}
 }
 
@@ -832,5 +836,11 @@ func All() ([]model.Exercise, error) {
 		return nil, err
 	}
 	out = append(out, sch...)
+	// Prometheus 基础题库（30 题）
+	prom, err := PrometheusBasics()
+	if err != nil {
+		return nil, err
+	}
+	out = append(out, prom...)
 	return out, nil
 }

@@ -369,8 +369,8 @@ func TestE2E_ExerciseListAndVariant(t *testing.T) {
 		PointCount   int    `json:"point_count"`
 	}
 	doJSON(t, "GET", base+"/exercises", nil, &list)
-	if len(list) != 405 {
-		t.Fatalf("expected 405 exercises (375 + 30 K8s 调度), got %d", len(list))
+	if len(list) != 435 {
+		t.Fatalf("expected 435 exercises (405 + 30 Prometheus), got %d", len(list))
 	}
 	var ids []string
 	for _, ex := range list {
@@ -979,6 +979,29 @@ func TestE2E_K8sBasics(t *testing.T) {
 		t.Errorf("k8s-sched-003 => score=%v correct=%v", res.Score, res.IsCorrect)
 	}
 
+	// Prometheus bank: exactly 30, a promql + a config question answer correctly
+	var promList []struct{ ID string `json:"id"` }
+	doJSON(t, "GET", base+"/exercises?tech_stack=prometheus", nil, &promList)
+	if len(promList) != 30 {
+		t.Fatalf("prometheus count = %d, want 30", len(promList))
+	}
+	doJSON(t, "POST", base+"/execute", map[string]any{
+		"exercise_id":  "prom-basics-011",
+		"weight_level": "easy",
+		"fill_answers": map[string]string{"FILL_range": "[5m]"},
+	}, &res)
+	if res.Score != 100 || !res.IsCorrect {
+		t.Errorf("prom promql => score=%v correct=%v", res.Score, res.IsCorrect)
+	}
+	doJSON(t, "POST", base+"/execute", map[string]any{
+		"exercise_id":  "prom-basics-023",
+		"weight_level": "medium",
+		"fill_answers": map[string]string{"FILL_job": "node", "FILL_target": "localhost:9100"},
+	}, &res)
+	if res.Score != 100 || !res.IsCorrect {
+		t.Errorf("prom config => score=%v correct=%v", res.Score, res.IsCorrect)
+	}
+
 	// Python 基础 bank: exactly 50 py-basics questions, and one runs correctly
 	var pyList []struct {
 		ID string `json:"id"`
@@ -1061,8 +1084,8 @@ func TestE2E_ExportImport(t *testing.T) {
 	if err := json.NewDecoder(resp.Body).Decode(&exported); err != nil {
 		t.Fatal(err)
 	}
-	if len(exported) != 405 {
-		t.Fatalf("export count = %d, want 405", len(exported))
+	if len(exported) != 435 {
+		t.Fatalf("export count = %d, want 435", len(exported))
 	}
 
 	// import: delete one exercise, then restore it from the exported blob

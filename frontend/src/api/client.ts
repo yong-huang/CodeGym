@@ -17,6 +17,13 @@ export interface AiGenResponse {
   items: { id: string; title: string; ok: boolean; error?: string }[];
 }
 
+export interface LLMSettings {
+  endpoint: string;
+  model: string;
+  models: string[];
+  online: boolean;
+}
+
 async function request<T>(url: string, init?: RequestInit): Promise<T> {
   const res = await fetch(`${BASE}${url}`, {
     headers: { 'Content-Type': 'application/json', ...(init?.headers ?? {}) },
@@ -94,6 +101,17 @@ export const api = {
 
   aiGenerate: (payload: { tech_stack: string; weight: string; knowledge_points: string; count: number }) =>
     request<AiGenResponse>('/admin/ai-generate', { method: 'POST', body: JSON.stringify(payload) }),
+
+  llmSettings: () => request<LLMSettings>('/admin/llm-settings'),
+
+  saveLLMSettings: (payload: { endpoint: string; model: string }) =>
+    request<{ ok: boolean }>('/admin/llm-settings', { method: 'PUT', body: JSON.stringify(payload) }),
+
+  testLLMSettings: (payload: { endpoint: string; model: string }) =>
+    request<{ ok: boolean; models: string[]; endpoint: string }>('/admin/llm-settings/test', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }),
 
   adminEnvironments: () => request<Environment[]>('/admin/environments'),
 

@@ -35,6 +35,11 @@ export default function LibraryPage() {
   const [aiCount, setAiCount] = useState(3);
   const [aiBusy, setAiBusy] = useState(false);
   const [aiResults, setAiResults] = useState<{ id: string; title: string; ok: boolean; error?: string }[]>([]);
+  // LLM 设置
+  const [llmEndpoint, setLlmEndpoint] = useState('');
+  const [llmModel, setLlmModel] = useState('');
+  const [llmModels, setLlmModels] = useState<string[]>([]);
+  const [llmOnline, setLlmOnline] = useState(false);
   // edit/create modal
   const [editing, setEditing] = useState<ExerciseDetail | null>(null);
   const [json, setJson] = useState('');
@@ -55,8 +60,39 @@ export default function LibraryPage() {
 
   useEffect(() => {
     refresh().catch((e) => setErr(String(e)));
+    api
+      .llmSettings()
+      .then((s) => {
+        setLlmEndpoint(s.endpoint);
+        setLlmModel(s.model);
+        setLlmModels(s.models);
+        setLlmOnline(s.online);
+      })
+      .catch(() => undefined);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const saveLLM = async () => {
+    try {
+      await api.saveLLMSettings({ endpoint: llmEndpoint.trim(), model: llmModel.trim() });
+      toast(`✅ 已保存 Ollama 配置`);
+    } catch (e) {
+      setErr(`保存失败：${String(e)}`);
+    }
+  };
+
+  const testLLM = async () => {
+    try {
+      const res = await api.testLLMSettings({ endpoint: llmEndpoint.trim(), model: llmModel.trim() });
+      setLlmModels(res.models);
+      setLlmOnline(true);
+      setMsg(`✅ 连接成功（${res.endpoint}），可用模型：${res.models.length} 个`);
+      setTimeout(() => setMsg(''), 4000);
+    } catch (e) {
+      setLlmOnline(false);
+      setErr(`连接失败：${String(e)}`);
+    }
+  };
 
   const techs = useMemo(
     () => [...new Set(exercises.map((e) => e.tech_stack))].sort(),
@@ -263,6 +299,43 @@ export default function LibraryPage() {
         </div>
         {msg && <div className="ok-banner">{msg}</div>}
         {err && <div className="error-banner">⚠️ {err}</div>}
+      </section>
+
+      <section className="panel">
+        <div className="panel-title">⚙️ Ollama 设置</div>
+        <div className="ai-form">
+          <label className="ai-endpoint">
+            服务地址
+            <input
+              value={llmEndpoint}
+              placeholder="http://localhost:11434"
+              onChange={(e) => setLlmEndpoint(e.target.value)}
+            />
+          </label>
+          <label>
+            模型
+            <input
+              list="llm-models"
+              value={llmModel}
+              placeholder="qwen3.5:latest"
+              onChange={(e) => setLlmModel(e.target.value)}
+            />
+            <datalist id="llm-models">
+              {llmModels.map((m) => (
+                <option key={m} value={m} />
+              ))}
+            </datalist>
+          </label>
+          <button className="ghost-btn" onClick={() => void testLLM()}>
+            测试连接
+          </button>
+          <button className="primary-btn" onClick={() => void saveLLM()}>
+            保存
+          </button>
+          <span className={`llm-state ${llmOnline ? 'ok' : ''}`}>
+            {llmOnline ? '● 在线' : '○ 离线'}
+          </span>
+        </div>
       </section>
 
       <section className="panel">

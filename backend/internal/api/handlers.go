@@ -27,9 +27,12 @@ type Server struct {
 	now    func() time.Time
 }
 
-// New creates an API server.
+// New creates an API server. LLM settings come from the DB when present,
+// otherwise fall back to environment/defaults (see internal/llm).
 func New(st *store.Store, eng *engine.Engine) *Server {
-	return &Server{store: st, engine: eng, llm: llm.New("", ""), now: time.Now}
+	ep, _ := st.GetSetting("llm.endpoint")
+	md, _ := st.GetSetting("llm.model")
+	return &Server{store: st, engine: eng, llm: llm.New(ep, md), now: time.Now}
 }
 
 // Handler returns the root http.Handler with all routes registered.
@@ -55,6 +58,9 @@ func (s *Server) Handler() http.Handler {
 	mux.HandleFunc("PUT /api/v1/admin/categories", s.renameCategory)
 	mux.HandleFunc("DELETE /api/v1/admin/categories", s.deleteCategory)
 	mux.HandleFunc("POST /api/v1/admin/ai-generate", s.aiGenerate)
+	mux.HandleFunc("GET /api/v1/admin/llm-settings", s.getLLMSettings)
+	mux.HandleFunc("PUT /api/v1/admin/llm-settings", s.setLLMSettings)
+	mux.HandleFunc("POST /api/v1/admin/llm-settings/test", s.testLLMSettings)
 	mux.HandleFunc("GET /api/v1/admin/environments", s.adminListEnvironments)
 	mux.HandleFunc("POST /api/v1/admin/environments", s.adminCreateEnvironment)
 	mux.HandleFunc("PUT /api/v1/admin/environments/{id}", s.adminUpdateEnvironment)
@@ -781,6 +787,81 @@ func (s *Server) aiGenerate(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	writeJSON(w, http.StatusOK, map[string]any{"total": len(results), "ok": ok, "items": results})
+}
+
+// --- LLM 设置（页面可配置，设计 §9） ---
+
+func (s *Server) currentLLMSettings() (string, string) {
+	ep, ok := s.store.GetSetting("llm.endpoint")
+	if !ok {
+		ep = s.llm.Endpoint
+	}
+	md, ok := s.store.GetSetting("llm.model")
+	if !ok {
+		md = s.llm.Model
+	}
+	return ep, md
+}
+
+func (s *Server) getLLMSettings(w http.ResponseWriter, r *http.Request) {
+	ep, md := s.currentLLMSettings()
+	models, err := s.llm.Models()
+	if err != nil {
+		models = nil
+	}
+	writeJSON(w, http.StatusOK, map[string]any{
+		"endpoint": ep,
+		"model":    md,
+		"models":   models,
+		"online":   err == nil,
+	})
+}
+
+func (s *Server) setLLMSettings(w http.ResponseWriter, r *http.Request) {
+	var req struct {
+		Endpoint string `json:"endpoint"`
+		Model    string `json:"model"`
+	}
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		writeErr(w, http.StatusBadRequest, "invalid body: "+err.Error())
+		return
+	}
+	if req.Endpoint != "" {
+		if err := s.store.SetSetting("llm.endpoint", req.Endpoint); err != nil {
+			writeErr(w, http.StatusInternalServerError, err.Error())
+			return
+		}
+	}
+	if req.Model != "" {
+		if err := s.store.SetSetting("llm.model", req.Model); err != nil {
+			writeErr(w, http.StatusInternalServerError, err.Error())
+			return
+		}
+	}
+	s.llm.SetConfig(req.Endpoint, req.Model)
+	writeJSON(w, http.StatusOK, map[string]any{"ok": true})
+}
+
+func (s *Server) testLLMSettings(w http.ResponseWriter, r *http.Request) {
+	var req struct {
+		Endpoint string `json:"endpoint"`
+		Model    string `json:"model"`
+	}
+	_ = json.NewDecoder(r.Body).Decode(&req)
+	ep, md := s.currentLLMSettings()
+	if req.Endpoint != "" {
+		ep = req.Endpoint
+	}
+	if req.Model != "" {
+		md = req.Model
+	}
+	probe := llm.New(ep, md)
+	models, err := probe.Models()
+	if err != nil {
+		writeErr(w, http.StatusBadGateway, err.Error())
+		return
+	}
+	writeJSON(w, http.StatusOK, map[string]any{"ok": true, "models": models, "endpoint": ep})
 }
 
 func (s *Server) adminStats(w http.ResponseWriter, _ *http.Request) {

@@ -591,6 +591,18 @@ body {
   flex: 1;
   min-width: 220px;
 }
+.ai-form .ai-endpoint {
+  flex: 1;
+  min-width: 220px;
+}
+.llm-state {
+  font-size: 12px;
+  color: var(--danger);
+  align-self: center;
+}
+.llm-state.ok {
+  color: var(--accent);
+}
 .ai-results {
   margin-top: 12px;
   display: flex;

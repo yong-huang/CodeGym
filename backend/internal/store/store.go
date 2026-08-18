@@ -113,6 +113,10 @@ func (s *Store) migrate() error {
 			enabled INTEGER DEFAULT 1,
 			created_at TEXT
 		)`,
+		`CREATE TABLE IF NOT EXISTS settings (
+			key TEXT PRIMARY KEY,
+			value TEXT
+		)`,
 		`CREATE INDEX IF NOT EXISTS idx_attempts_exercise ON attempt_records(exercise_id)`,
 		`CREATE INDEX IF NOT EXISTS idx_attempts_user ON attempt_records(user_id)`,
 	}
@@ -641,6 +645,25 @@ func (s *Store) DeleteEnvironment(id string) error {
 // SetEnvironmentHealth updates an environment's health status.
 func (s *Store) SetEnvironmentHealth(id, status string) error {
 	_, err := s.db.Exec(`UPDATE environments SET health_status=? WHERE id=?`, status, id)
+	return err
+}
+
+// --- settings (键值配置，如 LLM 地址/模型) ---
+
+// GetSetting returns a stored setting value.
+func (s *Store) GetSetting(key string) (string, bool) {
+	var v string
+	err := s.db.QueryRow(`SELECT value FROM settings WHERE key=?`, key).Scan(&v)
+	if err != nil {
+		return "", false
+	}
+	return v, true
+}
+
+// SetSetting stores a setting value (upsert).
+func (s *Store) SetSetting(key, value string) error {
+	_, err := s.db.Exec(`INSERT INTO settings (key, value) VALUES (?,?)
+		ON CONFLICT(key) DO UPDATE SET value=excluded.value`, key, value)
 	return err
 }
 

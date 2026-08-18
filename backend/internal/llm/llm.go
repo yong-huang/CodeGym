@@ -56,6 +56,46 @@ func (c *Client) Generate(ctx context.Context, prompt string) (string, error) {
 	return out.Response, nil
 }
 
+// SetConfig updates the endpoint/model at runtime (page-configurable).
+func (c *Client) SetConfig(endpoint, model string) {
+	if endpoint != "" {
+		c.Endpoint = endpoint
+	}
+	if model != "" {
+		c.Model = model
+	}
+}
+
+// Models lists the models available on the configured Ollama server
+// (used both for the settings dropdown and for connectivity tests).
+func (c *Client) Models() ([]string, error) {
+	req, err := http.NewRequest(http.MethodGet, c.Endpoint+"/api/tags", nil)
+	if err != nil {
+		return nil, err
+	}
+	resp, err := c.HTTP.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("Ollama 不可用: %w", err)
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("Ollama 返回 %d", resp.StatusCode)
+	}
+	var out struct {
+		Models []struct {
+			Name string `json:"name"`
+		} `json:"models"`
+	}
+	if err := json.NewDecoder(resp.Body).Decode(&out); err != nil {
+		return nil, err
+	}
+	var names []string
+	for _, m := range out.Models {
+		names = append(names, m.Name)
+	}
+	return names, nil
+}
+
 func firstNonEmpty(vals ...string) string {
 	for _, v := range vals {
 		if v != "" {

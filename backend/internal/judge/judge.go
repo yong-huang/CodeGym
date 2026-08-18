@@ -160,7 +160,7 @@ func GradeBugfix(ex model.Exercise, userCode string, output string, hintUsage ma
 	}
 	results = append(results, model.FillResult{
 		ID: "FILL_bug", PointID: "bug", UserAnswer: userCode,
-		Expected: ex.FullCode, IsCorrect: passed == total, Score: testScore,
+		Expected: ex.ExpectedOutput, IsCorrect: passed == total, Score: testScore,
 	})
 
 	// 2. bug location accuracy -> +20
@@ -170,11 +170,25 @@ func GradeBugfix(ex model.Exercise, userCode string, output string, hintUsage ma
 	} else if ex.BugLocation != "" && !strings.Contains(userCode, ex.BugLocation) {
 		locationScore = 20
 	}
-	results = append(results, model.FillResult{
-		ID: "FILL_location", PointID: "bug_location",
-		UserAnswer: userCode, Expected: ex.FullCode,
-		IsCorrect: locationScore == 20, Score: locationScore,
-	})
+	if locationScore == 20 {
+		// report the fixed line that should replace the buggy one, if derivable
+		fixed := fixSnippet(ex)
+		fixExp := "已定位到 bug 并修复"
+		if fixed != "" {
+			fixExp = fixExp + "：" + fixed
+		}
+		results = append(results, model.FillResult{
+			ID: "FILL_location", PointID: "bug_location",
+			UserAnswer: userCode, Expected: fixExp,
+			IsCorrect: true, Score: locationScore,
+		})
+	} else {
+		results = append(results, model.FillResult{
+			ID: "FILL_location", PointID: "bug_location",
+			UserAnswer: userCode, Expected: "未定位/未修复出错的代码行",
+			IsCorrect: false, Score: 0,
+		})
+	}
 
 	// 3. code quality -> +10 when all tests pass
 	qualityScore := 0.0
@@ -183,7 +197,7 @@ func GradeBugfix(ex model.Exercise, userCode string, output string, hintUsage ma
 	}
 	results = append(results, model.FillResult{
 		ID: "FILL_quality", PointID: "quality",
-		UserAnswer: userCode, Expected: ex.FullCode,
+		UserAnswer: userCode, Expected: "通过全部测试后给质量分",
 		IsCorrect: qualityScore == 10, Score: qualityScore,
 	})
 
@@ -198,6 +212,25 @@ func GradeBugfix(ex model.Exercise, userCode string, output string, hintUsage ma
 		score = 100
 	}
 	return math.Round(score*100) / 100, passed, results
+}
+
+// fixSnippet tries to surface the corrected line from the exercise explanation
+// (our explanations mention the fix, e.g. "加 (y%100 != 0 || y%400 == 0)").
+func fixSnippet(ex model.Exercise) string {
+	// pick a concise line reference from the explanation between backticks if any
+	// fall back to empty (frontend shows the whole answer code separately)
+	if ex.Explanation == "" {
+		return ""
+	}
+	// avoid dumping the whole explanation; just a trimmed first clause
+	cut := ex.Explanation
+	if i := strings.Index(cut, "。"); i > 0 && i < 60 {
+		cut = cut[:i]
+	}
+	if len(cut) > 48 {
+		cut = cut[:48] + "…"
+	}
+	return cut
 }
 
 // WeakAnalysis builds a short review recommendation for the result screen.

@@ -71,6 +71,8 @@ export interface ExecuteResult {
   logs: string[];
   weak_analysis?: string;
   error_message?: string;
+  correct_answer?: string;
+  explanation?: string;
 }
 
 export interface Progress {

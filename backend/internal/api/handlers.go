@@ -316,6 +316,8 @@ func (s *Server) execute(w http.ResponseWriter, r *http.Request) {
 		result.IsCorrect = passed == len(ex.TestCases) && passed > 0
 		result.FillResults = fillResults
 		result.WeakAnalysis = judge.WeakAnalysis(fillResults, hintUsage)
+		result.CorrectAnswer = ex.FullCode
+		result.Explanation = ex.Explanation
 		result.Logs = append(result.Logs, "✅ 执行成功")
 		if result.IsCorrect {
 			result.Logs = append(result.Logs, "🎉 恭喜，全部测试通过！")

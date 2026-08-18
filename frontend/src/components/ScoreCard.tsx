@@ -96,6 +96,16 @@ export default function ScoreCard({ result }: ScoreCardProps) {
           <p>{result.weak_analysis}</p>
         </div>
       )}
+
+      {(result.correct_answer || result.explanation) && (
+        <div className="score-answer">
+          <div className="panel-title">✅ 正确答案 / 📖 解析</div>
+          {result.correct_answer && (
+            <pre className="output-box answer-code">{result.correct_answer}</pre>
+          )}
+          {result.explanation && <p className="answer-expl">{result.explanation}</p>}
+        </div>
+      )}
     </div>
   );
 }

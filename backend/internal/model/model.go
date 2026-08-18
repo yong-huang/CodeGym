@@ -209,4 +209,6 @@ type ExecuteResult struct {
 	Logs            []string     `json:"logs"`
 	WeakAnalysis    string       `json:"weak_analysis,omitempty"`
 	ErrorMessage    string       `json:"error_message,omitempty"`
+	CorrectAnswer   string       `json:"correct_answer,omitempty"` // 修复后的代码 / 正确答案
+	Explanation     string       `json:"explanation,omitempty"`    // 解析
 }

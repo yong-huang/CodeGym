@@ -370,14 +370,18 @@ func (s *Store) UpdateProgress(ex model.Exercise, score float64, grade string, h
 		p.WeakPoints[ex.ID+"#hint"]++
 	}
 
-	// streak bookkeeping
+	// streak bookkeeping: 只看"天"（按日历日比较），同一天多次作答不重复 +1
 	if p.LastAttemptAt != nil {
 		today := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, time.UTC)
 		last := time.Date(p.LastAttemptAt.Year(), p.LastAttemptAt.Month(), p.LastAttemptAt.Day(), 0, 0, 0, 0, time.UTC)
-		diff := today.Sub(last)
-		if diff <= 24*time.Hour && diff >= 0 {
+		switch today.Sub(last) {
+		case 0:
+			// 今天已打过卡，连续天数保持不变
+		case 24 * time.Hour:
+			// 昨天打的卡，连续天数 +1
 			p.CurrentStreak++
-		} else if diff > 24*time.Hour {
+		default:
+			// 中断或首日，重新从 1 开始
 			p.CurrentStreak = 1
 		}
 		if p.CurrentStreak > p.LongestStreak {

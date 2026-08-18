@@ -742,6 +742,12 @@ func All() ([]model.Exercise, error) {
 		return nil, err
 	}
 	out = append(out, gob...)
+	// Go 并发题库（50 题）
+	gcc, err := GoConcurrency()
+	if err != nil {
+		return nil, err
+	}
+	out = append(out, gcc...)
 	// Python 基础题库（50 题）
 	pyb, err := PythonBasics()
 	if err != nil {

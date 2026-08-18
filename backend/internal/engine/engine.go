@@ -83,7 +83,7 @@ func (e *Engine) RunGo(ctx context.Context, code string, timeout time.Duration) 
 	}
 	defer os.RemoveAll(dir)
 
-	if err := os.WriteFile(filepath.Join(dir, "go.mod"), []byte("module codegymtmp\n\ngo 1.21\n"), 0o644); err != nil {
+	if err := os.WriteFile(filepath.Join(dir, "go.mod"), []byte("module codegymtmp\n\ngo 1.22\n"), 0o644); err != nil {
 		return Result{}, err
 	}
 	// prepend package+import-less main guard: if the user code already starts

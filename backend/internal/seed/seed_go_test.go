@@ -4,6 +4,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strings"
 	"testing"
 
 	"codegym/backend/internal/model"
@@ -15,7 +16,7 @@ import (
 func compile(t *testing.T, src string) {
 	t.Helper()
 	dir := t.TempDir()
-	if err := os.WriteFile(filepath.Join(dir, "go.mod"), []byte("module codegymverify\n\ngo 1.21\n"), 0o644); err != nil {
+	if err := os.WriteFile(filepath.Join(dir, "go.mod"), []byte("module codegymverify\n\ngo 1.22\n"), 0o644); err != nil {
 		t.Fatal(err)
 	}
 	if err := os.WriteFile(filepath.Join(dir, "main.go"), []byte(src), 0o644); err != nil {
@@ -49,6 +50,46 @@ func TestGoBasicsCompile(t *testing.T) {
 				}
 			})
 		}
+}
+
+// runGoResult stages a module and runs `go run .`, returning stdout.
+func runGoResult(t *testing.T, src string) string {
+	t.Helper()
+	dir := t.TempDir()
+	writeFile := func(name, content string) {
+		if err := os.WriteFile(filepath.Join(dir, name), []byte(content), 0o644); err != nil {
+			t.Fatal(err)
+		}
+	}
+	writeFile("go.mod", "module codegymrun\n\ngo 1.22\n")
+	writeFile("main.go", src)
+	cmd := exec.Command("go", "run", ".")
+	cmd.Dir = dir
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		t.Fatalf("go run failed:\n%s\ncode:\n%s", out, src)
+	}
+	return strings.TrimSpace(string(out))
+}
+
+// TestGoConcurrencyRun executes every Go concurrency fill/bugfix full code
+// and verifies the printed (deterministic) output matches the expected value.
+func TestGoConcurrencyRun(t *testing.T) {
+	exs, err := GoConcurrency()
+	if err != nil {
+		t.Fatalf("build GoConcurrency: %v", err)
+	}
+	if len(exs) != 50 {
+		t.Fatalf("expected 50 Go concurrency questions, got %d", len(exs))
+	}
+	for _, ex := range exs {
+		t.Run(ex.ID, func(t *testing.T) {
+			got := runGoResult(t, ex.FullCode)
+			if strings.TrimSpace(strings.Join(strings.Fields(got), " ")) != strings.TrimSpace(strings.Join(strings.Fields(ex.ExpectedOutput), " ")) {
+				t.Errorf("output = %q, want %q", got, ex.ExpectedOutput)
+			}
+		})
+	}
 }
 
 // TestEveryLevelHasFill checks that every exercise yields at least one fill

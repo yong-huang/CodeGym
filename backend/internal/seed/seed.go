@@ -376,6 +376,7 @@ func CategoryPlan() []CategoryPair {
 		{Tech: "kubernetes", Sub: "实战"},
 		{Tech: "kubernetes", Sub: "web"},
 		{Tech: "openshift", Sub: "基础"},
+		{Tech: "openshift", Sub: "对比"},
 		{Tech: "openshift", Sub: "高级"},
 		{Tech: "openshift", Sub: "实战"},
 		{Tech: "openshift", Sub: "web"},
@@ -827,6 +828,12 @@ func All() ([]model.Exercise, error) {
 		return nil, err
 	}
 	out = append(out, ocb...)
+	// OpenShift 对比 Kubernetes（30 题）
+	ocd, err := OpenShiftDiff()
+	if err != nil {
+		return nil, err
+	}
+	out = append(out, ocd...)
 	// Docker 基础题库（50 题）
 	dkb, err := DockerBasics()
 	if err != nil {

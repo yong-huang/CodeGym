@@ -202,6 +202,30 @@ func TestE2E_OpenShift(t *testing.T) {
 	if res.Score != 100 || !res.IsCorrect {
 		t.Errorf("oc config => score=%v correct=%v", res.Score, res.IsCorrect)
 	}
+
+	// OpenShift 对比 Kubernetes bank: exactly 30 under 对比 subcategory
+	var diffList []struct {
+		ID          string `json:"id"`
+		Subcategory string `json:"subcategory"`
+	}
+	doJSON(t, "GET", base+"/exercises?tech_stack=openshift", nil, &diffList)
+	nDiff := 0
+	for _, it := range diffList {
+		if it.Subcategory == "对比" {
+			nDiff++
+		}
+	}
+	if nDiff != 30 {
+		t.Fatalf("openshift 对比 count = %d, want 30", nDiff)
+	}
+	doJSON(t, "POST", base+"/execute", map[string]any{
+		"exercise_id":  "oc-diff-001",
+		"weight_level": "beginner",
+		"fill_answers": map[string]string{"FILL_res": "dc"},
+	}, &res)
+	if res.Score != 100 || !res.IsCorrect {
+		t.Errorf("oc-diff-001 => score=%v correct=%v", res.Score, res.IsCorrect)
+	}
 }
 
 func TestE2E_Categories(t *testing.T) {	ts := newTestServer(t)
@@ -337,8 +361,8 @@ func TestE2E_ExerciseListAndVariant(t *testing.T) {
 		PointCount   int    `json:"point_count"`
 	}
 	doJSON(t, "GET", base+"/exercises", nil, &list)
-	if len(list) != 345 {
-		t.Fatalf("expected 345 exercises (295 + 50 Go 并发), got %d", len(list))
+	if len(list) != 375 {
+		t.Fatalf("expected 375 exercises (345 + 30 OpenShift 对比), got %d", len(list))
 	}
 	var ids []string
 	for _, ex := range list {
@@ -1005,8 +1029,8 @@ func TestE2E_ExportImport(t *testing.T) {
 	if err := json.NewDecoder(resp.Body).Decode(&exported); err != nil {
 		t.Fatal(err)
 	}
-	if len(exported) != 345 {
-		t.Fatalf("export count = %d, want 345", len(exported))
+	if len(exported) != 375 {
+		t.Fatalf("export count = %d, want 375", len(exported))
 	}
 
 	// import: delete one exercise, then restore it from the exported blob

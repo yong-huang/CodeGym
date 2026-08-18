@@ -182,6 +182,73 @@ func addVerbPoint(points []seedPoint, code string) []seedPoint {
 	})
 }
 
+// goTokenHints lists salient Go concurrency tokens to auto-add as fill points.
+var goTokenHints = []struct {
+	pattern, category, hint string
+}{
+	{"go func", "goroutine", "用 go 关键字启动协程"},
+	{"wg.Add(1)", "waitgroup", "启动前计数器 +1"},
+	{"wg.Wait()", "waitgroup", "等待所有协程完成"},
+	{"defer wg.Done()", "waitgroup", "协程完成时 -1"},
+	{"mu.Lock()", "mutex", "进入临界区加锁"},
+	{"mu.Unlock()", "mutex", "退出临界区解锁"},
+	{"mu.RLock()", "rwmutex", "读操作加读锁"},
+	{"once.Do", "once", "只执行一次的初始化"},
+	{"atomic.AddInt64", "atomic", "原子自增"},
+	{"atomic.StoreInt64", "atomic", "原子写入"},
+	{"atomic.LoadInt64", "atomic", "原子读取"},
+	{"atomic.CompareAndSwapInt64", "atomic", "原子比较交换"},
+	{"cond.Wait()", "cond", "等待条件满足"},
+	{"cond.Broadcast()", "cond", "唤醒所有等待者"},
+	{"time.NewTicker", "ticker", "周期定时器"},
+	{"time.After(", "timeout", "超时通道"},
+	{"ctx.Done()", "context", "取消/超时通知"},
+	{"cancel()", "context", "触发取消"},
+	{"<-done", "channel", "接收退出信号"},
+	{"close(done)", "channel", "关闭即广播放行"},
+	{"close(ch)", "channel", "关闭 channel 结束接收"},
+	{"make(chan", "channel", "创建 channel"},
+	{"ch <- ", "channel", "向 channel 发送"},
+	{"<-ch", "channel", "从 channel 接收"},
+	{"select {", "select", "多路复用选择"},
+}
+
+// enrichGoPoints scans a Go program and appends concurrency fill points for
+// salient tokens (go/waitgroup/mutex/chan/context…), each with escalating
+// difficulty, so higher weight levels visibly fill more. Skips texts already
+// covered and caps additions.
+func enrichGoPoints(points []seedPoint, code string, maxAdded int) []seedPoint {
+	hasText := func(t string) bool {
+		for _, p := range points {
+			if p.text == t {
+				return true
+			}
+		}
+		return false
+	}
+	levels := []string{"easy", "easy", "medium", "medium", "hard", "hard", "expert"}
+	li := 0
+	added := 0
+	for _, t := range goTokenHints {
+		if added >= maxAdded {
+			break
+		}
+		if !strings.Contains(code, t.pattern) || hasText(t.pattern) {
+			continue
+		}
+		lvl := levels[li]
+		if li < len(levels)-1 {
+			li++
+		}
+		points = append(points, seedPoint{
+			id: "auto_" + sanitizeID(t.pattern), text: t.pattern, category: t.category,
+			minWeight: lvl, weightScore: 0.7, hint: t.hint, fillType: "text",
+		})
+		added++
+	}
+	return points
+}
+
 // sanitizeID makes an arbitrary token usable as a fill point id.
 func sanitizeID(s string) string {
 	var b strings.Builder

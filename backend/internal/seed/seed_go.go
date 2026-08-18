@@ -38,6 +38,8 @@ func toGoSeed(g goBasicSeed) seedExercise {
 	points := g.points
 	if exType == model.ExerciseTypeCommand {
 		points = addVerbPoint(points, g.code)
+	} else if exType == model.ExerciseTypeFill {
+		points = enrichGoPoints(points, g.code, 5)
 	}
 	return seedExercise{
 		id:           g.id,

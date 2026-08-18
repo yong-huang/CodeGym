@@ -154,32 +154,11 @@ func occurrenceIndex(s, sub string, n int) (int, bool) {
 	return idx, true
 }
 
-// addVerbPoint gives a single-point command exercise a second fill on its
-// subcommand, so higher weight levels visibly fill more of the command
-// (e.g. beginner fills only the flag, harder levels also fill the verb).
-func addVerbPoint(points []seedPoint, code string) []seedPoint {
-	if len(points) < 1 {
-		return points
-	}
-	fields := strings.Fields(strings.TrimSpace(code))
-	if len(fields) < 3 {
-		return points // single-verb commands (e.g. `kubectl version`) stay as-is
-	}
-	verb := fields[1]
-	for _, p := range points {
-		if p.text == verb {
-			return points
-		}
-	}
-	return append(points, seedPoint{
-		id:         "verb_" + sanitizeID(verb),
-		text:       verb,
-		category:   "command_verb",
-		minWeight:  "easy",
-		weightScore: 0.5,
-		hint:       "这句命令的子命令",
-		fillType:   "text",
-	})
+// addVerbPoint no longer auto-appends trivial "get/list"-style verb points:
+// filling in a bare verb like `get` is not a meaningful challenge, so command
+// exercises keep only their hand-authored (meaningful) fill points.
+func addVerbPoint(points []seedPoint, _ string) []seedPoint {
+	return points
 }
 
 // goTokenHints lists salient Go concurrency tokens to auto-add as fill points.

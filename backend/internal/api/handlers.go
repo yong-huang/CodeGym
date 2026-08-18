@@ -664,71 +664,158 @@ func (s *Server) adminStats(w http.ResponseWriter, _ *http.Request) {
 	writeJSON(w, http.StatusOK, stats)
 }
 
+// categoryHint2Map gives a meaningful Level-2 teaching hint per fill-point
+// category, covering the categories used across all banks.
+var categoryHint2Map = map[string]string{
+	// Go 并发
+	"goroutine":      "📖 用 `go` 关键字并发执行一个函数调用",
+	"waitgroup":      "📖 `WaitGroup` 三件套：`Add` 计入、`Done` 减计、`Wait` 等待归零",
+	"mutex":          "📖 修改共享变量前要 `Lock()`，结束后 `Unlock()`",
+	"rwmutex":        "📖 读多写少用 `RWMutex`：读加 `RLock()`，写加 `Lock()`",
+	"once":           "📖 `sync.Once` 保证初始化只执行一次，即使并发调用",
+	"atomic":         "📖 `sync/atomic` 提供无锁原子操作（Add/Load/Store/CAS）",
+	"cond":           "📖 条件不满足时 `Wait()` 释放锁等待，条件满足后 `Broadcast()` 唤醒",
+	"pool":           "📖 `sync.Pool` 缓存复用对象：`Get` 取、`Put` 还，降低分配压力",
+	"channel":        "📖 用 `ch <- v` 发送、`<-ch` 接收；带缓冲容量可避免阻塞",
+	"channel_direction": "📖 `chan<-` 只写、`<-chan` 只读，用于约束函数对通道的使用",
+	"channel_pattern": "📖 常见的通道模式：生成器/WorkerPool/流水线，用通道在协程间传数据",
+	"select":         "📖 `select` 同时监听多个通道，任一就绪即执行对应分支",
+	"context":        "📖 context 通过 `Done()` 通知取消/超时，向下游传递控制信号",
+	"timeout":        "📖 用 `time.After` 配合 `select` 做超时等待",
+	"ticker":         "📖 `time.Ticker` 周期向 `.C` 发送时间，做限流/心跳/定时任务",
+	"case":           "📖 分支值要与被判断对象类型一致，注意匹配的写法",
+	"default":        "📖 默认值/兜底：switch 无匹配分支或函数参数未传时用的默认",
+	// Go / Python 语法
+	"syntax":        "📖 先确认语句的正确语法（关键字、括号、缩进/换行）",
+	"variables":     "📖 变量声明与赋值：注意类型与命名",
+	"number":        "📖 数值要算对，注意整数/浮点与运算优先级",
+	"constant":      "📖 常量在编译期固定，运行期不可改",
+	"if":            "📖 判断条件要覆盖到正确分支，注意比较与取模",
+	"condition":     "📖 写出使分支成立的条件表达式，注意比较/取模运算",
+	"for":           "📖 for 的三段式：初始、条件、步进，缺一不可",
+	"while":         "📖 循环条件要能最终变假，否则死循环",
+	"loop":          "📖 注意循环边界（含首不含尾）与步进",
+	"iteration":     "📖 遍历序列时注意当前元素与下标的关系",
+	"iterator":      "📖 明确在遍历哪个可迭代对象",
+	"range":         "📖 `range` 同时产出下标与值，用 `_` 忽略其一",
+	"break":         "📖 `break` 立即跳出整个循环",
+	"continue":      "📖 `continue` 跳过本次迭代剩下的语句",
+	"list":          "📖 列表按下标访问，下标从 0 开始",
+	"slice":         "📖 切片 `[start:end]` 含首不含尾；`append` 追加、`len` 长度",
+	"tuple":         "📖 元组不可变，按下标访问或解包",
+	"unpack":        "📖 变量数量与序列元素数一致即可解包",
+	"dict":          "📖 字典 `d[键]` 取值、`d[键]=值` 写入；`get` 可给默认值",
+	"set":           "📖 集合自动去重，`len` 得元素个数",
+	"string":        "📖 字符串常用方法：upper/lower/strip/split/join/replace/find",
+	"method":        "📖 方法绑定在类型上，注意接收者（值/指针）",
+	"builtins":      "📖 内置函数如 len/sum/max/min/sorted 直接可用",
+	"function":      "📖 函数 `def/func` 定义，`return` 返回值，注意参数与默认值",
+	"variadic":      "📖 变长参数收集成切片/元组再处理",
+	"recursion":     "📖 递归 = 基线条件 + 递推式，缺一不可",
+	"lambda":        "📖 `lambda` 定义匿名函数，结果就是表达式值",
+	"comprehension": "📖 `[表达式 for x in 序列 if 条件]` 一行生成列表",
+	"format":        "📖 格式化输出：f-string 的 `{}` 或格式占位符",
+	"conversion":    "📖 类型转换用 `T(值)` 显式转换（int/str/float）",
+	"exception":     "📖 想清楚会抛什么异常，用对应类型捕获并处理",
+	"module":        "📖 先 `import` 引入包，再用 `包.函数` 调用",
+	"class":         "📖 类里 `__init__` 初始化、`self` 指实例，方法靠实例调用",
+	"closure":       "📖 闭包捕获外层变量，可带状态地反复调用",
+	"expression":    "📖 想出结果表达式，可用运算符/函数组合得到目标值",
+	"statement":     "📖 这里是一条语句，想清楚它的作用再补全",
+	"keyword":       "📖 想清楚这个关键字的语义（go/defer/select/close…）",
+	"argument":      "📖 参数取值要与函数定义匹配",
+	"type_annotation": "📖 类型注解要写对：int/str/bool/自定义类型",
+	"init":          "📖 初始化逻辑：声明变量并赋初值",
+	"generics":      "📖 泛型用 `[T 约束]` 声明，约束限定可用的类型",
+	"interface":     "📖 类型实现接口的全部方法即满足接口",
+	"struct":        "📖 结构体用 `Type{字段: 值}` 初始化，`.` 访问字段",
+	"pointer":       "📖 `&` 取地址、`*` 解引用；指针参数可修改调用方变量",
+	"recursion+":    "📖 先找基线，再写递推",
+	// K8s / OpenShift / Docker
+	"command_flag":  "📖 命令的选项/参数，注意短参数与长参数往往等价",
+	"command_verb":  "📖 想清楚这条命令的动词（动词决定操作）",
+	"resource":      "📖 资源类型有全称和缩写（如 deployments 与 deploy）",
+	"secret":        "📖 Secret 的 `data` 值要 base64 编码，`stringData` 可写明文",
+	"secret_type":   "📖 Secret 的 type：Opaque / kubernetes.io/tls 等",
+	"secret_data":   "📖 `data` 值必须 base64；`stringData` 自动编码",
+	"configmap":     "📖 ConfigMap 存非敏感配置，Pod 用 env 或 volume 引用",
+	"config":        "📖 找出该配置对应的键，填上正确的取值（注意数字/字符串引号、单位）",
+	"env":           "📖 env 注入环境变量：直接 value，或 valueFrom 引用 ConfigMap/Secret",
+	"volume":        "📖 卷先声明来源（emptyDir/PVC/ConfigMap…），再用 volumeMounts 挂载",
+	"mount_path":    "📖 挂载到容器内的绝对路径",
+	"host_path":     "📖 hostPath 直连节点上的目录，注意只读使用",
+	"probe":         "📖 探针三选一：httpGet / tcpSocket / exec；配好端口与周期",
+	"probe_port":    "📖 探测端口要对齐容器监听端口",
+	"storage":       "📖 存储容量用二进制单位（Mi/Gi），访问模式决定读写法",
+	"access_mode":   "📖 访问模式：ReadWriteOnce / ReadOnlyMany / ReadWriteMany",
+	"pvc":           "📖 PVC 声明存储需求并绑定 PV，Pod 用 claimName 引用",
+	"pvc_name":      "📖 引用的 PVC 名称要与已创建的 PVC 一致",
+	"api_version":   "📖 资源属于哪个 API 组、kind 决定了 `apiVersion`",
+	"service_type":  "📖 Service 类型：ClusterIP / NodePort / LoadBalancer",
+	"labels":        "📖 标签是键值对，选择器按标签匹配资源",
+	"label":         "📖 标签是键值对，`key=value` 或 `key: value` 形式",
+	"annotation":    "📖 注解是非标识性元数据，键值形式，不用于选择",
+	"selector":      "📖 selector 按标签选择后端 Pod，键值要与 Pod 标签一致",
+	"ports":         "📖 `\"主机端口:容器端口\"` 发布端口",
+	"port":          "📖 端口要与你声明的目标端口一致",
+	"replicas":      "📖 期望副本数决定同时运行的实例数",
+	"image":         "📖 镜像名 + 标签（如 nginx:1.25）",
+	"host":          "📖 对外的域名/主机名",
+	"path":          "📖 URL 路径，注意路径类型 Prefix/Exact",
+	"uri":           "📖 源码/镜像仓库地址",
+	"termination":   "📖 TLS 终止方式：edge / passthrough / reencrypt",
+	"strategy":      "📖 构建策略决定如何构建（Source/Docker/Custom）",
+	"build_strategy": "📖 构建策略：Source 从源码构建、Docker 按 Dockerfile",
+	"reclaim_policy":"📖 PV 释放后回收策略：Retain / Delete / Recycle",
+	"provisioner":   "📖 存储插件（供应器），决定 PV 如何动态创建",
+	"tls":           "📖 TLS 配置：termination 决定在哪里终止 HTTPS",
+	"trigger":       "📖 触发器让 DC 在配置/镜像变化时自动部署",
+	"depends_on":    "📖 声明服务依赖，控制启动顺序",
+	"restart":       "📖 重启策略：always / unless-stopped / on-failure",
+	"restart_policy": "📖 Job/CronJob 中 restartPolicy 只能 Never 或 OnFailure",
+	"serviceaccount": "📖 Pod 用 serviceAccountName 指定身份访问 API",
+	"init_container": "📖 init 容器在主容器前依序执行，用于初始化",
+	"security":      "📖 安全上下文：runAsUser/runAsNonRoot/只读根文件系统",
+	"lifecycle":     "📖 生命周期钩子：preStop 在终止前执行",
+	"healthcheck":   "📖 Dockerfile 用 HEALTHCHECK 声明容器健康检查",
+	"entrypoint":    "📖 ENTRYPOINT 固定入口命令，不被 run 参数覆盖",
+	"cmd":           "📖 明确这条指令的作用，补上正确的指令名或参数",
+	"workdir":       "📖 WORKDIR 设定工作目录，后续指令相对它执行",
+	"user":          "📖 USER 切换运行用户（通常非 root）",
+	"expose_port":   "📖 EXPOSE 声明容器监听端口",
+	"run_cmd":       "📖 RUN 在构建阶段执行的命令",
+	"base_image":    "📖 FROM 指定基础镜像名及标签",
+	"git_uri":       "📖 构建源码的 Git 仓库地址",
+	"source":        "📖 构建来源类型：Git / Binary / Image",
+	"cron":          "📖 cron 表达式：分 时 日 月 周",
+	"dns":           "📖 dnsPolicy 控制 Pod 的 DNS 解析策略",
+	"limit_type":    "📖 LimitRange 作用对象：Container / Pod",
+	"utilization":   "📖 HPA 目标 CPU 利用率百分比",
+	"volumes":       "📖 volumes 先挂载 `卷:容器路径`，再在顶层声明命名卷",
+	"volumes_decl":  "📖 顶层 volumes 里声明命名卷",
+	"image_pull_policy": "📖 拉取策略：Always / Never / IfNotPresent",
+	"add":           "📖 把元素追加/累加到目标（append / +=）",
+	"signature":     "📖 函数签名：参数类型与返回值类型要写对",
+	"server":        "📖 服务器/API 端点地址",
+	"service":       "📖 要暴露或引用的 Service 名称",
+	"copy":          "📖 复制内容：copy(dst, src) 或切片拷贝",
+	"arg":           "📖 参数的取值与传递要匹配函数定义",
+	"error":         "📖 错误处理：检查 err，返回 nil 表示成功",
+	"type":          "📖 类型声明：`type 名 底层类型`",
+	"pattern":       "📖 代码模式的关键写法，想清楚模式步骤再补全",
+	"project":       "📖 项目名称要唯一且符合命名规范",
+	"metadata":      "📖 metadata 里的名称/标签要合理且唯一",
+	"annotations":   "📖 注解是非标识性元数据，键值形式",
+	"taint_effect":  "📖 污点效果：NoSchedule / PreferNoSchedule / NoExecute",
+}
+
 // categoryHint2 returns a meaningful Level-2 teaching hint for a fill point
 // category (instead of a generic "look at the context" placeholder).
 func categoryHint2(category string) string {
-	switch category {
-	case "waitgroup":
-		return "📖 `WaitGroup` 三件套：`Add` 计入、`Done` 减计、`Wait` 等待归零"
-	case "mutex":
-		return "📖 修改共享变量前要 `Lock()`，结束后 `Unlock()`"
-	case "rwmutex":
-		return "📖 读多写少用 `RWMutex`：读加 `RLock()`，写加 `Lock()`"
-	case "goroutine", "keyword":
-		return "📖 用 `go` 关键字并发执行一个函数调用"
-	case "channel":
-		return "📖 用 `ch <- v` 发送、`<-ch` 接收；带缓冲容量可避免阻塞"
-	case "channel_direction":
-		return "📖 `chan<-` 只写、`<-chan` 只读，用于约束函数对通道的使用"
-	case "select":
-		return "📖 `select` 同时监听多个通道，任一就绪即执行对应分支"
-	case "context":
-		return "📖 context 通过 `Done()` 通知取消/超时，向下游传递控制信号"
-	case "atomic":
-		return "📖 `sync/atomic` 提供无锁原子操作（Add/Load/Store/CAS）"
-	case "once":
-		return "📖 `sync.Once` 保证初始化只执行一次，即使并发调用"
-	case "cond":
-		return "📖 条件不满足时 `Wait()` 释放锁等待，条件满足后 `Broadcast()` 唤醒"
-	case "ticker", "timeout":
-		return "📖 `time` 包：`Ticker` 周期触发、`After` 到点触发，配合 `select` 做定时/超时"
-	case "pool":
-		return "📖 `sync.Pool` 缓存复用对象：`Get` 取、`Put` 还，降低分配压力"
-	case "exception":
-		return "📖 先想清楚会抛什么异常，再用对应类型捕获"
-	case "slice":
-		return "📖 切片下标从 0 开始，`[:]` 切片含首不含尾"
-	case "condition":
-		return "📖 写出使分支成立的条件表达式，注意取模/比较运算"
-	case "expression":
-		return "📖 想出结果表达式，可用运算符/函数组合得到目标值"
-	case "command_flag":
-		return "📖 命令的选项/参数，注意短参数与长参数往往等价"
-	case "resource":
-		return "📖 资源类型有全称和缩写（如 deployments 与 deploy）"
-	case "command_verb":
-		return "📖 想清楚这条命令的动词（动词决定操作）"
-	case "secret":
-		return "📖 Secret 的 `data` 值要 base64 编码，`stringData` 可写明文"
-	case "configmap":
-		return "📖 ConfigMap 存非敏感配置，Pod 用 env 或 volume 引用"
-	case "volume", "mount_path":
-		return "📖 卷先声明来源（emptyDir/PVC/ConfigMap…），再用 volumeMounts 挂载"
-	case "probe", "probe_port":
-		return "📖 探针按容器端口探测：httpGet/tcpSocket/exec 三选一"
-	case "storage":
-		return "📖 存储容量用二进制单位（Mi/Gi）声明，访问模式决定读写法"
-	case "api_version", "service_type":
-		return "📖 资源属于哪个 API 组、kind 决定了 `apiVersion`"
-	case "labels":
-		return "📖 标签是键值对，选择器按标签匹配资源"
-	case "config":
-		return "📖 找出该配置对应的键，填上正确的取值（注意数字/字符串引号、单位）"
-	case "cmd":
-		return "📖 明确这条指令的作用，补上正确的指令名或参数"
-	default:
-		return "📖 想清楚这里的「" + category + "」在代码中起什么作用，再补全"
+	if h, ok := categoryHint2Map[category]; ok {
+		return h
 	}
+	return "📖 想清楚这里的「" + category + "」在代码中起什么作用，再补全"
 }
 
 func truncate(s string, n int) string {

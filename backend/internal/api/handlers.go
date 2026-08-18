@@ -210,7 +210,7 @@ func buildVariantResponse(ex model.Exercise, level string, points []model.FillPo
 			Line:       p.Location.Line,
 			Options:    p.Options,
 			HintLevel1: p.Hint,
-			HintLevel2: "📖 思路：从「" + p.Category + "」出发，看看前后文再补全",
+			HintLevel2: categoryHint2(p.Category),
 			HintLevel3: "👀 接近答案：" + truncate(p.OriginalText, 20),
 			HintLevel4: "📝 正确答案：" + p.OriginalText,
 		})
@@ -662,6 +662,73 @@ func (s *Server) adminStats(w http.ResponseWriter, _ *http.Request) {
 	}
 	stats["avg_attempts_per_user"] = totalAttempts
 	writeJSON(w, http.StatusOK, stats)
+}
+
+// categoryHint2 returns a meaningful Level-2 teaching hint for a fill point
+// category (instead of a generic "look at the context" placeholder).
+func categoryHint2(category string) string {
+	switch category {
+	case "waitgroup":
+		return "📖 `WaitGroup` 三件套：`Add` 计入、`Done` 减计、`Wait` 等待归零"
+	case "mutex":
+		return "📖 修改共享变量前要 `Lock()`，结束后 `Unlock()`"
+	case "rwmutex":
+		return "📖 读多写少用 `RWMutex`：读加 `RLock()`，写加 `Lock()`"
+	case "goroutine", "keyword":
+		return "📖 用 `go` 关键字并发执行一个函数调用"
+	case "channel":
+		return "📖 用 `ch <- v` 发送、`<-ch` 接收；带缓冲容量可避免阻塞"
+	case "channel_direction":
+		return "📖 `chan<-` 只写、`<-chan` 只读，用于约束函数对通道的使用"
+	case "select":
+		return "📖 `select` 同时监听多个通道，任一就绪即执行对应分支"
+	case "context":
+		return "📖 context 通过 `Done()` 通知取消/超时，向下游传递控制信号"
+	case "atomic":
+		return "📖 `sync/atomic` 提供无锁原子操作（Add/Load/Store/CAS）"
+	case "once":
+		return "📖 `sync.Once` 保证初始化只执行一次，即使并发调用"
+	case "cond":
+		return "📖 条件不满足时 `Wait()` 释放锁等待，条件满足后 `Broadcast()` 唤醒"
+	case "ticker", "timeout":
+		return "📖 `time` 包：`Ticker` 周期触发、`After` 到点触发，配合 `select` 做定时/超时"
+	case "pool":
+		return "📖 `sync.Pool` 缓存复用对象：`Get` 取、`Put` 还，降低分配压力"
+	case "exception":
+		return "📖 先想清楚会抛什么异常，再用对应类型捕获"
+	case "slice":
+		return "📖 切片下标从 0 开始，`[:]` 切片含首不含尾"
+	case "condition":
+		return "📖 写出使分支成立的条件表达式，注意取模/比较运算"
+	case "expression":
+		return "📖 想出结果表达式，可用运算符/函数组合得到目标值"
+	case "command_flag":
+		return "📖 命令的选项/参数，注意短参数与长参数往往等价"
+	case "resource":
+		return "📖 资源类型有全称和缩写（如 deployments 与 deploy）"
+	case "command_verb":
+		return "📖 想清楚这条命令的动词（动词决定操作）"
+	case "secret":
+		return "📖 Secret 的 `data` 值要 base64 编码，`stringData` 可写明文"
+	case "configmap":
+		return "📖 ConfigMap 存非敏感配置，Pod 用 env 或 volume 引用"
+	case "volume", "mount_path":
+		return "📖 卷先声明来源（emptyDir/PVC/ConfigMap…），再用 volumeMounts 挂载"
+	case "probe", "probe_port":
+		return "📖 探针按容器端口探测：httpGet/tcpSocket/exec 三选一"
+	case "storage":
+		return "📖 存储容量用二进制单位（Mi/Gi）声明，访问模式决定读写法"
+	case "api_version", "service_type":
+		return "📖 资源属于哪个 API 组、kind 决定了 `apiVersion`"
+	case "labels":
+		return "📖 标签是键值对，选择器按标签匹配资源"
+	case "config":
+		return "📖 找出该配置对应的键，填上正确的取值（注意数字/字符串引号、单位）"
+	case "cmd":
+		return "📖 明确这条指令的作用，补上正确的指令名或参数"
+	default:
+		return "📖 想清楚这里的「" + category + "」在代码中起什么作用，再补全"
+	}
 }
 
 func truncate(s string, n int) string {

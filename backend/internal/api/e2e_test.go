@@ -369,8 +369,8 @@ func TestE2E_ExerciseListAndVariant(t *testing.T) {
 		PointCount   int    `json:"point_count"`
 	}
 	doJSON(t, "GET", base+"/exercises", nil, &list)
-	if len(list) != 375 {
-		t.Fatalf("expected 375 exercises (345 + 30 OpenShift 对比), got %d", len(list))
+	if len(list) != 405 {
+		t.Fatalf("expected 405 exercises (375 + 30 K8s 调度), got %d", len(list))
 	}
 	var ids []string
 	for _, ex := range list {
@@ -955,6 +955,30 @@ func TestE2E_K8sBasics(t *testing.T) {
 		t.Errorf("k8s-res-001 => score=%v correct=%v", res.Score, res.IsCorrect)
 	}
 
+	// K8s 调度专项: exactly 30 under 调度 subcategory, and one answers correctly
+	var schedList []struct {
+		ID          string `json:"id"`
+		Subcategory string `json:"subcategory"`
+	}
+	doJSON(t, "GET", base+"/exercises?tech_stack=kubernetes", nil, &schedList)
+	nSched := 0
+	for _, it := range schedList {
+		if it.Subcategory == "调度" {
+			nSched++
+		}
+	}
+	if nSched != 30 {
+		t.Fatalf("k8s 调度 count = %d, want 30", nSched)
+	}
+	doJSON(t, "POST", base+"/execute", map[string]any{
+		"exercise_id":  "k8s-sched-003",
+		"weight_level": "beginner",
+		"fill_answers": map[string]string{"FILL_verb": "cordon"},
+	}, &res)
+	if res.Score != 100 || !res.IsCorrect {
+		t.Errorf("k8s-sched-003 => score=%v correct=%v", res.Score, res.IsCorrect)
+	}
+
 	// Python 基础 bank: exactly 50 py-basics questions, and one runs correctly
 	var pyList []struct {
 		ID string `json:"id"`
@@ -1037,8 +1061,8 @@ func TestE2E_ExportImport(t *testing.T) {
 	if err := json.NewDecoder(resp.Body).Decode(&exported); err != nil {
 		t.Fatal(err)
 	}
-	if len(exported) != 375 {
-		t.Fatalf("export count = %d, want 375", len(exported))
+	if len(exported) != 405 {
+		t.Fatalf("export count = %d, want 405", len(exported))
 	}
 
 	// import: delete one exercise, then restore it from the exported blob

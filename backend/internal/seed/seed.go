@@ -371,6 +371,7 @@ func CategoryPlan() []CategoryPair {
 		{Tech: "go", Sub: "web"},
 		{Tech: "kubernetes", Sub: "基础"},
 		{Tech: "kubernetes", Sub: "资源配置"},
+		{Tech: "kubernetes", Sub: "调度"},
 		{Tech: "kubernetes", Sub: "资源配置"},
 		{Tech: "kubernetes", Sub: "高级"},
 		{Tech: "kubernetes", Sub: "实战"},
@@ -846,5 +847,11 @@ func All() ([]model.Exercise, error) {
 		return nil, err
 	}
 	out = append(out, res...)
+	// Kubernetes 调度专项（30 题）
+	sch, err := K8sScheduler()
+	if err != nil {
+		return nil, err
+	}
+	out = append(out, sch...)
 	return out, nil
 }

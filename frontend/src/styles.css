@@ -174,10 +174,35 @@ body {
 .sidebar-head {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 4px;
   padding: 12px;
   border-bottom: 1px solid var(--border);
   min-width: 250px;
+}
+.sidebar-head-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.fav-filter-btn {
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  border-radius: 8px;
+  padding: 3px 10px;
+  cursor: pointer;
+  font-size: 12px;
+  white-space: nowrap;
+}
+.fav-filter-btn:hover {
+  color: var(--text);
+  border-color: var(--accent-2);
+}
+.fav-filter-btn.on {
+  color: var(--accent-2);
+  border-color: var(--accent-2);
+  background: rgba(250, 204, 21, 0.1);
 }
 .sidebar-title {
   font-weight: 700;

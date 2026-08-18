@@ -24,6 +24,8 @@ const subKey = (tech: string, sub: string) => `${tech}::${sub}`;
 export default function Sidebar({ collapsed, activeExerciseId }: SidebarProps) {
   const [exercises, setExercises] = useState<ExerciseListItem[]>([]);
   const [completed, setCompleted] = useState<Set<string>>(new Set());
+  const [favoriteIds, setFavoriteIds] = useState<Set<string>>(new Set());
+  const [favOnly, setFavOnly] = useState(false);
   const [expanded, setExpanded] = useState<Set<string>>(new Set()); // tech groups
   const [expandedSub, setExpandedSub] = useState<Set<string>>(new Set()); // subcategories
 
@@ -37,6 +39,10 @@ export default function Sidebar({ collapsed, activeExerciseId }: SidebarProps) {
         .progress()
         .then((p) => setCompleted(new Set(Object.keys(p.progress.completed_exercises))))
         .catch(() => undefined);
+      api
+        .favorites()
+        .then((list) => setFavoriteIds(new Set(list.map((f) => f.exercise_id))))
+        .catch(() => undefined);
     };
     load();
     // refresh completion marks when the user navigates back from training
@@ -44,9 +50,12 @@ export default function Sidebar({ collapsed, activeExerciseId }: SidebarProps) {
     return () => window.removeEventListener('hashchange', load);
   }, []);
 
+  const isFav = (id: string) => favoriteIds.has(id);
+
   const groups = useMemo(() => {
     const byTech = new Map<string, Map<string, ExerciseListItem[]>>();
     for (const ex of exercises) {
+      if (favOnly && !isFav(ex.id)) continue; // 收藏模式只展示收藏
       const subs = byTech.get(ex.tech_stack) ?? new Map<string, ExerciseListItem[]>();
       const list = subs.get(ex.subcategory) ?? [];
       list.push(ex);
@@ -63,7 +72,7 @@ export default function Sidebar({ collapsed, activeExerciseId }: SidebarProps) {
       out.push({ tech, subgroups });
     }
     return out.sort((a, b) => a.tech.localeCompare(b.tech));
-  }, [exercises]);
+  }, [exercises, favOnly, favoriteIds]);
 
   // Groups/subcategories default to COLLAPSED. When training an exercise,
   // auto-expand its tech group and its subcategory so it stays visible.
@@ -93,13 +102,22 @@ export default function Sidebar({ collapsed, activeExerciseId }: SidebarProps) {
   return (
     <aside className="sidebar">
       <div className="sidebar-head">
-        <span className="sidebar-title">📚 题库</span>
+        <div className="sidebar-head-row">
+          <span className="sidebar-title">{favOnly ? '⭐ 收藏' : '📚 题库'}</span>
+          <button
+            className={`fav-filter-btn ${favOnly ? 'on' : ''}`}
+            onClick={() => setFavOnly((v) => !v)}
+            title={favOnly ? '显示全部题库' : '只显示收藏的题目'}
+          >
+            {favOnly ? '★ 全部' : '☆ 收藏'}
+          </button>
+        </div>
         <span className="sidebar-summary">
-          {exercises.length} 题 · {groups.length} 个技术栈
+          {favOnly ? `${favoriteIds.size} 题收藏` : `${exercises.length} 题 · ${groups.length} 个技术栈`}
         </span>
       </div>
       <div className="sidebar-tree">
-        {groups.length === 0 && <div className="sidebar-empty">暂无题库内容</div>}
+        {groups.length === 0 && <div className="sidebar-empty">暂无题目</div>}
         {groups.map((g) => {
           const open = expanded.has(g.tech);
           const activeInGroup = g.subgroups.some((sg) => sg.items.some((it) => it.id === activeExerciseId));

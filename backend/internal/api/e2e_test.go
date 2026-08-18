@@ -34,6 +34,14 @@ func newTestServer(t *testing.T) *httptest.Server {
 			t.Fatalf("upsert: %v", err)
 		}
 	}
+	for _, env := range []model.Environment{
+		{Name: "python-3.10", Type: "local", Config: map[string]any{"interpreter": "python3"}, HealthStatus: "healthy", MaxConcurrent: 5, Enabled: true},
+		{Name: "go-1.26", Type: "local", Config: map[string]any{"toolchain": "go"}, HealthStatus: "healthy", MaxConcurrent: 5, Enabled: true},
+	} {
+		if err := st.UpsertEnvironment(env); err != nil {
+			t.Fatalf("upsert env: %v", err)
+		}
+	}
 	srv := api.New(st, engine.New("python3"))
 	ts := httptest.NewServer(srv.Handler())
 	t.Cleanup(func() {

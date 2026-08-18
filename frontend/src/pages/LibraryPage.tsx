@@ -28,6 +28,13 @@ export default function LibraryPage() {
   const [newSub, setNewSub] = useState('');
   const [msg, setMsg] = useState('');
   const [err, setErr] = useState('');
+  // AI 生成
+  const [aiTech, setAiTech] = useState('python');
+  const [aiWeight, setAiWeight] = useState('easy');
+  const [aiKnowledge, setAiKnowledge] = useState('');
+  const [aiCount, setAiCount] = useState(3);
+  const [aiBusy, setAiBusy] = useState(false);
+  const [aiResults, setAiResults] = useState<{ id: string; title: string; ok: boolean; error?: string }[]>([]);
   // edit/create modal
   const [editing, setEditing] = useState<ExerciseDetail | null>(null);
   const [json, setJson] = useState('');
@@ -201,6 +208,30 @@ export default function LibraryPage() {
     }
   };
 
+  const runAiGenerate = async () => {
+    if (!aiTech || aiBusy) return;
+    setAiBusy(true);
+    setAiResults([]);
+    setErr('');
+    setMsg('⏳ 正在生成（本地模型较慢，约 1-3 分钟），请耐心等待…');
+    try {
+      const res = await api.aiGenerate({
+        tech_stack: aiTech,
+        weight: aiWeight,
+        knowledge_points: aiKnowledge,
+        count: aiCount,
+      });
+      setAiResults(res.items);
+      setMsg(`✅ 生成完成：成功 ${res.ok}/${res.total} 道`);
+      refresh().catch(() => undefined);
+    } catch (e) {
+      setErr(`AI 生成失败：${String(e)}`);
+      setMsg('');
+    } finally {
+      setAiBusy(false);
+    }
+  };
+
   return (
     <div className="page">
       <section className="panel">
@@ -232,6 +263,69 @@ export default function LibraryPage() {
         </div>
         {msg && <div className="ok-banner">{msg}</div>}
         {err && <div className="error-banner">⚠️ {err}</div>}
+      </section>
+
+      <section className="panel">
+        <div className="panel-title">🤖 AI 生成题目（本地 Ollama）</div>
+        <div className="ai-form">
+          <label>
+            技术栈
+            <select value={aiTech} onChange={(e) => setAiTech(e.target.value)}>
+              {techs.map((t) => (
+                <option key={t} value={t}>
+                  {t}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label>
+            负重
+            <select value={aiWeight} onChange={(e) => setAiWeight(e.target.value)}>
+              {['beginner', 'easy', 'medium', 'hard', 'expert'].map((w) => (
+                <option key={w} value={w}>
+                  {w}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label>
+            数量
+            <input
+              type="number"
+              min={1}
+              max={5}
+              value={aiCount}
+              onChange={(e) => setAiCount(Number(e.target.value))}
+            />
+          </label>
+          <label className="ai-knowledge">
+            知识点（逗号分隔）
+            <input
+              value={aiKnowledge}
+              placeholder="如：列表推导式, 过滤偶数"
+              onChange={(e) => setAiKnowledge(e.target.value)}
+            />
+          </label>
+          <button className="primary-btn" onClick={() => void runAiGenerate()} disabled={aiBusy || !aiTech}>
+            {aiBusy ? '⏳ 生成中…' : '🚀 开始生成'}
+          </button>
+        </div>
+        {aiResults.length > 0 && (
+          <div className="ai-results">
+            {aiResults.map((r) => (
+              <div key={r.id} className={`ai-result ${r.ok ? 'ok' : 'err'}`}>
+                <span className="ai-status">{r.ok ? '✅' : '❌'}</span>
+                <span className="ai-title">{r.title || r.id}</span>
+                <span className="ai-id">{r.id}</span>
+                {r.ok ? (
+                  <button className="ghost-btn sm" onClick={() => void openEdit(r.id)}>编辑</button>
+                ) : (
+                  <span className="ai-err">{r.error}</span>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
       </section>
 
       <section className="panel">

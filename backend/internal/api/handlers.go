@@ -6,12 +6,14 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"os/exec"
 	"sort"
 	"strings"
 	"time"
 
 	"codegym/backend/internal/engine"
 	"codegym/backend/internal/judge"
+	"codegym/backend/internal/llm"
 	"codegym/backend/internal/model"
 	"codegym/backend/internal/store"
 	"codegym/backend/internal/variant"
@@ -21,12 +23,13 @@ import (
 type Server struct {
 	store  *store.Store
 	engine *engine.Engine
+	llm    *llm.Client
 	now    func() time.Time
 }
 
 // New creates an API server.
 func New(st *store.Store, eng *engine.Engine) *Server {
-	return &Server{store: st, engine: eng, now: time.Now}
+	return &Server{store: st, engine: eng, llm: llm.New("", ""), now: time.Now}
 }
 
 // Handler returns the root http.Handler with all routes registered.
@@ -51,6 +54,12 @@ func (s *Server) Handler() http.Handler {
 	mux.HandleFunc("POST /api/v1/admin/categories", s.createCategory)
 	mux.HandleFunc("PUT /api/v1/admin/categories", s.renameCategory)
 	mux.HandleFunc("DELETE /api/v1/admin/categories", s.deleteCategory)
+	mux.HandleFunc("POST /api/v1/admin/ai-generate", s.aiGenerate)
+	mux.HandleFunc("GET /api/v1/admin/environments", s.adminListEnvironments)
+	mux.HandleFunc("POST /api/v1/admin/environments", s.adminCreateEnvironment)
+	mux.HandleFunc("PUT /api/v1/admin/environments/{id}", s.adminUpdateEnvironment)
+	mux.HandleFunc("DELETE /api/v1/admin/environments/{id}", s.adminDeleteEnvironment)
+	mux.HandleFunc("POST /api/v1/admin/environments/{id}/test", s.adminTestEnvironment)
 	mux.HandleFunc("GET /api/v1/admin/stats", s.adminStats)
 
 	return s.withCommon(mux)
@@ -453,11 +462,101 @@ func (s *Server) getWeakPoints(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) listEnvironments(w http.ResponseWriter, _ *http.Request) {
-	writeJSON(w, http.StatusOK, []map[string]any{
-		{"name": "python-3.10", "type": "local", "config": map[string]any{"interpreter": "python3", "timeout": "30s"}, "health_status": "healthy", "enabled": true},
-		{"name": "go-1.26", "type": "local", "config": map[string]any{"toolchain": "go", "timeout": "30s"}, "health_status": "healthy", "enabled": true},
-		{"name": "answer-match", "type": "local", "config": map[string]any{"description": "command/config/non-python answer matching"}, "health_status": "healthy", "enabled": true},
-	})
+	items, err := s.store.ListEnvironments(true)
+	if err != nil {
+		writeErr(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+	writeJSON(w, http.StatusOK, items)
+}
+
+// --- 教练端环境管理（设计 §14） ---
+
+func (s *Server) adminListEnvironments(w http.ResponseWriter, _ *http.Request) {
+	items, err := s.store.ListEnvironments(false)
+	if err != nil {
+		writeErr(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+	writeJSON(w, http.StatusOK, items)
+}
+
+func (s *Server) adminCreateEnvironment(w http.ResponseWriter, r *http.Request) {
+	var e model.Environment
+	if err := json.NewDecoder(r.Body).Decode(&e); err != nil {
+		writeErr(w, http.StatusBadRequest, "invalid body: "+err.Error())
+		return
+	}
+	if e.Name == "" || e.Type == "" {
+		writeErr(w, http.StatusBadRequest, "name and type are required")
+		return
+	}
+	e.CreatedAt = time.Now().UTC()
+	if err := s.store.UpsertEnvironment(e); err != nil {
+		writeErr(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+	writeJSON(w, http.StatusOK, e)
+}
+
+func (s *Server) adminUpdateEnvironment(w http.ResponseWriter, r *http.Request) {
+	var e model.Environment
+	if err := json.NewDecoder(r.Body).Decode(&e); err != nil {
+		writeErr(w, http.StatusBadRequest, "invalid body: "+err.Error())
+		return
+	}
+	existing, err := s.store.GetEnvironment(r.PathValue("id"))
+	if err != nil {
+		writeErr(w, http.StatusNotFound, "environment not found")
+		return
+	}
+	e.ID = existing.ID
+	e.CreatedAt = existing.CreatedAt
+	if err := s.store.UpsertEnvironment(e); err != nil {
+		writeErr(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+	writeJSON(w, http.StatusOK, e)
+}
+
+func (s *Server) adminDeleteEnvironment(w http.ResponseWriter, r *http.Request) {
+	if err := s.store.DeleteEnvironment(r.PathValue("id")); err != nil {
+		writeErr(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+	writeJSON(w, http.StatusOK, map[string]string{"status": "deleted"})
+}
+
+// adminTestEnvironment performs a lightweight connectivity/health check.
+// Local engines verify the interpreter exists; others are marked healthy by
+// configuration (真实 Docker/K8s 探活为后续 Phase).
+func (s *Server) adminTestEnvironment(w http.ResponseWriter, r *http.Request) {
+	id := r.PathValue("id")
+	env, err := s.store.GetEnvironment(id)
+	if err != nil {
+		writeErr(w, http.StatusNotFound, "environment not found")
+		return
+	}
+	status := "healthy"
+	detail := "配置校验通过"
+	switch env.Type {
+	case "local":
+		bin := "python3"
+		if v, ok := env.Config["interpreter"].(string); ok && v != "" {
+			bin = v
+		}
+		if _, err := exec.LookPath(bin); err != nil {
+			status = "unhealthy"
+			detail = "未找到解释器: " + bin
+		} else {
+			detail = "解释器可用: " + bin
+		}
+	}
+	if err := s.store.SetEnvironmentHealth(id, status); err != nil {
+		writeErr(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+	writeJSON(w, http.StatusOK, map[string]any{"id": id, "health_status": status, "detail": detail})
 }
 
 func (s *Server) listFavorites(w http.ResponseWriter, r *http.Request) {
@@ -643,6 +742,45 @@ func (s *Server) deleteCategory(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	writeJSON(w, http.StatusOK, map[string]any{"ok": true})
+}
+
+func (s *Server) aiGenerate(w http.ResponseWriter, r *http.Request) {
+	var req struct {
+		TechStack        string `json:"tech_stack"`
+		Weight           string `json:"weight"`
+		KnowledgePoints  string `json:"knowledge_points"`
+		Count            int    `json:"count"`
+	}
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		writeErr(w, http.StatusBadRequest, "invalid body: "+err.Error())
+		return
+	}
+	if req.TechStack == "" {
+		writeErr(w, http.StatusBadRequest, "tech_stack is required")
+		return
+	}
+	if req.Weight == "" {
+		req.Weight = model.DefaultWeightLevel
+	}
+	count := req.Count
+	if count <= 0 {
+		count = 3
+	}
+	if count > 5 {
+		count = 5
+	}
+	results, err := s.generateExercises(r.Context(), req.TechStack, req.Weight, req.KnowledgePoints, count)
+	if err != nil {
+		writeErr(w, http.StatusBadGateway, err.Error())
+		return
+	}
+	ok := 0
+	for _, res := range results {
+		if res.OK {
+			ok++
+		}
+	}
+	writeJSON(w, http.StatusOK, map[string]any{"total": len(results), "ok": ok, "items": results})
 }
 
 func (s *Server) adminStats(w http.ResponseWriter, _ *http.Request) {

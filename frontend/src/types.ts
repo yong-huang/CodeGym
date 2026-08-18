@@ -107,6 +107,17 @@ export interface CategoryItem {
   exercise_count: number;
 }
 
+export interface Environment {
+  id: string;
+  name: string;
+  type: string;
+  config: Record<string, unknown>;
+  health_status: string;
+  max_concurrent: number;
+  enabled: boolean;
+  created_at: string;
+}
+
 export interface RecentAttempt {
   id: string;
   exercise_id: string;

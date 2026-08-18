@@ -1,5 +1,6 @@
 import type {
   CategoryItem,
+  Environment,
   ExerciseDetail,
   ExerciseListItem,
   ExecuteResult,
@@ -8,8 +9,13 @@ import type {
   Variant,
   WeakPointItem,
 } from '../types';
-
 const BASE = '/api/v1';
+
+export interface AiGenResponse {
+  total: number;
+  ok: number;
+  items: { id: string; title: string; ok: boolean; error?: string }[];
+}
 
 async function request<T>(url: string, init?: RequestInit): Promise<T> {
   const res = await fetch(`${BASE}${url}`, {
@@ -84,6 +90,22 @@ export const api = {
     request<unknown>('/admin/categories', {
       method: 'DELETE',
       body: JSON.stringify({ tech_stack: tech, subcategory: sub }),
+    }),
+
+  aiGenerate: (payload: { tech_stack: string; weight: string; knowledge_points: string; count: number }) =>
+    request<AiGenResponse>('/admin/ai-generate', { method: 'POST', body: JSON.stringify(payload) }),
+
+  adminEnvironments: () => request<Environment[]>('/admin/environments'),
+
+  createEnvironment: (env: Partial<Environment>) =>
+    request<Environment>('/admin/environments', { method: 'POST', body: JSON.stringify(env) }),
+
+  deleteEnvironment: (id: string) =>
+    request<{ status: string }>(`/admin/environments/${id}`, { method: 'DELETE' }),
+
+  testEnvironment: (id: string) =>
+    request<{ id: string; health_status: string; detail: string }>(`/admin/environments/${id}/test`, {
+      method: 'POST',
     }),
 
   adminStats: () => request<Record<string, unknown>>('/admin/stats'),

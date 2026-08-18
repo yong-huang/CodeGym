@@ -565,6 +565,118 @@ body {
 .modal .json-editor {
   min-height: 380px;
 }
+.ai-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: flex-end;
+}
+.ai-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.ai-form select,
+.ai-form input {
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  padding: 7px 10px;
+  font-size: 13px;
+}
+.ai-form .ai-knowledge {
+  flex: 1;
+  min-width: 220px;
+}
+.ai-results {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.ai-result {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--panel-2);
+}
+.ai-result.ok {
+  border-color: rgba(74, 222, 128, 0.4);
+}
+.ai-result.err {
+  border-color: rgba(248, 113, 113, 0.4);
+}
+.ai-status {
+  flex: 0 0 20px;
+}
+.ai-title {
+  flex: 1;
+}
+.ai-id {
+  color: var(--muted);
+  font-size: 12px;
+  font-family: monospace;
+}
+.ai-err {
+  color: var(--danger);
+  font-size: 12px;
+}
+.env-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.env-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--panel-2);
+  border-radius: 8px;
+  padding: 8px 12px;
+}
+.env-status {
+  flex: 0 0 24px;
+}
+.env-name {
+  flex: 1;
+  font-family: monospace;
+}
+.env-type {
+  color: var(--info);
+  font-size: 12px;
+  flex: 0 0 80px;
+}
+.env-state {
+  color: var(--muted);
+  font-size: 12px;
+  flex: 0 0 48px;
+}
+.env-add {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.env-add input,
+.env-add select {
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  padding: 7px 10px;
+  font-size: 13px;
+}
+.env-add input[placeholder^="config"] {
+  flex: 1;
+  min-width: 200px;
+}
 .exercise-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));

@@ -151,6 +151,18 @@ type Category struct {
 	ExerciseCount int    `json:"exercise_count"`
 }
 
+// Environment mirrors the environments table (设计 §8.3 / §11.1).
+type Environment struct {
+	ID            string         `json:"id"`
+	Name          string         `json:"name"`
+	Type          string         `json:"type"` // local / docker / kubernetes / pyodide
+	Config        map[string]any `json:"config"`
+	HealthStatus  string         `json:"health_status"` // unknown / healthy / unhealthy
+	MaxConcurrent int            `json:"max_concurrent"`
+	Enabled       bool           `json:"enabled"`
+	CreatedAt     time.Time      `json:"created_at"`
+}
+
 // AttemptRecord mirrors the attempt_records table.
 type AttemptRecord struct {
 	ID              string            `json:"id"`

@@ -103,6 +103,16 @@ func (s *Store) migrate() error {
 			created_at TEXT,
 			PRIMARY KEY (tech_stack, subcategory)
 		)`,
+		`CREATE TABLE IF NOT EXISTS environments (
+			id TEXT PRIMARY KEY,
+			name TEXT NOT NULL,
+			type TEXT NOT NULL,
+			config TEXT,
+			health_status TEXT DEFAULT 'unknown',
+			max_concurrent INTEGER DEFAULT 5,
+			enabled INTEGER DEFAULT 1,
+			created_at TEXT
+		)`,
 		`CREATE INDEX IF NOT EXISTS idx_attempts_exercise ON attempt_records(exercise_id)`,
 		`CREATE INDEX IF NOT EXISTS idx_attempts_user ON attempt_records(user_id)`,
 	}
@@ -550,6 +560,87 @@ func (s *Store) DeleteCategory(tech, sub string) error {
 		return err
 	}
 	_, err := s.db.Exec(`DELETE FROM categories WHERE tech_stack=? AND subcategory=?`, tech, sub)
+	return err
+}
+
+// --- environments ---
+
+// UpsertEnvironment inserts or replaces an environment.
+func (s *Store) UpsertEnvironment(e model.Environment) error {
+	if e.ID == "" {
+		e.ID = "env-" + strings.ToLower(strings.NewReplacer(" ", "-", "/", "-").Replace(e.Name))
+	}
+	if e.HealthStatus == "" {
+		e.HealthStatus = "unknown"
+	}
+	if e.MaxConcurrent == 0 {
+		e.MaxConcurrent = 5
+	}
+	cfg, _ := json.Marshal(e.Config)
+	_, err := s.db.Exec(`
+		INSERT INTO environments (id, name, type, config, health_status, max_concurrent, enabled, created_at)
+		VALUES (?,?,?,?,?,?,?,?)
+		ON CONFLICT(id) DO UPDATE SET
+			name=excluded.name, type=excluded.type, config=excluded.config,
+			health_status=excluded.health_status, max_concurrent=excluded.max_concurrent,
+			enabled=excluded.enabled`,
+		e.ID, e.Name, e.Type, string(cfg), e.HealthStatus, e.MaxConcurrent, boolInt(e.Enabled),
+		e.CreatedAt.Format(time.RFC3339))
+	return err
+}
+
+// ListEnvironments returns all environments (enabled only when the flag is set).
+func (s *Store) ListEnvironments(enabledOnly bool) ([]model.Environment, error) {
+	q := `SELECT id, name, type, config, health_status, max_concurrent, enabled, created_at FROM environments`
+	if enabledOnly {
+		q += ` WHERE enabled=1`
+	}
+	rows, err := s.db.Query(q)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var out []model.Environment
+	for rows.Next() {
+		var e model.Environment
+		var cfg, createdAt string
+		var enabled int
+		if err := rows.Scan(&e.ID, &e.Name, &e.Type, &cfg, &e.HealthStatus, &e.MaxConcurrent, &enabled, &createdAt); err != nil {
+			return nil, err
+		}
+		json.Unmarshal([]byte(cfg), &e.Config)
+		e.Enabled = enabled != 0
+		e.CreatedAt, _ = time.Parse(time.RFC3339, createdAt)
+		out = append(out, e)
+	}
+	return out, rows.Err()
+}
+
+// GetEnvironment returns one environment by id.
+func (s *Store) GetEnvironment(id string) (model.Environment, error) {
+	var e model.Environment
+	var cfg, createdAt string
+	var enabled int
+	err := s.db.QueryRow(`SELECT id, name, type, config, health_status, max_concurrent, enabled, created_at FROM environments WHERE id=?`, id).
+		Scan(&e.ID, &e.Name, &e.Type, &cfg, &e.HealthStatus, &e.MaxConcurrent, &enabled, &createdAt)
+	if err != nil {
+		return model.Environment{}, err
+	}
+	json.Unmarshal([]byte(cfg), &e.Config)
+	e.Enabled = enabled != 0
+	e.CreatedAt, _ = time.Parse(time.RFC3339, createdAt)
+	return e, nil
+}
+
+// DeleteEnvironment removes an environment by id.
+func (s *Store) DeleteEnvironment(id string) error {
+	_, err := s.db.Exec(`DELETE FROM environments WHERE id=?`, id)
+	return err
+}
+
+// SetEnvironmentHealth updates an environment's health status.
+func (s *Store) SetEnvironmentHealth(id, status string) error {
+	_, err := s.db.Exec(`UPDATE environments SET health_status=? WHERE id=?`, status, id)
 	return err
 }
 

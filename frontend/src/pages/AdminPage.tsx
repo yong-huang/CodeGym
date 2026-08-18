@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { api } from '../api/client';
-import type { ExerciseDetail, ExerciseListItem } from '../types';
+import type { Environment, ExerciseDetail, ExerciseListItem } from '../types';
 
 const EMPTY_EXERCISE: ExerciseDetail = {
   id: '',
@@ -25,10 +25,16 @@ export default function AdminPage() {
   const [importText, setImportText] = useState('');
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
+  // environments
+  const [envs, setEnvs] = useState<Environment[]>([]);
+  const [envName, setEnvName] = useState('');
+  const [envType, setEnvType] = useState('local');
+  const [envDetail, setEnvDetail] = useState('');
 
   const refresh = () => {
     api.listExercises().then(setExercises).catch(() => undefined);
     api.adminStats().then(setStats).catch(() => undefined);
+    api.adminEnvironments().then(setEnvs).catch(() => undefined);
   };
 
   useEffect(refresh, []);
@@ -74,8 +80,46 @@ export default function AdminPage() {
     }
   };
 
-  const importLibrary = async (list?: ExerciseDetail[]) => {
-    setMessage('');
+  const toast = (m: string) => {
+    setMessage(m);
+    setError('');
+    setTimeout(() => setMessage(''), 3000);
+  };
+
+  const addEnvironment = async () => {
+    setMessage(''); setError('');
+    if (!envName.trim()) { setError('请输入环境名称'); return; }
+    try {
+      const cfg: Record<string, unknown> = {};
+      if (envDetail.trim()) {
+        try { Object.assign(cfg, JSON.parse(envDetail)); } catch { cfg.description = envDetail.trim(); }
+      }
+      if (envType === 'local' && !cfg.interpreter) cfg.interpreter = envName.trim();
+      await api.createEnvironment({ name: envName.trim(), type: envType, config: cfg, enabled: true });
+      setEnvName(''); setEnvDetail('');
+      toast(`✅ 已创建环境`);
+      refresh();
+    } catch (e) { setError(`创建失败：${String(e)}`); }
+  };
+
+  const testEnvironment = async (id: string) => {
+    try {
+      const res = await api.testEnvironment(id);
+      toast(`${res.health_status === 'healthy' ? '✅' : '❌'} ${id} → ${res.detail}`);
+      refresh();
+    } catch (e) { setError(`测试失败：${String(e)}`); }
+  };
+
+  const removeEnvironment = async (id: string) => {
+    if (!window.confirm(`确认删除环境 ${id}？`)) return;
+    try {
+      await api.deleteEnvironment(id);
+      toast(`🗑️ 已删除环境 ${id}`);
+      refresh();
+    } catch (e) { setError(`删除失败：${String(e)}`); }
+  };
+
+  const importLibrary = async (list?: ExerciseDetail[]) => {    setMessage('');
     setError('');
     try {
       const data = list ?? (JSON.parse(importText) as unknown);
@@ -162,6 +206,33 @@ export default function AdminPage() {
           <button className="primary-btn" onClick={() => void submit()}>
             保存训练动作
           </button>
+        </div>
+      </section>
+
+      <section className="panel">
+        <div className="panel-title">⚙️ 执行环境管理</div>
+        <div className="env-list">
+          {envs.map((e) => (
+            <div key={e.id} className="env-row">
+              <span className={`env-status ${e.health_status === 'healthy' ? 'ok' : ''}`}>{e.health_status === 'healthy' ? '✅' : '❔'}</span>
+              <span className="env-name">{e.name}</span>
+              <span className="env-type">{e.type}</span>
+              <span className="env-state">{e.enabled ? '启用' : '停用'}</span>
+              <button className="ghost-btn sm" onClick={() => void testEnvironment(e.id)}>测试</button>
+              <button className="danger-btn" onClick={() => void removeEnvironment(e.id)}>删除</button>
+            </div>
+          ))}
+          <div className="env-add">
+            <input placeholder="环境名（如 node-20）" value={envName} onChange={(e) => setEnvName(e.target.value)} />
+            <select value={envType} onChange={(e) => setEnvType(e.target.value)}>
+              <option value="local">local</option>
+              <option value="docker">docker</option>
+              <option value="kubernetes">kubernetes</option>
+              <option value="pyodide">pyodide</option>
+            </select>
+            <input placeholder="config（JSON，可空）" value={envDetail} onChange={(e) => setEnvDetail(e.target.value)} />
+            <button className="primary-btn" onClick={() => void addEnvironment()}>＋ 添加</button>
+          </div>
         </div>
       </section>
 

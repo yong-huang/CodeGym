@@ -17,6 +17,29 @@
   box-sizing: border-box;
 }
 
+/* 低调的细滚动条，避免默认白色太亮眼 */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(130, 150, 180, 0.35) transparent;
+}
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+*::-webkit-scrollbar-thumb {
+  background: rgba(130, 150, 180, 0.28);
+  border-radius: 8px;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background: rgba(130, 150, 180, 0.48);
+}
+*::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
 body {
   margin: 0;
   background: var(--bg);

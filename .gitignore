@@ -7,7 +7,8 @@ frontend/dist/
 backend/bin/
 
 # runtime data
-backend/data/
+backend/data/*
+!backend/data/library/
 
 # logs
 *.log

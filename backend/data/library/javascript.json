@@ -1,0 +1,64 @@
+[
+  {
+    "id": "js-even-squares-007",
+    "title": "JS 数组处理 - 偶数平方",
+    "description": "用 filter 和 map 生成偶数的平方数组",
+    "exercise_type": "fill",
+    "tech_stack": "javascript",
+    "weight": "medium",
+    "category": "array_methods",
+    "subcategory": "",
+    "full_code": "const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];\nconst result = numbers.filter(x =\u003e x % 2 === 0).map(x =\u003e x ** 2);\nconsole.log(JSON.stringify(result));",
+    "fill_points": {
+      "points": [
+        {
+          "id": "filter_cond",
+          "location": {
+            "type": "span",
+            "line": 2,
+            "span_start": 84,
+            "span_end": 95
+          },
+          "original_text": "x % 2 === 0",
+          "category": "condition",
+          "min_weight": "medium",
+          "weight_score": 0.7,
+          "always_fill": false,
+          "hint": "筛选偶数的条件（严格相等）",
+          "fill_type": "text"
+        },
+        {
+          "id": "map_fn",
+          "location": {
+            "type": "span",
+            "line": 2,
+            "span_start": 106,
+            "span_end": 112
+          },
+          "original_text": "x ** 2",
+          "category": "expression",
+          "min_weight": "beginner",
+          "weight_score": 0.5,
+          "always_fill": false,
+          "hint": "计算平方的箭头函数体",
+          "fill_type": "text"
+        }
+      ],
+      "min_fills": 1,
+      "max_fills": 2
+    },
+    "expected_output": "[4,16,36,64,100]",
+    "spotter_hints": {
+      "level_1": "💡 filter 筛选，map 变换",
+      "level_2": "📖 偶数条件 `x % 2 === 0`，平方 `x ** 2`",
+      "level_3": "👀 `.filter(x =\u003e x % 2 === 0).map(x =\u003e x ** 2)`",
+      "level_4": "📝 正确答案：`x % 2 === 0` 与 `x ** 2`"
+    },
+    "time_limit_seconds": 30,
+    "explanation": "`filter` 保留满足条件的元素，`map` 对每个元素做变换，链式调用即可完成筛选并平方。",
+    "enabled": true,
+    "created_by": "seed",
+    "created_at": "2026-08-18T16:52:15.074547Z",
+    "updated_at": "2026-08-18T16:52:15.074547Z"
+  }
+]

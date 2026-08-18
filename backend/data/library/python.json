@@ -1,0 +1,2628 @@
+[
+  {
+    "id": "py-lc-001",
+    "title": "列表推导式 - 偶数平方",
+    "description": "将 numbers 列表中的偶数筛选出来并计算平方，生成新列表",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "list_comprehension",
+    "subcategory": "",
+    "full_code": "numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]\nresult = [x**2 for x in numbers if x % 2 == 0]\nprint(result)",
+    "fill_points": {
+      "points": [
+        {
+          "id": "expr",
+          "location": {
+            "type": "span",
+            "line": 2,
+            "span_start": 52,
+            "span_end": 56
+          },
+          "original_text": "x**2",
+          "category": "expression",
+          "min_weight": "beginner",
+          "weight_score": 0.6,
+          "always_fill": false,
+          "hint": "计算每个元素的平方，可以使用幂运算符或乘法",
+          "fill_type": "text"
+        },
+        {
+          "id": "cond",
+          "location": {
+            "type": "span",
+            "line": 2,
+            "span_start": 77,
+            "span_end": 87
+          },
+          "original_text": "x % 2 == 0",
+          "category": "condition",
+          "min_weight": "medium",
+          "weight_score": 0.8,
+          "always_fill": false,
+          "hint": "偶数的数学特征是什么？能被什么整除？",
+          "fill_type": "text"
+        },
+        {
+          "id": "iter",
+          "location": {
+            "type": "span",
+            "line": 2,
+            "span_start": 66,
+            "span_end": 73
+          },
+          "original_text": "numbers",
+          "category": "iterator",
+          "min_weight": "easy",
+          "weight_score": 0.4,
+          "always_fill": false,
+          "hint": "对哪个可迭代对象做推导？",
+          "fill_type": "text"
+        }
+      ],
+      "min_fills": 1,
+      "max_fills": 3
+    },
+    "expected_output": "[4, 16, 36, 64, 100]",
+    "spotter_hints": {
+      "level_1": "💡 想一想，偶数的数学特征是什么？",
+      "level_2": "📖 偶数能被 2 整除，用取模运算符 % 来判断",
+      "level_3": "👀 条件表达式应该是 `x % 2 == 0` 这样的形式",
+      "level_4": "📝 正确答案：`x % 2 == 0`"
+    },
+    "time_limit_seconds": 30,
+    "explanation": "列表推导式 `[expr for item in iterable if condition]`。`x**2` 计算平方，`x % 2 == 0` 筛选偶数，两者都满足时保留并平方。",
+    "enabled": true,
+    "created_by": "seed",
+    "created_at": "2026-08-18T16:52:15.07448Z",
+    "updated_at": "2026-08-18T16:52:15.07448Z"
+  },
+  {
+    "id": "py-palindrome-002",
+    "title": "回文判断函数",
+    "description": "实现 is_palindrome 函数，判断字符串是否正反相同",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "function",
+    "subcategory": "",
+    "full_code": "def is_palindrome(s: str) -\u003e bool:\n    return s == s[::-1]\n\nprint(is_palindrome('racecar'))\nprint(is_palindrome('hello'))",
+    "fill_points": {
+      "points": [
+        {
+          "id": "return_expr",
+          "location": {
+            "type": "span",
+            "line": 2,
+            "span_start": 51,
+            "span_end": 58
+          },
+          "original_text": "s[::-1]",
+          "category": "expression",
+          "min_weight": "beginner",
+          "weight_score": 0.5,
+          "always_fill": false,
+          "hint": "想想字符串反转的方法（切片）",
+          "fill_type": "text"
+        },
+        {
+          "id": "return_type",
+          "location": {
+            "type": "span",
+            "line": 1,
+            "span_start": 26,
+            "span_end": 33
+          },
+          "original_text": "-\u003e bool",
+          "category": "type_annotation",
+          "min_weight": "easy",
+          "weight_score": 0.3,
+          "always_fill": false,
+          "hint": "返回值是什么类型？布尔值",
+          "fill_type": "text"
+        },
+        {
+          "id": "compare",
+          "location": {
+            "type": "span",
+            "line": 2,
+            "span_start": 46,
+            "span_end": 58
+          },
+          "original_text": "s == s[::-1]",
+          "category": "condition",
+          "min_weight": "medium",
+          "weight_score": 0.8,
+          "always_fill": false,
+          "hint": "正序和反转后相等即为回文",
+          "fill_type": "text"
+        },
+        {
+          "id": "call_arg",
+          "location": {
+            "type": "span",
+            "line": 5,
+            "span_start": 112,
+            "span_end": 119
+          },
+          "original_text": "'hello'",
+          "category": "argument",
+          "min_weight": "hard",
+          "weight_score": 0.6,
+          "always_fill": false,
+          "hint": "第二个测试用例的反例参数",
+          "fill_type": "text"
+        }
+      ],
+      "min_fills": 1,
+      "max_fills": 4
+    },
+    "expected_output": "True\nFalse",
+    "spotter_hints": {
+      "level_1": "💡 判断回文只需比较原串与反转后的串",
+      "level_2": "📖 切片 `s[::-1]` 可以反转字符串",
+      "level_3": "👀 `return s == s[::-1]`",
+      "level_4": "📝 正确答案：`return s == s[::-1]`"
+    },
+    "time_limit_seconds": 30,
+    "explanation": "切片 `s[::-1]` 返回反转后的字符串。`s == s[::-1]` 在正反相同（回文）时返回 True。",
+    "enabled": true,
+    "created_by": "seed",
+    "created_at": "2026-08-18T16:52:15.074519Z",
+    "updated_at": "2026-08-18T16:52:15.074519Z"
+  },
+  {
+    "id": "py-factorial-bug-003",
+    "title": "阶乘 Bug 修复",
+    "description": "find and fix the off-by-one bug in factorial",
+    "exercise_type": "bugfix",
+    "tech_stack": "python",
+    "weight": "hard",
+    "category": "bugfix",
+    "subcategory": "",
+    "full_code": "def factorial(n):\n    result = 1\n    for i in range(1, n + 1):\n        result *= i\n    return result",
+    "buggy_code": "def factorial(n):\n    result = 1\n    for i in range(n):\n        result *= i\n    return result",
+    "bug_description": "n=5 时输出 0，预期 120。range(n) 从 0 开始，result 乘以 0 后永远为 0",
+    "bug_location": "for i in range(n)",
+    "fill_points": {
+      "points": [
+        {
+          "id": "loop",
+          "location": {
+            "type": "span",
+            "line": 3,
+            "span_start": 37,
+            "span_end": 54
+          },
+          "original_text": "for i in range(n)",
+          "category": "loop",
+          "min_weight": "beginner",
+          "weight_score": 1,
+          "always_fill": false,
+          "hint": "range(n) 从 0 开始，为什么结果会是 0？",
+          "fill_type": "code"
+        }
+      ],
+      "min_fills": 1,
+      "max_fills": 1
+    },
+    "expected_output": "120\n6",
+    "validation_code": "\nprint(factorial(5))\nprint(factorial(3))",
+    "test_cases": [
+      {
+        "input": "",
+        "output": "120"
+      },
+      {
+        "input": "",
+        "output": "6"
+      }
+    ],
+    "spotter_hints": {
+      "level_1": "💡 仔细看循环的起始值，乘以 0 会发生什么？",
+      "level_2": "📖 range(n) 生成 [0..n-1]，第一次循环 result *= 0 把结果清成 0",
+      "level_3": "👀 循环应从 1 开始到 n 结束",
+      "level_4": "📝 正确答案：`for i in range(1, n + 1):`"
+    },
+    "time_limit_seconds": 30,
+    "explanation": "off-by-one：range(n) 从 0 开始，第一次迭代 `result *= 0` 使结果恒为 0。改为 `range(1, n + 1)` 即可。",
+    "enabled": true,
+    "created_by": "seed",
+    "created_at": "2026-08-18T16:52:15.074521Z",
+    "updated_at": "2026-08-18T16:52:15.074521Z"
+  },
+  {
+    "id": "py-fizzbuzz-004",
+    "title": "FizzBuzz 函数",
+    "description": "实现 FizzBuzz：3 的倍数输出 Fizz，5 的倍数输出 Buzz，同时是 3 和 5 的倍数输出 FizzBuzz",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "control_flow",
+    "subcategory": "",
+    "full_code": "def fizzbuzz(n):\n    if n % 15 == 0:\n        return 'FizzBuzz'\n    if n % 3 == 0:\n        return 'Fizz'\n    if n % 5 == 0:\n        return 'Buzz'\n    return str(n)\n\nprint(fizzbuzz(15))\nprint(fizzbuzz(9))\nprint(fizzbuzz(10))\nprint(fizzbuzz(7))",
+    "fill_points": {
+      "points": [
+        {
+          "id": "fizzbuzz",
+          "location": {
+            "type": "span",
+            "line": 2,
+            "span_start": 24,
+            "span_end": 35
+          },
+          "original_text": "n % 15 == 0",
+          "category": "condition",
+          "min_weight": "beginner",
+          "weight_score": 0.8,
+          "always_fill": false,
+          "hint": "同时是 3 和 5 的倍数的最小公倍数是多少？",
+          "fill_type": "text"
+        },
+        {
+          "id": "fizz",
+          "location": {
+            "type": "span",
+            "line": 4,
+            "span_start": 70,
+            "span_end": 80
+          },
+          "original_text": "n % 3 == 0",
+          "category": "condition",
+          "min_weight": "easy",
+          "weight_score": 0.5,
+          "always_fill": false,
+          "hint": "3 的倍数如何判断？",
+          "fill_type": "text"
+        },
+        {
+          "id": "buzz",
+          "location": {
+            "type": "span",
+            "line": 6,
+            "span_start": 111,
+            "span_end": 121
+          },
+          "original_text": "n % 5 == 0",
+          "category": "condition",
+          "min_weight": "easy",
+          "weight_score": 0.5,
+          "always_fill": false,
+          "hint": "5 的倍数如何判断？",
+          "fill_type": "text"
+        },
+        {
+          "id": "fallback",
+          "location": {
+            "type": "span",
+            "line": 8,
+            "span_start": 156,
+            "span_end": 162
+          },
+          "original_text": "str(n)",
+          "category": "expression",
+          "min_weight": "medium",
+          "weight_score": 0.4,
+          "always_fill": false,
+          "hint": "都不是倍数时返回数字本身，注意类型",
+          "fill_type": "text"
+        }
+      ],
+      "min_fills": 1,
+      "max_fills": 4
+    },
+    "expected_output": "FizzBuzz\nFizz\nBuzz\n7",
+    "spotter_hints": {
+      "level_1": "💡 三个条件都有取模运算",
+      "level_2": "📖 n % 15 == 0 表示能同时被 3 和 5 整除",
+      "level_3": "👀 依次判断 15、3、5 的倍数",
+      "level_4": "📝 正确答案：`n % 15 == 0` / `n % 3 == 0` / `n % 5 == 0` / `str(n)`"
+    },
+    "time_limit_seconds": 30,
+    "explanation": "先判断是否同时是 3 和 5 的倍数（15 的倍数），再分别判断 3 和 5，最后返回原数字的字符串形式。",
+    "enabled": true,
+    "created_by": "seed",
+    "created_at": "2026-08-18T16:52:15.074522Z",
+    "updated_at": "2026-08-18T16:52:15.074522Z"
+  },
+  {
+    "id": "py-basics-001",
+    "title": "Hello Python",
+    "description": "输出问候语",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "beginner",
+    "category": "syntax",
+    "subcategory": "基础",
+    "full_code": "print(\"Hello, Python\")",
+    "fill_points": {
+      "points": [
+        {
+          "id": "msg",
+          "location": {
+            "type": "span",
+            "line": 1,
+            "span_start": 7,
+            "span_end": 20
+          },
+          "original_text": "Hello, Python",
+          "category": "string",
+          "min_weight": "beginner",
+          "weight_score": 1,
+          "always_fill": false,
+          "hint": "要输出的字符串",
+          "fill_type": "text"
+        }
+      ],
+      "min_fills": 1,
+      "max_fills": 1
+    },
+    "expected_output": "Hello, Python",
+    "spotter_hints": {
+      "level_1": "💡 输出一个字符串",
+      "level_2": "📖 用 `print(\"Hello, Python\")`",
+      "level_3": "👀 `print(\"Hello, Python\")`",
+      "level_4": "📝 正确答案：`\"Hello, Python\"`"
+    },
+    "time_limit_seconds": 30,
+    "explanation": "Python 用 `print()` 输出，字符串用引号包裹。",
+    "enabled": true,
+    "created_by": "seed",
+    "created_at": "2026-08-18T16:52:15.075528Z",
+    "updated_at": "2026-08-18T16:52:15.075528Z"
+  },
+  {
+    "id": "py-basics-002",
+    "title": "变量与 f-string",
+    "description": "用 f-string 格式化字符串",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "syntax",
+    "subcategory": "基础",
+    "full_code": "name = \"Alice\"\nprint(f\"Hi, {name}!\")",
+    "fill_points": {
+      "points": [
+        {
+          "id": "fstr",
+          "location": {
+            "type": "span",
+            "line": 2,
+            "span_start": 27,
+            "span_end": 33
+          },
+          "original_text": "{name}",
+          "category": "string",
+          "min_weight": "beginner",
+          "weight_score": 1,
+          "always_fill": false,
+          "hint": "f-string 中插入变量的写法",
+          "fill_type": "text"
+        }
+      ],
+      "min_fills": 1,
+      "max_fills": 1
+    },
+    "expected_output": "Hi, Alice!",
+    "spotter_hints": {
+      "level_1": "💡 f-string 插入变量",
+      "level_2": "📖 `f\"Hi, {name}!\"`",
+      "level_3": "👀 `f\"Hi, {name}!\"`",
+      "level_4": "📝 正确答案：`{name}`"
+    },
+    "time_limit_seconds": 30,
+    "explanation": "f-string 以 `f` 开头，用 `{}` 插入变量或表达式。",
+    "enabled": true,
+    "created_by": "seed",
+    "created_at": "2026-08-18T16:52:15.075529Z",
+    "updated_at": "2026-08-18T16:52:15.075529Z"
+  },
+  {
+    "id": "py-basics-003",
+    "title": "幂运算",
+    "description": "计算 2 的 10 次方",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "beginner",
+    "category": "arithmetic",
+    "subcategory": "基础",
+    "full_code": "print(2 ** 10)",
+    "fill_points": {
+      "points": [
+        {
+          "id": "exp",
+          "location": {
+            "type": "span",
+            "line": 1,
+            "span_start": 6,
+            "span_end": 13
+          },
+          "original_text": "2 ** 10",
+          "category": "expression",
+          "min_weight": "beginner",
+          "weight_score": 1,
+          "always_fill": false,
+          "hint": "幂运算表达式",
+          "fill_type": "text"
+        }
+      ],
+      "min_fills": 1,
+      "max_fills": 1
+    },
+    "expected_output": "1024",
+    "spotter_hints": {
+      "level_1": "💡 幂运算",
+      "level_2": "📖 `**` 是幂运算符",
+      "level_3": "👀 `print(2 ** 10)`",
+      "level_4": "📝 正确答案：`2 ** 10`"
+    },
+    "time_limit_seconds": 30,
+    "explanation": "`**` 计算幂，`2 ** 10 = 1024`；`//` 整除、`%` 取模。",
+    "enabled": true,
+    "created_by": "seed",
+    "created_at": "2026-08-18T16:52:15.07553Z",
+    "updated_at": "2026-08-18T16:52:15.07553Z"
+  },
+  {
+    "id": "py-basics-004",
+    "title": "整除与取模",
+    "description": "计算商和余数",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "beginner",
+    "category": "arithmetic",
+    "subcategory": "基础",
+    "full_code": "print(17 // 5, 17 % 5)",
+    "fill_points": {
+      "points": [
+        {
+          "id": "mod",
+          "location": {
+            "type": "span",
+            "line": 1,
+            "span_start": 15,
+            "span_end": 21
+          },
+          "original_text": "17 % 5",
+          "category": "expression",
+          "min_weight": "beginner",
+          "weight_score": 1,
+          "always_fill": false,
+          "hint": "取余数表达式",
+          "fill_type": "text"
+        }
+      ],
+      "min_fills": 1,
+      "max_fills": 1
+    },
+    "expected_output": "3 2",
+    "spotter_hints": {
+      "level_1": "💡 整除与取模",
+      "level_2": "📖 `//` 整除，`%` 取余",
+      "level_3": "👀 `print(17 // 5, 17 % 5)`",
+      "level_4": "📝 正确答案：`17 % 5`"
+    },
+    "time_limit_seconds": 30,
+    "explanation": "`17 // 5 = 3`（整除），`17 % 5 = 2`（余数）。",
+    "enabled": true,
+    "created_by": "seed",
+    "created_at": "2026-08-18T16:52:15.07553Z",
+    "updated_at": "2026-08-18T16:52:15.07553Z"
+  },
+  {
+    "id": "py-basics-005",
+    "title": "字符串转整数",
+    "description": "把字符串转成整数再运算",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "conversion",
+    "subcategory": "基础",
+    "full_code": "s = \"42\"\nn = int(s)\nprint(n + 1)",
+    "fill_points": {
+      "points": [
+        {
+          "id": "conv",
+          "location": {
+            "type": "span",
+            "line": 2,
+            "span_start": 13,
+            "span_end": 19
+          },
+          "original_text": "int(s)",
+          "category": "conversion",
+          "min_weight": "beginner",
+          "weight_score": 1,
+          "always_fill": false,
+          "hint": "字符串转整数的函数",
+          "fill_type": "text"
+        }
+      ],
+      "min_fills": 1,
+      "max_fills": 1
+    },
+    "expected_output": "43",
+    "spotter_hints": {
+      "level_1": "💡 类型转换",
+      "level_2": "📖 `int()` 把字符串/浮点转整数",
+      "level_3": "👀 `n = int(s)`",
+      "level_4": "📝 正确答案：`int(s)`"
+    },
+    "time_limit_seconds": 30,
+    "explanation": "`int()` 将内容为数字的字符串转换为整数。",
+    "enabled": true,
+    "created_by": "seed",
+    "created_at": "2026-08-18T16:52:15.075531Z",
+    "updated_at": "2026-08-18T16:52:15.075531Z"
+  },
+  {
+    "id": "py-basics-006",
+    "title": "格式化小数",
+    "description": "用 f-string 保留两位小数",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "format",
+    "subcategory": "基础",
+    "full_code": "price = 3.14159\nprint(f\"{price:.2f}\")",
+    "fill_points": {
+      "points": [
+        {
+          "id": "fmt",
+          "location": {
+            "type": "span",
+            "line": 2,
+            "span_start": 24,
+            "span_end": 35
+          },
+          "original_text": "{price:.2f}",
+          "category": "format",
+          "min_weight": "beginner",
+          "weight_score": 1,
+          "always_fill": false,
+          "hint": "保留两位小数的格式",
+          "fill_type": "text"
+        }
+      ],
+      "min_fills": 1,
+      "max_fills": 1
+    },
+    "expected_output": "3.14",
+    "spotter_hints": {
+      "level_1": "💡 格式化小数",
+      "level_2": "📖 `:.2f` 保留两位小数",
+      "level_3": "👀 `print(f\"{price:.2f}\")`",
+      "level_4": "📝 正确答案：`{price:.2f}`"
+    },
+    "time_limit_seconds": 30,
+    "explanation": "`:.2f` 把浮点按保留 2 位小数输出。",
+    "enabled": true,
+    "created_by": "seed",
+    "created_at": "2026-08-18T16:52:15.075532Z",
+    "updated_at": "2026-08-18T16:52:15.075532Z"
+  },
+  {
+    "id": "py-basics-007",
+    "title": "if 判断奇偶",
+    "description": "判断 7 是偶数还是奇数",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "beginner",
+    "category": "if",
+    "subcategory": "基础",
+    "full_code": "n = 7\nif n % 2 == 0:\n    print(\"even\")\nelse:\n    print(\"odd\")",
+    "fill_points": {
+      "points": [
+        {
+          "id": "cond",
+          "location": {
+            "type": "span",
+            "line": 2,
+            "span_start": 9,
+            "span_end": 19
+          },
+          "original_text": "n % 2 == 0",
+          "category": "condition",
+          "min_weight": "beginner",
+          "weight_score": 1,
+          "always_fill": false,
+          "hint": "偶数的判断条件",
+          "fill_type": "text"
+        }
+      ],
+      "min_fills": 1,
+      "max_fills": 1
+    },
+    "expected_output": "odd",
+    "spotter_hints": {
+      "level_1": "💡 if 条件",
+      "level_2": "📖 偶数条件 `n % 2 == 0`",
+      "level_3": "👀 `if n % 2 == 0:`",
+      "level_4": "📝 正确答案：`n % 2 == 0`"
+    },
+    "time_limit_seconds": 30,
+    "explanation": "`if` 分支靠缩进（4 空格）划分代码块，`elif` 中间判断。",
+    "enabled": true,
+    "created_by": "seed",
+    "created_at": "2026-08-18T16:52:15.075533Z",
+    "updated_at": "2026-08-18T16:52:15.075533Z"
+  },
+  {
+    "id": "py-basics-008",
+    "title": "成绩等级",
+    "description": "用 if-elif-else 判断分数等级",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "if",
+    "subcategory": "基础",
+    "full_code": "score = 85\nif score \u003e= 90:\n    print(\"A\")\nelif score \u003e= 80:\n    print(\"B\")\nelif score \u003e= 70:\n    print(\"C\")\nelse:\n    print(\"D\")",
+    "fill_points": {
+      "points": [
+        {
+          "id": "cond",
+          "location": {
+            "type": "span",
+            "line": 4,
+            "span_start": 47,
+            "span_end": 58
+          },
+          "original_text": "score \u003e= 80",
+          "category": "condition",
+          "min_weight": "beginner",
+          "weight_score": 1,
+          "always_fill": false,
+          "hint": "B 等级的条件",
+          "fill_type": "text"
+        }
+      ],
+      "min_fills": 1,
+      "max_fills": 1
+    },
+    "expected_output": "B",
+    "spotter_hints": {
+      "level_1": "💡 elif 分支",
+      "level_2": "📖 85 处于 80-89 区间",
+      "level_3": "👀 `elif score \u003e= 80: print(\"B\")`",
+      "level_4": "📝 正确答案：`score \u003e= 80`"
+    },
+    "time_limit_seconds": 30,
+    "explanation": "`elif` 依次短路判断，从高到低写条件更清晰。",
+    "enabled": true,
+    "created_by": "seed",
+    "created_at": "2026-08-18T16:52:15.075533Z",
+    "updated_at": "2026-08-18T16:52:15.075533Z"
+  },
+  {
+    "id": "py-basics-009",
+    "title": "for 求和",
+    "description": "用 for 计算 1 到 10 的和",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "for",
+    "subcategory": "基础",
+    "full_code": "total = 0\nfor i in range(1, 11):\n    total += i\nprint(total)",
+    "fill_points": {
+      "points": [
+        {
+          "id": "range",
+          "location": {
+            "type": "span",
+            "line": 2,
+            "span_start": 19,
+            "span_end": 31
+          },
+          "original_text": "range(1, 11)",
+          "category": "range",
+          "min_weight": "beginner",
+          "weight_score": 1,
+          "always_fill": false,
+          "hint": "1 到 10（含头不含尾）",
+          "fill_type": "text"
+        }
+      ],
+      "min_fills": 1,
+      "max_fills": 1
+    },
+    "expected_output": "55",
+    "spotter_hints": {
+      "level_1": "💡 range 范围",
+      "level_2": "📖 `range(1, 11)` 产生 1..10",
+      "level_3": "👀 `total += i`",
+      "level_4": "📝 正确答案：`range(1, 11)`"
+    },
+    "time_limit_seconds": 30,
+    "explanation": "`range(1, 11)` 含 1 不含 11；`total += i` 累加。",
+    "enabled": true,
+    "created_by": "seed",
+    "created_at": "2026-08-18T16:52:15.075534Z",
+    "updated_at": "2026-08-18T16:52:15.075534Z"
+  },
+  {
+    "id": "py-basics-010",
+    "title": "while 循环",
+    "description": "用 while 计数到 5",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "while",
+    "subcategory": "基础",
+    "full_code": "n = 0\nwhile n \u003c 5:\n    n += 1\nprint(n)",
+    "fill_points": {
+      "points": [
+        {
+          "id": "cond",
+          "location": {
+            "type": "span",
+            "line": 2,
+            "span_start": 12,
+            "span_end": 17
+          },
+          "original_text": "n \u003c 5",
+          "category": "condition",
+          "min_weight": "beginner",
+          "weight_score": 1,
+          "always_fill": false,
+          "hint": "循环继续条件",
+          "fill_type": "text"
+        }
+      ],
+      "min_fills": 1,
+      "max_fills": 1
+    },
+    "expected_output": "5",
+    "spotter_hints": {
+      "level_1": "💡 while 条件",
+      "level_2": "📖 `n \u003c 5` 时继续循环",
+      "level_3": "👀 `n += 1`",
+      "level_4": "📝 正确答案：`n \u003c 5`"
+    },
+    "time_limit_seconds": 30,
+    "explanation": "`while` 在条件为真时反复执行；要确保条件终将变假避免死循环。",
+    "enabled": true,
+    "created_by": "seed",
+    "created_at": "2026-08-18T16:52:15.075535Z",
+    "updated_at": "2026-08-18T16:52:15.075535Z"
+  },
+  {
+    "id": "py-basics-011",
+    "title": "break 跳出",
+    "description": "遇到 3 就跳出循环",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "control_flow",
+    "subcategory": "基础",
+    "full_code": "s = \"\"\nfor i in range(1, 10):\n    if i \u003e 3:\n        break\n    s += str(i)\nprint(s)",
+    "fill_points": {
+      "points": [
+        {
+          "id": "bk",
+          "location": {
+            "type": "span",
+            "line": 4,
+            "span_start": 52,
+            "span_end": 57
+          },
+          "original_text": "break",
+          "category": "keyword",
+          "min_weight": "beginner",
+          "weight_score": 1,
+          "always_fill": false,
+          "hint": "跳出循环的关键字",
+          "fill_type": "text"
+        }
+      ],
+      "min_fills": 1,
+      "max_fills": 1
+    },
+    "expected_output": "123",
+    "spotter_hints": {
+      "level_1": "💡 跳出循环",
+      "level_2": "📖 `break` 立即结束循环",
+      "level_3": "👀 `if i \u003e 3: break`",
+      "level_4": "📝 正确答案：`break`"
+    },
+    "time_limit_seconds": 30,
+    "explanation": "`break` 提前终止整个循环，不再执行后续迭代。",
+    "enabled": true,
+    "created_by": "seed",
+    "created_at": "2026-08-18T16:52:15.075535Z",
+    "updated_at": "2026-08-18T16:52:15.075535Z"
+  },
+  {
+    "id": "py-basics-012",
+    "title": "continue 跳过",
+    "description": "跳过偶数只打印奇数",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "control_flow",
+    "subcategory": "基础",
+    "full_code": "for i in range(1, 6):\n    if i % 2 == 0:\n        continue\n    print(i)",
+    "fill_points": {
+      "points": [
+        {
+          "id": "ct",
+          "location": {
+            "type": "span",
+            "line": 3,
+            "span_start": 49,
+            "span_end": 57
+          },
+          "original_text": "continue",
+          "category": "keyword",
+          "min_weight": "beginner",
+          "weight_score": 1,
+          "always_fill": false,
+          "hint": "跳过本次循环",
+          "fill_type": "text"
+        }
+      ],
+      "min_fills": 1,
+      "max_fills": 1
+    },
+    "expected_output": "1\n3\n5",
+    "spotter_hints": {
+      "level_1": "💡 跳过本次",
+      "level_2": "📖 `continue` 跳到下一次循环",
+      "level_3": "👀 `if i % 2 == 0: continue`",
+      "level_4": "📝 正确答案：`continue`"
+    },
+    "time_limit_seconds": 30,
+    "explanation": "`continue` 跳过当前迭代剩余代码，进入下一次迭代。",
+    "enabled": true,
+    "created_by": "seed",
+    "created_at": "2026-08-18T16:52:15.075538Z",
+    "updated_at": "2026-08-18T16:52:15.075538Z"
+  },
+  {
+    "id": "py-basics-013",
+    "title": "列表索引",
+    "description": "访问列表下标元素",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "beginner",
+    "category": "list",
+    "subcategory": "基础",
+    "full_code": "lst = [10, 20, 30]\nprint(lst[1])",
+    "fill_points": {
+      "points": [
+        {
+          "id": "idx",
+          "location": {
+            "type": "span",
+            "line": 2,
+            "span_start": 25,
+            "span_end": 31
+          },
+          "original_text": "lst[1]",
+          "category": "list",
+          "min_weight": "beginner",
+          "weight_score": 1,
+          "always_fill": false,
+          "hint": "取第 2 个元素",
+          "fill_type": "text"
+        }
+      ],
+      "min_fills": 1,
+      "max_fills": 1
+    },
+    "expected_output": "20",
+    "spotter_hints": {
+      "level_1": "💡 列表下标",
+      "level_2": "📖 下标从 0 开始",
+      "level_3": "👀 `lst[1]` = 20",
+      "level_4": "📝 正确答案：`lst[1]`"
+    },
+    "time_limit_seconds": 30,
+    "explanation": "列表下标从 0 开始，`lst[1]` 是第二个元素。",
+    "enabled": true,
+    "created_by": "seed",
+    "created_at": "2026-08-18T16:52:15.075538Z",
+    "updated_at": "2026-08-18T16:52:15.075538Z"
+  },
+  {
+    "id": "py-basics-014",
+    "title": "append 追加",
+    "description": "向列表追加元素",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "beginner",
+    "category": "list",
+    "subcategory": "基础",
+    "full_code": "lst = [1]\nlst.append(2)\nlst.append(3)\nprint(lst)",
+    "fill_points": {
+      "points": [
+        {
+          "id": "app",
+          "location": {
+            "type": "span",
+            "line": 2,
+            "span_start": 14,
+            "span_end": 20
+          },
+          "original_text": "append",
+          "category": "method",
+          "min_weight": "beginner",
+          "weight_score": 1,
+          "always_fill": false,
+          "hint": "追加元素的方法",
+          "fill_type": "text"
+        }
+      ],
+      "min_fills": 1,
+      "max_fills": 1
+    },
+    "expected_output": "[1, 2, 3]",
+    "spotter_hints": {
+      "level_1": "💡 追加元素",
+      "level_2": "📖 `lst.append(2)` 加到末尾",
+      "level_3": "👀 `print(lst)`",
+      "level_4": "📝 正确答案：`append`"
+    },
+    "time_limit_seconds": 30,
+    "explanation": "`list.append` 在列表末尾追加元素。",
+    "enabled": true,
+    "created_by": "seed",
+    "created_at": "2026-08-18T16:52:15.075539Z",
+    "updated_at": "2026-08-18T16:52:15.075539Z"
+  },
+  {
+    "id": "py-basics-015",
+    "title": "列表切片",
+    "description": "取切片 data[1:4]",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "list",
+    "subcategory": "基础",
+    "full_code": "data = [0, 1, 2, 3, 4]\nprint(data[1:4])",
+    "fill_points": {
+      "points": [
+        {
+          "id": "slice",
+          "location": {
+            "type": "span",
+            "line": 2,
+            "span_start": 29,
+            "span_end": 38
+          },
+          "original_text": "data[1:4]",
+          "category": "slice",
+          "min_weight": "beginner",
+          "weight_score": 1,
+          "always_fill": false,
+          "hint": "含首不含尾的切片",
+          "fill_type": "text"
+        }
+      ],
+      "min_fills": 1,
+      "max_fills": 1
+    },
+    "expected_output": "[1, 2, 3]",
+    "spotter_hints": {
+      "level_1": "💡 列表切片",
+      "level_2": "📖 `data[1:4]` 取下标 1..3",
+      "level_3": "👀 `print(data[1:4])`",
+      "level_4": "📝 正确答案：`data[1:4]`"
+    },
+    "time_limit_seconds": 30,
+    "explanation": "切片 `[开始:结束]` 含开始不含结束；`data[-1]` 取末尾。",
+    "enabled": true,
+    "created_by": "seed",
+    "created_at": "2026-08-18T16:52:15.07554Z",
+    "updated_at": "2026-08-18T16:52:15.07554Z"
+  },
+  {
+    "id": "py-basics-016",
+    "title": "列表推导式平方",
+    "description": "用推导式生成平方列表",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "comprehension",
+    "subcategory": "基础",
+    "full_code": "print([x * x for x in range(5)])",
+    "fill_points": {
+      "points": [
+        {
+          "id": "expr",
+          "location": {
+            "type": "span",
+            "line": 1,
+            "span_start": 7,
+            "span_end": 12
+          },
+          "original_text": "x * x",
+          "category": "expression",
+          "min_weight": "beginner",
+          "weight_score": 1,
+          "always_fill": false,
+          "hint": "每个元素的平方",
+          "fill_type": "text"
+        }
+      ],
+      "min_fills": 1,
+      "max_fills": 1
+    },
+    "expected_output": "[0, 1, 4, 9, 16]",
+    "spotter_hints": {
+      "level_1": "💡 列表推导式",
+      "level_2": "📖 `[x * x for x in ...]` 逐个平方",
+      "level_3": "👀 `[x * x for x in range(5)]`",
+      "level_4": "📝 正确答案：`x * x`"
+    },
+    "time_limit_seconds": 30,
+    "explanation": "列表推导式 `[表达式 for 变量 in 序列]` 简洁生成新列表。",
+    "enabled": true,
+    "created_by": "seed",
+    "created_at": "2026-08-18T16:52:15.075541Z",
+    "updated_at": "2026-08-18T16:52:15.075541Z"
+  },
+  {
+    "id": "py-basics-017",
+    "title": "推导式筛选偶数",
+    "description": "用推导式 + if 筛选偶数",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "comprehension",
+    "subcategory": "基础",
+    "full_code": "print([x for x in range(10) if x % 2 == 0])",
+    "fill_points": {
+      "points": [
+        {
+          "id": "cond",
+          "location": {
+            "type": "span",
+            "line": 1,
+            "span_start": 31,
+            "span_end": 41
+          },
+          "original_text": "x % 2 == 0",
+          "category": "condition",
+          "min_weight": "beginner",
+          "weight_score": 1,
+          "always_fill": false,
+          "hint": "筛选偶数的条件",
+          "fill_type": "text"
+        }
+      ],
+      "min_fills": 1,
+      "max_fills": 1
+    },
+    "expected_output": "[0, 2, 4, 6, 8]",
+    "spotter_hints": {
+      "level_1": "💡 推导式筛选",
+      "level_2": "📖 `if` 过滤元素",
+      "level_3": "👀 `[x for x in range(10) if x % 2 == 0]`",
+      "level_4": "📝 正确答案：`x % 2 == 0`"
+    },
+    "time_limit_seconds": 30,
+    "explanation": "推导式后跟 `if` 可过滤，只保留满足条件的元素。",
+    "enabled": true,
+    "created_by": "seed",
+    "created_at": "2026-08-18T16:52:15.075541Z",
+    "updated_at": "2026-08-18T16:52:15.075541Z"
+  },
+  {
+    "id": "py-basics-018",
+    "title": "字符串长度",
+    "description": "用 len 求字符串长度",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "beginner",
+    "category": "builtins",
+    "subcategory": "基础",
+    "full_code": "print(len(\"python\"))",
+    "fill_points": {
+      "points": [
+        {
+          "id": "len",
+          "location": {
+            "type": "span",
+            "line": 1,
+            "span_start": 6,
+            "span_end": 9
+          },
+          "original_text": "len",
+          "category": "function",
+          "min_weight": "beginner",
+          "weight_score": 1,
+          "always_fill": false,
+          "hint": "长度函数",
+          "fill_type": "text"
+        }
+      ],
+      "min_fills": 1,
+      "max_fills": 1
+    },
+    "expected_output": "6",
+    "spotter_hints": {
+      "level_1": "💡 求长度",
+      "level_2": "📖 `len(\"python\")` = 6",
+      "level_3": "👀 `print(len(\"python\"))`",
+      "level_4": "📝 正确答案：`len`"
+    },
+    "time_limit_seconds": 30,
+    "explanation": "`len()` 返回序列的长度（字符串/列表/元组等）。",
+    "enabled": true,
+    "created_by": "seed",
+    "created_at": "2026-08-18T16:52:15.075542Z",
+    "updated_at": "2026-08-18T16:52:15.075542Z"
+  },
+  {
+    "id": "py-basics-019",
+    "title": "sum 求和",
+    "description": "用 sum 计算列表之和",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "beginner",
+    "category": "builtins",
+    "subcategory": "基础",
+    "full_code": "print(sum([1, 2, 3, 4, 5]))",
+    "fill_points": {
+      "points": [
+        {
+          "id": "sum",
+          "location": {
+            "type": "span",
+            "line": 1,
+            "span_start": 6,
+            "span_end": 9
+          },
+          "original_text": "sum",
+          "category": "function",
+          "min_weight": "beginner",
+          "weight_score": 1,
+          "always_fill": false,
+          "hint": "求和函数",
+          "fill_type": "text"
+        }
+      ],
+      "min_fills": 1,
+      "max_fills": 1
+    },
+    "expected_output": "15",
+    "spotter_hints": {
+      "level_1": "💡 求和",
+      "level_2": "📖 `sum([1..5])` = 15",
+      "level_3": "👀 `print(sum([1, 2, 3, 4, 5]))`",
+      "level_4": "📝 正确答案：`sum`"
+    },
+    "time_limit_seconds": 30,
+    "explanation": "`sum()` 对可迭代对象求和。",
+    "enabled": true,
+    "created_by": "seed",
+    "created_at": "2026-08-18T16:52:15.075543Z",
+    "updated_at": "2026-08-18T16:52:15.075543Z"
+  },
+  {
+    "id": "py-basics-020",
+    "title": "max 与 min",
+    "description": "求最大值与最小值",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "beginner",
+    "category": "builtins",
+    "subcategory": "基础",
+    "full_code": "print(max(3, 7, 2), min(3, 7, 2))",
+    "fill_points": {
+      "points": [
+        {
+          "id": "max",
+          "location": {
+            "type": "span",
+            "line": 1,
+            "span_start": 6,
+            "span_end": 9
+          },
+          "original_text": "max",
+          "category": "function",
+          "min_weight": "beginner",
+          "weight_score": 1,
+          "always_fill": false,
+          "hint": "最大值函数",
+          "fill_type": "text"
+        }
+      ],
+      "min_fills": 1,
+      "max_fills": 1
+    },
+    "expected_output": "7 2",
+    "spotter_hints": {
+      "level_1": "💡 取最大/最小",
+      "level_2": "📖 `max(3,7,2)` = 7",
+      "level_3": "👀 `print(max(3, 7, 2), min(3, 7, 2))`",
+      "level_4": "📝 正确答案：`max`"
+    },
+    "time_limit_seconds": 30,
+    "explanation": "`max()`/`min()` 返回最大/最小值。",
+    "enabled": true,
+    "created_by": "seed",
+    "created_at": "2026-08-18T16:52:15.075545Z",
+    "updated_at": "2026-08-18T16:52:15.075545Z"
+  },
+  {
+    "id": "py-basics-021",
+    "title": "sorted 排序",
+    "description": "对列表排序",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "builtins",
+    "subcategory": "基础",
+    "full_code": "print(sorted([3, 1, 2]))",
+    "fill_points": {
+      "points": [
+        {
+          "id": "sort",
+          "location": {
+            "type": "span",
+            "line": 1,
+            "span_start": 6,
+            "span_end": 12
+          },
+          "original_text": "sorted",
+          "category": "function",
+          "min_weight": "beginner",
+          "weight_score": 1,
+          "always_fill": false,
+          "hint": "排序函数",
+          "fill_type": "text"
+        }
+      ],
+      "min_fills": 1,
+      "max_fills": 1
+    },
+    "expected_output": "[1, 2, 3]",
+    "spotter_hints": {
+      "level_1": "💡 排序",
+      "level_2": "📖 `sorted` 返回新排序列表",
+      "level_3": "👀 `print(sorted([3, 1, 2]))`",
+      "level_4": "📝 正确答案：`sorted`"
+    },
+    "time_limit_seconds": 30,
+    "explanation": "`sorted()` 返回排好序的新列表，不修改原列表。",
+    "enabled": true,
+    "created_by": "seed",
+    "created_at": "2026-08-18T16:52:15.075545Z",
+    "updated_at": "2026-08-18T16:52:15.075545Z"
+  },
+  {
+    "id": "py-basics-022",
+    "title": "元组访问",
+    "description": "访问元组元素",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "beginner",
+    "category": "tuple",
+    "subcategory": "基础",
+    "full_code": "t = (1, 2, 3)\nprint(t[1])",
+    "fill_points": {
+      "points": [
+        {
+          "id": "idx",
+          "location": {
+            "type": "span",
+            "line": 2,
+            "span_start": 20,
+            "span_end": 24
+          },
+          "original_text": "t[1]",
+          "category": "tuple",
+          "min_weight": "beginner",
+          "weight_score": 1,
+          "always_fill": false,
+          "hint": "取元组第 2 个元素",
+          "fill_type": "text"
+        }
+      ],
+      "min_fills": 1,
+      "max_fills": 1
+    },
+    "expected_output": "2",
+    "spotter_hints": {
+      "level_1": "💡 元组下标",
+      "level_2": "📖 元组不可变",
+      "level_3": "👀 `t[1]` = 2",
+      "level_4": "📝 正确答案：`t[1]`"
+    },
+    "time_limit_seconds": 30,
+    "explanation": "元组 `()` 定义，不可变；按下标访问。",
+    "enabled": true,
+    "created_by": "seed",
+    "created_at": "2026-08-18T16:52:15.075546Z",
+    "updated_at": "2026-08-18T16:52:15.075546Z"
+  },
+  {
+    "id": "py-basics-023",
+    "title": "元组解包",
+    "description": "把元组解包到多个变量",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "tuple",
+    "subcategory": "基础",
+    "full_code": "a, b, c = (1, 2, 3)\nprint(a + c)",
+    "fill_points": {
+      "points": [
+        {
+          "id": "unpack",
+          "location": {
+            "type": "span",
+            "line": 1,
+            "span_start": 0,
+            "span_end": 7
+          },
+          "original_text": "a, b, c",
+          "category": "unpack",
+          "min_weight": "beginner",
+          "weight_score": 1,
+          "always_fill": false,
+          "hint": "多变量解包",
+          "fill_type": "text"
+        }
+      ],
+      "min_fills": 1,
+      "max_fills": 1
+    },
+    "expected_output": "4",
+    "spotter_hints": {
+      "level_1": "💡 解包",
+      "level_2": "📖 左边变量数=元组长度",
+      "level_3": "👀 `a, b, c = (1, 2, 3)`",
+      "level_4": "📝 正确答案：`a, b, c`"
+    },
+    "time_limit_seconds": 30,
+    "explanation": "序列解包把每个元素赋给对应变量。",
+    "enabled": true,
+    "created_by": "seed",
+    "created_at": "2026-08-18T16:52:15.075547Z",
+    "updated_at": "2026-08-18T16:52:15.075547Z"
+  },
+  {
+    "id": "py-basics-024",
+    "title": "字典读取",
+    "description": "按键读取字典值",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "beginner",
+    "category": "dict",
+    "subcategory": "基础",
+    "full_code": "d = {\"name\": \"py\"}\nprint(d[\"name\"])",
+    "fill_points": {
+      "points": [
+        {
+          "id": "key",
+          "location": {
+            "type": "span",
+            "line": 2,
+            "span_start": 25,
+            "span_end": 34
+          },
+          "original_text": "d[\"name\"]",
+          "category": "dict",
+          "min_weight": "beginner",
+          "weight_score": 1,
+          "always_fill": false,
+          "hint": "按键取值",
+          "fill_type": "text"
+        }
+      ],
+      "min_fills": 1,
+      "max_fills": 1
+    },
+    "expected_output": "py",
+    "spotter_hints": {
+      "level_1": "💡 字典取值",
+      "level_2": "📖 用键取值",
+      "level_3": "👀 `print(d[\"name\"])`",
+      "level_4": "📝 正确答案：`d[\"name\"]`"
+    },
+    "time_limit_seconds": 30,
+    "explanation": "字典 `{键: 值}`，用 `d[键]` 取值；键不存在会报 KeyError。",
+    "enabled": true,
+    "created_by": "seed",
+    "created_at": "2026-08-18T16:52:15.075547Z",
+    "updated_at": "2026-08-18T16:52:15.075547Z"
+  },
+  {
+    "id": "py-basics-025",
+    "title": "字典写入",
+    "description": "向字典添加键值",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "beginner",
+    "category": "dict",
+    "subcategory": "基础",
+    "full_code": "d = {}\nd[\"x\"] = 1\nprint(d[\"x\"])",
+    "fill_points": {
+      "points": [
+        {
+          "id": "write",
+          "location": {
+            "type": "span",
+            "line": 2,
+            "span_start": 7,
+            "span_end": 13
+          },
+          "original_text": "d[\"x\"]",
+          "category": "dict",
+          "min_weight": "beginner",
+          "weight_score": 1,
+          "always_fill": false,
+          "hint": "写入键 x",
+          "fill_type": "text"
+        }
+      ],
+      "min_fills": 1,
+      "max_fills": 1
+    },
+    "expected_output": "1",
+    "spotter_hints": {
+      "level_1": "💡 字典写入",
+      "level_2": "📖 `d[\"x\"] = 1` 新增键",
+      "level_3": "👀 `print(d[\"x\"])`",
+      "level_4": "📝 正确答案：`d[\"x\"]`"
+    },
+    "time_limit_seconds": 30,
+    "explanation": "字典用 `d[键] = 值` 写入，键不存在则新增。",
+    "enabled": true,
+    "created_by": "seed",
+    "created_at": "2026-08-18T16:52:15.075548Z",
+    "updated_at": "2026-08-18T16:52:15.075548Z"
+  },
+  {
+    "id": "py-basics-026",
+    "title": "dict.get 默认值",
+    "description": "用 get 取键并给默认值",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "dict",
+    "subcategory": "基础",
+    "full_code": "d = {\"a\": 1}\nprint(d.get(\"z\", 0))",
+    "fill_points": {
+      "points": [
+        {
+          "id": "get",
+          "location": {
+            "type": "span",
+            "line": 2,
+            "span_start": 20,
+            "span_end": 32
+          },
+          "original_text": ".get(\"z\", 0)",
+          "category": "dict",
+          "min_weight": "beginner",
+          "weight_score": 1,
+          "always_fill": false,
+          "hint": "取键带默认值",
+          "fill_type": "text"
+        }
+      ],
+      "min_fills": 1,
+      "max_fills": 1
+    },
+    "expected_output": "0",
+    "spotter_hints": {
+      "level_1": "💡 get 默认值",
+      "level_2": "📖 键不存在返回默认 0",
+      "level_3": "👀 `print(d.get(\"z\", 0))`",
+      "level_4": "📝 正确答案：`.get(\"z\", 0)`"
+    },
+    "time_limit_seconds": 30,
+    "explanation": "`dict.get(键, 默认)` 键缺失时返回默认值，不会抛错。",
+    "enabled": true,
+    "created_by": "seed",
+    "created_at": "2026-08-18T16:52:15.075549Z",
+    "updated_at": "2026-08-18T16:52:15.075549Z"
+  },
+  {
+    "id": "py-basics-027",
+    "title": "遍历字典值",
+    "description": "累加字典所有值",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "dict",
+    "subcategory": "基础",
+    "full_code": "d = {\"a\": 1, \"b\": 2, \"c\": 3}\ntotal = 0\nfor v in d.values():\n    total += v\nprint(total)",
+    "fill_points": {
+      "points": [
+        {
+          "id": "vals",
+          "location": {
+            "type": "span",
+            "line": 3,
+            "span_start": 48,
+            "span_end": 58
+          },
+          "original_text": "d.values()",
+          "category": "dict",
+          "min_weight": "beginner",
+          "weight_score": 1,
+          "always_fill": false,
+          "hint": "取所有值",
+          "fill_type": "text"
+        }
+      ],
+      "min_fills": 1,
+      "max_fills": 1
+    },
+    "expected_output": "6",
+    "spotter_hints": {
+      "level_1": "💡 遍历值",
+      "level_2": "📖 `d.values()` 返回所有值",
+      "level_3": "👀 `for v in d.values()`",
+      "level_4": "📝 正确答案：`d.values()`"
+    },
+    "time_limit_seconds": 30,
+    "explanation": "`d.values()` / `d.keys()` / `d.items()` 遍历字典。",
+    "enabled": true,
+    "created_by": "seed",
+    "created_at": "2026-08-18T16:52:15.075549Z",
+    "updated_at": "2026-08-18T16:52:15.075549Z"
+  },
+  {
+    "id": "py-basics-028",
+    "title": "set 去重",
+    "description": "用集合去重并求个数",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "set",
+    "subcategory": "基础",
+    "full_code": "s = {1, 1, 2, 3}\nprint(len(s))",
+    "fill_points": {
+      "points": [
+        {
+          "id": "len",
+          "location": {
+            "type": "span",
+            "line": 2,
+            "span_start": 23,
+            "span_end": 29
+          },
+          "original_text": "len(s)",
+          "category": "set",
+          "min_weight": "beginner",
+          "weight_score": 1,
+          "always_fill": false,
+          "hint": "集合元素个数",
+          "fill_type": "text"
+        }
+      ],
+      "min_fills": 1,
+      "max_fills": 1
+    },
+    "expected_output": "3",
+    "spotter_hints": {
+      "level_1": "💡 集合去重",
+      "level_2": "📖 集合自动去重",
+      "level_3": "👀 `print(len(s))`",
+      "level_4": "📝 正确答案：`len(s)`"
+    },
+    "time_limit_seconds": 30,
+    "explanation": "集合 `{}` 自动去重，`len()` 得元素个数。",
+    "enabled": true,
+    "created_by": "seed",
+    "created_at": "2026-08-18T16:52:15.07555Z",
+    "updated_at": "2026-08-18T16:52:15.07555Z"
+  },
+  {
+    "id": "py-basics-029",
+    "title": "字符串大写",
+    "description": "用 upper 转大写",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "beginner",
+    "category": "string",
+    "subcategory": "基础",
+    "full_code": "print(\"go\".upper())",
+    "fill_points": {
+      "points": [
+        {
+          "id": "upper",
+          "location": {
+            "type": "span",
+            "line": 1,
+            "span_start": 10,
+            "span_end": 18
+          },
+          "original_text": ".upper()",
+          "category": "method",
+          "min_weight": "beginner",
+          "weight_score": 1,
+          "always_fill": false,
+          "hint": "大写方法",
+          "fill_type": "text"
+        }
+      ],
+      "min_fills": 1,
+      "max_fills": 1
+    },
+    "expected_output": "GO",
+    "spotter_hints": {
+      "level_1": "💡 转大写",
+      "level_2": "📖 `\"go\".upper()` → GO",
+      "level_3": "👀 `print(\"go\".upper())`",
+      "level_4": "📝 正确答案：`.upper()`"
+    },
+    "time_limit_seconds": 30,
+    "explanation": "`str.upper()` 返回全大写；`lower()` 全小写。",
+    "enabled": true,
+    "created_by": "seed",
+    "created_at": "2026-08-18T16:52:15.07555Z",
+    "updated_at": "2026-08-18T16:52:15.07555Z"
+  },
+  {
+    "id": "py-basics-030",
+    "title": "strip 去空白",
+    "description": "去掉字符串首尾空格",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "string",
+    "subcategory": "基础",
+    "full_code": "print(\"  hi  \".strip())",
+    "fill_points": {
+      "points": [
+        {
+          "id": "strip",
+          "location": {
+            "type": "span",
+            "line": 1,
+            "span_start": 14,
+            "span_end": 22
+          },
+          "original_text": ".strip()",
+          "category": "method",
+          "min_weight": "beginner",
+          "weight_score": 1,
+          "always_fill": false,
+          "hint": "去除首尾空白",
+          "fill_type": "text"
+        }
+      ],
+      "min_fills": 1,
+      "max_fills": 1
+    },
+    "expected_output": "hi",
+    "spotter_hints": {
+      "level_1": "💡 去空白",
+      "level_2": "📖 `\"  hi  \".strip()` → hi",
+      "level_3": "👀 `print(\"  hi  \".strip())`",
+      "level_4": "📝 正确答案：`.strip()`"
+    },
+    "time_limit_seconds": 30,
+    "explanation": "`str.strip()` 去掉首尾空白，`lstrip`/`rstrip` 只去一边。",
+    "enabled": true,
+    "created_by": "seed",
+    "created_at": "2026-08-18T16:52:15.075551Z",
+    "updated_at": "2026-08-18T16:52:15.075551Z"
+  },
+  {
+    "id": "py-basics-031",
+    "title": "split 与 join",
+    "description": "切分再拼接字符串",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "string",
+    "subcategory": "基础",
+    "full_code": "words = \"a,b,c\".split(\",\")\nprint(\"-\".join(words))",
+    "fill_points": {
+      "points": [
+        {
+          "id": "split",
+          "location": {
+            "type": "span",
+            "line": 1,
+            "span_start": 15,
+            "span_end": 26
+          },
+          "original_text": ".split(\",\")",
+          "category": "method",
+          "min_weight": "beginner",
+          "weight_score": 1,
+          "always_fill": false,
+          "hint": "按逗号切分",
+          "fill_type": "text"
+        }
+      ],
+      "min_fills": 1,
+      "max_fills": 1
+    },
+    "expected_output": "a-b-c",
+    "spotter_hints": {
+      "level_1": "💡 切分与拼接",
+      "level_2": "📖 `split` 变列表，`join` 反拼接",
+      "level_3": "👀 `\"-\".join(words)`",
+      "level_4": "📝 正确答案：`.split(\",\")`"
+    },
+    "time_limit_seconds": 30,
+    "explanation": "`split()` 按分隔符切开，`join()` 用分隔符合并为字符串。",
+    "enabled": true,
+    "created_by": "seed",
+    "created_at": "2026-08-18T16:52:15.075552Z",
+    "updated_at": "2026-08-18T16:52:15.075552Z"
+  },
+  {
+    "id": "py-basics-032",
+    "title": "replace 替换",
+    "description": "替换字符串中的字符",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "string",
+    "subcategory": "基础",
+    "full_code": "print(\"a-b-c\".replace(\"-\", \"+\"))",
+    "fill_points": {
+      "points": [
+        {
+          "id": "rep",
+          "location": {
+            "type": "span",
+            "line": 1,
+            "span_start": 14,
+            "span_end": 31
+          },
+          "original_text": "replace(\"-\", \"+\")",
+          "category": "method",
+          "min_weight": "beginner",
+          "weight_score": 1,
+          "always_fill": false,
+          "hint": "替换函数",
+          "fill_type": "text"
+        }
+      ],
+      "min_fills": 1,
+      "max_fills": 1
+    },
+    "expected_output": "a+b+c",
+    "spotter_hints": {
+      "level_1": "💡 字符串替换",
+      "level_2": "📖 把所有 - 换成 +",
+      "level_3": "👀 `print(\"a-b-c\".replace(\"-\", \"+\"))`",
+      "level_4": "📝 正确答案：`replace(\"-\", \"+\")`"
+    },
+    "time_limit_seconds": 30,
+    "explanation": "`str.replace(旧, 新)` 把所有匹配子串替换。",
+    "enabled": true,
+    "created_by": "seed",
+    "created_at": "2026-08-18T16:52:15.075552Z",
+    "updated_at": "2026-08-18T16:52:15.075552Z"
+  },
+  {
+    "id": "py-basics-033",
+    "title": "find 查找",
+    "description": "找子串位置",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "string",
+    "subcategory": "基础",
+    "full_code": "print(\"hello\".find(\"ll\"))",
+    "fill_points": {
+      "points": [
+        {
+          "id": "find",
+          "location": {
+            "type": "span",
+            "line": 1,
+            "span_start": 14,
+            "span_end": 24
+          },
+          "original_text": "find(\"ll\")",
+          "category": "method",
+          "min_weight": "beginner",
+          "weight_score": 1,
+          "always_fill": false,
+          "hint": "查找子串下标",
+          "fill_type": "text"
+        }
+      ],
+      "min_fills": 1,
+      "max_fills": 1
+    },
+    "expected_output": "2",
+    "spotter_hints": {
+      "level_1": "💡 查找下标",
+      "level_2": "📖 找不到返回 -1",
+      "level_3": "👀 `print(\"hello\".find(\"ll\"))`",
+      "level_4": "📝 正确答案：`find(\"ll\")`"
+    },
+    "time_limit_seconds": 30,
+    "explanation": "`str.find(子串)` 返回首次出现的下标，找不到返回 -1。",
+    "enabled": true,
+    "created_by": "seed",
+    "created_at": "2026-08-18T16:52:15.075553Z",
+    "updated_at": "2026-08-18T16:52:15.075553Z"
+  },
+  {
+    "id": "py-basics-034",
+    "title": "startswith 判断",
+    "description": "判断前缀",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "string",
+    "subcategory": "基础",
+    "full_code": "print(\"python\".startswith(\"py\"))",
+    "fill_points": {
+      "points": [
+        {
+          "id": "starts",
+          "location": {
+            "type": "span",
+            "line": 1,
+            "span_start": 15,
+            "span_end": 31
+          },
+          "original_text": "startswith(\"py\")",
+          "category": "method",
+          "min_weight": "beginner",
+          "weight_score": 1,
+          "always_fill": false,
+          "hint": "前缀判断",
+          "fill_type": "text"
+        }
+      ],
+      "min_fills": 1,
+      "max_fills": 1
+    },
+    "expected_output": "True",
+    "spotter_hints": {
+      "level_1": "💡 判断前缀",
+      "level_2": "📖 返回布尔值",
+      "level_3": "👀 `print(\"python\".startswith(\"py\"))`",
+      "level_4": "📝 正确答案：`startswith(\"py\")`"
+    },
+    "time_limit_seconds": 30,
+    "explanation": "`startswith()`/`endswith()` 判断前缀/后缀，返回 True/False。",
+    "enabled": true,
+    "created_by": "seed",
+    "created_at": "2026-08-18T16:52:15.075554Z",
+    "updated_at": "2026-08-18T16:52:15.075554Z"
+  },
+  {
+    "id": "py-basics-035",
+    "title": "enumerate 遍历",
+    "description": "遍历并带下标",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "iteration",
+    "subcategory": "基础",
+    "full_code": "names = [\"a\", \"b\"]\nfor i, n in enumerate(names):\n    print(i, n)",
+    "fill_points": {
+      "points": [
+        {
+          "id": "enum",
+          "location": {
+            "type": "span",
+            "line": 2,
+            "span_start": 31,
+            "span_end": 47
+          },
+          "original_text": "enumerate(names)",
+          "category": "function",
+          "min_weight": "beginner",
+          "weight_score": 1,
+          "always_fill": false,
+          "hint": "带下标的遍历",
+          "fill_type": "text"
+        }
+      ],
+      "min_fills": 1,
+      "max_fills": 1
+    },
+    "expected_output": "0 a\n1 b",
+    "spotter_hints": {
+      "level_1": "💡 带下标遍历",
+      "level_2": "📖 同时拿到下标和值",
+      "level_3": "👀 `for i, n in enumerate(names)`",
+      "level_4": "📝 正确答案：`enumerate(names)`"
+    },
+    "time_limit_seconds": 30,
+    "explanation": "`enumerate()` 同时产出下标与元素，遍历时免去手动计数。",
+    "enabled": true,
+    "created_by": "seed",
+    "created_at": "2026-08-18T16:52:15.075554Z",
+    "updated_at": "2026-08-18T16:52:15.075554Z"
+  },
+  {
+    "id": "py-basics-036",
+    "title": "zip 配对",
+    "description": "把两个列表配对",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "builtins",
+    "subcategory": "基础",
+    "full_code": "print(list(zip([1, 2], [3, 4])))",
+    "fill_points": {
+      "points": [
+        {
+          "id": "zip",
+          "location": {
+            "type": "span",
+            "line": 1,
+            "span_start": 11,
+            "span_end": 14
+          },
+          "original_text": "zip",
+          "category": "function",
+          "min_weight": "beginner",
+          "weight_score": 1,
+          "always_fill": false,
+          "hint": "配对函数",
+          "fill_type": "text"
+        }
+      ],
+      "min_fills": 1,
+      "max_fills": 1
+    },
+    "expected_output": "[(1, 3), (2, 4)]",
+    "spotter_hints": {
+      "level_1": "💡 序列配对",
+      "level_2": "📖 `zip` 把对应元素组成元组",
+      "level_3": "👀 `print(list(zip([1, 2], [3, 4])))`",
+      "level_4": "📝 正确答案：`zip`"
+    },
+    "time_limit_seconds": 30,
+    "explanation": "`zip()` 把多个序列按位置配对；`list()` 转成列表查看。",
+    "enabled": true,
+    "created_by": "seed",
+    "created_at": "2026-08-18T16:52:15.075555Z",
+    "updated_at": "2026-08-18T16:52:15.075555Z"
+  },
+  {
+    "id": "py-basics-037",
+    "title": "map 转换",
+    "description": "把数字列表转成字符串",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "functional",
+    "subcategory": "基础",
+    "full_code": "print(list(map(str, [1, 2, 3])))",
+    "fill_points": {
+      "points": [
+        {
+          "id": "map",
+          "location": {
+            "type": "span",
+            "line": 1,
+            "span_start": 11,
+            "span_end": 14
+          },
+          "original_text": "map",
+          "category": "function",
+          "min_weight": "beginner",
+          "weight_score": 1,
+          "always_fill": false,
+          "hint": "批量转换函数",
+          "fill_type": "text"
+        }
+      ],
+      "min_fills": 1,
+      "max_fills": 1
+    },
+    "expected_output": "['1', '2', '3']",
+    "spotter_hints": {
+      "level_1": "💡 批量映射",
+      "level_2": "📖 `map(str, ...)` 逐项转字符串",
+      "level_3": "👀 `print(list(map(str, [1, 2, 3])))`",
+      "level_4": "📝 正确答案：`map`"
+    },
+    "time_limit_seconds": 30,
+    "explanation": "`map()` 把函数应用到序列每个元素；需 `list()` 取出结果。",
+    "enabled": true,
+    "created_by": "seed",
+    "created_at": "2026-08-18T16:52:15.075556Z",
+    "updated_at": "2026-08-18T16:52:15.075556Z"
+  },
+  {
+    "id": "py-basics-038",
+    "title": "lambda 平方",
+    "description": "用 lambda 定义匿名函数",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "functional",
+    "subcategory": "基础",
+    "full_code": "f = lambda x: x ** 2\nprint(f(5))",
+    "fill_points": {
+      "points": [
+        {
+          "id": "lambda",
+          "location": {
+            "type": "span",
+            "line": 1,
+            "span_start": 4,
+            "span_end": 20
+          },
+          "original_text": "lambda x: x ** 2",
+          "category": "lambda",
+          "min_weight": "beginner",
+          "weight_score": 1,
+          "always_fill": false,
+          "hint": "匿名函数",
+          "fill_type": "text"
+        }
+      ],
+      "min_fills": 1,
+      "max_fills": 1
+    },
+    "expected_output": "25",
+    "spotter_hints": {
+      "level_1": "💡 匿名函数",
+      "level_2": "📖 `lambda 参数: 表达式`",
+      "level_3": "👀 `f(5)` = 25",
+      "level_4": "📝 正确答案：`lambda x: x ** 2`"
+    },
+    "time_limit_seconds": 30,
+    "explanation": "`lambda` 定义一次性匿名小函数，结果就是返回值。",
+    "enabled": true,
+    "created_by": "seed",
+    "created_at": "2026-08-18T16:52:15.075557Z",
+    "updated_at": "2026-08-18T16:52:15.075557Z"
+  },
+  {
+    "id": "py-basics-039",
+    "title": "filter 筛选",
+    "description": "用 filter 筛选偶数",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "functional",
+    "subcategory": "基础",
+    "full_code": "print(list(filter(lambda x: x % 2 == 0, range(10))))",
+    "fill_points": {
+      "points": [
+        {
+          "id": "filter",
+          "location": {
+            "type": "span",
+            "line": 1,
+            "span_start": 11,
+            "span_end": 17
+          },
+          "original_text": "filter",
+          "category": "function",
+          "min_weight": "beginner",
+          "weight_score": 1,
+          "always_fill": false,
+          "hint": "筛选函数",
+          "fill_type": "text"
+        }
+      ],
+      "min_fills": 1,
+      "max_fills": 1
+    },
+    "expected_output": "[0, 2, 4, 6, 8]",
+    "spotter_hints": {
+      "level_1": "💡 筛选元素",
+      "level_2": "📖 保留 lambda 为真的元素",
+      "level_3": "👀 `print(list(filter(...)))`",
+      "level_4": "📝 正确答案：`filter`"
+    },
+    "time_limit_seconds": 30,
+    "explanation": "`filter()` 保留使函数返回真的元素，与 `lambda` 常搭配。",
+    "enabled": true,
+    "created_by": "seed",
+    "created_at": "2026-08-18T16:52:15.075558Z",
+    "updated_at": "2026-08-18T16:52:15.075558Z"
+  },
+  {
+    "id": "py-basics-040",
+    "title": "函数定义",
+    "description": "定义并调用 add 函数",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "function",
+    "subcategory": "基础",
+    "full_code": "def add(a, b):\n    return a + b\nprint(add(2, 3))",
+    "fill_points": {
+      "points": [
+        {
+          "id": "ret",
+          "location": {
+            "type": "span",
+            "line": 2,
+            "span_start": 19,
+            "span_end": 31
+          },
+          "original_text": "return a + b",
+          "category": "function",
+          "min_weight": "beginner",
+          "weight_score": 1,
+          "always_fill": false,
+          "hint": "返回值",
+          "fill_type": "text"
+        }
+      ],
+      "min_fills": 1,
+      "max_fills": 1
+    },
+    "expected_output": "5",
+    "spotter_hints": {
+      "level_1": "💡 函数定义",
+      "level_2": "📖 `def` 定义，`return` 返回",
+      "level_3": "👀 `add(2, 3)`",
+      "level_4": "📝 正确答案：`return a + b`"
+    },
+    "time_limit_seconds": 30,
+    "explanation": "`def 名(参数):` 定义函数，`return` 返回计算结果。",
+    "enabled": true,
+    "created_by": "seed",
+    "created_at": "2026-08-18T16:52:15.075559Z",
+    "updated_at": "2026-08-18T16:52:15.075559Z"
+  },
+  {
+    "id": "py-basics-041",
+    "title": "默认参数",
+    "description": "给函数参数设默认值",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "function",
+    "subcategory": "基础",
+    "full_code": "def greet(name=\"world\"):\n    return f\"hi {name}\"\nprint(greet())",
+    "fill_points": {
+      "points": [
+        {
+          "id": "default",
+          "location": {
+            "type": "span",
+            "line": 1,
+            "span_start": 10,
+            "span_end": 22
+          },
+          "original_text": "name=\"world\"",
+          "category": "function",
+          "min_weight": "beginner",
+          "weight_score": 1,
+          "always_fill": false,
+          "hint": "默认参数值",
+          "fill_type": "text"
+        }
+      ],
+      "min_fills": 1,
+      "max_fills": 1
+    },
+    "expected_output": "hi world",
+    "spotter_hints": {
+      "level_1": "💡 默认参数",
+      "level_2": "📖 不传参时用默认值",
+      "level_3": "👀 `greet()`",
+      "level_4": "📝 正确答案：`name=\"world\"`"
+    },
+    "time_limit_seconds": 30,
+    "explanation": "参数可设默认值，调用时不传则使用默认。",
+    "enabled": true,
+    "created_by": "seed",
+    "created_at": "2026-08-18T16:52:15.075559Z",
+    "updated_at": "2026-08-18T16:52:15.075559Z"
+  },
+  {
+    "id": "py-basics-042",
+    "title": "多返回值",
+    "description": "函数返回总和与个数",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "function",
+    "subcategory": "基础",
+    "full_code": "def stats(nums):\n    return sum(nums), len(nums)\ns, c = stats([1, 2, 3])\nprint(s, c)",
+    "fill_points": {
+      "points": [
+        {
+          "id": "ret",
+          "location": {
+            "type": "span",
+            "line": 2,
+            "span_start": 28,
+            "span_end": 48
+          },
+          "original_text": "sum(nums), len(nums)",
+          "category": "function",
+          "min_weight": "beginner",
+          "weight_score": 1,
+          "always_fill": false,
+          "hint": "返回多个值",
+          "fill_type": "text"
+        }
+      ],
+      "min_fills": 1,
+      "max_fills": 1
+    },
+    "expected_output": "6 3",
+    "spotter_hints": {
+      "level_1": "💡 多返回值",
+      "level_2": "📖 用逗号返回多个值",
+      "level_3": "👀 `s, c = stats([1, 2, 3])`",
+      "level_4": "📝 正确答案：`sum(nums), len(nums)`"
+    },
+    "time_limit_seconds": 30,
+    "explanation": "Python 函数可用逗号一次返回多个值，接收时解包。",
+    "enabled": true,
+    "created_by": "seed",
+    "created_at": "2026-08-18T16:52:15.07556Z",
+    "updated_at": "2026-08-18T16:52:15.07556Z"
+  },
+  {
+    "id": "py-basics-043",
+    "title": "*args 变长参数",
+    "description": "接受任意数量参数",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "function",
+    "subcategory": "基础",
+    "full_code": "def total(*args):\n    return sum(args)\nprint(total(1, 2, 3))",
+    "fill_points": {
+      "points": [
+        {
+          "id": "args",
+          "location": {
+            "type": "span",
+            "line": 1,
+            "span_start": 10,
+            "span_end": 15
+          },
+          "original_text": "*args",
+          "category": "function",
+          "min_weight": "beginner",
+          "weight_score": 1,
+          "always_fill": false,
+          "hint": "变长位置参数",
+          "fill_type": "text"
+        }
+      ],
+      "min_fills": 1,
+      "max_fills": 1
+    },
+    "expected_output": "6",
+    "spotter_hints": {
+      "level_1": "💡 可变参数",
+      "level_2": "📖 `*args` 收集所有位置参数",
+      "level_3": "👀 `total(1, 2, 3)`",
+      "level_4": "📝 正确答案：`*args`"
+    },
+    "time_limit_seconds": 30,
+    "explanation": "`*args` 收集任意数量的位置参数为元组。",
+    "enabled": true,
+    "created_by": "seed",
+    "created_at": "2026-08-18T16:52:15.075561Z",
+    "updated_at": "2026-08-18T16:52:15.075561Z"
+  },
+  {
+    "id": "py-basics-044",
+    "title": "递归阶乘",
+    "description": "用递归计算阶乘",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "recursion",
+    "subcategory": "基础",
+    "full_code": "def fact(n):\n    return 1 if n \u003c= 1 else n * fact(n - 1)\nprint(fact(5))",
+    "fill_points": {
+      "points": [
+        {
+          "id": "rec",
+          "location": {
+            "type": "span",
+            "line": 2,
+            "span_start": 41,
+            "span_end": 56
+          },
+          "original_text": "n * fact(n - 1)",
+          "category": "recursion",
+          "min_weight": "beginner",
+          "weight_score": 1,
+          "always_fill": false,
+          "hint": "递推式",
+          "fill_type": "text"
+        }
+      ],
+      "min_fills": 1,
+      "max_fills": 1
+    },
+    "expected_output": "120",
+    "spotter_hints": {
+      "level_1": "💡 递归",
+      "level_2": "📖 递归 = 基线 + 递推",
+      "level_3": "👀 `fact(5)` = 120",
+      "level_4": "📝 正确答案：`n * fact(n - 1)`"
+    },
+    "time_limit_seconds": 30,
+    "explanation": "`fact(n) = n * fact(n-1)`，基线 `n\u003c=1` 返回 1。",
+    "enabled": true,
+    "created_by": "seed",
+    "created_at": "2026-08-18T16:52:15.075562Z",
+    "updated_at": "2026-08-18T16:52:15.075562Z"
+  },
+  {
+    "id": "py-basics-045",
+    "title": "递归斐波那契",
+    "description": "用递归求第 10 个斐波那契数",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "recursion",
+    "subcategory": "基础",
+    "full_code": "def fib(n):\n    return n if n \u003c 2 else fib(n - 1) + fib(n - 2)\nprint(fib(10))",
+    "fill_points": {
+      "points": [
+        {
+          "id": "rec",
+          "location": {
+            "type": "span",
+            "line": 2,
+            "span_start": 39,
+            "span_end": 62
+          },
+          "original_text": "fib(n - 1) + fib(n - 2)",
+          "category": "recursion",
+          "min_weight": "beginner",
+          "weight_score": 1,
+          "always_fill": false,
+          "hint": "递推式",
+          "fill_type": "text"
+        }
+      ],
+      "min_fills": 1,
+      "max_fills": 1
+    },
+    "expected_output": "55",
+    "spotter_hints": {
+      "level_1": "💡 递归斐波那契",
+      "level_2": "📖 前两项之和",
+      "level_3": "👀 `fib(10)` = 55",
+      "level_4": "📝 正确答案：`fib(n - 1) + fib(n - 2)`"
+    },
+    "time_limit_seconds": 30,
+    "explanation": "`fib(n) = fib(n-1) + fib(n-2)`，基线 `n\u003c2` 返回 n。",
+    "enabled": true,
+    "created_by": "seed",
+    "created_at": "2026-08-18T16:52:15.075563Z",
+    "updated_at": "2026-08-18T16:52:15.075563Z"
+  },
+  {
+    "id": "py-basics-046",
+    "title": "try/except 捕获",
+    "description": "捕获转换异常",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "exception",
+    "subcategory": "基础",
+    "full_code": "try:\n    print(int(\"abc\"))\nexcept ValueError:\n    print(\"bad\")",
+    "fill_points": {
+      "points": [
+        {
+          "id": "conv",
+          "location": {
+            "type": "span",
+            "line": 2,
+            "span_start": 15,
+            "span_end": 25
+          },
+          "original_text": "int(\"abc\")",
+          "category": "exception",
+          "min_weight": "beginner",
+          "weight_score": 1,
+          "always_fill": false,
+          "hint": "会抛异常的操作",
+          "fill_type": "text"
+        }
+      ],
+      "min_fills": 1,
+      "max_fills": 1
+    },
+    "expected_output": "bad",
+    "spotter_hints": {
+      "level_1": "💡 异常处理",
+      "level_2": "📖 转换失败抛 ValueError",
+      "level_3": "👀 `except ValueError: print(\"bad\")`",
+      "level_4": "📝 正确答案：`int(\"abc\")`"
+    },
+    "time_limit_seconds": 30,
+    "explanation": "`try/except` 捕获异常；`int(\"abc\")` 无法转换抛出 ValueError。",
+    "enabled": true,
+    "created_by": "seed",
+    "created_at": "2026-08-18T16:52:15.075564Z",
+    "updated_at": "2026-08-18T16:52:15.075564Z"
+  },
+  {
+    "id": "py-basics-047",
+    "title": "除零异常",
+    "description": "捕获 ZeroDivisionError",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "exception",
+    "subcategory": "基础",
+    "full_code": "try:\n    print(1 / 0)\nexcept ZeroDivisionError:\n    print(\"no\")",
+    "fill_points": {
+      "points": [
+        {
+          "id": "exc",
+          "location": {
+            "type": "span",
+            "line": 3,
+            "span_start": 29,
+            "span_end": 46
+          },
+          "original_text": "ZeroDivisionError",
+          "category": "exception",
+          "min_weight": "beginner",
+          "weight_score": 1,
+          "always_fill": false,
+          "hint": "除零异常类型",
+          "fill_type": "text"
+        }
+      ],
+      "min_fills": 1,
+      "max_fills": 1
+    },
+    "expected_output": "no",
+    "spotter_hints": {
+      "level_1": "💡 异常类型",
+      "level_2": "📖 除零抛 ZeroDivisionError",
+      "level_3": "👀 `except ZeroDivisionError`",
+      "level_4": "📝 正确答案：`ZeroDivisionError`"
+    },
+    "time_limit_seconds": 30,
+    "explanation": "除以 0 抛出 `ZeroDivisionError`，用对应异常类型捕获。",
+    "enabled": true,
+    "created_by": "seed",
+    "created_at": "2026-08-18T16:52:15.075566Z",
+    "updated_at": "2026-08-18T16:52:15.075566Z"
+  },
+  {
+    "id": "py-basics-048",
+    "title": "math 开方",
+    "description": "用 math.sqrt 求平方根",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "module",
+    "subcategory": "基础",
+    "full_code": "import math\nprint(math.sqrt(16))",
+    "fill_points": {
+      "points": [
+        {
+          "id": "sqrt",
+          "location": {
+            "type": "span",
+            "line": 2,
+            "span_start": 18,
+            "span_end": 27
+          },
+          "original_text": "math.sqrt",
+          "category": "module",
+          "min_weight": "beginner",
+          "weight_score": 1,
+          "always_fill": false,
+          "hint": "开方函数",
+          "fill_type": "text"
+        }
+      ],
+      "min_fills": 1,
+      "max_fills": 1
+    },
+    "expected_output": "4.0",
+    "spotter_hints": {
+      "level_1": "💡 导入模块",
+      "level_2": "📖 `import math` 后使用",
+      "level_3": "👀 `math.sqrt(16)` = 4.0",
+      "level_4": "📝 正确答案：`math.sqrt`"
+    },
+    "time_limit_seconds": 30,
+    "explanation": "`import math` 导入标准库，`math.sqrt` 开平方。",
+    "enabled": true,
+    "created_by": "seed",
+    "created_at": "2026-08-18T16:52:15.075566Z",
+    "updated_at": "2026-08-18T16:52:15.075566Z"
+  },
+  {
+    "id": "py-basics-049",
+    "title": "自定义类",
+    "description": "定义类与方法",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "class",
+    "subcategory": "基础",
+    "full_code": "class Dog:\n    def __init__(self, name):\n        self.name = name\n    def bark(self):\n        return self.name + \"!\"\nd = Dog(\"rex\")\nprint(d.bark())",
+    "fill_points": {
+      "points": [
+        {
+          "id": "ret",
+          "location": {
+            "type": "span",
+            "line": 5,
+            "span_start": 101,
+            "span_end": 116
+          },
+          "original_text": "self.name + \"!\"",
+          "category": "class",
+          "min_weight": "beginner",
+          "weight_score": 1,
+          "always_fill": false,
+          "hint": "方法返回值",
+          "fill_type": "text"
+        }
+      ],
+      "min_fills": 1,
+      "max_fills": 1
+    },
+    "expected_output": "rex!",
+    "spotter_hints": {
+      "level_1": "💡 类与方法",
+      "level_2": "📖 `__init__` 构造，`self` 指实例",
+      "level_3": "👀 `d.bark()`",
+      "level_4": "📝 正确答案：`self.name + \"!\"`"
+    },
+    "time_limit_seconds": 30,
+    "explanation": "`class` 定义类，`__init__` 初始化，方法首参 `self` 指向实例。",
+    "enabled": true,
+    "created_by": "seed",
+    "created_at": "2026-08-18T16:52:15.075567Z",
+    "updated_at": "2026-08-18T16:52:15.075567Z"
+  },
+  {
+    "id": "py-basics-050",
+    "title": "f-string 表达式",
+    "description": "在 f-string 中直接计算",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "format",
+    "subcategory": "基础",
+    "full_code": "a = 3\nb = 4\nprint(f\"{a}+{b}={a + b}\")",
+    "fill_points": {
+      "points": [
+        {
+          "id": "expr",
+          "location": {
+            "type": "span",
+            "line": 3,
+            "span_start": 28,
+            "span_end": 35
+          },
+          "original_text": "{a + b}",
+          "category": "format",
+          "min_weight": "beginner",
+          "weight_score": 1,
+          "always_fill": false,
+          "hint": "f-string 内计算",
+          "fill_type": "text"
+        }
+      ],
+      "min_fills": 1,
+      "max_fills": 1
+    },
+    "expected_output": "3+4=7",
+    "spotter_hints": {
+      "level_1": "💡 f-string 表达式",
+      "level_2": "📖 `{}` 里可放任意表达式",
+      "level_3": "👀 `f\"{a}+{b}={a + b}\"`",
+      "level_4": "📝 正确答案：`{a + b}`"
+    },
+    "time_limit_seconds": 30,
+    "explanation": "f-string 的 `{}` 内可直接写表达式并求值插入。",
+    "enabled": true,
+    "created_by": "seed",
+    "created_at": "2026-08-18T16:52:15.075568Z",
+    "updated_at": "2026-08-18T16:52:15.075568Z"
+  }
+]

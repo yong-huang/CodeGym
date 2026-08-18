@@ -1,7 +1,10 @@
 package seed
 
 import (
+	"encoding/json"
 	"fmt"
+	"os"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -369,6 +372,32 @@ func CategoryPlan() []CategoryPair {
 		{Tech: "prometheus", Sub: "实战"},
 		{Tech: "prometheus", Sub: "web"},
 	}
+}
+
+// LoadLibrary reads all question-bank JSON files (*.json) in dir and returns
+// the exercises. When the directory is missing/empty it returns nil so the
+// caller can fall back to the built-in builders.
+func LoadLibrary(dir string) ([]model.Exercise, error) {
+	entries, err := os.ReadDir(dir)
+	if err != nil {
+		return nil, nil // no library dir configured -> fall back to built-in
+	}
+	var out []model.Exercise
+	for _, e := range entries {
+		if e.IsDir() || !strings.HasSuffix(e.Name(), ".json") {
+			continue
+		}
+		data, err := os.ReadFile(filepath.Join(dir, e.Name()))
+		if err != nil {
+			return nil, err
+		}
+		var list []model.Exercise
+		if err := json.Unmarshal(data, &list); err != nil {
+			return nil, fmt.Errorf("parse %s: %w", e.Name(), err)
+		}
+		out = append(out, list...)
+	}
+	return out, nil
 }
 
 // All returns every seeded exercise, ready for Upsert.

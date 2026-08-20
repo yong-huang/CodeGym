@@ -59,19 +59,50 @@ export function toPlaceholderText(markedCode: string): string {
 }
 
 /**
- * Locate the fill regions inside the *live* edited text by anchoring on the
- * surrounding (unchanged) code segments, then extract each fill's answer.
+ * Locate the code segments (the fixed text outside the fills) inside the live
+ * edited text via backtracking so the whole text is covered exactly: each fill
+ * answer is whatever sits between two adjacent code segments. A plain
+ * first-occurrence anchor would mis-place a fill when its text already
+ * contains the following code segment (e.g. answer `.upper()` and the next
+ * code segment is `)`), truncating the answer. Backtracking over all segment
+ * occurrences and requiring exact coverage resolves that ambiguity.
  */
-export function extractAnswers(
-  markedCode: string,
+function locateCodeSegments(codeTexts: string[], text: string, allowTrailing: boolean): number[] | null {
+  const res: number[] = [];
+  const place = (i: number, from: number): boolean => {
+    if (i === codeTexts.length) {
+      if (allowTrailing) return true; // leftover behind the last code segment is the trailing fill
+      return from === text.length; // otherwise the last segment must end exactly at the end
+    }
+    const s = codeTexts[i];
+    if (!s) {
+      res.push(from);
+      if (place(i + 1, from)) return true;
+      res.pop();
+      return false;
+    }
+    let idx = text.indexOf(s, from);
+    while (idx >= 0) {
+      res.push(idx);
+      if (place(i + 1, idx + s.length)) return true;
+      res.pop();
+      idx = text.indexOf(s, idx + 1);
+    }
+    return false;
+  };
+  if (!place(0, 0)) return null;
+  return res;
+}
+
+/** Greedy first-occurrence extraction; kept as a fallback for text where the
+ *  user edited code outside the fills (exact coverage then fails). */
+function greedyExtract(
+  segs: Segment[],
   text: string,
-  fillIds: string[],
 ): { answers: Record<string, string>; ranges: FillRange[] } {
-  const segs = parseTemplate(markedCode, fillIds);
   const answers: Record<string, string> = {};
   const ranges: FillRange[] = [];
 
-  // anchor positions of the code segments inside the edited text
   const codePos: number[] = new Array(segs.length).fill(-1);
   let search = 0;
   for (let i = 0; i < segs.length; i++) {
@@ -90,12 +121,63 @@ export function extractAnswers(
       if (codePos[i] >= 0 && s.text) prevEnd = codePos[i] + s.text.length;
       continue;
     }
-    // find the start of the next code anchor
     let nextStart = text.length;
     for (let j = i + 1; j < segs.length; j++) {
       if (segs[j].type === 'code' && codePos[j] >= 0) {
         nextStart = codePos[j];
         break;
+      }
+    }
+    const start = Math.min(prevEnd, text.length);
+    const end = Math.max(nextStart, start);
+    ranges.push({ id: s.id!, start, end });
+    answers[s.id!] = text.slice(start, end);
+  }
+  return { answers, ranges };
+}
+
+/**
+ * Locate the fill regions inside the *live* edited text by anchoring on the
+ * surrounding (unchanged) code segments, then extract each fill's answer.
+ */
+export function extractAnswers(
+  markedCode: string,
+  text: string,
+  fillIds: string[],
+): { answers: Record<string, string>; ranges: FillRange[] } {
+  const segs = parseTemplate(markedCode, fillIds);
+  const answers: Record<string, string> = {};
+  const ranges: FillRange[] = [];
+
+  const codeSegs: { text: string; segIdx: number }[] = [];
+  for (let i = 0; i < segs.length; i++) {
+    const s = segs[i];
+    if (s.type === 'code' && s.text) codeSegs.push({ text: s.text, segIdx: i });
+  }
+  const hasTrailingFill = segs[segs.length - 1]?.type === 'fill';
+
+  const positions = locateCodeSegments(codeSegs.map((c) => c.text), text, hasTrailingFill);
+  if (!positions) return greedyExtract(segs, text);
+
+  const posBySeg = new Map<number, number>();
+  codeSegs.forEach((seg, i) => posBySeg.set(seg.segIdx, positions[i]));
+
+  let prevEnd = 0;
+  for (let i = 0; i < segs.length; i++) {
+    const s = segs[i];
+    if (s.type === 'code') {
+      const p = posBySeg.get(i);
+      if (p !== undefined && s.text) prevEnd = p + s.text.length;
+      continue;
+    }
+    let nextStart = text.length;
+    for (let j = i + 1; j < segs.length; j++) {
+      if (segs[j].type === 'code') {
+        const p = posBySeg.get(j);
+        if (p !== undefined) {
+          nextStart = p;
+          break;
+        }
       }
     }
     const start = Math.min(prevEnd, text.length);

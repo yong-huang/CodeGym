@@ -88,6 +88,23 @@ describe('extractAnswers', () => {
     const { answers: a2 } = extractAnswers(TEMPLATE, filled, ['expr', 'nonexistent']);
     expect(a2.expr).toBe('x**2');
   });
+
+  it('keeps the full answer when it contains the following code segment text', () => {
+    // regression: `("go".upper())` — the answer `.upper()` already contains a
+    // `)` that is also the next code segment; it must not be truncated to `.upper(`.
+    const template = 'print("go"____FILL_upper____)';
+    const edited = 'print("go".upper())';
+    const { answers, ranges } = extractAnswers(template, edited, ['upper']);
+    expect(answers.upper).toBe('.upper()');
+    expect(edited.slice(ranges[0].start, ranges[0].end)).toBe('.upper()');
+  });
+
+  it('still reports a genuinely incomplete answer as-is', () => {
+    const template = 'print("go"____FILL_upper____)';
+    const edited = 'print("go".upper()'; // user really typed a missing `)`
+    const { answers } = extractAnswers(template, edited, ['upper']);
+    expect(answers.upper).toBe('.upper(');
+  });
 });
 
 describe('CodeEditor rendering', () => {

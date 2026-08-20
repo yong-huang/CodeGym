@@ -1,0 +1,717 @@
+[
+  {
+    "id": "py-lc-001",
+    "title": "列表推导式 - 偶数平方",
+    "description": "将 numbers 列表中的偶数筛选出来并计算平方，生成新列表",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "list_comprehension",
+    "full_code": "numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]\nresult = [x**2 for x in numbers if x % 2 == 0]\nprint(result)",
+    "expected": "[4, 16, 36, 64, 100]",
+    "points": [
+      {
+        "id": "expr",
+        "text": "x**2",
+        "category": "expression",
+        "min_weight": "beginner",
+        "weight_score": 0.6,
+        "hint": "计算每个元素的平方，可以使用幂运算符或乘法",
+        "fill_type": "text"
+      },
+      {
+        "id": "cond",
+        "text": "x % 2 == 0",
+        "category": "condition",
+        "min_weight": "medium",
+        "weight_score": 0.8,
+        "hint": "偶数的数学特征是什么？能被什么整除？",
+        "fill_type": "text"
+      },
+      {
+        "id": "iter",
+        "text": "numbers",
+        "category": "iterator",
+        "min_weight": "easy",
+        "weight_score": 0.4,
+        "hint": "对哪个可迭代对象做推导？",
+        "fill_type": "text",
+        "occurrence": 1
+      }
+    ],
+    "hints": {
+      "level_1": "💡 想一想，偶数的数学特征是什么？",
+      "level_2": "📖 偶数能被 2 整除，用取模运算符 % 来判断",
+      "level_3": "👀 条件表达式应该是 `x % 2 == 0` 这样的形式",
+      "level_4": "📝 正确答案：`x % 2 == 0`"
+    },
+    "explanation": "列表推导式 `[expr for item in iterable if condition]`。`x**2` 计算平方，`x % 2 == 0` 筛选偶数，两者都满足时保留并平方。"
+  },
+  {
+    "id": "py-palindrome-002",
+    "title": "回文判断函数",
+    "description": "实现 is_palindrome 函数，判断字符串是否正反相同",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "function",
+    "full_code": "def is_palindrome(s: str) -\u003e bool:\n    return s == s[::-1]\n\nprint(is_palindrome('racecar'))\nprint(is_palindrome('hello'))",
+    "expected": "True\nFalse",
+    "points": [
+      {
+        "id": "return_expr",
+        "text": "s[::-1]",
+        "category": "expression",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "想想字符串反转的方法（切片）",
+        "fill_type": "text"
+      },
+      {
+        "id": "return_type",
+        "text": "-\u003e bool",
+        "category": "type_annotation",
+        "min_weight": "easy",
+        "weight_score": 0.3,
+        "hint": "返回值是什么类型？布尔值",
+        "fill_type": "text"
+      },
+      {
+        "id": "compare",
+        "text": "s == s[::-1]",
+        "category": "condition",
+        "min_weight": "medium",
+        "weight_score": 0.8,
+        "hint": "正序和反转后相等即为回文",
+        "fill_type": "text"
+      },
+      {
+        "id": "call_arg",
+        "text": "'hello'",
+        "category": "argument",
+        "min_weight": "hard",
+        "weight_score": 0.6,
+        "hint": "第二个测试用例的反例参数",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 判断回文只需比较原串与反转后的串",
+      "level_2": "📖 切片 `s[::-1]` 可以反转字符串",
+      "level_3": "👀 `return s == s[::-1]`",
+      "level_4": "📝 正确答案：`return s == s[::-1]`"
+    },
+    "explanation": "切片 `s[::-1]` 返回反转后的字符串。`s == s[::-1]` 在正反相同（回文）时返回 True。"
+  },
+  {
+    "id": "py-factorial-bug-003",
+    "title": "阶乘 Bug 修复",
+    "description": "find and fix the off-by-one bug in factorial",
+    "exercise_type": "bugfix",
+    "tech_stack": "python",
+    "weight": "hard",
+    "category": "bugfix",
+    "full_code": "def factorial(n):\n    result = 1\n    for i in range(1, n + 1):\n        result *= i\n    return result",
+    "buggy_code": "def factorial(n):\n    result = 1\n    for i in range(n):\n        result *= i\n    return result",
+    "bug_description": "n=5 时输出 0，预期 120。range(n) 从 0 开始，result 乘以 0 后永远为 0",
+    "bug_location": "for i in range(n)",
+    "expected": "120\n6",
+    "validation_code": "\nprint(factorial(5))\nprint(factorial(3))",
+    "test_cases": [
+      {
+        "input": "",
+        "output": "120"
+      },
+      {
+        "input": "",
+        "output": "6"
+      }
+    ],
+    "points": [
+      {
+        "id": "loop",
+        "text": "for i in range(n)",
+        "category": "loop",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "range(n) 从 0 开始，为什么结果会是 0？",
+        "fill_type": "code"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 仔细看循环的起始值，乘以 0 会发生什么？",
+      "level_2": "📖 range(n) 生成 [0..n-1]，第一次循环 result *= 0 把结果清成 0",
+      "level_3": "👀 循环应从 1 开始到 n 结束",
+      "level_4": "📝 正确答案：`for i in range(1, n + 1):`"
+    },
+    "explanation": "off-by-one：range(n) 从 0 开始，第一次迭代 `result *= 0` 使结果恒为 0。改为 `range(1, n + 1)` 即可。"
+  },
+  {
+    "id": "py-fizzbuzz-004",
+    "title": "FizzBuzz 函数",
+    "description": "实现 FizzBuzz：3 的倍数输出 Fizz，5 的倍数输出 Buzz，同时是 3 和 5 的倍数输出 FizzBuzz",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "control_flow",
+    "full_code": "def fizzbuzz(n):\n    if n % 15 == 0:\n        return 'FizzBuzz'\n    if n % 3 == 0:\n        return 'Fizz'\n    if n % 5 == 0:\n        return 'Buzz'\n    return str(n)\n\nprint(fizzbuzz(15))\nprint(fizzbuzz(9))\nprint(fizzbuzz(10))\nprint(fizzbuzz(7))",
+    "expected": "FizzBuzz\nFizz\nBuzz\n7",
+    "points": [
+      {
+        "id": "fizzbuzz",
+        "text": "n % 15 == 0",
+        "category": "condition",
+        "min_weight": "beginner",
+        "weight_score": 0.8,
+        "hint": "同时是 3 和 5 的倍数的最小公倍数是多少？",
+        "fill_type": "text"
+      },
+      {
+        "id": "fizz",
+        "text": "n % 3 == 0",
+        "category": "condition",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "3 的倍数如何判断？",
+        "fill_type": "text"
+      },
+      {
+        "id": "buzz",
+        "text": "n % 5 == 0",
+        "category": "condition",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "5 的倍数如何判断？",
+        "fill_type": "text"
+      },
+      {
+        "id": "fallback",
+        "text": "str(n)",
+        "category": "expression",
+        "min_weight": "medium",
+        "weight_score": 0.4,
+        "hint": "都不是倍数时返回数字本身，注意类型",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 三个条件都有取模运算",
+      "level_2": "📖 n % 15 == 0 表示能同时被 3 和 5 整除",
+      "level_3": "👀 依次判断 15、3、5 的倍数",
+      "level_4": "📝 正确答案：`n % 15 == 0` / `n % 3 == 0` / `n % 5 == 0` / `str(n)`"
+    },
+    "explanation": "先判断是否同时是 3 和 5 的倍数（15 的倍数），再分别判断 3 和 5，最后返回原数字的字符串形式。"
+  },
+  {
+    "id": "kubectl-getpods-005",
+    "title": "kubectl 查看所有命名空间的 Pod",
+    "description": "补全命令，查看所有命名空间的 Pod",
+    "exercise_type": "command",
+    "tech_stack": "kubernetes",
+    "weight": "easy",
+    "category": "command",
+    "full_code": "# 查看所有命名空间的 Pod\nkubectl get pods -A",
+    "expected": "",
+    "points": [
+      {
+        "id": "flag",
+        "text": "-A",
+        "category": "command_flag",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "可以用短参数 -A 或长参数 --all-namespaces",
+        "fill_type": "select",
+        "options": [
+          "-A",
+          "--all-namespaces",
+          "-n default",
+          "--namespace all"
+        ],
+        "acceptable_answers": [
+          "--all-namespaces"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 所有命名空间的关键词是什么？",
+      "level_2": "📖 `--all-namespaces` 或短参数 `-A`",
+      "level_3": "👀 `kubectl get pods -A`",
+      "level_4": "📝 正确答案：`-A`（等价 `--all-namespaces`）"
+    },
+    "explanation": "`-A` 是 `--all-namespaces` 的短参数，列出所有命名空间中的 Pod。"
+  },
+  {
+    "id": "k8s-nginx-pod-006",
+    "title": "Nginx Pod 配置",
+    "description": "补全 Kubernetes Pod YAML 中的关键字段",
+    "exercise_type": "config",
+    "tech_stack": "kubernetes",
+    "weight": "medium",
+    "category": "manifest",
+    "full_code": "apiVersion: v1\nkind: Pod\nmetadata:\n  name: nginx-pod\nspec:\n  containers:\n  - name: nginx\n    image: nginx:1.25\n    ports:\n    - containerPort: 80",
+    "expected": "",
+    "points": [
+      {
+        "id": "image",
+        "text": "nginx:1.25",
+        "category": "image",
+        "min_weight": "beginner",
+        "weight_score": 0.7,
+        "hint": "Nginx 镜像及版本标签",
+        "fill_type": "text"
+      },
+      {
+        "id": "port",
+        "text": "80",
+        "category": "port",
+        "min_weight": "easy",
+        "weight_score": 0.6,
+        "hint": "Nginx 默认监听端口",
+        "fill_type": "text"
+      },
+      {
+        "id": "name",
+        "text": "nginx-pod",
+        "category": "metadata",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "Pod 的名称字段",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 镜像与端口分别填写什么？",
+      "level_2": "📖 镜像 `nginx:1.25`，Nginx 默认 80 端口",
+      "level_3": "👀 `image: nginx:1.25` / `containerPort: 80`",
+      "level_4": "📝 正确答案：`nginx:1.25` 与 `80`"
+    },
+    "explanation": "Pod 资源要求镜像名称（含标签）与容器端口，`nginx:1.25` 对应官方镜像，Nginx 默认监听 80。"
+  },
+  {
+    "id": "js-even-squares-007",
+    "title": "JS 数组处理 - 偶数平方",
+    "description": "用 filter 和 map 生成偶数的平方数组",
+    "exercise_type": "fill",
+    "tech_stack": "javascript",
+    "weight": "medium",
+    "category": "array_methods",
+    "full_code": "const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];\nconst result = numbers.filter(x =\u003e x % 2 === 0).map(x =\u003e x ** 2);\nconsole.log(JSON.stringify(result));",
+    "expected": "[4,16,36,64,100]",
+    "points": [
+      {
+        "id": "filter_cond",
+        "text": "x % 2 === 0",
+        "category": "condition",
+        "min_weight": "medium",
+        "weight_score": 0.7,
+        "hint": "筛选偶数的条件（严格相等）",
+        "fill_type": "text"
+      },
+      {
+        "id": "map_fn",
+        "text": "x ** 2",
+        "category": "expression",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "计算平方的箭头函数体",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 filter 筛选，map 变换",
+      "level_2": "📖 偶数条件 `x % 2 === 0`，平方 `x ** 2`",
+      "level_3": "👀 `.filter(x =\u003e x % 2 === 0).map(x =\u003e x ** 2)`",
+      "level_4": "📝 正确答案：`x % 2 === 0` 与 `x ** 2`"
+    },
+    "explanation": "`filter` 保留满足条件的元素，`map` 对每个元素做变换，链式调用即可完成筛选并平方。"
+  },
+  {
+    "id": "go-even-squares-101",
+    "title": "Geven 偶数平方过滤",
+    "description": "用 for + 取模筛选偶数并计算平方，收集到新的切片",
+    "exercise_type": "fill",
+    "tech_stack": "go",
+    "weight": "medium",
+    "category": "slice",
+    "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tnumbers := []int{1, 2, 3, 4, 5, 6, 7, 8}\n\tresult := []int{}\n\tfor _, n := range numbers {\n\t\tif n%2 == 0 {\n\t\t\tresult = append(result, n*n)\n\t\t}\n\t}\n\tfmt.Println(result)\n}",
+    "expected": "[4 16 36 64]",
+    "points": [
+      {
+        "id": "cond",
+        "text": "n%2 == 0",
+        "category": "condition",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "用取模判断偶数的条件是什么？",
+        "fill_type": "text"
+      },
+      {
+        "id": "square",
+        "text": "n*n",
+        "category": "expression",
+        "min_weight": "beginner",
+        "weight_score": 0.6,
+        "hint": "计算 n 的平方（乘法表达式）",
+        "fill_type": "text"
+      },
+      {
+        "id": "append",
+        "text": "append",
+        "category": "function",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "向切片末尾追加元素的 Go 内置函数",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 偶数能被 2 整除，平方用乘法",
+      "level_2": "📖 判断 `n%2 == 0`，计算 `n*n`，追加 `append`",
+      "level_3": "👀 `n%2 == 0` → `result = append(result, n*n)`",
+      "level_4": "📝 正确答案：`n%2 == 0` / `n*n` / `append`"
+    },
+    "explanation": "`n%2 == 0` 判断偶数，`n*n` 计算平方，`append` 向切片追加元素。"
+  },
+  {
+    "id": "go-palindrome-102",
+    "title": "Goure 回文判断",
+    "description": "实现 isPalindrome，比较字符串首尾字符判断回文",
+    "exercise_type": "fill",
+    "tech_stack": "go",
+    "weight": "medium",
+    "category": "string",
+    "full_code": "package main\n\nimport \"fmt\"\n\nfunc isPalindrome(s string) bool {\n\trunes := []rune(s)\n\tfor i := 0; i \u003c len(runes); i++ {\n\t\tif runes[i] != runes[len(runes)-1-i] {\n\t\t\treturn false\n\t\t}\n\t}\n\treturn true\n}\n\nfunc main() {\n\tfmt.Println(isPalindrome(\"racecar\"))\n\tfmt.Println(isPalindrome(\"hello\"))\n}",
+    "expected": "true\nfalse",
+    "points": [
+      {
+        "id": "cond",
+        "text": "runes[i] != runes[len(runes)-1-i]",
+        "category": "condition",
+        "min_weight": "medium",
+        "weight_score": 0.8,
+        "hint": "比较第 i 个与倒数第 i 个字符，不对称返回 false",
+        "fill_type": "text"
+      },
+      {
+        "id": "init",
+        "text": "i := 0",
+        "category": "init",
+        "min_weight": "beginner",
+        "weight_score": 0.4,
+        "hint": "循环起始下标（occurrence：for 循环的初始化）",
+        "fill_type": "text"
+      },
+      {
+        "id": "incr",
+        "text": "i++",
+        "category": "iteration",
+        "min_weight": "easy",
+        "weight_score": 0.4,
+        "hint": "每次循环下标加一",
+        "fill_type": "text"
+      },
+      {
+        "id": "arg",
+        "text": "\"hello\"",
+        "category": "argument",
+        "min_weight": "hard",
+        "weight_score": 0.5,
+        "hint": "第二个测试用例的反例字符串",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 首尾字符逐一比较",
+      "level_2": "📖 `runes[i]` 与 `runes[len(runes)-1-i]` 对称比较，不等则 false",
+      "level_3": "👀 `if runes[i] != runes[len(runes)-1-i] { return false }`",
+      "level_4": "📝 正确答案：`runes[i] != runes[len(runes)-1-i]`"
+    },
+    "explanation": "双指针式循环：`runes[i]` 是首部字符，`runes[len(runes)-1-i]` 是对称尾部字符，任何一对不等即非回文。"
+  },
+  {
+    "id": "go-factorial-bug-103",
+    "title": "Goto 阶乘 Bug 修复",
+    "description": "修复阶乘计算的 off-by-one 与初始值 bug",
+    "exercise_type": "bugfix",
+    "tech_stack": "go",
+    "weight": "hard",
+    "category": "bugfix",
+    "full_code": "package main\n\nimport \"fmt\"\n\nfunc factorial(n int) int {\n\tresult := 1\n\tfor i := 1; i \u003c= n; i++ {\n\t\tresult *= i\n\t}\n\treturn result\n}\n\nfunc main() {\n\tfmt.Println(factorial(5))\n\tfmt.Println(factorial(3))\n}",
+    "buggy_code": "package main\n\nimport \"fmt\"\n\nfunc factorial(n int) int {\n\tresult := 1\n\tfor i := 0; i \u003c= n; i++ {\n\t\tresult *= i\n\t}\n\treturn result\n}\n\nfunc main() {\n\tfmt.Println(factorial(5))\n\tfmt.Println(factorial(3))\n}",
+    "bug_description": "n=5 时输出 0，预期 120：循环从 i:=0 开始，第一次 result 乘以 0 后恒为 0",
+    "bug_location": "for i := 0; i \u003c= n; i++",
+    "expected": "120\n6",
+    "test_cases": [
+      {
+        "input": "",
+        "output": "120"
+      },
+      {
+        "input": "",
+        "output": "6"
+      }
+    ],
+    "points": [
+      {
+        "id": "loop",
+        "text": "for i := 0; i \u003c= n; i++",
+        "category": "loop",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "循环从哪个数开始？乘以 0 会发生什么？",
+        "fill_type": "code"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 循环起始值可能是问题所在",
+      "level_2": "📖 i 从 0 开始，第一次 result *= 0 直接把结果清零",
+      "level_3": "👀 改为 `for i := 1; i \u003c= n; i++`",
+      "level_4": "📝 正确答案：`for i := 1; i \u003c= n; i++`"
+    },
+    "explanation": "Go 的 for 循环三条语句用分号分隔；`i := 0` 使第一次迭代 result 乘 0，结果恒为 0，应改为 `i := 1; i \u003c= n; i++`。"
+  },
+  {
+    "id": "go-fizzbuzz-104",
+    "title": "Goz 思路 FizzBuzz",
+    "description": "实现 fizzbuzz：3 的倍数输出 Fizz，5 的倍数输出 Buzz，同倍数输出 FizzBuzz",
+    "exercise_type": "fill",
+    "tech_stack": "go",
+    "weight": "medium",
+    "category": "control_flow",
+    "full_code": "package main\n\nimport \"fmt\"\n\nfunc fizzbuzz(n int) string {\n\tif n%15 == 0 {\n\t\treturn \"FizzBuzz\"\n\t}\n\tif n%3 == 0 {\n\t\treturn \"Fizz\"\n\t}\n\tif n%5 == 0 {\n\t\treturn \"Buzz\"\n\t}\n\treturn fmt.Sprint(n)\n}\n\nfunc main() {\n\tfmt.Println(fizzbuzz(15))\n\tfmt.Println(fizzbuzz(9))\n\tfmt.Println(fizzbuzz(10))\n\tfmt.Println(fizzbuzz(7))\n}",
+    "expected": "FizzBuzz\nFizz\nBuzz\n7",
+    "points": [
+      {
+        "id": "both",
+        "text": "n%15 == 0",
+        "category": "condition",
+        "min_weight": "beginner",
+        "weight_score": 0.8,
+        "hint": "同时是 3 和 5 的倍数，用最小公倍数 15 判断",
+        "fill_type": "text"
+      },
+      {
+        "id": "fizz",
+        "text": "n%3 == 0",
+        "category": "condition",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "3 的倍数",
+        "fill_type": "text"
+      },
+      {
+        "id": "buzz",
+        "text": "n%5 == 0",
+        "category": "condition",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "5 的倍数",
+        "fill_type": "text"
+      },
+      {
+        "id": "fallback",
+        "text": "fmt.Sprint(n)",
+        "category": "expression",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "都不是倍数时转成字符串返回",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 三个分支都做取模判断",
+      "level_2": "📖 15、3、5 的倍数顺序判断，最后 `fmt.Sprint(n)`",
+      "level_3": "👀 `if n%15 == 0` / `if n%3 == 0` / `if n%5 == 0`",
+      "level_4": "📝 正确答案：`n%15==0` / `n%3==0` / `n%5==0` / `fmt.Sprint(n)`"
+    },
+    "explanation": "先判 15 的倍数（同时满足 3 和 5），再分别判 3、5，最后返回字符串化的数字，注意 Go 里 int 不能直接与 string 拼接。"
+  },
+  {
+    "id": "go-fib-105",
+    "title": "Goz 斐波那契数列",
+    "description": "用递归实现 fib，返回第 n 个斐波那契数",
+    "exercise_type": "fill",
+    "tech_stack": "go",
+    "weight": "medium",
+    "category": "recursion",
+    "full_code": "package main\n\nimport \"fmt\"\n\nfunc fib(n int) int {\n\tif n \u003c 2 {\n\t\treturn n\n\t}\n\treturn fib(n-1) + fib(n-2)\n}\n\nfunc main() {\n\tfmt.Println(fib(10))\n}",
+    "expected": "55",
+    "points": [
+      {
+        "id": "base",
+        "text": "n \u003c 2",
+        "category": "condition",
+        "min_weight": "beginner",
+        "weight_score": 0.6,
+        "hint": "递归终止条件：n 小于几时直接返回？",
+        "fill_type": "text"
+      },
+      {
+        "id": "recur",
+        "text": "fib(n-1) + fib(n-2)",
+        "category": "expression",
+        "min_weight": "medium",
+        "weight_score": 0.9,
+        "hint": "斐波那契递推式：前两项之和",
+        "fill_type": "text"
+      },
+      {
+        "id": "call",
+        "text": "10",
+        "category": "argument",
+        "min_weight": "easy",
+        "weight_score": 0.4,
+        "hint": "主程序求解第几个斐波那契数？",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 递归 = 终止条件 + 递推式",
+      "level_2": "📖 `n\u003c2` 返回 n；否则 `fib(n-1)+fib(n-2)`",
+      "level_3": "👀 `if n \u003c 2 { return n }` 否则 `return fib(n-1) + fib(n-2)`",
+      "level_4": "📝 正确答案：`n \u003c 2` / `fib(n-1) + fib(n-2)` / `10`"
+    },
+    "explanation": "Fib(0)=0、Fib(1)=1，其余为前两项之和；`fib(10)=55`。"
+  },
+  {
+    "id": "go-concurrent-106",
+    "title": "Gocon 并发求和",
+    "description": "用 goroutine 并发计算 1..100 的和，练习 sync.WaitGroup 与 Mutex",
+    "exercise_type": "fill",
+    "tech_stack": "go",
+    "weight": "hard",
+    "category": "concurrency",
+    "full_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"sync\"\n)\n\nfunc main() {\n\tvar wg sync.WaitGroup\n\tvar mu sync.Mutex\n\tsum := 0\n\tfor i := 1; i \u003c= 100; i++ {\n\t\twg.Add(1)\n\t\tgo func(n int) {\n\t\t\tdefer wg.Done()\n\t\t\tmu.Lock()\n\t\t\tdefer mu.Unlock()\n\t\t\tsum += n\n\t\t}(i)\n\t}\n\twg.Wait()\n\tfmt.Println(sum)\n}",
+    "expected": "5050",
+    "points": [
+      {
+        "id": "add",
+        "text": "wg.Add(1)",
+        "category": "statement",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "每启动一个 goroutine 前计数器加一",
+        "fill_type": "text"
+      },
+      {
+        "id": "done",
+        "text": "defer wg.Done()",
+        "category": "statement",
+        "min_weight": "easy",
+        "weight_score": 0.6,
+        "hint": "goroutine 结束时计数器减一",
+        "fill_type": "text"
+      },
+      {
+        "id": "lock",
+        "text": "mu.Lock()",
+        "category": "statement",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "并发修改 sum 前加互斥锁",
+        "fill_type": "text"
+      },
+      {
+        "id": "goroutine",
+        "text": "go func",
+        "category": "keyword",
+        "min_weight": "easy",
+        "weight_score": 0.4,
+        "hint": "启动 goroutine 的关键字",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 WaitGroup 管等待，Mutex 管互斥",
+      "level_2": "📖 `wg.Add(1)` 启动前增加，`defer wg.Done()` 退出前减少，写 sum 前 `mu.Lock()`",
+      "level_3": "👀 `go func(n int){ defer wg.Done(); mu.Lock(); ... }(i)`",
+      "level_4": "📝 正确答案：`wg.Add(1)` / `defer wg.Done()` / `mu.Lock()` / `go func`"
+    },
+    "explanation": "`go` 关键字启动 goroutine；`WaitGroup` 等待所有 goroutine 完成；`Mutex` 保证并发写 sum 互斥。1..100 求和为 5050。"
+  },
+  {
+    "id": "go-wordcount-107",
+    "title": "Goword 词频统计",
+    "description": "用 map 统计一段文本中单词出现的次数",
+    "exercise_type": "fill",
+    "tech_stack": "go",
+    "weight": "easy",
+    "category": "map",
+    "full_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"strings\"\n)\n\nfunc main() {\n\ttext := \"go go python go go\"\n\twords := strings.Fields(text)\n\tcounts := map[string]int{}\n\tfor _, w := range words {\n\t\tcounts[w]++\n\t}\n\tfmt.Println(counts[\"go\"], counts[\"python\"], counts[\"rust\"])\n}",
+    "expected": "4 1 0",
+    "points": [
+      {
+        "id": "fields",
+        "text": "strings.Fields",
+        "category": "function",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "按空白切分字符串成切片的内置函数",
+        "fill_type": "text"
+      },
+      {
+        "id": "incr",
+        "text": "counts[w]++",
+        "category": "statement",
+        "min_weight": "easy",
+        "weight_score": 0.6,
+        "hint": "单词出现次数加一（map 写入）",
+        "fill_type": "text"
+      },
+      {
+        "id": "lookup",
+        "text": "counts[\"python\"]",
+        "category": "expression",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "读取 python 出现的次数",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 切分文本 + map 计数",
+      "level_2": "📖 `strings.Fields(text)` 切词，`counts[w]++` 计数",
+      "level_3": "👀 `words := strings.Fields(text)` 然后 `counts[w]++`",
+      "level_4": "📝 正确答案：`strings.Fields` / `counts[w]++` / `counts[\"python\"]`"
+    },
+    "explanation": "`strings.Fields` 把字符串按空格切成切片；`map[string]int` 统计词频。"
+  },
+  {
+    "id": "go-map-missing-108",
+    "title": "Gomap map 键缺失处理 Bug 修复",
+    "description": "读取 map 中不存在的键时会返回零值并设置 ok=false，修复忽略 ok 的 bug",
+    "exercise_type": "bugfix",
+    "tech_stack": "go",
+    "weight": "medium",
+    "category": "bugfix",
+    "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tscores := map[string]int{\"alice\": 90, \"bob\": 80}\n\tscore, ok := scores[\"carol\"]\n\tif !ok {\n\t\tfmt.Println(\"not found\")\n\t} else {\n\t\tfmt.Println(score)\n\t}\n}",
+    "buggy_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tscores := map[string]int{\"alice\": 90, \"bob\": 80}\n\tscore, _ := scores[\"carol\"]\n\tfmt.Println(score)\n}",
+    "bug_description": "carol 不在 map 中，忽略 ok 会直接输出零值 0，期望输出 not found",
+    "bug_location": "score, _ := scores[\"carol\"]",
+    "expected": "not found",
+    "test_cases": [
+      {
+        "input": "",
+        "output": "not found"
+      }
+    ],
+    "points": [
+      {
+        "id": "read",
+        "text": "score, _ := scores[\"carol\"]",
+        "category": "statement",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "map 读取返回两个值，第二个是键是否存在的布尔值，忽略它就会漏判",
+        "fill_type": "code"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 map 返回两个值：值和是否存在",
+      "level_2": "📖 用 `ok` 接收第二个返回值，`if !ok` 时输出 not found",
+      "level_3": "👀 `score, ok := scores[\"carol\"]; if !ok { fmt.Println(\"not found\") }`",
+      "level_4": "📝 正确答案：`score, ok := scores[\"carol\"]` 并判断 `if !ok`"
+    },
+    "explanation": "Go 中读取 map 缺失键返回零值且 ok=false；必须检查 ok 才能真正区分「值存在但为 0」与「键不存在」。"
+  }
+]

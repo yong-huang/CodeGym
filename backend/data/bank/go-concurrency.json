@@ -1,0 +1,3076 @@
+[
+  {
+    "id": "go-cc-001",
+    "title": "启动 goroutine",
+    "description": "用 go 关键字启动协程并等待",
+    "exercise_type": "fill",
+    "tech_stack": "go",
+    "weight": "beginner",
+    "category": "goroutine",
+    "subcategory": "并发",
+    "full_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"sync\"\n)\n\nfunc main() {\n\tvar wg sync.WaitGroup\n\twg.Add(1)\n\tgo func() {\n\t\tdefer wg.Done()\n\t\tfmt.Println(\"hi\")\n\t}()\n\twg.Wait()\n}",
+    "expected": "hi",
+    "points": [
+      {
+        "id": "go",
+        "text": "go func",
+        "category": "keyword",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "启动协程的关键字",
+        "fill_type": "text"
+      },
+      {
+        "id": "wait",
+        "text": "wg.Wait()",
+        "category": "waitgroup",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "等待协程完成",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_wgAdd1",
+        "text": "wg.Add(1)",
+        "category": "waitgroup",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "启动前计数器 +1",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_deferwgDone",
+        "text": "defer wg.Done()",
+        "category": "waitgroup",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "协程完成时 -1",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 用 go 启动协程",
+      "level_2": "📖 `go` 启动协程，`WaitGroup` 等它完成",
+      "level_3": "👀 `go func(){ ... }()`",
+      "level_4": "📝 正确答案：`go func` / `wg.Wait()`"
+    },
+    "explanation": "`go` 关键字并发执行函数；主协程用 `WaitGroup.Wait()` 等待。"
+  },
+  {
+    "id": "go-cc-002",
+    "title": "WaitGroup 等待",
+    "description": "启动多个协程并等待全部完成",
+    "exercise_type": "fill",
+    "tech_stack": "go",
+    "weight": "beginner",
+    "category": "waitgroup",
+    "subcategory": "并发",
+    "full_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"sync\"\n)\n\nfunc main() {\n\tvar wg sync.WaitGroup\n\tdone := make(chan int, 5)\n\tfor i := 0; i \u003c 5; i++ {\n\t\twg.Add(1)\n\t\tgo func() {\n\t\t\tdefer wg.Done()\n\t\t\tdone \u003c- 1\n\t\t}()\n\t}\n\twg.Wait()\n\tclose(done)\n\ts := 0\n\tfor range done {\n\t\ts++\n\t}\n\tfmt.Println(s)\n}",
+    "expected": "5",
+    "points": [
+      {
+        "id": "add",
+        "text": "wg.Add(1)",
+        "category": "waitgroup",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "每次启动前计数 +1",
+        "fill_type": "text"
+      },
+      {
+        "id": "done",
+        "text": "done \u003c- 1",
+        "category": "channel",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "协程完成后发信号",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_gofunc",
+        "text": "go func",
+        "category": "goroutine",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "用 go 关键字启动协程",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_wgWait",
+        "text": "wg.Wait()",
+        "category": "waitgroup",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "等待所有协程完成",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_deferwgDone",
+        "text": "defer wg.Done()",
+        "category": "waitgroup",
+        "min_weight": "medium",
+        "weight_score": 0.7,
+        "hint": "协程完成时 -1",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_closedone",
+        "text": "close(done)",
+        "category": "channel",
+        "min_weight": "medium",
+        "weight_score": 0.7,
+        "hint": "关闭即广播放行",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_makechan",
+        "text": "make(chan",
+        "category": "channel",
+        "min_weight": "hard",
+        "weight_score": 0.7,
+        "hint": "创建 channel",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 WaitGroup + channel",
+      "level_2": "📖 `Add/Done/Wait` 等待全部协程，channel 汇总结果",
+      "level_3": "👀 `wg.Wait()`",
+      "level_4": "📝 正确答案：`wg.Add(1)` / `done \u003c- 1`"
+    },
+    "explanation": "WaitGroup 等待 5 个协程全部 `Done`，再用 channel 收齐，故 s=5。"
+  },
+  {
+    "id": "go-cc-003",
+    "title": "goroutine 参数捕获",
+    "description": "协程通过参数传入循环变量",
+    "exercise_type": "fill",
+    "tech_stack": "go",
+    "weight": "easy",
+    "category": "goroutine",
+    "subcategory": "并发",
+    "full_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"sync\"\n)\n\nfunc main() {\n\tvar wg sync.WaitGroup\n\tch := make(chan int, 3)\n\tfor i := 1; i \u003c= 3; i++ {\n\t\twg.Add(1)\n\t\tgo func(n int) {\n\t\t\tdefer wg.Done()\n\t\t\tch \u003c- n\n\t\t}(i)\n\t}\n\twg.Wait()\n\tclose(ch)\n\ts := 0\n\tfor v := range ch {\n\t\ts += v\n\t}\n\tfmt.Println(s)\n}",
+    "expected": "6",
+    "points": [
+      {
+        "id": "param",
+        "text": "go func(n int)",
+        "category": "closure",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "把循环变量作为参数传入",
+        "fill_type": "text"
+      },
+      {
+        "id": "call",
+        "text": "(i)",
+        "category": "closure",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "传入当前 i 的值",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_gofunc",
+        "text": "go func",
+        "category": "goroutine",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "用 go 关键字启动协程",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_wgAdd1",
+        "text": "wg.Add(1)",
+        "category": "waitgroup",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "启动前计数器 +1",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_wgWait",
+        "text": "wg.Wait()",
+        "category": "waitgroup",
+        "min_weight": "medium",
+        "weight_score": 0.7,
+        "hint": "等待所有协程完成",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_deferwgDone",
+        "text": "defer wg.Done()",
+        "category": "waitgroup",
+        "min_weight": "medium",
+        "weight_score": 0.7,
+        "hint": "协程完成时 -1",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_closech",
+        "text": "close(ch)",
+        "category": "channel",
+        "min_weight": "hard",
+        "weight_score": 0.7,
+        "hint": "关闭 channel 结束接收",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 按值传参捕获",
+      "level_2": "📖 把 i 作为参数传入，避免共享循环变量",
+      "level_3": "👀 `go func(n int){...}(i)`",
+      "level_4": "📝 正确答案：`func(n int)` / `(i)`"
+    },
+    "explanation": "把循环变量作为参数传入协程，每个协程拥有独立副本，结果 1+2+3=6。"
+  },
+  {
+    "id": "go-cc-004",
+    "title": "无缓冲 channel 通信",
+    "description": "协程用 channel 把值传给主协程",
+    "exercise_type": "fill",
+    "tech_stack": "go",
+    "weight": "beginner",
+    "category": "channel",
+    "subcategory": "并发",
+    "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tch := make(chan int)\n\tgo func() { ch \u003c- 7 }()\n\tv := \u003c-ch\n\tfmt.Println(v)\n}",
+    "expected": "7",
+    "points": [
+      {
+        "id": "send",
+        "text": "ch \u003c- 7",
+        "category": "channel",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "发送值",
+        "fill_type": "text"
+      },
+      {
+        "id": "recv",
+        "text": "\u003c-ch",
+        "category": "channel",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "接收值",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_gofunc",
+        "text": "go func",
+        "category": "goroutine",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "用 go 关键字启动协程",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_makechan",
+        "text": "make(chan",
+        "category": "channel",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "创建 channel",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_ch",
+        "text": "ch \u003c- ",
+        "category": "channel",
+        "min_weight": "medium",
+        "weight_score": 0.7,
+        "hint": "向 channel 发送",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 无缓冲 channel",
+      "level_2": "📖 发送后接收方就绪才完成（同步）",
+      "level_3": "👀 `ch \u003c- 7` → `v := \u003c-ch`",
+      "level_4": "📝 正确答案：`ch \u003c- 7` / `\u003c-ch`"
+    },
+    "explanation": "`ch \u003c- v` 发送、`v := \u003c-ch` 接收；无缓冲 channel 是同步的。"
+  },
+  {
+    "id": "go-cc-005",
+    "title": "缓冲 channel",
+    "description": "用带缓冲的 channel 避免阻塞",
+    "exercise_type": "fill",
+    "tech_stack": "go",
+    "weight": "beginner",
+    "category": "channel",
+    "subcategory": "并发",
+    "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tch := make(chan int, 3)\n\tch \u003c- 1\n\tch \u003c- 2\n\tch \u003c- 3\n\tfmt.Println(len(ch))\n}",
+    "expected": "3",
+    "points": [
+      {
+        "id": "make",
+        "text": "make(chan int, 3)",
+        "category": "channel",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "容量为 3 的缓冲",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_makechan",
+        "text": "make(chan",
+        "category": "channel",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "创建 channel",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_ch",
+        "text": "ch \u003c- ",
+        "category": "channel",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "向 channel 发送",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 缓冲 channel",
+      "level_2": "📖 容量未满时发送不阻塞",
+      "level_3": "👀 `len(ch)` 是已存数量",
+      "level_4": "📝 正确答案：`make(chan int, 3)`"
+    },
+    "explanation": "`make(chan T, n)` 创建容量 n 的缓冲；未满前发送不阻塞。"
+  },
+  {
+    "id": "go-cc-006",
+    "title": "遍历 channel 求和",
+    "description": "发送后 close 再 range 求和",
+    "exercise_type": "fill",
+    "tech_stack": "go",
+    "weight": "easy",
+    "category": "channel",
+    "subcategory": "并发",
+    "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tch := make(chan int, 3)\n\tch \u003c- 1\n\tch \u003c- 2\n\tch \u003c- 3\n\tclose(ch)\n\ts := 0\n\tfor v := range ch {\n\t\ts += v\n\t}\n\tfmt.Println(s)\n}",
+    "expected": "6",
+    "points": [
+      {
+        "id": "close",
+        "text": "close(ch)",
+        "category": "channel",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "关闭 channel 结束 range",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_makechan",
+        "text": "make(chan",
+        "category": "channel",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "创建 channel",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_ch",
+        "text": "ch \u003c- ",
+        "category": "channel",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "向 channel 发送",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 关闭 channel",
+      "level_2": "📖 `range ch` 在关闭后结束",
+      "level_3": "👀 `for v := range ch`",
+      "level_4": "📝 正确答案：`close(ch)`"
+    },
+    "explanation": "发送完 `close(ch)` 后 `range` 才结束；不关闭则无限等待。"
+  },
+  {
+    "id": "go-cc-007",
+    "title": "只发送 channel",
+    "description": "用只写 channel 参数",
+    "exercise_type": "fill",
+    "tech_stack": "go",
+    "weight": "medium",
+    "category": "channel_direction",
+    "subcategory": "并发",
+    "full_code": "package main\n\nimport \"fmt\"\n\nfunc send(ch chan\u003c- int) {\n\tch \u003c- 42\n}\n\nfunc main() {\n\tch := make(chan int)\n\tgo send(ch)\n\tfmt.Println(\u003c-ch)\n}",
+    "expected": "42",
+    "points": [
+      {
+        "id": "dir",
+        "text": "chan\u003c- int",
+        "category": "channel_direction",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "只写的 channel 类型",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_makechan",
+        "text": "make(chan",
+        "category": "channel",
+        "min_weight": "beginner",
+        "weight_score": 0.7,
+        "hint": "创建 channel",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_ch",
+        "text": "ch \u003c- ",
+        "category": "channel",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "向 channel 发送",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_ch",
+        "text": "\u003c-ch",
+        "category": "channel",
+        "min_weight": "medium",
+        "weight_score": 0.7,
+        "hint": "从 channel 接收",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 单向 channel",
+      "level_2": "📖 `chan\u003c-` 只写、`\u003c-chan` 只读",
+      "level_3": "👀 `func send(ch chan\u003c- int)`",
+      "level_4": "📝 正确答案：`chan\u003c- int`"
+    },
+    "explanation": "`chan\u003c- T` 声明只写 channel，编译器在函数内禁止接收。"
+  },
+  {
+    "id": "go-cc-008",
+    "title": "只接收 channel",
+    "description": "用只读 channel 参数",
+    "exercise_type": "fill",
+    "tech_stack": "go",
+    "weight": "medium",
+    "category": "channel_direction",
+    "subcategory": "并发",
+    "full_code": "package main\n\nimport \"fmt\"\n\nfunc recv(ch \u003c-chan int) int {\n\treturn \u003c-ch\n}\n\nfunc main() {\n\tch := make(chan int, 1)\n\tch \u003c- 7\n\tfmt.Println(recv(ch))\n}",
+    "expected": "7",
+    "points": [
+      {
+        "id": "dir",
+        "text": "\u003c-chan int",
+        "category": "channel_direction",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "只读的 channel 类型",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_makechan",
+        "text": "make(chan",
+        "category": "channel",
+        "min_weight": "beginner",
+        "weight_score": 0.7,
+        "hint": "创建 channel",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_ch",
+        "text": "ch \u003c- ",
+        "category": "channel",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "向 channel 发送",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_ch",
+        "text": "\u003c-ch",
+        "category": "channel",
+        "min_weight": "medium",
+        "weight_score": 0.7,
+        "hint": "从 channel 接收",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 单向只读",
+      "level_2": "📖 `\u003c-chan T` 只读，防止误发送",
+      "level_3": "👀 `func recv(ch \u003c-chan int)`",
+      "level_4": "📝 正确答案：`\u003c-chan int`"
+    },
+    "explanation": "`\u003c-chan T` 只读 channel；把 channel 按方向限制传给函数更安全。"
+  },
+  {
+    "id": "go-cc-009",
+    "title": "接收 ok 判断",
+    "description": "从已关闭 channel 接收并判断状态",
+    "exercise_type": "fill",
+    "tech_stack": "go",
+    "weight": "easy",
+    "category": "channel",
+    "subcategory": "并发",
+    "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tch := make(chan int, 1)\n\tch \u003c- 5\n\tclose(ch)\n\tv, ok := \u003c-ch\n\tfmt.Println(v, ok)\n}",
+    "expected": "5 true",
+    "points": [
+      {
+        "id": "ok",
+        "text": "ok",
+        "category": "channel",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "是否成功收到",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_closech",
+        "text": "close(ch)",
+        "category": "channel",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "关闭 channel 结束接收",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_makechan",
+        "text": "make(chan",
+        "category": "channel",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "创建 channel",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_ch",
+        "text": "ch \u003c- ",
+        "category": "channel",
+        "min_weight": "medium",
+        "weight_score": 0.7,
+        "hint": "向 channel 发送",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_ch",
+        "text": "\u003c-ch",
+        "category": "channel",
+        "min_weight": "medium",
+        "weight_score": 0.7,
+        "hint": "从 channel 接收",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 ok 判断",
+      "level_2": "📖 ok=false 表示 channel 已关闭且无值",
+      "level_3": "👀 `fmt.Println(v, ok)`",
+      "level_4": "📝 正确答案：`v, ok := \u003c-ch`"
+    },
+    "explanation": "接收返回 `(值, ok)`，ok=false 表示已关闭无数据。"
+  },
+  {
+    "id": "go-cc-010",
+    "title": "select 就绪分支",
+    "description": "用 select 从有值的 channel 接收",
+    "exercise_type": "fill",
+    "tech_stack": "go",
+    "weight": "easy",
+    "category": "select",
+    "subcategory": "并发",
+    "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\ta := make(chan int, 1)\n\tb := make(chan int, 1)\n\tb \u003c- 2\n\tselect {\n\tcase x := \u003c-a:\n\t\tfmt.Println(\"a\", x)\n\tcase x := \u003c-b:\n\t\tfmt.Println(\"b\", x)\n\t}\n}",
+    "expected": "b 2",
+    "points": [
+      {
+        "id": "select",
+        "text": "select",
+        "category": "keyword",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "多路复用关键字",
+        "fill_type": "text"
+      },
+      {
+        "id": "case",
+        "text": "case x := \u003c-b:",
+        "category": "select",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "接收 b 的分支",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_makechan",
+        "text": "make(chan",
+        "category": "channel",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "创建 channel",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_select",
+        "text": "select {",
+        "category": "select",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "多路复用选择",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 select 接收",
+      "level_2": "📖 b 有值则走该分支",
+      "level_3": "👀 `select { case x := \u003c-b: ... }`",
+      "level_4": "📝 正确答案：`select` / `case x := \u003c-b:`"
+    },
+    "explanation": "`select` 多个 case 中随选一个就绪的（都有值时随机）。"
+  },
+  {
+    "id": "go-cc-011",
+    "title": "select default",
+    "description": "无就绪分支时走 default",
+    "exercise_type": "fill",
+    "tech_stack": "go",
+    "weight": "easy",
+    "category": "select",
+    "subcategory": "并发",
+    "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tch := make(chan int)\n\tselect {\n\tcase v := \u003c-ch:\n\t\tfmt.Println(v)\n\tdefault:\n\t\tfmt.Println(\"default\")\n\t}\n}",
+    "expected": "default",
+    "points": [
+      {
+        "id": "default",
+        "text": "default:",
+        "category": "select",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "无就绪分支的默认项",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_makechan",
+        "text": "make(chan",
+        "category": "channel",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "创建 channel",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_ch",
+        "text": "\u003c-ch",
+        "category": "channel",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "从 channel 接收",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_select",
+        "text": "select {",
+        "category": "select",
+        "min_weight": "medium",
+        "weight_score": 0.7,
+        "hint": "多路复用选择",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 select default",
+      "level_2": "📖 所有 case 未就绪时走 default",
+      "level_3": "👀 `select { default: }`",
+      "level_4": "📝 正确答案：`default:`"
+    },
+    "explanation": "`select` 的 `default` 在其它 case 都未就绪时立即执行，用于非阻塞探测。"
+  },
+  {
+    "id": "go-cc-012",
+    "title": "select 超时",
+    "description": "用 time.After 实现超时",
+    "exercise_type": "fill",
+    "tech_stack": "go",
+    "weight": "medium",
+    "category": "select",
+    "subcategory": "并发",
+    "full_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\nfunc main() {\n\tch := make(chan int)\n\tselect {\n\tcase v := \u003c-ch:\n\t\tfmt.Println(v)\n\tcase \u003c-time.After(10 * time.Millisecond):\n\t\tfmt.Println(\"timeout\")\n\t}\n}",
+    "expected": "timeout",
+    "points": [
+      {
+        "id": "after",
+        "text": "time.After(10 * time.Millisecond)",
+        "category": "timeout",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "定时通道",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_timeAfter",
+        "text": "time.After(",
+        "category": "timeout",
+        "min_weight": "beginner",
+        "weight_score": 0.7,
+        "hint": "超时通道",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_makechan",
+        "text": "make(chan",
+        "category": "channel",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "创建 channel",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_ch",
+        "text": "\u003c-ch",
+        "category": "channel",
+        "min_weight": "medium",
+        "weight_score": 0.7,
+        "hint": "从 channel 接收",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_select",
+        "text": "select {",
+        "category": "select",
+        "min_weight": "medium",
+        "weight_score": 0.7,
+        "hint": "多路复用选择",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 select 超时",
+      "level_2": "📖 time.After 到期后可读，实现超时",
+      "level_3": "👀 `case \u003c-time.After(10ms):`",
+      "level_4": "📝 正确答案：`time.After`"
+    },
+    "explanation": "`time.After(d)` 到点后向其通道发送，配合 select 做超时。"
+  },
+  {
+    "id": "go-cc-013",
+    "title": "Mutex 互斥",
+    "description": "用 Mutex 保护共享计数",
+    "exercise_type": "fill",
+    "tech_stack": "go",
+    "weight": "medium",
+    "category": "mutex",
+    "subcategory": "并发",
+    "full_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"sync\"\n)\n\nfunc main() {\n\tvar wg sync.WaitGroup\n\tvar mu sync.Mutex\n\tn := 0\n\tfor i := 0; i \u003c 1000; i++ {\n\t\twg.Add(1)\n\t\tgo func() {\n\t\t\tdefer wg.Done()\n\t\t\tmu.Lock()\n\t\t\tn++\n\t\t\tmu.Unlock()\n\t\t}()\n\t}\n\twg.Wait()\n\tfmt.Println(n)\n}",
+    "expected": "1000",
+    "points": [
+      {
+        "id": "lock",
+        "text": "mu.Lock()",
+        "category": "mutex",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "加锁",
+        "fill_type": "text"
+      },
+      {
+        "id": "unlock",
+        "text": "mu.Unlock()",
+        "category": "mutex",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "解锁",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_gofunc",
+        "text": "go func",
+        "category": "goroutine",
+        "min_weight": "beginner",
+        "weight_score": 0.7,
+        "hint": "用 go 关键字启动协程",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_wgAdd1",
+        "text": "wg.Add(1)",
+        "category": "waitgroup",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "启动前计数器 +1",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_wgWait",
+        "text": "wg.Wait()",
+        "category": "waitgroup",
+        "min_weight": "medium",
+        "weight_score": 0.7,
+        "hint": "等待所有协程完成",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_deferwgDone",
+        "text": "defer wg.Done()",
+        "category": "waitgroup",
+        "min_weight": "medium",
+        "weight_score": 0.7,
+        "hint": "协程完成时 -1",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 Mutex 保护临界区",
+      "level_2": "📖 加锁后再读写共享变量",
+      "level_3": "👀 `mu.Lock(); n++; mu.Unlock()`",
+      "level_4": "📝 正确答案：`mu.Lock()` / `mu.Unlock()`"
+    },
+    "explanation": "`Lock/Unlock` 保证同一时刻只有一个协程进入临界区。"
+  },
+  {
+    "id": "go-cc-014",
+    "title": "RWMutex 读写锁",
+    "description": "多个读并发、写互斥",
+    "exercise_type": "fill",
+    "tech_stack": "go",
+    "weight": "hard",
+    "category": "rwmutex",
+    "subcategory": "并发",
+    "full_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"sync\"\n)\n\nfunc main() {\n\tvar mu sync.RWMutex\n\tvar wg sync.WaitGroup\n\treads := 0\n\tfor i := 0; i \u003c 5; i++ {\n\t\twg.Add(1)\n\t\tgo func() {\n\t\t\tdefer wg.Done()\n\t\t\tmu.RLock()\n\t\t\t_ = reads\n\t\t\tmu.RUnlock()\n\t\t}()\n\t}\n\twg.Wait()\n\tfmt.Println(reads)\n}",
+    "expected": "0",
+    "points": [
+      {
+        "id": "rlock",
+        "text": "mu.RLock()",
+        "category": "rwmutex",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "读锁",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_gofunc",
+        "text": "go func",
+        "category": "goroutine",
+        "min_weight": "beginner",
+        "weight_score": 0.7,
+        "hint": "用 go 关键字启动协程",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_wgAdd1",
+        "text": "wg.Add(1)",
+        "category": "waitgroup",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "启动前计数器 +1",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_wgWait",
+        "text": "wg.Wait()",
+        "category": "waitgroup",
+        "min_weight": "medium",
+        "weight_score": 0.7,
+        "hint": "等待所有协程完成",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_deferwgDone",
+        "text": "defer wg.Done()",
+        "category": "waitgroup",
+        "min_weight": "medium",
+        "weight_score": 0.7,
+        "hint": "协程完成时 -1",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 读写锁",
+      "level_2": "📖 RLock 共享读，写 Lock 独占",
+      "level_3": "👀 `mu.RLock() ... mu.RUnlock()`",
+      "level_4": "📝 正确答案：`mu.RLock()`"
+    },
+    "explanation": "`RWMutex` 允许多个读并发；写者需要独占 `Lock`。"
+  },
+  {
+    "id": "go-cc-015",
+    "title": "sync.Once 只执行一次",
+    "description": "多个协程只初始化一次",
+    "exercise_type": "fill",
+    "tech_stack": "go",
+    "weight": "medium",
+    "category": "once",
+    "subcategory": "并发",
+    "full_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"sync\"\n)\n\nfunc main() {\n\tvar once sync.Once\n\tvar wg sync.WaitGroup\n\tfor i := 0; i \u003c 5; i++ {\n\t\twg.Add(1)\n\t\tgo func() {\n\t\t\tdefer wg.Done()\n\t\t\tonce.Do(func() { fmt.Println(\"init\") })\n\t\t}()\n\t}\n\twg.Wait()\n\tfmt.Println(\"done\")\n}",
+    "expected": "init\ndone",
+    "points": [
+      {
+        "id": "once",
+        "text": "once.Do",
+        "category": "once",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "只执行一次的方法",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_gofunc",
+        "text": "go func",
+        "category": "goroutine",
+        "min_weight": "beginner",
+        "weight_score": 0.7,
+        "hint": "用 go 关键字启动协程",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_wgAdd1",
+        "text": "wg.Add(1)",
+        "category": "waitgroup",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "启动前计数器 +1",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_wgWait",
+        "text": "wg.Wait()",
+        "category": "waitgroup",
+        "min_weight": "medium",
+        "weight_score": 0.7,
+        "hint": "等待所有协程完成",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_deferwgDone",
+        "text": "defer wg.Done()",
+        "category": "waitgroup",
+        "min_weight": "medium",
+        "weight_score": 0.7,
+        "hint": "协程完成时 -1",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 sync.Once",
+      "level_2": "📖 无论多少协程调用都只执行一次",
+      "level_3": "👀 `once := sync.Once{}`",
+      "level_4": "📝 正确答案：`once.Do(...)`"
+    },
+    "explanation": "`Once.Do(f)` 保证 f 只执行一次，即使多个协程并发调用。"
+  },
+  {
+    "id": "go-cc-016",
+    "title": "atomic 原子加",
+    "description": "用 atomic 安全计数",
+    "exercise_type": "fill",
+    "tech_stack": "go",
+    "weight": "medium",
+    "category": "atomic",
+    "subcategory": "并发",
+    "full_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"sync\"\n\t\"sync/atomic\"\n)\n\nfunc main() {\n\tvar n int64\n\tvar wg sync.WaitGroup\n\tfor i := 0; i \u003c 100; i++ {\n\t\twg.Add(1)\n\t\tgo func() {\n\t\t\tdefer wg.Done()\n\t\t\tatomic.AddInt64(\u0026n, 1)\n\t\t}()\n\t}\n\twg.Wait()\n\tfmt.Println(n)\n}",
+    "expected": "100",
+    "points": [
+      {
+        "id": "add",
+        "text": "atomic.AddInt64(\u0026n, 1)",
+        "category": "atomic",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "原子自增",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_gofunc",
+        "text": "go func",
+        "category": "goroutine",
+        "min_weight": "beginner",
+        "weight_score": 0.7,
+        "hint": "用 go 关键字启动协程",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_wgAdd1",
+        "text": "wg.Add(1)",
+        "category": "waitgroup",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "启动前计数器 +1",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_wgWait",
+        "text": "wg.Wait()",
+        "category": "waitgroup",
+        "min_weight": "medium",
+        "weight_score": 0.7,
+        "hint": "等待所有协程完成",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_deferwgDone",
+        "text": "defer wg.Done()",
+        "category": "waitgroup",
+        "min_weight": "medium",
+        "weight_score": 0.7,
+        "hint": "协程完成时 -1",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_atomicAddInt64",
+        "text": "atomic.AddInt64",
+        "category": "atomic",
+        "min_weight": "hard",
+        "weight_score": 0.7,
+        "hint": "原子自增",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 原子操作",
+      "level_2": "📖 无需加锁也能安全累加",
+      "level_3": "👀 `atomic.AddInt64(\u0026n, 1)`",
+      "level_4": "📝 正确答案：`atomic.AddInt64(\u0026n, 1)`"
+    },
+    "explanation": "`sync/atomic` 提供无锁原子运算，计数器并发安全。"
+  },
+  {
+    "id": "go-cc-017",
+    "title": "CAS 原子比较交换",
+    "description": "用 CompareAndSwap 更新值",
+    "exercise_type": "fill",
+    "tech_stack": "go",
+    "weight": "hard",
+    "category": "atomic",
+    "subcategory": "并发",
+    "full_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"sync/atomic\"\n)\n\nfunc main() {\n\tvar n int64 = 5\n\tok := atomic.CompareAndSwapInt64(\u0026n, 5, 10)\n\tfmt.Println(n, ok)\n}",
+    "expected": "10 true",
+    "points": [
+      {
+        "id": "cas",
+        "text": "CompareAndSwapInt64(\u0026n, 5, 10)",
+        "category": "atomic",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "比较并交换",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_atomicCompareAndSwapInt64",
+        "text": "atomic.CompareAndSwapInt64",
+        "category": "atomic",
+        "min_weight": "beginner",
+        "weight_score": 0.7,
+        "hint": "原子比较交换",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 CAS 原子",
+      "level_2": "📖 值等于旧值才替换，返回是否成功",
+      "level_3": "👀 `atomic.CompareAndSwapInt64(\u0026n, 5, 10)`",
+      "level_4": "📝 正确答案：`CompareAndSwapInt64(\u0026n, 5, 10)`"
+    },
+    "explanation": "CAS：仅当当前值等于旧值时写入新值，失败可重试实现乐观更新。"
+  },
+  {
+    "id": "go-cc-018",
+    "title": "channel 生成器",
+    "description": "用 channel 生成序列",
+    "exercise_type": "fill",
+    "tech_stack": "go",
+    "weight": "medium",
+    "category": "channel_pattern",
+    "subcategory": "并发",
+    "full_code": "package main\n\nimport \"fmt\"\n\nfunc nums() \u003c-chan int {\n\tch := make(chan int)\n\tgo func() {\n\t\tfor i := 1; i \u003c= 4; i++ {\n\t\t\tch \u003c- i\n\t\t}\n\t\tclose(ch)\n\t}()\n\treturn ch\n}\n\nfunc main() {\n\ts := 0\n\tfor v := range nums() {\n\t\ts += v\n\t}\n\tfmt.Println(s)\n}",
+    "expected": "10",
+    "points": [
+      {
+        "id": "ret",
+        "text": "\u003c-chan int",
+        "category": "channel_pattern",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "返回只读 channel",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_gofunc",
+        "text": "go func",
+        "category": "goroutine",
+        "min_weight": "beginner",
+        "weight_score": 0.7,
+        "hint": "用 go 关键字启动协程",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_closech",
+        "text": "close(ch)",
+        "category": "channel",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "关闭 channel 结束接收",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_makechan",
+        "text": "make(chan",
+        "category": "channel",
+        "min_weight": "medium",
+        "weight_score": 0.7,
+        "hint": "创建 channel",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_ch",
+        "text": "ch \u003c- ",
+        "category": "channel",
+        "min_weight": "medium",
+        "weight_score": 0.7,
+        "hint": "向 channel 发送",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_ch",
+        "text": "\u003c-ch",
+        "category": "channel",
+        "min_weight": "hard",
+        "weight_score": 0.7,
+        "hint": "从 channel 接收",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 生成器模式",
+      "level_2": "📖 函数用协程生产、channel 传出",
+      "level_3": "👀 `for v := range nums()`",
+      "level_4": "📝 正确答案：`nums() \u003c-chan int`"
+    },
+    "explanation": "函数返回只读 channel，后台协程往里发送数据（生产者）。"
+  },
+  {
+    "id": "go-cc-019",
+    "title": "Worker Pool 任务池",
+    "description": "多个 worker 处理任务",
+    "exercise_type": "fill",
+    "tech_stack": "go",
+    "weight": "hard",
+    "category": "channel_pattern",
+    "subcategory": "并发",
+    "full_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"sync\"\n)\n\nfunc worker(id int, jobs \u003c-chan int, res chan\u003c- int, wg *sync.WaitGroup) {\n\tfor j := range jobs {\n\t\tres \u003c- j * 2\n\t}\n\twg.Done()\n}\n\nfunc main() {\n\tjobs := make(chan int, 5)\n\tres := make(chan int, 5)\n\tvar wg sync.WaitGroup\n\tfor w := 0; w \u003c 2; w++ {\n\t\twg.Add(1)\n\t\tgo worker(w, jobs, res, \u0026wg)\n\t}\n\tfor j := 1; j \u003c= 5; j++ {\n\t\tjobs \u003c- j\n\t}\n\tclose(jobs)\n\twg.Wait()\n\tclose(res)\n\ts := 0\n\tfor v := range res {\n\t\ts += v\n\t}\n\tfmt.Println(s)\n}",
+    "expected": "30",
+    "points": [
+      {
+        "id": "range",
+        "text": "for j := range jobs",
+        "category": "channel_pattern",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "从任务 channel 取任务",
+        "fill_type": "text"
+      },
+      {
+        "id": "close",
+        "text": "close(jobs)",
+        "category": "channel_pattern",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "投完任务后关闭",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_wgAdd1",
+        "text": "wg.Add(1)",
+        "category": "waitgroup",
+        "min_weight": "beginner",
+        "weight_score": 0.7,
+        "hint": "启动前计数器 +1",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_wgWait",
+        "text": "wg.Wait()",
+        "category": "waitgroup",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "等待所有协程完成",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_makechan",
+        "text": "make(chan",
+        "category": "channel",
+        "min_weight": "medium",
+        "weight_score": 0.7,
+        "hint": "创建 channel",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_ch",
+        "text": "\u003c-ch",
+        "category": "channel",
+        "min_weight": "medium",
+        "weight_score": 0.7,
+        "hint": "从 channel 接收",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 Worker Pool",
+      "level_2": "📖 多个 worker 从 jobs channel 消费",
+      "level_3": "👀 `for j := range jobs`",
+      "level_4": "📝 正确答案：`for j := range jobs` / `close(jobs)`"
+    },
+    "explanation": "固定 worker 并行消费任务 channel；作业投完 `close`。结果 2×(1..5)=30。"
+  },
+  {
+    "id": "go-cc-020",
+    "title": "Fan-in 汇聚",
+    "description": "多个协程写入同一 channel",
+    "exercise_type": "fill",
+    "tech_stack": "go",
+    "weight": "medium",
+    "category": "channel_pattern",
+    "subcategory": "并发",
+    "full_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"sync\"\n)\n\nfunc main() {\n\tch := make(chan int, 2)\n\tvar wg sync.WaitGroup\n\tfor i := 1; i \u003c= 2; i++ {\n\t\twg.Add(1)\n\t\tgo func(n int) {\n\t\t\tdefer wg.Done()\n\t\t\tch \u003c- n\n\t\t}(i)\n\t}\n\twg.Wait()\n\tclose(ch)\n\ts := 0\n\tfor v := range ch {\n\t\ts += v\n\t}\n\tfmt.Println(s)\n}",
+    "expected": "3",
+    "points": [
+      {
+        "id": "close",
+        "text": "close(ch)",
+        "category": "channel_pattern",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "全部写完后关闭",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_gofunc",
+        "text": "go func",
+        "category": "goroutine",
+        "min_weight": "beginner",
+        "weight_score": 0.7,
+        "hint": "用 go 关键字启动协程",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_wgAdd1",
+        "text": "wg.Add(1)",
+        "category": "waitgroup",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "启动前计数器 +1",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_wgWait",
+        "text": "wg.Wait()",
+        "category": "waitgroup",
+        "min_weight": "medium",
+        "weight_score": 0.7,
+        "hint": "等待所有协程完成",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_deferwgDone",
+        "text": "defer wg.Done()",
+        "category": "waitgroup",
+        "min_weight": "medium",
+        "weight_score": 0.7,
+        "hint": "协程完成时 -1",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_makechan",
+        "text": "make(chan",
+        "category": "channel",
+        "min_weight": "hard",
+        "weight_score": 0.7,
+        "hint": "创建 channel",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 Fan-in 汇聚",
+      "level_2": "📖 多个生产者写一个 channel，主协程读",
+      "level_3": "👀 `for v := range ch`",
+      "level_4": "📝 正确答案：`close(ch)`"
+    },
+    "explanation": "Fan-in：多个协程向同一 channel 写入，主协程汇聚消费。"
+  },
+  {
+    "id": "go-cc-021",
+    "title": "Pipeline 流水线",
+    "description": "两级管道传递并变换",
+    "exercise_type": "fill",
+    "tech_stack": "go",
+    "weight": "hard",
+    "category": "channel_pattern",
+    "subcategory": "并发",
+    "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tin := make(chan int)\n\tout := make(chan int)\n\tgo func() {\n\t\tin \u003c- 4\n\t\tclose(in)\n\t}()\n\tgo func() {\n\t\tfor v := range in {\n\t\t\tout \u003c- v * 2\n\t\t}\n\t\tclose(out)\n\t}()\n\tfmt.Println(\u003c-out)\n}",
+    "expected": "8",
+    "points": [
+      {
+        "id": "map",
+        "text": "v * 2",
+        "category": "channel_pattern",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "在流水线中变换值",
+        "fill_type": "text"
+      },
+      {
+        "id": "close",
+        "text": "close(out)",
+        "category": "channel_pattern",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "输出完成关闭",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_gofunc",
+        "text": "go func",
+        "category": "goroutine",
+        "min_weight": "beginner",
+        "weight_score": 0.7,
+        "hint": "用 go 关键字启动协程",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_makechan",
+        "text": "make(chan",
+        "category": "channel",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "创建 channel",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 Pipeline 流水线",
+      "level_2": "📖 阶段间用 channel 传值",
+      "level_3": "👀 `out \u003c- v * 2`",
+      "level_4": "📝 正确答案：`v * 2` / `close(out)`"
+    },
+    "explanation": "Pipeline：上阶段写入、下阶段变换后再输出；4×2=8。"
+  },
+  {
+    "id": "go-cc-022",
+    "title": "cap 与 len of channel",
+    "description": "查看 channel 容量与元素数",
+    "exercise_type": "fill",
+    "tech_stack": "go",
+    "weight": "easy",
+    "category": "channel",
+    "subcategory": "并发",
+    "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tch := make(chan int, 5)\n\tch \u003c- 1\n\tch \u003c- 2\n\tfmt.Println(len(ch), cap(ch))\n}",
+    "expected": "2 5",
+    "points": [
+      {
+        "id": "cap",
+        "text": "cap(ch)",
+        "category": "channel",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "channel 容量",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_makechan",
+        "text": "make(chan",
+        "category": "channel",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "创建 channel",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_ch",
+        "text": "ch \u003c- ",
+        "category": "channel",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "向 channel 发送",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 channel 容量",
+      "level_2": "📖 len=已存，cap=容量",
+      "level_3": "👀 `fmt.Println(len(ch), cap(ch))`",
+      "level_4": "📝 正确答案：`cap(ch)`"
+    },
+    "explanation": "`len` 已存数量、`cap` 总容量（仅缓冲 channel 有意义）。"
+  },
+  {
+    "id": "go-cc-023",
+    "title": "close 广播",
+    "description": "关闭 channel 同时通知多个协程",
+    "exercise_type": "fill",
+    "tech_stack": "go",
+    "weight": "hard",
+    "category": "channel",
+    "subcategory": "并发",
+    "full_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"sync\"\n)\n\nfunc main() {\n\tdone := make(chan struct{})\n\tvar wg sync.WaitGroup\n\tfor i := 0; i \u003c 3; i++ {\n\t\twg.Add(1)\n\t\tgo func() {\n\t\t\tdefer wg.Done()\n\t\t\t\u003c-done\n\t\t\tfmt.Println(\"x\")\n\t\t}()\n\t}\n\tclose(done)\n\twg.Wait()\n}",
+    "expected": "x\nx\nx",
+    "points": [
+      {
+        "id": "close",
+        "text": "close(done)",
+        "category": "channel",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "关闭即广播",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_gofunc",
+        "text": "go func",
+        "category": "goroutine",
+        "min_weight": "beginner",
+        "weight_score": 0.7,
+        "hint": "用 go 关键字启动协程",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_wgAdd1",
+        "text": "wg.Add(1)",
+        "category": "waitgroup",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "启动前计数器 +1",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_wgWait",
+        "text": "wg.Wait()",
+        "category": "waitgroup",
+        "min_weight": "medium",
+        "weight_score": 0.7,
+        "hint": "等待所有协程完成",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_deferwgDone",
+        "text": "defer wg.Done()",
+        "category": "waitgroup",
+        "min_weight": "medium",
+        "weight_score": 0.7,
+        "hint": "协程完成时 -1",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_done",
+        "text": "\u003c-done",
+        "category": "channel",
+        "min_weight": "hard",
+        "weight_score": 0.7,
+        "hint": "接收退出信号",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 close 广播",
+      "level_2": "📖 所有等待接收的协程同时被唤醒",
+      "level_3": "👀 `\u003c-done` 解除阻塞",
+      "level_4": "📝 正确答案：`close(done)`"
+    },
+    "explanation": "关闭空 channel 会同时唤醒所有等待它的接收者，用作退出信号。"
+  },
+  {
+    "id": "go-cc-024",
+    "title": "信号量限流",
+    "description": "用缓冲 channel 限制并发数",
+    "exercise_type": "fill",
+    "tech_stack": "go",
+    "weight": "hard",
+    "category": "pattern",
+    "subcategory": "并发",
+    "full_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"sync\"\n)\n\nfunc main() {\n\tvar wg sync.WaitGroup\n\tsem := make(chan struct{}, 2)\n\tcnt := 0\n\tfor i := 0; i \u003c 10; i++ {\n\t\twg.Add(1)\n\t\tgo func() {\n\t\t\tdefer wg.Done()\n\t\t\tsem \u003c- struct{}{}\n\t\t\tcnt++\n\t\t\t\u003c-sem\n\t\t}()\n\t}\n\twg.Wait()\n\tfmt.Println(cnt, cap(sem))\n}",
+    "expected": "10 2",
+    "points": [
+      {
+        "id": "sem",
+        "text": "sem \u003c- struct{}{}",
+        "category": "pattern",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "占一个信号量槽",
+        "fill_type": "text"
+      },
+      {
+        "id": "rel",
+        "text": "\u003c-sem",
+        "category": "pattern",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "释放槽位",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_gofunc",
+        "text": "go func",
+        "category": "goroutine",
+        "min_weight": "beginner",
+        "weight_score": 0.7,
+        "hint": "用 go 关键字启动协程",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_wgAdd1",
+        "text": "wg.Add(1)",
+        "category": "waitgroup",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "启动前计数器 +1",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_wgWait",
+        "text": "wg.Wait()",
+        "category": "waitgroup",
+        "min_weight": "medium",
+        "weight_score": 0.7,
+        "hint": "等待所有协程完成",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_deferwgDone",
+        "text": "defer wg.Done()",
+        "category": "waitgroup",
+        "min_weight": "medium",
+        "weight_score": 0.7,
+        "hint": "协程完成时 -1",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_makechan",
+        "text": "make(chan",
+        "category": "channel",
+        "min_weight": "hard",
+        "weight_score": 0.7,
+        "hint": "创建 channel",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 信号量",
+      "level_2": "📖 并发数=信号量容量",
+      "level_3": "👀 `sem \u003c- struct{}{}` 占用，`\u003c-sem` 释放",
+      "level_4": "📝 正确答案：`sem \u003c- struct{}{}` / `\u003c-sem`"
+    },
+    "explanation": "用容量受限的 channel 作信号量，`cnt++` 无锁不保证但此处并发数小。"
+  },
+  {
+    "id": "go-cc-025",
+    "title": "context 取消",
+    "description": "用 cancel 通知协程退出",
+    "exercise_type": "fill",
+    "tech_stack": "go",
+    "weight": "hard",
+    "category": "context",
+    "subcategory": "并发",
+    "full_code": "package main\n\nimport (\n\t\"context\"\n\t\"fmt\"\n\t\"sync\"\n)\n\nfunc main() {\n\tctx, cancel := context.WithCancel(context.Background())\n\tvar wg sync.WaitGroup\n\twg.Add(1)\n\tgo func() {\n\t\tdefer wg.Done()\n\t\tselect {\n\t\tcase \u003c-ctx.Done():\n\t\t\tfmt.Println(\"canceled\")\n\t\t}\n\t}()\n\tcancel()\n\twg.Wait()\n}",
+    "expected": "canceled",
+    "points": [
+      {
+        "id": "done",
+        "text": "ctx.Done()",
+        "category": "context",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "取消通知通道",
+        "fill_type": "text"
+      },
+      {
+        "id": "cancel",
+        "text": "cancel()",
+        "category": "context",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "触发取消",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_gofunc",
+        "text": "go func",
+        "category": "goroutine",
+        "min_weight": "beginner",
+        "weight_score": 0.7,
+        "hint": "用 go 关键字启动协程",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_wgAdd1",
+        "text": "wg.Add(1)",
+        "category": "waitgroup",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "启动前计数器 +1",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_wgWait",
+        "text": "wg.Wait()",
+        "category": "waitgroup",
+        "min_weight": "medium",
+        "weight_score": 0.7,
+        "hint": "等待所有协程完成",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_deferwgDone",
+        "text": "defer wg.Done()",
+        "category": "waitgroup",
+        "min_weight": "medium",
+        "weight_score": 0.7,
+        "hint": "协程完成时 -1",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_select",
+        "text": "select {",
+        "category": "select",
+        "min_weight": "hard",
+        "weight_score": 0.7,
+        "hint": "多路复用选择",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 context 取消",
+      "level_2": "📖 cancel 后 Done 关闭，select 解除阻塞",
+      "level_3": "👀 `case \u003c-ctx.Done():`",
+      "level_4": "📝 正确答案：`ctx.Done()` / `cancel()`"
+    },
+    "explanation": "`WithCancel` 派生子 context，调 `cancel()` 关闭 `Done()` 通知协程退出。"
+  },
+  {
+    "id": "go-cc-026",
+    "title": "context 超时",
+    "description": "用 WithTimeout 自动取消",
+    "exercise_type": "fill",
+    "tech_stack": "go",
+    "weight": "hard",
+    "category": "context",
+    "subcategory": "并发",
+    "full_code": "package main\n\nimport (\n\t\"context\"\n\t\"fmt\"\n\t\"time\"\n)\n\nfunc main() {\n\tctx, cancel := context.WithTimeout(context.Background(), 10*time.Millisecond)\n\tdefer cancel()\n\tselect {\n\tcase \u003c-ctx.Done():\n\t\tfmt.Println(\"timeout\")\n\t}\n}",
+    "expected": "timeout",
+    "points": [
+      {
+        "id": "to",
+        "text": "context.WithTimeout",
+        "category": "context",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "带超时的 context",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_ctxDone",
+        "text": "ctx.Done()",
+        "category": "context",
+        "min_weight": "beginner",
+        "weight_score": 0.7,
+        "hint": "取消/超时通知",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_cancel",
+        "text": "cancel()",
+        "category": "context",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "触发取消",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_select",
+        "text": "select {",
+        "category": "select",
+        "min_weight": "medium",
+        "weight_score": 0.7,
+        "hint": "多路复用选择",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 context 超时",
+      "level_2": "📖 到点后 Done 自动关闭",
+      "level_3": "👀 `case \u003c-ctx.Done():`",
+      "level_4": "📝 正确答案：`context.WithTimeout`"
+    },
+    "explanation": "`WithTimeout` 到时时自动取消，`Done()` 会关闭并提示原因。"
+  },
+  {
+    "id": "go-cc-027",
+    "title": "context 传值",
+    "description": "用 WithValue 携带请求级数据",
+    "exercise_type": "fill",
+    "tech_stack": "go",
+    "weight": "hard",
+    "category": "context",
+    "subcategory": "并发",
+    "full_code": "package main\n\nimport (\n\t\"context\"\n\t\"fmt\"\n)\n\nfunc main() {\n\tctx := context.WithValue(context.Background(), \"user\", \"admin\")\n\tfmt.Println(ctx.Value(\"user\"))\n}",
+    "expected": "admin",
+    "points": [
+      {
+        "id": "value",
+        "text": "context.WithValue",
+        "category": "context",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "携带键值",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 context 传值",
+      "level_2": "📖 键-值传给下游",
+      "level_3": "👀 `ctx.Value(\"user\")`",
+      "level_4": "📝 正确答案：`context.WithValue` / `Value(\"user\")`"
+    },
+    "explanation": "`WithValue` 在 context 链上携带请求级数据，用 `Value(key)` 读取。"
+  },
+  {
+    "id": "go-cc-028",
+    "title": "done 通道退出",
+    "description": "用关闭的 done 通知退出",
+    "exercise_type": "fill",
+    "tech_stack": "go",
+    "weight": "medium",
+    "category": "channel",
+    "subcategory": "并发",
+    "full_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"sync\"\n)\n\nfunc main() {\n\tdone := make(chan struct{})\n\tvar wg sync.WaitGroup\n\twg.Add(1)\n\tgo func() {\n\t\tdefer wg.Done()\n\t\t\u003c-done\n\t\tfmt.Println(\"exit\")\n\t}()\n\tclose(done)\n\twg.Wait()\n}",
+    "expected": "exit",
+    "points": [
+      {
+        "id": "recv",
+        "text": "\u003c-done",
+        "category": "channel",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "接收退出信号",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_gofunc",
+        "text": "go func",
+        "category": "goroutine",
+        "min_weight": "beginner",
+        "weight_score": 0.7,
+        "hint": "用 go 关键字启动协程",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_wgAdd1",
+        "text": "wg.Add(1)",
+        "category": "waitgroup",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "启动前计数器 +1",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_wgWait",
+        "text": "wg.Wait()",
+        "category": "waitgroup",
+        "min_weight": "medium",
+        "weight_score": 0.7,
+        "hint": "等待所有协程完成",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_deferwgDone",
+        "text": "defer wg.Done()",
+        "category": "waitgroup",
+        "min_weight": "medium",
+        "weight_score": 0.7,
+        "hint": "协程完成时 -1",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_closedone",
+        "text": "close(done)",
+        "category": "channel",
+        "min_weight": "hard",
+        "weight_score": 0.7,
+        "hint": "关闭即广播放行",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 done 通道",
+      "level_2": "📖 关闭 done 通知协程退出",
+      "level_3": "👀 `close(done)`",
+      "level_4": "📝 正确答案：`\u003c-done`"
+    },
+    "explanation": "用单独的 done channel，关闭即发退出信号，避免协程泄漏。"
+  },
+  {
+    "id": "go-cc-029",
+    "title": "生产者消费者",
+    "description": "生产者投递、消费者处理",
+    "exercise_type": "fill",
+    "tech_stack": "go",
+    "weight": "hard",
+    "category": "pattern",
+    "subcategory": "并发",
+    "full_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"sync\"\n)\n\nfunc main() {\n\tch := make(chan int, 5)\n\tvar wg sync.WaitGroup\n\twg.Add(1)\n\tgo func() {\n\t\tdefer wg.Done()\n\t\tfor i := 1; i \u003c= 5; i++ {\n\t\t\tch \u003c- i\n\t\t}\n\t\tclose(ch)\n\t}()\n\ts := 0\n\tfor v := range ch {\n\t\ts += v\n\t}\n\twg.Wait()\n\tfmt.Println(s)\n}",
+    "expected": "15",
+    "points": [
+      {
+        "id": "close",
+        "text": "close(ch)",
+        "category": "pattern",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "生产完关闭",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_gofunc",
+        "text": "go func",
+        "category": "goroutine",
+        "min_weight": "beginner",
+        "weight_score": 0.7,
+        "hint": "用 go 关键字启动协程",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_wgAdd1",
+        "text": "wg.Add(1)",
+        "category": "waitgroup",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "启动前计数器 +1",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_wgWait",
+        "text": "wg.Wait()",
+        "category": "waitgroup",
+        "min_weight": "medium",
+        "weight_score": 0.7,
+        "hint": "等待所有协程完成",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_deferwgDone",
+        "text": "defer wg.Done()",
+        "category": "waitgroup",
+        "min_weight": "medium",
+        "weight_score": 0.7,
+        "hint": "协程完成时 -1",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_makechan",
+        "text": "make(chan",
+        "category": "channel",
+        "min_weight": "hard",
+        "weight_score": 0.7,
+        "hint": "创建 channel",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 生产者消费者",
+      "level_2": "📖 生产者写完关闭，消费者 range 读完",
+      "level_3": "👀 `for v := range ch`",
+      "level_4": "📝 正确答案：`close(ch)`"
+    },
+    "explanation": "生产者往缓冲 channel 投递并 close，消费者 range 消费，1..5 求和 15。"
+  },
+  {
+    "id": "go-cc-030",
+    "title": "WaitGroup 死锁修复",
+    "description": "修复缺少 wg.Done() 导致的死锁",
+    "exercise_type": "bugfix",
+    "tech_stack": "go",
+    "weight": "medium",
+    "category": "bugfix",
+    "subcategory": "并发",
+    "full_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"sync\"\n)\n\nfunc main() {\n\tvar wg sync.WaitGroup\n\tfor i := 0; i \u003c 3; i++ {\n\t\twg.Add(1)\n\t\tgo func() {\n\t\t\tdefer wg.Done()\n\t\t\tfmt.Println(\"x\")\n\t\t}()\n\t}\n\twg.Wait()\n\tfmt.Println(\"done\")\n}",
+    "buggy_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"sync\"\n)\n\nfunc main() {\n\tvar wg sync.WaitGroup\n\tfor i := 0; i \u003c 3; i++ {\n\t\twg.Add(1)\n\t\tgo func() {\n\t\t\tfmt.Println(\"x\")\n\t\t}()\n\t}\n\twg.Wait()\n\tfmt.Println(\"done\")\n}",
+    "expected": "x\nx\nx\ndone",
+    "test_cases": [
+      {
+        "input": "",
+        "output": "done"
+      }
+    ],
+    "points": [
+      {
+        "id": "done",
+        "text": "fmt.Println(\"x\")",
+        "category": "waitgroup",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "协程内输出",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 wg.Done 必须调用",
+      "level_2": "📖 缺少 Done 计数永不归零，Wait 卡死",
+      "level_3": "👀 `defer wg.Done()`",
+      "level_4": "📝 正确答案：`defer wg.Done()`"
+    },
+    "explanation": "每个协程结束都要 `Done()`；否则 `Wait` 永远阻塞（死锁）。"
+  },
+  {
+    "id": "go-cc-031",
+    "title": "数据竞争修复",
+    "description": "给共享计数加锁修复数据竞争",
+    "exercise_type": "bugfix",
+    "tech_stack": "go",
+    "weight": "hard",
+    "category": "bugfix",
+    "subcategory": "并发",
+    "full_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"sync\"\n)\n\nfunc main() {\n\tvar wg sync.WaitGroup\n\tvar mu sync.Mutex\n\tn := 0\n\tfor i := 0; i \u003c 1000; i++ {\n\t\twg.Add(1)\n\t\tgo func() {\n\t\t\tdefer wg.Done()\n\t\t\tmu.Lock()\n\t\t\tn++\n\t\t\tmu.Unlock()\n\t\t}()\n\t}\n\twg.Wait()\n\tfmt.Println(n)\n}",
+    "buggy_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"sync\"\n)\n\nfunc main() {\n\tvar wg sync.WaitGroup\n\tn := 0\n\tfor i := 0; i \u003c 1000; i++ {\n\t\twg.Add(1)\n\t\tgo func() {\n\t\t\tdefer wg.Done()\n\t\t\tn++\n\t\t}()\n\t}\n\twg.Wait()\n\tfmt.Println(n)\n}",
+    "expected": "1000",
+    "test_cases": [
+      {
+        "input": "",
+        "output": "1000"
+      }
+    ],
+    "points": [
+      {
+        "id": "lock",
+        "text": "n++",
+        "category": "mutex",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "共享计数操作",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 数据竞争",
+      "level_2": "📖 多个协程无锁写同一变量会丢失更新",
+      "level_3": "👀 `mu.Lock()` 保护 `n++`",
+      "level_4": "📝 正确答案：`mu.Lock(); n++; mu.Unlock()`"
+    },
+    "explanation": "并发写共享变量需互斥；加锁保证 n 最终等于 1000。"
+  },
+  {
+    "id": "go-cc-032",
+    "title": "缓冲不足死锁修复",
+    "description": "修复缓冲过小导致发送阻塞",
+    "exercise_type": "bugfix",
+    "tech_stack": "go",
+    "weight": "medium",
+    "category": "bugfix",
+    "subcategory": "并发",
+    "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tch := make(chan int, 3)\n\tch \u003c- 1\n\tch \u003c- 2\n\tch \u003c- 3\n\tfmt.Println(len(ch))\n}",
+    "buggy_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tch := make(chan int)\n\tch \u003c- 1\n\tch \u003c- 2\n\tch \u003c- 3\n\tfmt.Println(len(ch))\n}",
+    "expected": "3",
+    "test_cases": [
+      {
+        "input": "",
+        "output": "3"
+      }
+    ],
+    "points": [
+      {
+        "id": "cap",
+        "text": "make(chan int)",
+        "category": "channel",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "缓冲容量不足",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 无缓冲发送阻塞",
+      "level_2": "📖 无缓冲 channel 发送需接收方，否则阻塞",
+      "level_3": "👀 `make(chan int, 3)`",
+      "level_4": "📝 正确答案：`make(chan int, 3)`"
+    },
+    "explanation": "无缓冲 channel 发送会阻塞到有人接收；改带缓冲即可容纳 3 个值。"
+  },
+  {
+    "id": "go-cc-033",
+    "title": "Once 重复初始化修复",
+    "description": "修复初始化可能执行多次",
+    "exercise_type": "bugfix",
+    "tech_stack": "go",
+    "weight": "medium",
+    "category": "bugfix",
+    "subcategory": "并发",
+    "full_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"sync\"\n)\n\nfunc main() {\n\tvar once sync.Once\n\tvar wg sync.WaitGroup\n\tfor i := 0; i \u003c 5; i++ {\n\t\twg.Add(1)\n\t\tgo func() {\n\t\t\tdefer wg.Done()\n\t\t\tonce.Do(func() { fmt.Println(\"init\") })\n\t\t}()\n\t}\n\twg.Wait()\n\tfmt.Println(\"done\")\n}",
+    "buggy_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"sync\"\n)\n\nfunc main() {\n\tvar wg sync.WaitGroup\n\tfor i := 0; i \u003c 5; i++ {\n\t\twg.Add(1)\n\t\tgo func() {\n\t\t\tdefer wg.Done()\n\t\t\tfmt.Println(\"init\")\n\t\t}()\n\t}\n\twg.Wait()\n\tfmt.Println(\"done\")\n}",
+    "expected": "init\ndone",
+    "test_cases": [
+      {
+        "input": "",
+        "output": "init"
+      }
+    ],
+    "points": [
+      {
+        "id": "once",
+        "text": "fmt.Println(\"init\")",
+        "category": "once",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "初始化输出",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 重复初始化",
+      "level_2": "📖 多个协程各自 print 造成重复",
+      "level_3": "👀 用 `sync.Once` 包裹初始化",
+      "level_4": "📝 正确答案：`once.Do(...)`"
+    },
+    "explanation": "用 `Once.Do` 保证初始化只执行一次（此处 init 只打印一次）。"
+  },
+  {
+    "id": "go-cc-034",
+    "title": "sync.Cond 条件变量",
+    "description": "用条件变量等待某条件满足",
+    "exercise_type": "fill",
+    "tech_stack": "go",
+    "weight": "hard",
+    "category": "cond",
+    "subcategory": "并发",
+    "full_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"sync\"\n)\n\nfunc main() {\n\tvar mu sync.Mutex\n\tcond := sync.NewCond(\u0026mu)\n\tready := false\n\tvar wg sync.WaitGroup\n\twg.Add(1)\n\tgo func() {\n\t\tdefer wg.Done()\n\t\tmu.Lock()\n\t\tfor !ready {\n\t\t\tcond.Wait()\n\t\t}\n\t\tfmt.Println(\"go\")\n\t\tmu.Unlock()\n\t}()\n\tmu.Lock()\n\tready = true\n\tcond.Broadcast()\n\tmu.Unlock()\n\twg.Wait()\n}",
+    "expected": "go",
+    "points": [
+      {
+        "id": "wait",
+        "text": "cond.Wait()",
+        "category": "cond",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "等待条件",
+        "fill_type": "text"
+      },
+      {
+        "id": "bc",
+        "text": "cond.Broadcast()",
+        "category": "cond",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "唤醒所有等待者",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_gofunc",
+        "text": "go func",
+        "category": "goroutine",
+        "min_weight": "beginner",
+        "weight_score": 0.7,
+        "hint": "用 go 关键字启动协程",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_wgAdd1",
+        "text": "wg.Add(1)",
+        "category": "waitgroup",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "启动前计数器 +1",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_wgWait",
+        "text": "wg.Wait()",
+        "category": "waitgroup",
+        "min_weight": "medium",
+        "weight_score": 0.7,
+        "hint": "等待所有协程完成",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_deferwgDone",
+        "text": "defer wg.Done()",
+        "category": "waitgroup",
+        "min_weight": "medium",
+        "weight_score": 0.7,
+        "hint": "协程完成时 -1",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_muLock",
+        "text": "mu.Lock()",
+        "category": "mutex",
+        "min_weight": "hard",
+        "weight_score": 0.7,
+        "hint": "进入临界区加锁",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 条件变量",
+      "level_2": "📖 不满足条件则 Wait 释放锁，条件就绪后 Broadcast",
+      "level_3": "👀 `for !ready { cond.Wait() }`",
+      "level_4": "📝 正确答案：`cond.Wait()` / `cond.Broadcast()`"
+    },
+    "explanation": "`Cond.Wait` 等待并释放锁，`Signal/Broadcast` 唤醒；必须循环判断条件。"
+  },
+  {
+    "id": "go-cc-035",
+    "title": "sync.Pool 对象池",
+    "description": "复用对象减少分配",
+    "exercise_type": "fill",
+    "tech_stack": "go",
+    "weight": "hard",
+    "category": "pool",
+    "subcategory": "并发",
+    "full_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"sync\"\n)\n\nfunc main() {\n\tp := \u0026sync.Pool{New: func() any { return 0 }}\n\tx := p.Get()\n\t_ = x\n\tp.Put(42)\n\ty := p.Get()\n\tfmt.Println(y)\n}",
+    "expected": "42",
+    "points": [
+      {
+        "id": "pool",
+        "text": "sync.Pool{New:",
+        "category": "pool",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "对象池构造",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 sync.Pool",
+      "level_2": "📖 Get 取对象，Put 归还复用",
+      "level_3": "👀 `p.Get()` / `p.Put(42)`",
+      "level_4": "📝 正确答案：`sync.Pool{New: ...}`"
+    },
+    "explanation": "`sync.Pool` 用于缓存与复用临时对象，降低 GC 压力。"
+  },
+  {
+    "id": "go-cc-036",
+    "title": "barrier 屏障",
+    "description": "用关闭 channel 同时放行多个协程",
+    "exercise_type": "fill",
+    "tech_stack": "go",
+    "weight": "medium",
+    "category": "channel",
+    "subcategory": "并发",
+    "full_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"sync\"\n)\n\nfunc main() {\n\tstart := make(chan struct{})\n\tvar wg sync.WaitGroup\n\tfor i := 0; i \u003c 3; i++ {\n\t\twg.Add(1)\n\t\tgo func() {\n\t\t\tdefer wg.Done()\n\t\t\t\u003c-start\n\t\t\tfmt.Println(\"run\")\n\t\t}()\n\t}\n\tclose(start)\n\twg.Wait()\n}",
+    "expected": "run\nrun\nrun",
+    "points": [
+      {
+        "id": "start",
+        "text": "\u003c-start",
+        "category": "channel",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "等待放行信号",
+        "fill_type": "text"
+      },
+      {
+        "id": "close",
+        "text": "close(start)",
+        "category": "channel",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "同时放行",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_gofunc",
+        "text": "go func",
+        "category": "goroutine",
+        "min_weight": "beginner",
+        "weight_score": 0.7,
+        "hint": "用 go 关键字启动协程",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_wgAdd1",
+        "text": "wg.Add(1)",
+        "category": "waitgroup",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "启动前计数器 +1",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_wgWait",
+        "text": "wg.Wait()",
+        "category": "waitgroup",
+        "min_weight": "medium",
+        "weight_score": 0.7,
+        "hint": "等待所有协程完成",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_deferwgDone",
+        "text": "defer wg.Done()",
+        "category": "waitgroup",
+        "min_weight": "medium",
+        "weight_score": 0.7,
+        "hint": "协程完成时 -1",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_makechan",
+        "text": "make(chan",
+        "category": "channel",
+        "min_weight": "hard",
+        "weight_score": 0.7,
+        "hint": "创建 channel",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 barrier 放行",
+      "level_2": "📖 close 后所有接收者同时解除阻塞",
+      "level_3": "👀 `\u003c-start` 等待，`close(start)` 放行",
+      "level_4": "📝 正确答案：`\u003c-start` / `close(start)`"
+    },
+    "explanation": "barrier：等待方全部阻塞在某 channel 上，close 后同时放行继续执行。"
+  },
+  {
+    "id": "go-cc-037",
+    "title": "双向转单向",
+    "description": "把双向 channel 作为只读参数",
+    "exercise_type": "fill",
+    "tech_stack": "go",
+    "weight": "medium",
+    "category": "channel_direction",
+    "subcategory": "并发",
+    "full_code": "package main\n\nimport \"fmt\"\n\nfunc consume(ch \u003c-chan int) int {\n\treturn \u003c-ch\n}\n\nfunc main() {\n\tch := make(chan int, 1)\n\tch \u003c- 9\n\tfmt.Println(consume(ch))\n}",
+    "expected": "9",
+    "points": [
+      {
+        "id": "dir",
+        "text": "\u003c-chan int",
+        "category": "channel_direction",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "只读参数类型",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_makechan",
+        "text": "make(chan",
+        "category": "channel",
+        "min_weight": "beginner",
+        "weight_score": 0.7,
+        "hint": "创建 channel",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_ch",
+        "text": "ch \u003c- ",
+        "category": "channel",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "向 channel 发送",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_ch",
+        "text": "\u003c-ch",
+        "category": "channel",
+        "min_weight": "medium",
+        "weight_score": 0.7,
+        "hint": "从 channel 接收",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 单向参数",
+      "level_2": "📖 双向 channel 可自动转成单向参数",
+      "level_3": "👀 `func consume(ch \u003c-chan int)`",
+      "level_4": "📝 正确答案：`\u003c-chan int`"
+    },
+    "explanation": "把双向 channel 传给只读参数即限制该函数只能接收。"
+  },
+  {
+    "id": "go-cc-038",
+    "title": "atomic 读写",
+    "description": "用 Store/Load 安全读写整数",
+    "exercise_type": "fill",
+    "tech_stack": "go",
+    "weight": "medium",
+    "category": "atomic",
+    "subcategory": "并发",
+    "full_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"sync/atomic\"\n)\n\nfunc main() {\n\tvar n int64 = 7\n\tatomic.StoreInt64(\u0026n, 10)\n\tfmt.Println(atomic.LoadInt64(\u0026n))\n}",
+    "expected": "10",
+    "points": [
+      {
+        "id": "store",
+        "text": "atomic.StoreInt64(\u0026n, 10)",
+        "category": "atomic",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "原子写入",
+        "fill_type": "text"
+      },
+      {
+        "id": "load",
+        "text": "atomic.LoadInt64(\u0026n)",
+        "category": "atomic",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "原子读取",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_atomicStoreInt64",
+        "text": "atomic.StoreInt64",
+        "category": "atomic",
+        "min_weight": "beginner",
+        "weight_score": 0.7,
+        "hint": "原子写入",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_atomicLoadInt64",
+        "text": "atomic.LoadInt64",
+        "category": "atomic",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "原子读取",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 原子读写",
+      "level_2": "📖 Store 写、Load 读，始终一致",
+      "level_3": "👀 `atomic.StoreInt64(\u0026n, 10)`",
+      "level_4": "📝 正确答案：`StoreInt64` / `LoadInt64`"
+    },
+    "explanation": "用 `Store/Load` 原子读写整数，避免数据竞争。"
+  },
+  {
+    "id": "go-cc-039",
+    "title": "懒加载单例",
+    "description": "用 Once 实现线程安全的懒加载",
+    "exercise_type": "fill",
+    "tech_stack": "go",
+    "weight": "hard",
+    "category": "once",
+    "subcategory": "并发",
+    "full_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"sync\"\n)\n\nvar (\n\tonce sync.Once\n\tcfg  string\n)\n\nfunc config() string {\n\tonce.Do(func() { cfg = \"loaded\" })\n\treturn cfg\n}\n\nfunc main() {\n\tfmt.Println(config(), config())\n}",
+    "expected": "loaded loaded",
+    "points": [
+      {
+        "id": "once",
+        "text": "once.Do",
+        "category": "once",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "只初始化一次",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 懒加载单例",
+      "level_2": "📖 首次调用才初始化，且只一次",
+      "level_3": "👀 `once.Do(func(){ cfg = \"loaded\" })`",
+      "level_4": "📝 正确答案：`once.Do(...)`"
+    },
+    "explanation": "用 `sync.Once` 保证全局配置只初始化一次，后续直接复用。"
+  },
+  {
+    "id": "go-cc-040",
+    "title": "并发 map 修复",
+    "description": "修复并发写 map 导致的 panic",
+    "exercise_type": "bugfix",
+    "tech_stack": "go",
+    "weight": "hard",
+    "category": "bugfix",
+    "subcategory": "并发",
+    "full_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"sync\"\n)\n\nfunc main() {\n\tvar mu sync.RWMutex\n\tm := map[string]int{}\n\tvar wg sync.WaitGroup\n\tfor i := 0; i \u003c 5; i++ {\n\t\twg.Add(1)\n\t\tgo func(n int) {\n\t\t\tdefer wg.Done()\n\t\t\tmu.Lock()\n\t\t\tm[\"k\"] = n\n\t\t\tmu.Unlock()\n\t\t}(i)\n\t}\n\twg.Wait()\n\tmu.RLock()\n\tfmt.Println(len(m))\n\tmu.RUnlock()\n}",
+    "buggy_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"sync\"\n)\n\nfunc main() {\n\tm := map[string]int{}\n\tvar wg sync.WaitGroup\n\tfor i := 0; i \u003c 5; i++ {\n\t\twg.Add(1)\n\t\tgo func(n int) {\n\t\t\tdefer wg.Done()\n\t\t\tm[\"k\"] = n\n\t\t}(i)\n\t}\n\twg.Wait()\n\tfmt.Println(len(m))\n}",
+    "expected": "1",
+    "test_cases": [
+      {
+        "input": "",
+        "output": "1"
+      }
+    ],
+    "points": [
+      {
+        "id": "lock",
+        "text": "m[\"k\"] = n",
+        "category": "mutex",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "写 map 操作",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 并发写 map",
+      "level_2": "📖 并发写同一 map 会 panic",
+      "level_3": "👀 `mu.Lock()` 保护写入",
+      "level_4": "📝 正确答案：`mu.Lock(); m[\"k\"] = n; mu.Unlock()`"
+    },
+    "explanation": "Go 的 map 并发写不安全，写map 要加锁（读用 RLock）。"
+  },
+  {
+    "id": "go-cc-041",
+    "title": "ticker 定时器",
+    "description": "用 time.Ticker 周期性触发",
+    "exercise_type": "fill",
+    "tech_stack": "go",
+    "weight": "hard",
+    "category": "ticker",
+    "subcategory": "并发",
+    "full_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\nfunc main() {\n\tt := time.NewTicker(10 * time.Millisecond)\n\tgo func() {\n\t\t\u003c-t.C\n\t\tfmt.Println(\"tick\")\n\t\tt.Stop()\n\t}()\n\ttime.Sleep(50 * time.Millisecond)\n}",
+    "expected": "tick",
+    "points": [
+      {
+        "id": "ticker",
+        "text": "time.NewTicker(10 * time.Millisecond)",
+        "category": "ticker",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "周期定时器",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_gofunc",
+        "text": "go func",
+        "category": "goroutine",
+        "min_weight": "beginner",
+        "weight_score": 0.7,
+        "hint": "用 go 关键字启动协程",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_timeNewTicker",
+        "text": "time.NewTicker",
+        "category": "ticker",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "周期定时器",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 ticker",
+      "level_2": "📖 `.C` 通道定期收到时间",
+      "level_3": "👀 `\u003c-t.C`",
+      "level_4": "📝 正确答案：`time.NewTicker`"
+    },
+    "explanation": "`time.Ticker` 周期向 `.C` 通道发送、`Stop()` 停止，用于限流/心跳。"
+  },
+  {
+    "id": "go-cc-042",
+    "title": "channel 限流令牌",
+    "description": "用容量 1 的 channel 串行化关键段",
+    "exercise_type": "fill",
+    "tech_stack": "go",
+    "weight": "hard",
+    "category": "channel",
+    "subcategory": "并发",
+    "full_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"sync\"\n\t\"sync/atomic\"\n)\n\nfunc main() {\n\ttoken := make(chan struct{}, 1)\n\tvar wg sync.WaitGroup\n\tvar executed int64\n\tfor i := 0; i \u003c 5; i++ {\n\t\twg.Add(1)\n\t\tgo func() {\n\t\t\tdefer wg.Done()\n\t\t\ttoken \u003c- struct{}{}\n\t\t\tatomic.AddInt64(\u0026executed, 1)\n\t\t\t\u003c-token\n\t\t}()\n\t}\n\twg.Wait()\n\tfmt.Println(executed)\n}",
+    "expected": "5",
+    "points": [
+      {
+        "id": "acquire",
+        "text": "token \u003c- struct{}{}",
+        "category": "channel",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "占用令牌槽",
+        "fill_type": "text"
+      },
+      {
+        "id": "release",
+        "text": "\u003c-token",
+        "category": "channel",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "释放令牌槽",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_gofunc",
+        "text": "go func",
+        "category": "goroutine",
+        "min_weight": "beginner",
+        "weight_score": 0.7,
+        "hint": "用 go 关键字启动协程",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_wgAdd1",
+        "text": "wg.Add(1)",
+        "category": "waitgroup",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "启动前计数器 +1",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_wgWait",
+        "text": "wg.Wait()",
+        "category": "waitgroup",
+        "min_weight": "medium",
+        "weight_score": 0.7,
+        "hint": "等待所有协程完成",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_deferwgDone",
+        "text": "defer wg.Done()",
+        "category": "waitgroup",
+        "min_weight": "medium",
+        "weight_score": 0.7,
+        "hint": "协程完成时 -1",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_atomicAddInt64",
+        "text": "atomic.AddInt64",
+        "category": "atomic",
+        "min_weight": "hard",
+        "weight_score": 0.7,
+        "hint": "原子自增",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 Channel 限流",
+      "level_2": "📖 容量 1 保证关键段同一时刻只有一个协程",
+      "level_3": "👀 `token \u003c- struct{}{}` 占用、`\u003c-token` 释放",
+      "level_4": "📝 正确答案：`token \u003c- struct{}{}` / `\u003c-token`"
+    },
+    "explanation": "用缓冲容量 1 的 channel 当互斥令牌：占用后执行，完事释放，共 5 次。"
+  },
+  {
+    "id": "go-cc-043",
+    "title": "非阻塞发送",
+    "description": "缓冲满时走 default 不阻塞",
+    "exercise_type": "fill",
+    "tech_stack": "go",
+    "weight": "easy",
+    "category": "select",
+    "subcategory": "并发",
+    "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tch := make(chan int, 1)\n\tch \u003c- 1\n\tselect {\n\tcase ch \u003c- 2:\n\t\tfmt.Println(\"sent\")\n\tdefault:\n\t\tfmt.Println(\"full\")\n\t}\n}",
+    "expected": "full",
+    "points": [
+      {
+        "id": "default",
+        "text": "default:",
+        "category": "select",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "满则走默认",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_makechan",
+        "text": "make(chan",
+        "category": "channel",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "创建 channel",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_ch",
+        "text": "ch \u003c- ",
+        "category": "channel",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "向 channel 发送",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_select",
+        "text": "select {",
+        "category": "select",
+        "min_weight": "medium",
+        "weight_score": 0.7,
+        "hint": "多路复用选择",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 非阻塞发送",
+      "level_2": "📖 缓冲满时 default 立即执行",
+      "level_3": "👀 `case ch \u003c- 2:` vs `default:`",
+      "level_4": "📝 正确答案：`default:`"
+    },
+    "explanation": "配合 `default` 实现非阻塞发送：满则不再等待直接走默认分支。"
+  },
+  {
+    "id": "go-cc-044",
+    "title": "防止 goroutine 泄漏",
+    "description": "用 done 通道退出循环协程",
+    "exercise_type": "fill",
+    "tech_stack": "go",
+    "weight": "hard",
+    "category": "channel",
+    "subcategory": "并发",
+    "full_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"sync\"\n)\n\nfunc main() {\n\tdone := make(chan struct{})\n\tvar wg sync.WaitGroup\n\twg.Add(1)\n\tgo func() {\n\t\tdefer wg.Done()\n\t\tfor {\n\t\t\tselect {\n\t\t\tcase \u003c-done:\n\t\t\t\treturn\n\t\t\t}\n\t\t}\n\t}()\n\tclose(done)\n\twg.Wait()\n\tfmt.Println(\"ok\")\n}",
+    "expected": "ok",
+    "points": [
+      {
+        "id": "done",
+        "text": "\u003c-done",
+        "category": "channel",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "收到退出信号",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_gofunc",
+        "text": "go func",
+        "category": "goroutine",
+        "min_weight": "beginner",
+        "weight_score": 0.7,
+        "hint": "用 go 关键字启动协程",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_wgAdd1",
+        "text": "wg.Add(1)",
+        "category": "waitgroup",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "启动前计数器 +1",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_wgWait",
+        "text": "wg.Wait()",
+        "category": "waitgroup",
+        "min_weight": "medium",
+        "weight_score": 0.7,
+        "hint": "等待所有协程完成",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_deferwgDone",
+        "text": "defer wg.Done()",
+        "category": "waitgroup",
+        "min_weight": "medium",
+        "weight_score": 0.7,
+        "hint": "协程完成时 -1",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_closedone",
+        "text": "close(done)",
+        "category": "channel",
+        "min_weight": "hard",
+        "weight_score": 0.7,
+        "hint": "关闭即广播放行",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 优雅退出",
+      "level_2": "📖 done 关闭后 select 命中考量退出",
+      "level_3": "👀 `close(done)`",
+      "level_4": "📝 正确答案：`case \u003c-done: return`"
+    },
+    "explanation": "长期运行的协程要用 done/context 提供退出路径，避免泄漏。"
+  },
+  {
+    "id": "go-cc-045",
+    "title": "worker 优雅关闭",
+    "description": "通过 done 通道关闭工作协程",
+    "exercise_type": "fill",
+    "tech_stack": "go",
+    "weight": "hard",
+    "category": "pattern",
+    "subcategory": "并发",
+    "full_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"sync\"\n)\n\nfunc worker(done \u003c-chan struct{}, wg *sync.WaitGroup) {\n\tdefer wg.Done()\n\tfor {\n\t\tselect {\n\t\tcase \u003c-done:\n\t\t\treturn\n\t\tdefault:\n\t\t}\n\t}\n}\n\nfunc main() {\n\tdone := make(chan struct{})\n\tvar wg sync.WaitGroup\n\twg.Add(1)\n\tgo worker(done, \u0026wg)\n\tclose(done)\n\twg.Wait()\n\tfmt.Println(\"stopped\")\n}",
+    "expected": "stopped",
+    "points": [
+      {
+        "id": "done",
+        "text": "\u003c-done",
+        "category": "pattern",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "关闭信号",
+        "fill_type": "text"
+      },
+      {
+        "id": "ret",
+        "text": "return",
+        "category": "pattern",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "退出 worker",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_wgAdd1",
+        "text": "wg.Add(1)",
+        "category": "waitgroup",
+        "min_weight": "beginner",
+        "weight_score": 0.7,
+        "hint": "启动前计数器 +1",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_wgWait",
+        "text": "wg.Wait()",
+        "category": "waitgroup",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "等待所有协程完成",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_deferwgDone",
+        "text": "defer wg.Done()",
+        "category": "waitgroup",
+        "min_weight": "medium",
+        "weight_score": 0.7,
+        "hint": "协程完成时 -1",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_closedone",
+        "text": "close(done)",
+        "category": "channel",
+        "min_weight": "medium",
+        "weight_score": 0.7,
+        "hint": "关闭即广播放行",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_makechan",
+        "text": "make(chan",
+        "category": "channel",
+        "min_weight": "hard",
+        "weight_score": 0.7,
+        "hint": "创建 channel",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 优雅关闭",
+      "level_2": "📖 done 关闭后 worker 退出",
+      "level_3": "👀 `close(done)` → `wg.Wait()`",
+      "level_4": "📝 正确答案：`case \u003c-done: return`"
+    },
+    "explanation": "worker 循环中用 select 监听 done，收到关闭信号即退出。"
+  },
+  {
+    "id": "go-cc-046",
+    "title": "select 收集多路",
+    "description": "用 select 循环接收多个 channel",
+    "exercise_type": "fill",
+    "tech_stack": "go",
+    "weight": "medium",
+    "category": "select",
+    "subcategory": "并发",
+    "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tc1 := make(chan int, 1)\n\tc2 := make(chan int, 1)\n\tc1 \u003c- 1\n\tc2 \u003c- 2\n\ts := 0\n\tfor i := 0; i \u003c 2; i++ {\n\t\tselect {\n\t\tcase v := \u003c-c1:\n\t\t\ts += v\n\t\tcase v := \u003c-c2:\n\t\t\ts += v\n\t\t}\n\t}\n\tfmt.Println(s)\n}",
+    "expected": "3",
+    "points": [
+      {
+        "id": "select",
+        "text": "select",
+        "category": "select",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "多路复用",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_makechan",
+        "text": "make(chan",
+        "category": "channel",
+        "min_weight": "beginner",
+        "weight_score": 0.7,
+        "hint": "创建 channel",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_select",
+        "text": "select {",
+        "category": "select",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "多路复用选择",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 多路收集",
+      "level_2": "📖 每次 select 取一路就绪值",
+      "level_3": "👀 `case v := \u003c-c1 / \u003c-c2`",
+      "level_4": "📝 正确答案：`select` 循环"
+    },
+    "explanation": "用 select 循环从多个 channel 取数，两路各取一次，和 1+2=3。"
+  },
+  {
+    "id": "go-cc-047",
+    "title": "Fan-out 分发",
+    "description": "一个生产者分发到多个消费者",
+    "exercise_type": "fill",
+    "tech_stack": "go",
+    "weight": "hard",
+    "category": "channel_pattern",
+    "subcategory": "并发",
+    "full_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"sync\"\n)\n\nfunc main() {\n\tsrc := make(chan int, 3)\n\tgo func() {\n\t\tfor i := 1; i \u003c= 3; i++ {\n\t\t\tsrc \u003c- i\n\t\t}\n\t\tclose(src)\n\t}()\n\tvar mu sync.Mutex\n\ts := 0\n\tvar wg sync.WaitGroup\n\tfor w := 0; w \u003c 2; w++ {\n\t\twg.Add(1)\n\t\tgo func() {\n\t\t\tdefer wg.Done()\n\t\t\tfor v := range src {\n\t\t\t\tmu.Lock()\n\t\t\t\ts += v\n\t\t\t\tmu.Unlock()\n\t\t\t}\n\t\t}()\n\t}\n\twg.Wait()\n\tfmt.Println(s)\n}",
+    "expected": "6",
+    "points": [
+      {
+        "id": "range",
+        "text": "for v := range src",
+        "category": "channel_pattern",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "消费端遍历",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_gofunc",
+        "text": "go func",
+        "category": "goroutine",
+        "min_weight": "beginner",
+        "weight_score": 0.7,
+        "hint": "用 go 关键字启动协程",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_wgAdd1",
+        "text": "wg.Add(1)",
+        "category": "waitgroup",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "启动前计数器 +1",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_wgWait",
+        "text": "wg.Wait()",
+        "category": "waitgroup",
+        "min_weight": "medium",
+        "weight_score": 0.7,
+        "hint": "等待所有协程完成",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_deferwgDone",
+        "text": "defer wg.Done()",
+        "category": "waitgroup",
+        "min_weight": "medium",
+        "weight_score": 0.7,
+        "hint": "协程完成时 -1",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_muLock",
+        "text": "mu.Lock()",
+        "category": "mutex",
+        "min_weight": "hard",
+        "weight_score": 0.7,
+        "hint": "进入临界区加锁",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 Fan-out 分发",
+      "level_2": "📖 多个消费者竞争消费同一 channel",
+      "level_3": "👀 `close(src)` 结束分发",
+      "level_4": "📝 正确答案：`for v := range src`"
+    },
+    "explanation": "Fan-out：一个生产者、多个消费者并行处理，总量 1+2+3=6。"
+  },
+  {
+    "id": "go-cc-048",
+    "title": "接收 ok 提前退出",
+    "description": "用 ok 判断 channel 关闭",
+    "exercise_type": "fill",
+    "tech_stack": "go",
+    "weight": "easy",
+    "category": "channel",
+    "subcategory": "并发",
+    "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tch := make(chan int, 2)\n\tch \u003c- 1\n\tch \u003c- 2\n\tclose(ch)\n\ts := 0\n\tfor {\n\t\tv, ok := \u003c-ch\n\t\tif !ok {\n\t\t\tbreak\n\t\t}\n\t\ts += v\n\t}\n\tfmt.Println(s)\n}",
+    "expected": "3",
+    "points": [
+      {
+        "id": "ok",
+        "text": "ok",
+        "category": "channel",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "通道是否关闭",
+        "fill_type": "text"
+      },
+      {
+        "id": "break",
+        "text": "break",
+        "category": "channel",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "关闭后退出",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_closech",
+        "text": "close(ch)",
+        "category": "channel",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "关闭 channel 结束接收",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_makechan",
+        "text": "make(chan",
+        "category": "channel",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "创建 channel",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_ch",
+        "text": "ch \u003c- ",
+        "category": "channel",
+        "min_weight": "medium",
+        "weight_score": 0.7,
+        "hint": "向 channel 发送",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_ch",
+        "text": "\u003c-ch",
+        "category": "channel",
+        "min_weight": "medium",
+        "weight_score": 0.7,
+        "hint": "从 channel 接收",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 ok 判断退出",
+      "level_2": "📖 ok=false 表示已关闭，退出循环",
+      "level_3": "👀 `if !ok { break }`",
+      "level_4": "📝 正确答案：`v, ok := \u003c-ch` / `break`"
+    },
+    "explanation": "手动循环需用 `(值, ok)` 判断 channel 是否关闭并 `break`。"
+  },
+  {
+    "id": "go-cc-049",
+    "title": "len 统计缓冲",
+    "description": "接收后查看剩余元素",
+    "exercise_type": "fill",
+    "tech_stack": "go",
+    "weight": "easy",
+    "category": "channel",
+    "subcategory": "并发",
+    "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tch := make(chan int, 3)\n\tch \u003c- 1\n\tch \u003c- 2\n\tch \u003c- 3\n\t\u003c-ch\n\t\u003c-ch\n\tfmt.Println(len(ch))\n}",
+    "expected": "1",
+    "points": [
+      {
+        "id": "len",
+        "text": "len(ch)",
+        "category": "channel",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "已存元素数",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_makechan",
+        "text": "make(chan",
+        "category": "channel",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "创建 channel",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_ch",
+        "text": "ch \u003c- ",
+        "category": "channel",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "向 channel 发送",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_ch",
+        "text": "\u003c-ch",
+        "category": "channel",
+        "min_weight": "medium",
+        "weight_score": 0.7,
+        "hint": "从 channel 接收",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 channel 元素数",
+      "level_2": "📖 发送 3 个、接收 2 个后剩 1",
+      "level_3": "👀 `fmt.Println(len(ch))`",
+      "level_4": "📝 正确答案：`len(ch)`"
+    },
+    "explanation": "`len(ch)` 返回缓冲中还剩的元素个数。"
+  },
+  {
+    "id": "go-cc-050",
+    "title": "select 带 ok 接收",
+    "description": "在 select 中接收并判断 ok",
+    "exercise_type": "fill",
+    "tech_stack": "go",
+    "weight": "medium",
+    "category": "select",
+    "subcategory": "并发",
+    "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tch := make(chan int, 1)\n\tch \u003c- 7\n\tselect {\n\tcase v, ok := \u003c-ch:\n\t\tfmt.Println(v, ok)\n\t}\n}",
+    "expected": "7 true",
+    "points": [
+      {
+        "id": "case",
+        "text": "case v, ok := \u003c-ch:",
+        "category": "select",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "带 ok 的接收分支",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_makechan",
+        "text": "make(chan",
+        "category": "channel",
+        "min_weight": "beginner",
+        "weight_score": 0.7,
+        "hint": "创建 channel",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_ch",
+        "text": "ch \u003c- ",
+        "category": "channel",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "向 channel 发送",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_ch",
+        "text": "\u003c-ch",
+        "category": "channel",
+        "min_weight": "medium",
+        "weight_score": 0.7,
+        "hint": "从 channel 接收",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_select",
+        "text": "select {",
+        "category": "select",
+        "min_weight": "medium",
+        "weight_score": 0.7,
+        "hint": "多路复用选择",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 select 带 ok",
+      "level_2": "📖 在 case 里同时拿到值与 ok",
+      "level_3": "👀 `fmt.Println(v, ok)`",
+      "level_4": "📝 正确答案：`case v, ok := \u003c-ch:`"
+    },
+    "explanation": "select 的 case 也可写成 `v, ok := \u003c-ch`，同时判断是否成功接收。"
+  }
+]

@@ -1,0 +1,1824 @@
+[
+  {
+    "id": "k8s-basics-001",
+    "title": "查看所有命名空间的 Pod",
+    "description": "列出所有命名空间下的 Pod",
+    "exercise_type": "command",
+    "tech_stack": "kubernetes",
+    "weight": "easy",
+    "category": "command_get",
+    "full_code": "kubectl get pods -A",
+    "expected": "",
+    "points": [
+      {
+        "id": "flag",
+        "text": "-A",
+        "category": "command_flag",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "短参数 -A 或长参数 --all-namespaces",
+        "fill_type": "select",
+        "acceptable_answers": [
+          "--all-namespaces"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 所有命名空间的关键词是什么？",
+      "level_2": "📖 `--all-namespaces` 或短参数 `-A`",
+      "level_3": "👀 `kubectl get pods -A`",
+      "level_4": "📝 正确答案："
+    },
+    "explanation": "`-A` 是 `--all-namespaces` 的短参数，列出全部命名空间的 Pod。"
+  },
+  {
+    "id": "k8s-basics-002",
+    "title": "查看指定命名空间的 Pod",
+    "description": "列出 kube-system 命名空间的 Pod",
+    "exercise_type": "command",
+    "tech_stack": "kubernetes",
+    "weight": "easy",
+    "category": "command_get",
+    "full_code": "kubectl get pods -n kube-system",
+    "expected": "",
+    "points": [
+      {
+        "id": "flag",
+        "text": "-n kube-system",
+        "category": "command_flag",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "用 -n 或 --namespace 指定命名空间",
+        "fill_type": "select",
+        "acceptable_answers": [
+          "--namespace kube-system"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 如何指定命名空间？",
+      "level_2": "📖 `-n kube-system` 或 `--namespace kube-system`",
+      "level_3": "👀 `kubectl get pods -n kube-system`",
+      "level_4": "📝 正确答案："
+    },
+    "explanation": "`-n` 指定命名空间，不指定时默认使用当前 context 的命名空间。"
+  },
+  {
+    "id": "k8s-basics-003",
+    "title": "查看 Pod 详细信息",
+    "description": "查看名为 nginx 的 Pod 的详细信息与事件",
+    "exercise_type": "command",
+    "tech_stack": "kubernetes",
+    "weight": "easy",
+    "category": "command_describe",
+    "full_code": "kubectl describe pod nginx",
+    "expected": "",
+    "points": [
+      {
+        "id": "verb",
+        "text": "describe",
+        "category": "command_verb",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "查看资源详细状态和事件的命令动词",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 查看详细信息的命令是？",
+      "level_2": "📖 `kubectl describe pod \u003c名称\u003e`",
+      "level_3": "👀 `kubectl describe pod nginx`",
+      "level_4": "📝 正确答案："
+    },
+    "explanation": "`describe` 展示资源的详细状态、事件与最近事件，排障常用。"
+  },
+  {
+    "id": "k8s-basics-004",
+    "title": "查看集群节点",
+    "description": "列出集群中的所有节点",
+    "exercise_type": "command",
+    "tech_stack": "kubernetes",
+    "weight": "easy",
+    "category": "command_get",
+    "full_code": "kubectl get nodes",
+    "expected": "",
+    "points": [
+      {
+        "id": "resource",
+        "text": "nodes",
+        "category": "resource",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "节点的资源名",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 节点的资源名是什么？",
+      "level_2": "📖 `kubectl get nodes`",
+      "level_3": "👀 `kubectl get nodes`",
+      "level_4": "📝 正确答案："
+    },
+    "explanation": "节点资源名为 `nodes`，可用 `-o wide` 查看更多信息。"
+  },
+  {
+    "id": "k8s-basics-005",
+    "title": "应用 YAML 清单",
+    "description": "用 deployment.yaml 创建或更新资源",
+    "exercise_type": "command",
+    "tech_stack": "kubernetes",
+    "weight": "easy",
+    "category": "command_apply",
+    "full_code": "kubectl apply -f deployment.yaml",
+    "expected": "",
+    "points": [
+      {
+        "id": "flag",
+        "text": "-f deployment.yaml",
+        "category": "command_flag",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "指定清单文件的选项",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 用什么选项指定清单文件？",
+      "level_2": "📖 `-f \u003c文件名\u003e`",
+      "level_3": "👀 `kubectl apply -f deployment.yaml`",
+      "level_4": "📝 正确答案："
+    },
+    "explanation": "`apply -f` 声明式应用清单，可创建或更新资源。"
+  },
+  {
+    "id": "k8s-basics-006",
+    "title": "删除 Pod",
+    "description": "删除名为 nginx 的 Pod",
+    "exercise_type": "command",
+    "tech_stack": "kubernetes",
+    "weight": "easy",
+    "category": "command_delete",
+    "full_code": "kubectl delete pod nginx",
+    "expected": "",
+    "points": [
+      {
+        "id": "verb",
+        "text": "delete",
+        "category": "command_verb",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "删除资源的命令动词",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 删除资源的动词？",
+      "level_2": "📖 `kubectl delete pod \u003c名称\u003e`",
+      "level_3": "👀 `kubectl delete pod nginx`",
+      "level_4": "📝 正确答案："
+    },
+    "explanation": "`delete` 删除资源，可用 `--force --grace-period=0` 强制删除。"
+  },
+  {
+    "id": "k8s-basics-007",
+    "title": "创建命名空间",
+    "description": "创建名为 dev 的命名空间",
+    "exercise_type": "command",
+    "tech_stack": "kubernetes",
+    "weight": "easy",
+    "category": "command_create",
+    "full_code": "kubectl create namespace dev",
+    "expected": "",
+    "points": [
+      {
+        "id": "verb",
+        "text": "create",
+        "category": "command_verb",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "创建资源的命令动词",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 创建资源的动词？",
+      "level_2": "📖 `kubectl create namespace dev`",
+      "level_3": "👀 `kubectl create namespace dev`",
+      "level_4": "📝 正确答案："
+    },
+    "explanation": "`create` 命令式创建资源；`apply` 则更适用于声明式管理。"
+  },
+  {
+    "id": "k8s-basics-008",
+    "title": "运行一次性 Pod",
+    "description": "以 nginx 镜像运行一个一次性 Pod（不生成控制器）",
+    "exercise_type": "command",
+    "tech_stack": "kubernetes",
+    "weight": "easy",
+    "category": "command_run",
+    "full_code": "kubectl run nginx --image=nginx:1.25 --restart=Never",
+    "expected": "",
+    "points": [
+      {
+        "id": "restart",
+        "text": "--restart=Never",
+        "category": "command_flag",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "让 kubectl run 创建裸 Pod 而非 Deployment 的选项",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 如何让 run 创建裸 Pod？",
+      "level_2": "📖 `--restart=Never` 创建裸 Pod",
+      "level_3": "👀 `kubectl run nginx --image=nginx:1.25 --restart=Never`",
+      "level_4": "📝 正确答案："
+    },
+    "explanation": "默认 `kubectl run` 创建 Deployment；`--restart=Never` 创建一次性裸 Pod。"
+  },
+  {
+    "id": "k8s-basics-009",
+    "title": "暴露 Deployment 服务",
+    "description": "将 nginx Deployment 暴露为 ClusterIP 服务",
+    "exercise_type": "command",
+    "tech_stack": "kubernetes",
+    "weight": "easy",
+    "category": "command_expose",
+    "full_code": "kubectl expose deployment nginx --port=80 --type=ClusterIP",
+    "expected": "",
+    "points": [
+      {
+        "id": "type",
+        "text": "--type=ClusterIP",
+        "category": "command_flag",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "服务类型的选项",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "--type=NodePort"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 服务类型参数是什么？",
+      "level_2": "📖 `--type=ClusterIP` 或 `--type=NodePort`",
+      "level_3": "👀 `kubectl expose deployment nginx --port=80 --type=ClusterIP`",
+      "level_4": "📝 正确答案："
+    },
+    "explanation": "`expose` 为资源创建 Service；`--type` 决定 Service 暴露方式。"
+  },
+  {
+    "id": "k8s-basics-010",
+    "title": "查看 Deployment",
+    "description": "列出所有 Deployment",
+    "exercise_type": "command",
+    "tech_stack": "kubernetes",
+    "weight": "easy",
+    "category": "command_get",
+    "full_code": "kubectl get deployments",
+    "expected": "",
+    "points": [
+      {
+        "id": "resource",
+        "text": "deployments",
+        "category": "resource",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "Deployment 的资源名",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "deploy"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 Deployment 的资源名（复数）？",
+      "level_2": "📖 `deployments` 或简称 `deploy`",
+      "level_3": "👀 `kubectl get deployments`",
+      "level_4": "📝 正确答案："
+    },
+    "explanation": "资源名可用全称或缩写（deploy/svc/pods）。"
+  },
+  {
+    "id": "k8s-basics-011",
+    "title": "查看 Service",
+    "description": "列出所有 Service",
+    "exercise_type": "command",
+    "tech_stack": "kubernetes",
+    "weight": "easy",
+    "category": "command_get",
+    "full_code": "kubectl get svc",
+    "expected": "",
+    "points": [
+      {
+        "id": "resource",
+        "text": "svc",
+        "category": "resource",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "Service 的缩写资源名",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "services"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 Service 的缩写资源名？",
+      "level_2": "📖 `svc` 或 `services`",
+      "level_3": "👀 `kubectl get svc`",
+      "level_4": "📝 正确答案："
+    },
+    "explanation": "Service 缩写为 `svc`，全称为 `services`。"
+  },
+  {
+    "id": "k8s-basics-014",
+    "title": "查看集群事件",
+    "description": "查看命名空间内的最新事件",
+    "exercise_type": "command",
+    "tech_stack": "kubernetes",
+    "weight": "easy",
+    "category": "command_events",
+    "full_code": "kubectl get events",
+    "expected": "",
+    "points": [
+      {
+        "id": "resource",
+        "text": "events",
+        "category": "resource",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "事件资源名",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 查看事件的资源名？",
+      "level_2": "📖 `kubectl get events`",
+      "level_3": "👀 `kubectl get events`",
+      "level_4": "📝 正确答案："
+    },
+    "explanation": "`events` 记录调度、拉取镜像、重启等集群事件，排障重要。"
+  },
+  {
+    "id": "k8s-basics-015",
+    "title": "查看 Pod 日志",
+    "description": "查看 nginx Pod 的标准输出日志",
+    "exercise_type": "command",
+    "tech_stack": "kubernetes",
+    "weight": "easy",
+    "category": "command_logs",
+    "full_code": "kubectl logs nginx",
+    "expected": "",
+    "points": [
+      {
+        "id": "verb",
+        "text": "logs",
+        "category": "command_verb",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "查看日志的命令动词",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 查看日志的动词？",
+      "level_2": "📖 `kubectl logs \u003cpod\u003e`",
+      "level_3": "👀 `kubectl logs nginx`",
+      "level_4": "📝 正确答案："
+    },
+    "explanation": "`logs` 输出容器 stdout/stderr 日志，`-f` 实时跟随。"
+  },
+  {
+    "id": "k8s-basics-016",
+    "title": "实时跟随日志",
+    "description": "实时输出 nginx Pod 的日志流",
+    "exercise_type": "command",
+    "tech_stack": "kubernetes",
+    "weight": "easy",
+    "category": "command_logs",
+    "full_code": "kubectl logs -f nginx",
+    "expected": "",
+    "points": [
+      {
+        "id": "flag",
+        "text": "-f",
+        "category": "command_flag",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "实时跟随日志的选项",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "--follow"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 跟随日志输出的选项？",
+      "level_2": "📖 `-f` 或 `--follow`",
+      "level_3": "👀 `kubectl logs -f nginx`",
+      "level_4": "📝 正确答案："
+    },
+    "explanation": "`-f` 实时流式输出日志，类似 `tail -f`。"
+  },
+  {
+    "id": "k8s-basics-017",
+    "title": "进入容器执行命令",
+    "description": "以交互式终端进入 nginx 容器的 shell",
+    "exercise_type": "command",
+    "tech_stack": "kubernetes",
+    "weight": "easy",
+    "category": "command_exec",
+    "full_code": "kubectl exec -it nginx -- /bin/sh",
+    "expected": "",
+    "points": [
+      {
+        "id": "args",
+        "text": "-it",
+        "category": "command_flag",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "交互式 + 分配 TTY 的选项",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "--stdin --tty"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 交互式终端的选项组合？",
+      "level_2": "📖 `-it`（stdin + tty）",
+      "level_3": "👀 `kubectl exec -it nginx -- /bin/sh`",
+      "level_4": "📝 正确答案："
+    },
+    "explanation": "`-i` 保持标准输入，`-t` 分配 TTY，`--` 后接要执行的命令。"
+  },
+  {
+    "id": "k8s-basics-018",
+    "title": "端口转发到本地",
+    "description": "将 nginx Service 的 80 端口转发到本地 8080",
+    "exercise_type": "command",
+    "tech_stack": "kubernetes",
+    "weight": "easy",
+    "category": "command_portforward",
+    "full_code": "kubectl port-forward svc/nginx 8080:80",
+    "expected": "",
+    "points": [
+      {
+        "id": "ports",
+        "text": "8080:80",
+        "category": "command_flag",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "本地端口:容器端口的格式",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 端口映射的写法？",
+      "level_2": "📖 `本地端口:目标端口` → `8080:80`",
+      "level_3": "👀 `kubectl port-forward svc/nginx 8080:80`",
+      "level_4": "📝 正确答案："
+    },
+    "explanation": "`port-forward` 把集群内端口转发到本地，便于调试访问。"
+  },
+  {
+    "id": "k8s-basics-019",
+    "title": "副本扩容",
+    "description": "将 nginx Deployment 扩到 3 个副本",
+    "exercise_type": "command",
+    "tech_stack": "kubernetes",
+    "weight": "easy",
+    "category": "command_scale",
+    "full_code": "kubectl scale deployment nginx --replicas=3",
+    "expected": "",
+    "points": [
+      {
+        "id": "flag",
+        "text": "--replicas=3",
+        "category": "command_flag",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "设置副本数的选项",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 设置副本数的选项？",
+      "level_2": "📖 `--replicas=3`",
+      "level_3": "👀 `kubectl scale deployment nginx --replicas=3`",
+      "level_4": "📝 正确答案："
+    },
+    "explanation": "`scale` 调整副本数；HPA 会自动管理副本数。"
+  },
+  {
+    "id": "k8s-basics-020",
+    "title": "更新镜像版本",
+    "description": "将 nginx Deployment 的镜像更新到 nginx:1.26",
+    "exercise_type": "command",
+    "tech_stack": "kubernetes",
+    "weight": "easy",
+    "category": "command_set",
+    "full_code": "kubectl set image deployment/nginx nginx=nginx:1.26",
+    "expected": "",
+    "points": [
+      {
+        "id": "verb",
+        "text": "set image",
+        "category": "command_verb",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "更新镜像的命令",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 更新镜像的命令？",
+      "level_2": "📖 `kubectl set image deployment/\u003c名\u003e \u003c容器\u003e=\u003c镜像\u003e`",
+      "level_3": "👀 `kubectl set image deployment/nginx nginx=nginx:1.26`",
+      "level_4": "📝 正确答案："
+    },
+    "explanation": "`set image` 滚动更新容器镜像；可用 `kubectl rollout status` 查看进度。"
+  },
+  {
+    "id": "k8s-basics-021",
+    "title": "查看滚动更新状态",
+    "description": "查看 nginx Deployment 的滚动更新状态",
+    "exercise_type": "command",
+    "tech_stack": "kubernetes",
+    "weight": "easy",
+    "category": "command_rollout",
+    "full_code": "kubectl rollout status deployment/nginx",
+    "expected": "",
+    "points": [
+      {
+        "id": "verb",
+        "text": "rollout status",
+        "category": "command_verb",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "查看更新状态的命令",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 查看滚动状态的命令？",
+      "level_2": "📖 `kubectl rollout status deployment/nginx`",
+      "level_3": "👀 `kubectl rollout status deployment/nginx`",
+      "level_4": "📝 正确答案："
+    },
+    "explanation": "`rollout status` 阻塞直到部署完成或超时。"
+  },
+  {
+    "id": "k8s-basics-022",
+    "title": "回滚更新",
+    "description": "将 nginx Deployment 回滚到上一个版本",
+    "exercise_type": "command",
+    "tech_stack": "kubernetes",
+    "weight": "easy",
+    "category": "command_rollout",
+    "full_code": "kubectl rollout undo deployment/nginx",
+    "expected": "",
+    "points": [
+      {
+        "id": "verb",
+        "text": "undo",
+        "category": "command_verb",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "回滚到上一版本的子命令",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 回滚的子命令？",
+      "level_2": "📖 `rollout undo`",
+      "level_3": "👀 `kubectl rollout undo deployment/nginx`",
+      "level_4": "📝 正确答案："
+    },
+    "explanation": "`rollout undo` 回滚到上一版本，`--to-revision` 指定目标版本。"
+  },
+  {
+    "id": "k8s-basics-025",
+    "title": "给资源加注解",
+    "description": "给 nginx Pod 添加描述注解",
+    "exercise_type": "command",
+    "tech_stack": "kubernetes",
+    "weight": "easy",
+    "category": "command_annotate",
+    "full_code": "kubectl annotate pod nginx description=web-server",
+    "expected": "",
+    "points": [
+      {
+        "id": "verb",
+        "text": "annotate",
+        "category": "command_verb",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "管理注解的命令动词",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 管理注解的动词？",
+      "level_2": "📖 `kubectl annotate pod \u003c名\u003e \u003ckey\u003e=\u003cvalue\u003e`",
+      "level_3": "👀 `kubectl annotate pod nginx description=web-server`",
+      "level_4": "📝 正确答案："
+    },
+    "explanation": "`annotate` 添加非标识性元数据；注解不用于选择器匹配。"
+  },
+  {
+    "id": "k8s-basics-026",
+    "title": "以 YAML 输出",
+    "description": "以 YAML 格式输出 nginx Pod 的清单",
+    "exercise_type": "command",
+    "tech_stack": "kubernetes",
+    "weight": "easy",
+    "category": "command_output",
+    "full_code": "kubectl get pod nginx -o yaml",
+    "expected": "",
+    "points": [
+      {
+        "id": "flag",
+        "text": "-o yaml",
+        "category": "command_flag",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "YAML 输出格式选项",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "--output yaml"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 指定输出格式的选项？",
+      "level_2": "📖 `-o yaml` 或 `--output yaml`",
+      "level_3": "👀 `kubectl get pod nginx -o yaml`",
+      "level_4": "📝 正确答案："
+    },
+    "explanation": "`-o yaml` 输出资源清单，便于审阅或另存复用。"
+  },
+  {
+    "id": "k8s-basics-027",
+    "title": "以 JSON 输出",
+    "description": "以 JSON 格式输出 nginx Pod 的清单",
+    "exercise_type": "command",
+    "tech_stack": "kubernetes",
+    "weight": "easy",
+    "category": "command_output",
+    "full_code": "kubectl get pod nginx -o json",
+    "expected": "",
+    "points": [
+      {
+        "id": "flag",
+        "text": "-o json",
+        "category": "command_flag",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "JSON 输出格式选项",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "--output json"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 JSON 输出格式选项？",
+      "level_2": "📖 `-o json`",
+      "level_3": "👀 `kubectl get pod nginx -o json`",
+      "level_4": "📝 正确答案："
+    },
+    "explanation": "`-o json` 输出结构化 JSON，便于脚本处理。"
+  },
+  {
+    "id": "k8s-basics-028",
+    "title": "宽表输出",
+    "description": "以宽格式查看 Pod（含节点 IP）",
+    "exercise_type": "command",
+    "tech_stack": "kubernetes",
+    "weight": "easy",
+    "category": "command_output",
+    "full_code": "kubectl get pods -o wide",
+    "expected": "",
+    "points": [
+      {
+        "id": "flag",
+        "text": "-o wide",
+        "category": "command_flag",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "宽表输出选项",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 显示更多列的选项？",
+      "level_2": "📖 `-o wide`",
+      "level_3": "👀 `kubectl get pods -o wide`",
+      "level_4": "📝 正确答案："
+    },
+    "explanation": "`-o wide` 额外显示节点、IP 等列。"
+  },
+  {
+    "id": "k8s-basics-029",
+    "title": "按标签筛选",
+    "description": "筛选出 app=nginx 标签的 Pod",
+    "exercise_type": "command",
+    "tech_stack": "kubernetes",
+    "weight": "easy",
+    "category": "command_select",
+    "full_code": "kubectl get pods -l app=nginx",
+    "expected": "",
+    "points": [
+      {
+        "id": "flag",
+        "text": "-l app=nginx",
+        "category": "command_flag",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "标签选择器选项",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "--selector app=nginx"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 标签筛选的选项？",
+      "level_2": "📖 `-l app=nginx` 或 `--selector`",
+      "level_3": "👀 `kubectl get pods -l app=nginx`",
+      "level_4": "📝 正确答案："
+    },
+    "explanation": "`-l` 按标签键值筛选，支持 `,`、`!=`、`in` 等表达式。"
+  },
+  {
+    "id": "k8s-basics-031",
+    "title": "客户端预演",
+    "description": "在不真正应用的情况下验证 pod.yaml 语法",
+    "exercise_type": "command",
+    "tech_stack": "kubernetes",
+    "weight": "easy",
+    "category": "command_dryrun",
+    "full_code": "kubectl apply -f pod.yaml --dry-run=client",
+    "expected": "",
+    "points": [
+      {
+        "id": "flag",
+        "text": "--dry-run=client",
+        "category": "command_flag",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "本地校验不落地的选项",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "--dry-run=server"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 预演选项？",
+      "level_2": "📖 `--dry-run=client`（本地）或 `=server`（服务端）",
+      "level_3": "👀 `kubectl apply -f pod.yaml --dry-run=client`",
+      "level_4": "📝 正确答案："
+    },
+    "explanation": "`--dry-run` 校验清单而不真正变更集群。"
+  },
+  {
+    "id": "k8s-basics-036",
+    "title": "驱逐节点 Pod",
+    "description": "清空 node-1 上的 Pod 以便维护",
+    "exercise_type": "command",
+    "tech_stack": "kubernetes",
+    "weight": "easy",
+    "category": "command_drain",
+    "full_code": "kubectl drain node-1 --ignore-daemonsets",
+    "expected": "",
+    "points": [
+      {
+        "id": "flag",
+        "text": "--ignore-daemonsets",
+        "category": "command_flag",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "忽略 DaemonSet 的选项",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 忽略 DaemonSet 的选项？",
+      "level_2": "📖 `--ignore-daemonsets`",
+      "level_3": "👀 `kubectl drain node-1 --ignore-daemonsets`",
+      "level_4": "📝 正确答案："
+    },
+    "explanation": "`drain` 驱逐节点上 Pod（通常配合 cordon 使用）。"
+  },
+  {
+    "id": "k8s-basics-039",
+    "title": "配置水平自动伸缩",
+    "description": "让 nginx Deployment 在 2-5 副本间自动伸缩",
+    "exercise_type": "command",
+    "tech_stack": "kubernetes",
+    "weight": "easy",
+    "category": "command_autoscale",
+    "full_code": "kubectl autoscale deployment nginx --min=2 --max=5",
+    "expected": "",
+    "points": [
+      {
+        "id": "flag",
+        "text": "--max=5",
+        "category": "command_flag",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "设置最大副本数的选项",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "--cpu-percent=80"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 设置最大副本数的选项？",
+      "level_2": "📖 `--min=2 --max=5`",
+      "level_3": "👀 `kubectl autoscale deployment nginx --min=2 --max=5`",
+      "level_4": "📝 正确答案："
+    },
+    "explanation": "`autoscale` 创建 HPA，按 CPU 使用率自动调整副本数。"
+  },
+  {
+    "id": "k8s-basics-040",
+    "title": "查看当前上下文",
+    "description": "查看当前使用的 kubeconfig 上下文",
+    "exercise_type": "command",
+    "tech_stack": "kubernetes",
+    "weight": "easy",
+    "category": "command_config",
+    "full_code": "kubectl config current-context",
+    "expected": "",
+    "points": [
+      {
+        "id": "verb",
+        "text": "current-context",
+        "category": "command_verb",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "查看当前上下文的子命令",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 查看当前上下文的命令？",
+      "level_2": "📖 `kubectl config current-context`",
+      "level_3": "👀 `kubectl config current-context`",
+      "level_4": "📝 正确答案："
+    },
+    "explanation": "上下文 = 集群 + 用户 + 命名空间的组合。"
+  },
+  {
+    "id": "k8s-basics-041",
+    "title": "切换上下文",
+    "description": "切换到 minikube 上下文",
+    "exercise_type": "command",
+    "tech_stack": "kubernetes",
+    "weight": "easy",
+    "category": "command_config",
+    "full_code": "kubectl config use-context minikube",
+    "expected": "",
+    "points": [
+      {
+        "id": "verb",
+        "text": "use-context",
+        "category": "command_verb",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "切换上下文的子命令",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 切换上下文的命令？",
+      "level_2": "📖 `kubectl config use-context \u003c名称\u003e`",
+      "level_3": "👀 `kubectl config use-context minikube`",
+      "level_4": "📝 正确答案："
+    },
+    "explanation": "`use-context` 切换当前生效的集群上下文。"
+  },
+  {
+    "id": "k8s-basics-051",
+    "title": "Pod 资源限制",
+    "description": "为容器设置 CPU 与内存限制",
+    "exercise_type": "config",
+    "tech_stack": "kubernetes",
+    "weight": "medium",
+    "category": "yaml_limits",
+    "full_code": "apiVersion: v1\nkind: Pod\nmetadata:\n  name: busybox\nspec:\n  containers:\n  - name: busybox\n    image: busybox\n    resources:\n      limits:\n        cpu: \"500m\"\n        memory: \"128Mi\"",
+    "expected": "",
+    "points": [
+      {
+        "id": "cpu",
+        "text": "\"500m\"",
+        "category": "resource",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "CPU 限制（500m = 0.5 核）",
+        "fill_type": "text"
+      },
+      {
+        "id": "mem",
+        "text": "\"128Mi\"",
+        "category": "resource",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "内存限制（Mi 为二进制兆）",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_image_busybox",
+        "text": "busybox",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "补充「容器镜像」",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_cpu_500m",
+        "text": "500m",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "补充「CPU 配额」",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_memory_128Mi",
+        "text": "128Mi",
+        "category": "config",
+        "min_weight": "medium",
+        "weight_score": 0.7,
+        "hint": "补充「内存配额」",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 limits 需要哪两项？",
+      "level_2": "📖 `cpu` 与 `memory`，500m=0.5 核，128Mi=128 MiB",
+      "level_3": "👀 `cpu: \"500m\"` / `memory: \"128Mi\"`",
+      "level_4": "📝 正确答案："
+    },
+    "explanation": "resources.limits 设置容器可用的硬上限；requests 是调度保证。"
+  },
+  {
+    "id": "k8s-basics-052",
+    "title": "Pod 环境变量",
+    "description": "通过 env 注入环境变量",
+    "exercise_type": "config",
+    "tech_stack": "kubernetes",
+    "weight": "easy",
+    "category": "yaml_env",
+    "full_code": "apiVersion: v1\nkind: Pod\nmetadata:\n  name: web\nspec:\n  containers:\n  - name: web\n    image: nginx\n    env:\n    - name: MODE\n      value: production",
+    "expected": "",
+    "points": [
+      {
+        "id": "name",
+        "text": "MODE",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "环境变量名",
+        "fill_type": "text"
+      },
+      {
+        "id": "value",
+        "text": "production",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "环境变量值",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_image_nginx",
+        "text": "nginx",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "补充「容器镜像」",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 env 每项的两个字段？",
+      "level_2": "📖 `name` 与 `value`",
+      "level_3": "👀 `- name: MODE` / `value: production`",
+      "level_4": "📝 正确答案："
+    },
+    "explanation": "容器通过 env 注入键值配置；值也可来自 configMapKeyRef/secretKeyRef。"
+  },
+  {
+    "id": "k8s-basics-053",
+    "title": "Deployment 副本数",
+    "description": "创建 3 副本的 nginx Deployment",
+    "exercise_type": "config",
+    "tech_stack": "kubernetes",
+    "weight": "easy",
+    "category": "yaml_deployment",
+    "full_code": "apiVersion: apps/v1\nkind: Deployment\nmetadata:\n  name: nginx-deploy\nspec:\n  replicas: 3\n  selector:\n    matchLabels:\n      app: nginx\n  template:\n    metadata:\n      labels:\n        app: nginx\n    spec:\n      containers:\n      - name: nginx\n        image: nginx:1.25",
+    "expected": "",
+    "points": [
+      {
+        "id": "api",
+        "text": "apps/v1",
+        "category": "api_version",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "Deployment 的 API 版本",
+        "fill_type": "text"
+      },
+      {
+        "id": "replicas",
+        "text": "3",
+        "category": "replicas",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "期望副本数",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_app_nginx",
+        "text": "nginx",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "补充「标签 app 的值」",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_image_nginx125",
+        "text": "nginx:1.25",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "补充「容器镜像」",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 Deployment 的 apiVersion 与副本数？",
+      "level_2": "📖 `apps/v1`，`replicas: 3`",
+      "level_3": "👀 `apiVersion: apps/v1` / `replicas: 3`",
+      "level_4": "📝 正确答案："
+    },
+    "explanation": "Deployment 属于 apps 组 v1；replicas 声明期望副本数，label 选择器需匹配模板标签。"
+  },
+  {
+    "id": "k8s-basics-054",
+    "title": "Deployment 更新策略",
+    "description": "配置滚动更新最大不可用为 25%",
+    "exercise_type": "config",
+    "tech_stack": "kubernetes",
+    "weight": "hard",
+    "category": "yaml_deployment",
+    "full_code": "apiVersion: apps/v1\nkind: Deployment\nmetadata:\n  name: app\nspec:\n  replicas: 2\n  strategy:\n    type: RollingUpdate\n    rollingUpdate:\n      maxUnavailable: 25%\n  selector:\n    matchLabels:\n      app: app\n  template:\n    metadata:\n      labels:\n        app: app\n    spec:\n      containers:\n      - name: app\n        image: nginx",
+    "expected": "",
+    "points": [
+      {
+        "id": "maxun",
+        "text": "maxUnavailable: 25%",
+        "category": "config",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "滚动更新期间最多不可用副本比例",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_replicas_2",
+        "text": "2",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 0.7,
+        "hint": "补充「副本数」",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_app_app",
+        "text": "app",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "补充「标签 app 的值」",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_image_nginx",
+        "text": "nginx",
+        "category": "config",
+        "min_weight": "medium",
+        "weight_score": 0.7,
+        "hint": "补充「容器镜像」",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 控制滚动更新速率的字段？",
+      "level_2": "📖 `rollingUpdate.maxUnavailable`（或 maxSurge）",
+      "level_3": "👀 `maxUnavailable: 25%`",
+      "level_4": "📝 正确答案："
+    },
+    "explanation": "`maxSurge` 与 `maxUnavailable` 共同控制滚动更新的节奏。"
+  },
+  {
+    "id": "k8s-basics-055",
+    "title": "Service 类型与端口",
+    "description": "创建暴露 8080 端口映射 80 的 ClusterIP 服务",
+    "exercise_type": "config",
+    "tech_stack": "kubernetes",
+    "weight": "easy",
+    "category": "yaml_service",
+    "full_code": "apiVersion: v1\nkind: Service\nmetadata:\n  name: my-svc\nspec:\n  type: ClusterIP\n  selector:\n    app: nginx\n  ports:\n  - port: 8080\n    targetPort: 80",
+    "expected": "",
+    "points": [
+      {
+        "id": "port",
+        "text": "8080",
+        "category": "port",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "Service 对外端口",
+        "fill_type": "text"
+      },
+      {
+        "id": "target",
+        "text": "80",
+        "category": "port",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "后端容器端口",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_app_nginx",
+        "text": "nginx",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "补充「标签 app 的值」",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 ports 中两个端口字段？",
+      "level_2": "📖 `port`（服务端口）与 `targetPort`（容器端口）",
+      "level_3": "👀 `port: 8080` / `targetPort: 80`",
+      "level_4": "📝 正确答案："
+    },
+    "explanation": "`port` 是 Service 的 VIP 端口，`targetPort` 是转发到容器的端口。"
+  },
+  {
+    "id": "k8s-basics-056",
+    "title": "NodePort 服务",
+    "description": "创建固定节点端口 30080 的 NodePort 服务",
+    "exercise_type": "config",
+    "tech_stack": "kubernetes",
+    "weight": "easy",
+    "category": "yaml_service",
+    "full_code": "apiVersion: v1\nkind: Service\nmetadata:\n  name: web\nspec:\n  type: NodePort\n  selector:\n    app: web\n  ports:\n  - port: 80\n    targetPort: 80\n    nodePort: 30080",
+    "expected": "",
+    "points": [
+      {
+        "id": "type",
+        "text": "NodePort",
+        "category": "service_type",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "Service 类型",
+        "fill_type": "text"
+      },
+      {
+        "id": "nodeport",
+        "text": "30080",
+        "category": "port",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "节点上暴露的端口（30000-32767）",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_app_web",
+        "text": "web",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "补充「标签 app 的值」",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_targetPort_80",
+        "text": "80",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "补充「后端目标端口」",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 NodePort 的类型与端口？",
+      "level_2": "📖 `type: NodePort`，`nodePort: 30080`",
+      "level_3": "👀 `type: NodePort` / `nodePort: 30080`",
+      "level_4": "📝 正确答案："
+    },
+    "explanation": "NodePort 通过节点 IP:30080 访问；端口范围默认 30000-32767。"
+  },
+  {
+    "id": "k8s-basics-057",
+    "title": "ConfigMap 数据",
+    "description": "创建含数据库地址配置的 ConfigMap",
+    "exercise_type": "config",
+    "tech_stack": "kubernetes",
+    "weight": "easy",
+    "category": "yaml_configmap",
+    "full_code": "apiVersion: v1\nkind: ConfigMap\nmetadata:\n  name: app-config\ndata:\n  DB_HOST: db.example.com\n  DB_PORT: \"5432\"",
+    "expected": "",
+    "points": [
+      {
+        "id": "host",
+        "text": "db.example.com",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "数据库主机配置值",
+        "fill_type": "text"
+      },
+      {
+        "id": "port",
+        "text": "\"5432\"",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "端口值（字符串需要引号）",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 ConfigMap 数据如何写？",
+      "level_2": "📖 `data` 下 `key: value`，数值建议加引号",
+      "level_3": "👀 `DB_HOST: db.example.com` / `DB_PORT: \"5432\"`",
+      "level_4": "📝 正确答案："
+    },
+    "explanation": "ConfigMap.data 存放明文键值；Pod 可通过 env 或 volume 引用。"
+  },
+  {
+    "id": "k8s-basics-058",
+    "title": "Secret 数据",
+    "description": "创建含 MySQL 密码的 Secret",
+    "exercise_type": "config",
+    "tech_stack": "kubernetes",
+    "weight": "easy",
+    "category": "yaml_secret",
+    "full_code": "apiVersion: v1\nkind: Secret\nmetadata:\n  name: db-secret\ntype: Opaque\ndata:\n  password: bXlwYXNz\nstringData:\n  username: root",
+    "expected": "",
+    "points": [
+      {
+        "id": "type",
+        "text": "Opaque",
+        "category": "secret_type",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "Secret 类型（Opaque=不透明）",
+        "fill_type": "text"
+      },
+      {
+        "id": "pwd",
+        "text": "bXlwYXNz",
+        "category": "secret_data",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "data 中值需 base64 编码（bXlwYXNz = mypass）",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 Secret 的 type 与编码？",
+      "level_2": "📖 `Opaque`；data 值 base64 编码，stringData 明文",
+      "level_3": "👀 `type: Opaque` / `data.password: bXlwYXNz`",
+      "level_4": "📝 正确答案："
+    },
+    "explanation": "Secret.data 的 value 必须 base64；stringData 可写明文并在创建时自动编码。"
+  },
+  {
+    "id": "k8s-basics-059",
+    "title": "Ingress 路由",
+    "description": "将 example.com 的 /api 路由到 api 服务",
+    "exercise_type": "config",
+    "tech_stack": "kubernetes",
+    "weight": "medium",
+    "category": "yaml_ingress",
+    "full_code": "apiVersion: networking.k8s.io/v1\nkind: Ingress\nmetadata:\n  name: my-ingress\nspec:\n  rules:\n  - host: example.com\n    http:\n      paths:\n      - path: /api\n        pathType: Prefix\n        backend:\n          service:\n            name: api-service\n            port:\n              number: 80",
+    "expected": "",
+    "points": [
+      {
+        "id": "host",
+        "text": "example.com",
+        "category": "host",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "域名",
+        "fill_type": "text"
+      },
+      {
+        "id": "path",
+        "text": "/api",
+        "category": "path",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "URL 路径",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 Ingress 的 host 与 path？",
+      "level_2": "📖 `host: example.com`，`path: /api`",
+      "level_3": "👀 `- host: example.com` / `path: /api`",
+      "level_4": "📝 正确答案："
+    },
+    "explanation": "Ingress 按 host + path 将外部请求路由到集群内 Service。"
+  },
+  {
+    "id": "k8s-basics-060",
+    "title": "PersistentVolumeClaim",
+    "description": "申请 1Gi 的存储",
+    "exercise_type": "config",
+    "tech_stack": "kubernetes",
+    "weight": "easy",
+    "category": "yaml_pvc",
+    "full_code": "apiVersion: v1\nkind: PersistentVolumeClaim\nmetadata:\n  name: data-pvc\nspec:\n  accessModes:\n  - ReadWriteOnce\n  resources:\n    requests:\n      storage: 1Gi",
+    "expected": "",
+    "points": [
+      {
+        "id": "mode",
+        "text": "ReadWriteOnce",
+        "category": "access_mode",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "访问模式（单节点读写）",
+        "fill_type": "text"
+      },
+      {
+        "id": "storage",
+        "text": "1Gi",
+        "category": "storage",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "申请容量",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 PVC 的访问模式与容量？",
+      "level_2": "📖 `ReadWriteOnce`，`storage: 1Gi`",
+      "level_3": "👀 `- ReadWriteOnce` / `storage: 1Gi`",
+      "level_4": "📝 正确答案："
+    },
+    "explanation": "PVC 声明存储需求，调度时绑定到满足条件的 PV。"
+  },
+  {
+    "id": "k8s-basics-061",
+    "title": "Pod 挂载 PVC",
+    "description": "把 data-pvc 挂载到容器的 /data 目录",
+    "exercise_type": "config",
+    "tech_stack": "kubernetes",
+    "weight": "medium",
+    "category": "yaml_volume",
+    "full_code": "apiVersion: v1\nkind: Pod\nmetadata:\n  name: app\nspec:\n  containers:\n  - name: app\n    image: nginx\n    volumeMounts:\n    - name: data\n      mountPath: /data\n  volumes:\n  - name: data\n    persistentVolumeClaim:\n      claimName: data-pvc",
+    "expected": "",
+    "points": [
+      {
+        "id": "mount",
+        "text": "/data",
+        "category": "mount_path",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "容器内挂载路径",
+        "fill_type": "text"
+      },
+      {
+        "id": "claim",
+        "text": "data-pvc",
+        "category": "pvc_name",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "引用的 PVC 名称",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_image_nginx",
+        "text": "nginx",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "补充「容器镜像」",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 挂载路径与 PVC 名称？",
+      "level_2": "📖 `mountPath: /data`，`claimName: data-pvc`",
+      "level_3": "👀 `mountPath: /data` / `claimName: data-pvc`",
+      "level_4": "📝 正确答案："
+    },
+    "explanation": "容器 volumeMounts 声明挂载点，volumes 声明来源（PVC/emptyDir/configMap 等）。"
+  },
+  {
+    "id": "k8s-basics-062",
+    "title": "ResourceQuota 配额",
+    "description": "限制命名空间 CPU 总量为 2 核",
+    "exercise_type": "config",
+    "tech_stack": "kubernetes",
+    "weight": "medium",
+    "category": "yaml_quota",
+    "full_code": "apiVersion: v1\nkind: ResourceQuota\nmetadata:\n  name: dev-quota\nspec:\n  hard:\n    requests.cpu: \"2\"\n    limits.cpu: \"4\"",
+    "expected": "",
+    "points": [
+      {
+        "id": "req",
+        "text": "requests.cpu: \"2\"",
+        "category": "resource",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "请求量总上限的键",
+        "fill_type": "text"
+      },
+      {
+        "id": "lim",
+        "text": "limits.cpu: \"4\"",
+        "category": "resource",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "限制量总上限的键",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 ResourceQuota 限制的键？",
+      "level_2": "📖 `requests.cpu` / `limits.cpu`",
+      "level_3": "👀 `requests.cpu: \"2\"` / `limits.cpu: \"4\"`",
+      "level_4": "📝 正确答案："
+    },
+    "explanation": "ResourceQuota 汇总限制命名空间内所有 Pod 的请求/限制总量。"
+  },
+  {
+    "id": "k8s-basics-063",
+    "title": "LimitRange 默认值",
+    "description": "为容器设置默认内存限制",
+    "exercise_type": "config",
+    "tech_stack": "kubernetes",
+    "weight": "medium",
+    "category": "yaml_limitrange",
+    "full_code": "apiVersion: v1\nkind: LimitRange\nmetadata:\n  name: mem-limit\nspec:\n  limits:\n  - default:\n      memory: 512Mi\n    defaultRequest:\n      memory: 256Mi\n    type: Container",
+    "expected": "",
+    "points": [
+      {
+        "id": "default",
+        "text": "512Mi",
+        "category": "resource",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "未指定时应用的默认限制",
+        "fill_type": "text"
+      },
+      {
+        "id": "type",
+        "text": "Container",
+        "category": "limit_type",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "作用对象类型",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "Pod"
+        ]
+      },
+      {
+        "id": "auto_memory_256Mi",
+        "text": "256Mi",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 0.7,
+        "hint": "补充「内存配额」",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 LimitRange 的 default 与 type？",
+      "level_2": "📖 `default.memory: 512Mi`，`type: Container`",
+      "level_3": "👀 `memory: 512Mi` / `type: Container`",
+      "level_4": "📝 正确答案："
+    },
+    "explanation": "LimitRange 为未显式声明资源的容器注入默认值并约束范围。"
+  },
+  {
+    "id": "k8s-basics-064",
+    "title": "Job 一次性任务",
+    "description": "创建执行一次的 Job",
+    "exercise_type": "config",
+    "tech_stack": "kubernetes",
+    "weight": "medium",
+    "category": "yaml_job",
+    "full_code": "apiVersion: batch/v1\nkind: Job\nmetadata:\n  name: pi\nspec:\n  template:\n    spec:\n      containers:\n      - name: pi\n        image: perl\n        command: [\"perl\", \"-Mbignum=bpi\", \"-wle\", \"print bpi(2000)\"]\n      restartPolicy: Never\n  backoffLimit: 4",
+    "expected": "",
+    "points": [
+      {
+        "id": "api",
+        "text": "batch/v1",
+        "category": "api_version",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "Job 的 API 版本",
+        "fill_type": "text"
+      },
+      {
+        "id": "restart",
+        "text": "Never",
+        "category": "restart_policy",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "Job 容器失败时不能重启，任务需整体重试",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_image_perl",
+        "text": "perl",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "补充「容器镜像」",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 Job 的 apiVersion 与 restartPolicy？",
+      "level_2": "📖 `batch/v1`，`restartPolicy: Never`",
+      "level_3": "👀 `apiVersion: batch/v1` / `restartPolicy: Never`",
+      "level_4": "📝 正确答案："
+    },
+    "explanation": "Job 运行完成即结束；restartPolicy 只能是 Never 或 OnFailure。"
+  },
+  {
+    "id": "k8s-basics-065",
+    "title": "CronJob 定时任务",
+    "description": "每天凌晨 3 点执行的定时任务",
+    "exercise_type": "config",
+    "tech_stack": "kubernetes",
+    "weight": "medium",
+    "category": "yaml_cronjob",
+    "full_code": "apiVersion: batch/v1\nkind: CronJob\nmetadata:\n  name: backup\nspec:\n  schedule: \"0 3 * * *\"\n  jobTemplate:\n    spec:\n      template:\n        spec:\n          containers:\n          - name: backup\n            image: busybox\n            command: [\"sh\", \"-c\", \"echo backup\"]\n          restartPolicy: Never",
+    "expected": "",
+    "points": [
+      {
+        "id": "schedule",
+        "text": "\"0 3 * * *\"",
+        "category": "cron",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "cron 表达式（分 时 日 月 周）",
+        "fill_type": "text"
+      },
+      {
+        "id": "api",
+        "text": "batch/v1",
+        "category": "api_version",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "CronJob 的 API 版本",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_image_busybox",
+        "text": "busybox",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "补充「容器镜像」",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 CronJob 的 schedule 与 apiVersion？",
+      "level_2": "📖 `\"0 3 * * *\"`（每天 3 点），`batch/v1`",
+      "level_3": "👀 `schedule: \"0 3 * * *\"` / `apiVersion: batch/v1`",
+      "level_4": "📝 正确答案："
+    },
+    "explanation": "`0 3 * * *` = 每天 03:00；CronJob 按 schedule 周期创建 Job。"
+  },
+  {
+    "id": "k8s-basics-066",
+    "title": "水平自动伸缩 HPA",
+    "description": "按 CPU 在 1-5 副本间伸缩",
+    "exercise_type": "config",
+    "tech_stack": "kubernetes",
+    "weight": "medium",
+    "category": "yaml_hpa",
+    "full_code": "apiVersion: autoscaling/v2\nkind: HorizontalPodAutoscaler\nmetadata:\n  name: web-hpa\nspec:\n  scaleTargetRef:\n    apiVersion: apps/v1\n    kind: Deployment\n    name: web\n  minReplicas: 1\n  maxReplicas: 5\n  metrics:\n  - type: Resource\n    resource:\n      name: cpu\n      target:\n        type: Utilization\n        averageUtilization: 70",
+    "expected": "",
+    "points": [
+      {
+        "id": "min",
+        "text": "1",
+        "category": "replicas",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "最小副本数",
+        "fill_type": "text"
+      },
+      {
+        "id": "max",
+        "text": "5",
+        "category": "replicas",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "最大副本数",
+        "fill_type": "text"
+      },
+      {
+        "id": "util",
+        "text": "70",
+        "category": "utilization",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "目标 CPU 利用率百分比",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 HPA 的副本范围与目标利用率？",
+      "level_2": "📖 `minReplicas: 1`，`maxReplicas: 5`，`averageUtilization: 70`",
+      "level_3": "👀 `minReplicas: 1` / `maxReplicas: 5` / `averageUtilization: 70`",
+      "level_4": "📝 正确答案："
+    },
+    "explanation": "HPA 持续观测指标（如 CPU），在 min/max 之间自动调整副本数。"
+  },
+  {
+    "id": "k8s-basics-067",
+    "title": "Namespace 与标签",
+    "description": "创建带标签的命名空间",
+    "exercise_type": "config",
+    "tech_stack": "kubernetes",
+    "weight": "easy",
+    "category": "yaml_namespace",
+    "full_code": "apiVersion: v1\nkind: Namespace\nmetadata:\n  name: dev\n  labels:\n    env: dev",
+    "expected": "",
+    "points": [
+      {
+        "id": "name",
+        "text": "dev",
+        "category": "metadata",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "命名空间名称",
+        "fill_type": "text"
+      },
+      {
+        "id": "label",
+        "text": "env: dev",
+        "category": "labels",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "命名空间标签",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 Namespace 的名称与标签？",
+      "level_2": "📖 `name: dev`，`labels.env: dev`",
+      "level_3": "👀 `name: dev` / `env: dev`",
+      "level_4": "📝 正确答案："
+    },
+    "explanation": "命名空间用于隔离资源；标签可用于配额或网络策略选择。"
+  },
+  {
+    "id": "k8s-basics-068",
+    "title": "ServiceAccount 与自动挂载",
+    "description": "创建不自动挂载令牌的 ServiceAccount",
+    "exercise_type": "config",
+    "tech_stack": "kubernetes",
+    "weight": "medium",
+    "category": "yaml_sa",
+    "full_code": "apiVersion: v1\nkind: ServiceAccount\nmetadata:\n  name: ci-runner\nautomountServiceAccountToken: false",
+    "expected": "",
+    "points": [
+      {
+        "id": "name",
+        "text": "ci-runner",
+        "category": "metadata",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "ServiceAccount 名称",
+        "fill_type": "text"
+      },
+      {
+        "id": "automount",
+        "text": "false",
+        "category": "config",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "是否自动挂载 API 令牌到 Pod",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 ServiceAccount 名称与令牌选项？",
+      "level_2": "📖 `name: ci-runner`，`automountServiceAccountToken: false`",
+      "level_3": "👀 `name: ci-runner` / `automountServiceAccountToken: false`",
+      "level_4": "📝 正确答案："
+    },
+    "explanation": "ServiceAccount 默认向 Pod 注入 API 令牌；CI 等可关闭自动挂载。"
+  },
+  {
+    "id": "k8s-basics-069",
+    "title": "Pod 安全上下文",
+    "description": "以非 root 用户运行容器",
+    "exercise_type": "config",
+    "tech_stack": "kubernetes",
+    "weight": "medium",
+    "category": "yaml_securitycontext",
+    "full_code": "apiVersion: v1\nkind: Pod\nmetadata:\n  name: secure\nspec:\n  securityContext:\n    runAsNonRoot: true\n  containers:\n  - name: app\n    image: nginx",
+    "expected": "",
+    "points": [
+      {
+        "id": "nonroot",
+        "text": "runAsNonRoot: true",
+        "category": "security",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "强制非 root 运行的字段",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_image_nginx",
+        "text": "nginx",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "补充「容器镜像」",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 强制非 root 的字段？",
+      "level_2": "📖 `securityContext.runAsNonRoot: true`",
+      "level_3": "👀 `runAsNonRoot: true`",
+      "level_4": "📝 正确答案："
+    },
+    "explanation": "securityContext 可设置 runAsUser、runAsNonRoot、capabilities、readOnlyRootFilesystem 等。"
+  },
+  {
+    "id": "k8s-basics-070",
+    "title": "NetworkPolicy 放行",
+    "description": "允许同命名空间 app=web 标签访问 80 端口",
+    "exercise_type": "config",
+    "tech_stack": "kubernetes",
+    "weight": "hard",
+    "category": "yaml_networkpolicy",
+    "full_code": "apiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: allow-web\nspec:\n  podSelector:\n    matchLabels:\n      app: web\n  policyTypes:\n  - Ingress\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: web\n    ports:\n    - protocol: TCP\n      port: 80",
+    "expected": "",
+    "points": [
+      {
+        "id": "label",
+        "text": "app: web",
+        "category": "labels",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "目标 Pod 的标签",
+        "fill_type": "text"
+      },
+      {
+        "id": "port",
+        "text": "80",
+        "category": "port",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "放行的端口",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_app_web",
+        "text": "web",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "补充「标签 app 的值」",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 NetworkPolicy 的目标标签与端口？",
+      "level_2": "📖 `podSelector.matchLabels.app: web`，`port: 80`",
+      "level_3": "👀 `app: web` / `port: 80`",
+      "level_4": "📝 正确答案："
+    },
+    "explanation": "NetworkPolicy 默认拒绝未放行的流量；需显式允许来源与端口。"
+  }
+]

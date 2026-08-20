@@ -1,0 +1,911 @@
+[
+ {
+  "id": "fa-basics-001",
+  "title": "创建应用实例",
+  "description": "实例化 FastAPI 应用",
+  "exercise_type": "fill",
+  "tech_stack": "python",
+  "weight": "medium",
+  "category": "app",
+  "subcategory": "FastAPI",
+  "full_code": "from fastapi import FastAPI\napp = FastAPI()",
+  "expected": "",
+  "points": [
+   {
+    "id": "cls",
+    "text": "FastAPI",
+    "category": "class",
+    "min_weight": "beginner",
+    "weight_score": 1,
+    "hint": "应用类名",
+    "fill_type": "text"
+   }
+  ],
+  "hints": {
+   "level_1": "💡 `FastAPI()`",
+   "level_2": "📖 实例化应用",
+   "level_3": "👀 `app = FastAPI()` 创建应用对象",
+   "level_4": "📝 正确答案：from fastapi import FastAPI\napp = FastAPI()"
+  },
+  "explanation": "从 `fastapi` 导入 `FastAPI` 类，实例化后即为应用入口。"
+ },
+ {
+  "id": "fa-basics-002",
+  "title": "定义 GET 路由",
+  "description": "用装饰器注册 GET 接口",
+  "exercise_type": "fill",
+  "tech_stack": "python",
+  "weight": "medium",
+  "category": "route",
+  "subcategory": "FastAPI",
+  "full_code": "from fastapi import FastAPI\n\napp = FastAPI()\n\n@app.get(\"/\")\ndef root():\n    return {\"msg\": \"hi\"}",
+  "expected": "",
+  "points": [
+   {
+    "id": "dec",
+    "text": "@app.get",
+    "category": "decorator",
+    "min_weight": "beginner",
+    "weight_score": 1,
+    "hint": "路由装饰器",
+    "fill_type": "text"
+   }
+  ],
+  "hints": {
+   "level_1": "💡 `@app.get`",
+   "level_2": "📖 GET 路由",
+   "level_3": "👀 `@app.get(\"/\")` 装饰函数注册 GET 接口",
+   "level_4": "📝 正确答案：from fastapi import FastAPI\n\napp = FastAPI()\n\n@app.get(\"/\")\ndef root():\n    return {\"msg\": \"hi\"}"
+  },
+  "explanation": "用 `@app.get(\"/\")` 把函数注册为 GET 路由，返回 JSON。"
+ },
+ {
+  "id": "fa-basics-003",
+  "title": "路径参数",
+  "description": "从 URL 路径取参数",
+  "exercise_type": "fill",
+  "tech_stack": "python",
+  "weight": "medium",
+  "category": "parameter",
+  "subcategory": "FastAPI",
+  "full_code": "from fastapi import FastAPI\n\napp = FastAPI()\n\n@app.get(\"/items/{item_id}\")\ndef read_item(item_id: int):\n    return {\"id\": item_id}",
+  "expected": "",
+  "points": [
+   {
+    "id": "path",
+    "text": "{item_id}",
+    "category": "path_parameter",
+    "min_weight": "beginner",
+    "weight_score": 1,
+    "hint": "路径占位符",
+    "fill_type": "text"
+   }
+  ],
+  "hints": {
+   "level_1": "💡 `{item_id}`",
+   "level_2": "📖 路径参数",
+   "level_3": "👀 `/items/{item_id}` 中 `{}` 即路径参数",
+   "level_4": "📝 正确答案：from fastapi import FastAPI\n\napp = FastAPI()\n\n@app.get(\"/items/{item_id}\")\ndef read_item(item_id: int):\n    return {\"id\": item_id}"
+  },
+  "explanation": "路径用 `{}` 声明参数，函数同名参数自动接收。"
+ },
+ {
+  "id": "fa-basics-004",
+  "title": "查询参数",
+  "description": "定义带默认值的查询参数",
+  "exercise_type": "fill",
+  "tech_stack": "python",
+  "weight": "medium",
+  "category": "parameter",
+  "subcategory": "FastAPI",
+  "full_code": "from fastapi import FastAPI\n\napp = FastAPI()\n\n@app.get(\"/search\")\ndef search(q: str | None = None):\n    return {\"q\": q}",
+  "expected": "",
+  "points": [
+   {
+    "id": "q",
+    "text": "q: str | None = None",
+    "category": "query_parameter",
+    "min_weight": "beginner",
+    "weight_score": 1,
+    "hint": "查询参数声明",
+    "fill_type": "text"
+   }
+  ],
+  "hints": {
+   "level_1": "💡 `q: str | None = None`",
+   "level_2": "📖 查询参数",
+   "level_3": "👀 非路径参数自动视为查询参数，可设默认值",
+   "level_4": "📝 正确答案：from fastapi import FastAPI\n\napp = FastAPI()\n\n@app.get(\"/search\")\ndef search(q: str | None = None):\n    return {\"q\": q}"
+  },
+  "explanation": "未在路径里的函数参数即查询参数；`None` 默认使其可选。"
+ },
+ {
+  "id": "fa-basics-005",
+  "title": "返回类型注解",
+  "description": "声明返回值类型",
+  "exercise_type": "fill",
+  "tech_stack": "python",
+  "weight": "medium",
+  "category": "parameter",
+  "subcategory": "FastAPI",
+  "full_code": "from fastapi import FastAPI\n\napp = FastAPI()\n\n@app.get(\"/info\")\ndef info() -> dict:\n    return {\"name\": \"api\"}",
+  "expected": "",
+  "points": [
+   {
+    "id": "ret",
+    "text": "-> dict",
+    "category": "type_annotation",
+    "min_weight": "beginner",
+    "weight_score": 1,
+    "hint": "返回类型",
+    "fill_type": "text"
+   }
+  ],
+  "hints": {
+   "level_1": "💡 `-> dict`",
+   "level_2": "📖 返回类型注解",
+   "level_3": "👀 `-> dict` 声明返回字典",
+   "level_4": "📝 正确答案：from fastapi import FastAPI\n\napp = FastAPI()\n\n@app.get(\"/info\")\ndef info() -> dict:\n    return {\"name\": \"api\"}"
+  },
+  "explanation": "FastAPI 根据返回类型注解做序列化与 OpenAPI 文档。"
+ },
+ {
+  "id": "fa-basics-006",
+  "title": "POST 请求体",
+  "description": "用 Pydantic 模型接收 Body",
+  "exercise_type": "fill",
+  "tech_stack": "python",
+  "weight": "medium",
+  "category": "request_body",
+  "subcategory": "FastAPI",
+  "full_code": "from fastapi import FastAPI\nfrom pydantic import BaseModel\n\napp = FastAPI()\n\nclass Item(BaseModel):\n    name: str\n\n@app.post(\"/items\")\ndef create(item: Item):\n    return {\"name\": item.name}",
+  "expected": "",
+  "points": [
+   {
+    "id": "model",
+    "text": "BaseModel",
+    "category": "pydantic",
+    "min_weight": "beginner",
+    "weight_score": 1,
+    "hint": "Pydantic 基类",
+    "fill_type": "text"
+   },
+   {
+    "id": "body",
+    "text": "Item",
+    "category": "request_body",
+    "min_weight": "medium",
+    "weight_score": 1,
+    "hint": "请求体模型",
+    "fill_type": "text"
+   }
+  ],
+  "hints": {
+   "level_1": "💡 `BaseModel` / `Item`",
+   "level_2": "📖 Pydantic 请求体",
+   "level_3": "👀 继承 BaseModel 定义模型，函数参数用它接收 JSON",
+   "level_4": "📝 正确答案：from fastapi import FastAPI\nfrom pydantic import BaseModel\n\napp = FastAPI()\n\nclass Item(BaseModel):\n    name: str\n\n@app.post(\"/items\")\ndef create(item: Item):\n    return {\"name\": item.name}"
+  },
+  "explanation": "Pydantic 模型自动校验请求体；函数参数类型为该模型即接收 Body。"
+ },
+ {
+  "id": "fa-basics-007",
+  "title": "自定义状态码",
+  "description": "POST 成功返回 201",
+  "exercise_type": "fill",
+  "tech_stack": "python",
+  "weight": "medium",
+  "category": "status",
+  "subcategory": "FastAPI",
+  "full_code": "from fastapi import FastAPI\nfrom pydantic import BaseModel\n\napp = FastAPI()\n\nclass Item(BaseModel):\n    name: str\n\n@app.post(\"/items\", status_code=201)\ndef create(item: Item):\n    return {\"name\": item.name}",
+  "expected": "",
+  "points": [
+   {
+    "id": "code",
+    "text": "status_code=201",
+    "category": "status_code",
+    "min_weight": "beginner",
+    "weight_score": 1,
+    "hint": "状态码参数",
+    "fill_type": "text"
+   }
+  ],
+  "hints": {
+   "level_1": "💡 `status_code=201`",
+   "level_2": "📖 自定义状态码",
+   "level_3": "👀 装饰器里 `status_code` 指定返回码",
+   "level_4": "📝 正确答案：from fastapi import FastAPI\nfrom pydantic import BaseModel\n\napp = FastAPI()\n\nclass Item(BaseModel):\n    name: str\n\n@app.post(\"/items\", status_code=201)\ndef create(item: Item):\n    return {\"name\": item.name}"
+  },
+  "explanation": "`status_code=201` 让创建成功返回 201 Created。"
+ },
+ {
+  "id": "fa-basics-008",
+  "title": "响应模型",
+  "description": "用 response_model 约束输出",
+  "exercise_type": "fill",
+  "tech_stack": "python",
+  "weight": "medium",
+  "category": "response_model",
+  "subcategory": "FastAPI",
+  "full_code": "from fastapi import FastAPI\nfrom pydantic import BaseModel\n\napp = FastAPI()\n\nclass Item(BaseModel):\n    name: str\n    price: float\n\n@app.get(\"/items\", response_model=list[Item])\ndef list_items():\n    return [{\"name\": \"a\", \"price\": 1.5}]",
+  "expected": "",
+  "points": [
+   {
+    "id": "rm",
+    "text": "response_model=list[Item]",
+    "category": "response_model",
+    "min_weight": "beginner",
+    "weight_score": 1,
+    "hint": "响应模型参数",
+    "fill_type": "text"
+   }
+  ],
+  "hints": {
+   "level_1": "💡 `response_model=list[Item]`",
+   "level_2": "📖 响应模型",
+   "level_3": "👀 `response_model` 声明响应结构并过滤多余字段",
+   "level_4": "📝 正确答案：from fastapi import FastAPI\nfrom pydantic import BaseModel\n\napp = FastAPI()\n\nclass Item(BaseModel):\n    name: str\n    price: float\n\n@app.get(\"/items\", response_model=list[Item])\ndef list_items():\n    return [{\"name\": \"a\", \"price\": 1.5}]"
+  },
+  "explanation": "`response_model` 声明返回结构，自动校验/过滤字段。"
+ },
+ {
+  "id": "fa-basics-009",
+  "title": "依赖注入",
+  "description": "用 Depends 注入依赖",
+  "exercise_type": "fill",
+  "tech_stack": "python",
+  "weight": "medium",
+  "category": "dependency",
+  "subcategory": "FastAPI",
+  "full_code": "from fastapi import Depends, FastAPI\n\napp = FastAPI()\n\ndef get_common() -> str:\n    return \"common\"\n\n@app.get(\"/items\")\ndef read(x: str = Depends(get_common)):\n    return {\"x\": x}",
+  "expected": "",
+  "points": [
+   {
+    "id": "dep",
+    "text": "Depends",
+    "category": "dependency",
+    "min_weight": "beginner",
+    "weight_score": 1,
+    "hint": "依赖注入函数",
+    "fill_type": "text"
+   }
+  ],
+  "hints": {
+   "level_1": "💡 `Depends`",
+   "level_2": "📖 依赖注入",
+   "level_3": "👀 `Depends(函数)` 自动调用并注入返回值",
+   "level_4": "📝 正确答案：from fastapi import Depends, FastAPI\n\napp = FastAPI()\n\ndef get_common() -> str:\n    return \"common\"\n\n@app.get(\"/items\")\ndef read(x: str = Depends(get_common)):\n    return {\"x\": x}"
+  },
+  "explanation": "`Depends` 让 FastAPI 自动调用依赖函数并把结果作为参数注入。"
+ },
+ {
+  "id": "fa-basics-010",
+  "title": "Header 参数",
+  "description": "读取请求头",
+  "exercise_type": "fill",
+  "tech_stack": "python",
+  "weight": "medium",
+  "category": "parameter",
+  "subcategory": "FastAPI",
+  "full_code": "from fastapi import FastAPI, Header\n\napp = FastAPI()\n\n@app.get(\"/items\")\ndef read(x_token: str = Header(...)):\n    return {\"token\": x_token}",
+  "expected": "",
+  "points": [
+   {
+    "id": "hdr",
+    "text": "Header",
+    "category": "header",
+    "min_weight": "beginner",
+    "weight_score": 1,
+    "hint": "请求头参数类型",
+    "fill_type": "text"
+   }
+  ],
+  "hints": {
+   "level_1": "💡 `Header`",
+   "level_2": "📖 Header 参数",
+   "level_3": "👀 `Header(...)` 声明必填请求头",
+   "level_4": "📝 正确答案：from fastapi import FastAPI, Header\n\napp = FastAPI()\n\n@app.get(\"/items\")\ndef read(x_token: str = Header(...)):\n    return {\"token\": x_token}"
+  },
+  "explanation": "`Header` 声明从请求头读取参数；下划线自动转成 `-` 键。"
+ },
+ {
+  "id": "fa-basics-011",
+  "title": "Query 参数校验",
+  "description": "给查询参数加约束",
+  "exercise_type": "fill",
+  "tech_stack": "python",
+  "weight": "medium",
+  "category": "parameter",
+  "subcategory": "FastAPI",
+  "full_code": "from fastapi import FastAPI, Query\n\napp = FastAPI()\n\n@app.get(\"/search\")\ndef search(q: str = Query(..., min_length=3)):\n    return {\"q\": q}",
+  "expected": "",
+  "points": [
+   {
+    "id": "q",
+    "text": "Query",
+    "category": "query",
+    "min_weight": "beginner",
+    "weight_score": 1,
+    "hint": "查询参数校验类",
+    "fill_type": "text"
+   }
+  ],
+  "hints": {
+   "level_1": "💡 `Query`",
+   "level_2": "📖 Query 校验",
+   "level_3": "👀 `Query(..., min_length=3)` 必填且最短 3",
+   "level_4": "📝 正确答案：from fastapi import FastAPI, Query\n\napp = FastAPI()\n\n@app.get(\"/search\")\ndef search(q: str = Query(..., min_length=3)):\n    return {\"q\": q}"
+  },
+  "explanation": "`Query` 给查询参数加校验：必填、长度、范围等。"
+ },
+ {
+  "id": "fa-basics-012",
+  "title": "Body 显式声明",
+  "description": "明确请求体为 Body",
+  "exercise_type": "fill",
+  "tech_stack": "python",
+  "weight": "medium",
+  "category": "request_body",
+  "subcategory": "FastAPI",
+  "full_code": "from fastapi import Body, FastAPI\n\napp = FastAPI()\n\n@app.post(\"/items\")\ndef create(payload: dict = Body(...)):\n    return payload",
+  "expected": "",
+  "points": [
+   {
+    "id": "body",
+    "text": "Body",
+    "category": "request_body",
+    "min_weight": "beginner",
+    "weight_score": 1,
+    "hint": "请求体参数类型",
+    "fill_type": "text"
+   }
+  ],
+  "hints": {
+   "level_1": "💡 `Body`",
+   "level_2": "📖 Body 参数",
+   "level_3": "👀 `Body(...)` 明确把参数当作请求体",
+   "level_4": "📝 正确答案：from fastapi import Body, FastAPI\n\napp = FastAPI()\n\n@app.post(\"/items\")\ndef create(payload: dict = Body(...)):\n    return payload"
+  },
+  "explanation": "`Body` 显式声明该参数来自请求体 JSON。"
+ },
+ {
+  "id": "fa-basics-013",
+  "title": "Path 参数校验",
+  "description": "路径参数加范围约束",
+  "exercise_type": "fill",
+  "tech_stack": "python",
+  "weight": "medium",
+  "category": "parameter",
+  "subcategory": "FastAPI",
+  "full_code": "from fastapi import FastAPI, Path\n\napp = FastAPI()\n\n@app.get(\"/items/{item_id}\")\ndef read(item_id: int = Path(..., ge=1)):\n    return {\"id\": item_id}",
+  "expected": "",
+  "points": [
+   {
+    "id": "path",
+    "text": "Path",
+    "category": "path",
+    "min_weight": "beginner",
+    "weight_score": 1,
+    "hint": "路径参数校验类",
+    "fill_type": "text"
+   }
+  ],
+  "hints": {
+   "level_1": "💡 `Path`",
+   "level_2": "📖 Path 校验",
+   "level_3": "👀 `Path(..., ge=1)` 要求 >= 1",
+   "level_4": "📝 正确答案：from fastapi import FastAPI, Path\n\napp = FastAPI()\n\n@app.get(\"/items/{item_id}\")\ndef read(item_id: int = Path(..., ge=1)):\n    return {\"id\": item_id}"
+  },
+  "explanation": "`Path` 给路径参数加校验（ge/gt/le/lt 等）。"
+ },
+ {
+  "id": "fa-basics-014",
+  "title": "HTTPException 异常",
+  "description": "抛 404 处理未找到",
+  "exercise_type": "fill",
+  "tech_stack": "python",
+  "weight": "medium",
+  "category": "exception",
+  "subcategory": "FastAPI",
+  "full_code": "from fastapi import FastAPI, HTTPException\n\napp = FastAPI()\n\n@app.get(\"/items/{item_id}\")\ndef read(item_id: int):\n    if item_id > 100:\n        raise HTTPException(status_code=404, detail=\"not found\")\n    return {\"id\": item_id}",
+  "expected": "",
+  "points": [
+   {
+    "id": "exc",
+    "text": "HTTPException",
+    "category": "exception",
+    "min_weight": "beginner",
+    "weight_score": 1,
+    "hint": "HTTP 异常类",
+    "fill_type": "text"
+   }
+  ],
+  "hints": {
+   "level_1": "💡 `HTTPException`",
+   "level_2": "📖 HTTP 异常",
+   "level_3": "👀 `raise HTTPException(status_code=404, detail=...)`",
+   "level_4": "📝 正确答案：from fastapi import FastAPI, HTTPException\n\napp = FastAPI()\n\n@app.get(\"/items/{item_id}\")\ndef read(item_id: int):\n    if item_id > 100:\n        raise HTTPException(status_code=404, detail=\"not found\")\n    return {\"id\": item_id}"
+  },
+  "explanation": "`HTTPException` 以指定状态码抛出错误，返回对应 JSON 错误。"
+ },
+ {
+  "id": "fa-basics-015",
+  "title": "async 路由",
+  "description": "用协程处理异步接口",
+  "exercise_type": "fill",
+  "tech_stack": "python",
+  "weight": "medium",
+  "category": "async",
+  "subcategory": "FastAPI",
+  "full_code": "from fastapi import FastAPI\n\napp = FastAPI()\n\n@app.get(\"/async\")\nasync def read():\n    return {\"ok\": True}",
+  "expected": "",
+  "points": [
+   {
+    "id": "async",
+    "text": "async def",
+    "category": "async",
+    "min_weight": "beginner",
+    "weight_score": 1,
+    "hint": "异步函数定义",
+    "fill_type": "text"
+   }
+  ],
+  "hints": {
+   "level_1": "💡 `async def`",
+   "level_2": "📖 async 路由",
+   "level_3": "👀 `async def` 处理异步逻辑",
+   "level_4": "📝 正确答案：from fastapi import FastAPI\n\napp = FastAPI()\n\n@app.get(\"/async\")\nasync def read():\n    return {\"ok\": True}"
+  },
+  "explanation": "路由可用 `async def`，配合 await 处理 IO 密集型逻辑。"
+ },
+ {
+  "id": "fa-basics-016",
+  "title": "上传文件 UploadFile",
+  "description": "接收上传文件",
+  "exercise_type": "fill",
+  "tech_stack": "python",
+  "weight": "medium",
+  "category": "upload",
+  "subcategory": "FastAPI",
+  "full_code": "from fastapi import FastAPI, UploadFile\n\napp = FastAPI()\n\n@app.post(\"/upload\")\nasync def upload(file: UploadFile):\n    return {\"name\": file.filename}",
+  "expected": "",
+  "points": [
+   {
+    "id": "up",
+    "text": "UploadFile",
+    "category": "upload",
+    "min_weight": "beginner",
+    "weight_score": 1,
+    "hint": "上传文件类型",
+    "fill_type": "text"
+   }
+  ],
+  "hints": {
+   "level_1": "💡 `UploadFile`",
+   "level_2": "📖 文件上传",
+   "level_3": "👀 `UploadFile` 接收文件并带 filename",
+   "level_4": "📝 正确答案：from fastapi import FastAPI, UploadFile\n\napp = FastAPI()\n\n@app.post(\"/upload\")\nasync def upload(file: UploadFile):\n    return {\"name\": file.filename}"
+  },
+  "explanation": "`UploadFile` 接收上传文件，支持异步读取内容。"
+ },
+ {
+  "id": "fa-basics-017",
+  "title": "表单 Form",
+  "description": "接收表单字段",
+  "exercise_type": "fill",
+  "tech_stack": "python",
+  "weight": "medium",
+  "category": "form",
+  "subcategory": "FastAPI",
+  "full_code": "from fastapi import FastAPI, Form\n\napp = FastAPI()\n\n@app.post(\"/login\")\ndef login(username: str = Form(...)):\n    return {\"username\": username}",
+  "expected": "",
+  "points": [
+   {
+    "id": "form",
+    "text": "Form",
+    "category": "form",
+    "min_weight": "beginner",
+    "weight_score": 1,
+    "hint": "表单字段类型",
+    "fill_type": "text"
+   }
+  ],
+  "hints": {
+   "level_1": "💡 `Form`",
+   "level_2": "📖 表单参数",
+   "level_3": "👀 `Form(...)` 声明表单字段",
+   "level_4": "📝 正确答案：from fastapi import FastAPI, Form\n\napp = FastAPI()\n\n@app.post(\"/login\")\ndef login(username: str = Form(...)):\n    return {\"username\": username}"
+  },
+  "explanation": "`Form` 接收 application/x-www-form-urlencoded 表单字段。"
+ },
+ {
+  "id": "fa-basics-018",
+  "title": "File 文件字节",
+  "description": "以字节接收文件",
+  "exercise_type": "fill",
+  "tech_stack": "python",
+  "weight": "medium",
+  "category": "file",
+  "subcategory": "FastAPI",
+  "full_code": "from fastapi import FastAPI, File\n\napp = FastAPI()\n\n@app.post(\"/upload\")\ndef upload(contents: bytes = File(...)):\n    return {\"size\": len(contents)}",
+  "expected": "",
+  "points": [
+   {
+    "id": "file",
+    "text": "File",
+    "category": "file",
+    "min_weight": "beginner",
+    "weight_score": 1,
+    "hint": "文件字节类型",
+    "fill_type": "text"
+   }
+  ],
+  "hints": {
+   "level_1": "💡 `File`",
+   "level_2": "📖 文件字节",
+   "level_3": "👀 `bytes = File(...)` 接收文件内容",
+   "level_4": "📝 正确答案：from fastapi import FastAPI, File\n\napp = FastAPI()\n\n@app.post(\"/upload\")\ndef upload(contents: bytes = File(...)):\n    return {\"size\": len(contents)}"
+  },
+  "explanation": "`File` 以字节串接收文件内容；需要元数据用 `UploadFile`。"
+ },
+ {
+  "id": "fa-basics-019",
+  "title": "APIRouter 路由分组",
+  "description": "用 Router 拆分模块",
+  "exercise_type": "fill",
+  "tech_stack": "python",
+  "weight": "medium",
+  "category": "router",
+  "subcategory": "FastAPI",
+  "full_code": "from fastapi import APIRouter\n\nrouter = APIRouter(prefix=\"/users\", tags=[\"users\"])\n\n@router.get(\"/me\")\ndef me():\n    return {\"user\": \"me\"}",
+  "expected": "",
+  "points": [
+   {
+    "id": "router",
+    "text": "APIRouter",
+    "category": "router",
+    "min_weight": "beginner",
+    "weight_score": 1,
+    "hint": "路由分组类",
+    "fill_type": "text"
+   }
+  ],
+  "hints": {
+   "level_1": "💡 `APIRouter`",
+   "level_2": "📖 路由分组",
+   "level_3": "👀 `APIRouter(prefix=..., tags=...)` 分组路由",
+   "level_4": "📝 正确答案：from fastapi import APIRouter\n\nrouter = APIRouter(prefix=\"/users\", tags=[\"users\"])\n\n@router.get(\"/me\")\ndef me():\n    return {\"user\": \"me\"}"
+  },
+  "explanation": "`APIRouter` 把路由按模块拆分，prefix 统一前缀、tags 归组文档。"
+ },
+ {
+  "id": "fa-basics-020",
+  "title": "挂载 Router",
+  "description": "把子路由注册进应用",
+  "exercise_type": "fill",
+  "tech_stack": "python",
+  "weight": "medium",
+  "category": "router",
+  "subcategory": "FastAPI",
+  "full_code": "from fastapi import APIRouter, FastAPI\n\napp = FastAPI()\nrouter = APIRouter()\n\n@router.get(\"/ping\")\ndef ping():\n    return {\"pong\": True}\n\napp.include_router(router)",
+  "expected": "",
+  "points": [
+   {
+    "id": "inc",
+    "text": "include_router",
+    "category": "router",
+    "min_weight": "beginner",
+    "weight_score": 1,
+    "hint": "挂载子路由方法",
+    "fill_type": "text"
+   }
+  ],
+  "hints": {
+   "level_1": "💡 `include_router`",
+   "level_2": "📖 挂载 Router",
+   "level_3": "👀 `app.include_router(router)` 注册子路由",
+   "level_4": "📝 正确答案：from fastapi import APIRouter, FastAPI\n\napp = FastAPI()\nrouter = APIRouter()\n\n@router.get(\"/ping\")\ndef ping():\n    return {\"pong\": True}\n\napp.include_router(router)"
+  },
+  "explanation": "`include_router` 把 APIRouter 的所有路由并入应用。"
+ },
+ {
+  "id": "fa-basics-021",
+  "title": "HTTP 中间件",
+  "description": "给每个请求加处理",
+  "exercise_type": "fill",
+  "tech_stack": "python",
+  "weight": "medium",
+  "category": "middleware",
+  "subcategory": "FastAPI",
+  "full_code": "from fastapi import FastAPI, Request\n\napp = FastAPI()\n\n@app.middleware(\"http\")\nasync def add_header(request: Request, call_next):\n    response = await call_next(request)\n    response.headers[\"X-App\"] = \"demo\"\n    return response",
+  "expected": "",
+  "points": [
+   {
+    "id": "mw",
+    "text": "middleware",
+    "category": "middleware",
+    "min_weight": "beginner",
+    "weight_score": 1,
+    "hint": "中间件装饰器",
+    "fill_type": "text"
+   }
+  ],
+  "hints": {
+   "level_1": "💡 `@app.middleware(\"http\")`",
+   "level_2": "📖 HTTP 中间件",
+   "level_3": "👀 装饰函数包裹每个请求",
+   "level_4": "📝 正确答案：from fastapi import FastAPI, Request\n\napp = FastAPI()\n\n@app.middleware(\"http\")\nasync def add_header(request: Request, call_next):\n    response = await call_next(request)\n    response.headers[\"X-App\"] = \"demo\"\n    return response"
+  },
+  "explanation": "`@app.middleware(\"http\")` 在请求处理前后做全局处理。"
+ },
+ {
+  "id": "fa-basics-022",
+  "title": "生命周期 lifespan",
+  "description": "启动/关闭时执行逻辑",
+  "exercise_type": "fill",
+  "tech_stack": "python",
+  "weight": "medium",
+  "category": "lifecycle",
+  "subcategory": "FastAPI",
+  "full_code": "from contextlib import asynccontextmanager\nfrom fastapi import FastAPI\n\n@asynccontextmanager\nasync def lifespan(app: FastAPI):\n    print(\"startup\")\n    yield\n    print(\"shutdown\")\n\napp = FastAPI(lifespan=lifespan)",
+  "expected": "",
+  "points": [
+   {
+    "id": "ls",
+    "text": "lifespan",
+    "category": "lifecycle",
+    "min_weight": "beginner",
+    "weight_score": 1,
+    "hint": "生命周期参数",
+    "fill_type": "text"
+   }
+  ],
+  "hints": {
+   "level_1": "💡 `lifespan`",
+   "level_2": "📖 生命周期",
+   "level_3": "👀 `FastAPI(lifespan=...)` 在启动/关闭时执行",
+   "level_4": "📝 正确答案：from contextlib import asynccontextmanager\nfrom fastapi import FastAPI\n\n@asynccontextmanager\nasync def lifespan(app: FastAPI):\n    print(\"startup\")\n    yield\n    print(\"shutdown\")\n\napp = FastAPI(lifespan=lifespan)"
+  },
+  "explanation": "`lifespan` 上下文在应用启动前 yield、关闭后执行清理。"
+ },
+ {
+  "id": "fa-basics-023",
+  "title": "自定义异常处理",
+  "description": "统一处理异常返回",
+  "exercise_type": "fill",
+  "tech_stack": "python",
+  "weight": "medium",
+  "category": "exception",
+  "subcategory": "FastAPI",
+  "full_code": "from fastapi import FastAPI, Request, HTTPException\n\napp = FastAPI()\n\n@app.exception_handler(HTTPException)\nasync def handler(request: Request, exc: HTTPException):\n    return {\"error\": exc.detail}",
+  "expected": "",
+  "points": [
+   {
+    "id": "eh",
+    "text": "exception_handler",
+    "category": "exception",
+    "min_weight": "beginner",
+    "weight_score": 1,
+    "hint": "异常处理器",
+    "fill_type": "text"
+   }
+  ],
+  "hints": {
+   "level_1": "💡 `@app.exception_handler`",
+   "level_2": "📖 异常处理器",
+   "level_3": "👀 `@app.exception_handler(HTTPException)` 覆盖默认错误返回",
+   "level_4": "📝 正确答案：from fastapi import FastAPI, Request, HTTPException\n\napp = FastAPI()\n\n@app.exception_handler(HTTPException)\nasync def handler(request: Request, exc: HTTPException):\n    return {\"error\": exc.detail}"
+  },
+  "explanation": "自定义 `exception_handler` 统一拦截并格式化异常响应。"
+ },
+ {
+  "id": "fa-basics-024",
+  "title": "WebSocket",
+  "description": "建立 WebSocket 端点",
+  "exercise_type": "fill",
+  "tech_stack": "python",
+  "weight": "medium",
+  "category": "websocket",
+  "subcategory": "FastAPI",
+  "full_code": "from fastapi import FastAPI, WebSocket\n\napp = FastAPI()\n\n@app.websocket(\"/ws\")\nasync def ws(websocket: WebSocket):\n    await websocket.accept()\n    await websocket.send_text(\"hi\")",
+  "expected": "",
+  "points": [
+   {
+    "id": "ws",
+    "text": "websocket",
+    "category": "websocket",
+    "min_weight": "beginner",
+    "weight_score": 1,
+    "hint": "WebSocket 装饰器",
+    "fill_type": "text"
+   }
+  ],
+  "hints": {
+   "level_1": "💡 `@app.websocket`",
+   "level_2": "📖 WebSocket",
+   "level_3": "👀 `@app.websocket(\"/ws\")` 注册长连接端点",
+   "level_4": "📝 正确答案：from fastapi import FastAPI, WebSocket\n\napp = FastAPI()\n\n@app.websocket(\"/ws\")\nasync def ws(websocket: WebSocket):\n    await websocket.accept()\n    await websocket.send_text(\"hi\")"
+  },
+  "explanation": "`@app.websocket` 处理 WebSocket 连接，accept 后收发消息。"
+ },
+ {
+  "id": "fa-basics-025",
+  "title": "BackgroundTasks 后台任务",
+  "description": "请求返回后异步执行",
+  "exercise_type": "fill",
+  "tech_stack": "python",
+  "weight": "medium",
+  "category": "background",
+  "subcategory": "FastAPI",
+  "full_code": "from fastapi import BackgroundTasks, FastAPI\n\napp = FastAPI()\n\ndef send_mail(email: str):\n    print(\"mail\", email)\n\n@app.post(\"/notify\")\ndef notify(email: str, background: BackgroundTasks):\n    background.add_task(send_mail, email)\n    return {\"ok\": True}",
+  "expected": "",
+  "points": [
+   {
+    "id": "bt",
+    "text": "BackgroundTasks",
+    "category": "background",
+    "min_weight": "beginner",
+    "weight_score": 1,
+    "hint": "后台任务类型",
+    "fill_type": "text"
+   }
+  ],
+  "hints": {
+   "level_1": "💡 `BackgroundTasks`",
+   "level_2": "📖 后台任务",
+   "level_3": "👀 `background.add_task(func, args)` 响应后执行",
+   "level_4": "📝 正确答案：from fastapi import BackgroundTasks, FastAPI\n\napp = FastAPI()\n\ndef send_mail(email: str):\n    print(\"mail\", email)\n\n@app.post(\"/notify\")\ndef notify(email: str, background: BackgroundTasks):\n    background.add_task(send_mail, email)\n    return {\"ok\": True}"
+  },
+  "explanation": "`BackgroundTasks` 在返回响应后异步执行耗时任务（如发邮件）。"
+ },
+ {
+  "id": "fa-basics-026",
+  "title": "启动命令 uvicorn",
+  "description": "用 uvicorn 运行应用",
+  "exercise_type": "fill",
+  "tech_stack": "python",
+  "weight": "medium",
+  "category": "run",
+  "subcategory": "FastAPI",
+  "full_code": "uvicorn main:app --host 0.0.0.0 --port 8000 --reload",
+  "expected": "",
+  "points": [
+   {
+    "id": "run",
+    "text": "uvicorn main:app",
+    "category": "run",
+    "min_weight": "beginner",
+    "weight_score": 1,
+    "hint": "启动命令",
+    "fill_type": "text"
+   }
+  ],
+  "hints": {
+   "level_1": "💡 `uvicorn main:app`",
+   "level_2": "📖 运行应用",
+   "level_3": "👀 `uvicorn <模块>:<应用>` 启动",
+   "level_4": "📝 正确答案：uvicorn main:app --host 0.0.0.0 --port 8000 --reload"
+  },
+  "explanation": "`uvicorn main:app` 运行；`--reload` 开发时热重载。"
+ },
+ {
+  "id": "fa-basics-027",
+  "title": "文档地址",
+  "description": "自定义 /docs 路径",
+  "exercise_type": "fill",
+  "tech_stack": "python",
+  "weight": "medium",
+  "category": "docs",
+  "subcategory": "FastAPI",
+  "full_code": "from fastapi import FastAPI\n\napp = FastAPI(docs_url=\"/api/docs\")",
+  "expected": "",
+  "points": [
+   {
+    "id": "docs",
+    "text": "docs_url",
+    "category": "docs",
+    "min_weight": "beginner",
+    "weight_score": 1,
+    "hint": "文档地址参数",
+    "fill_type": "text"
+   }
+  ],
+  "hints": {
+   "level_1": "💡 `docs_url`",
+   "level_2": "📖 文档地址",
+   "level_3": "👀 `FastAPI(docs_url=\"/api/docs\")` 改 Swagger 地址",
+   "level_4": "📝 正确答案：from fastapi import FastAPI\n\napp = FastAPI(docs_url=\"/api/docs\")"
+  },
+  "explanation": "`docs_url` 自定义 Swagger UI 路径，默认 `/docs`。"
+ },
+ {
+  "id": "fa-basics-028",
+  "title": "路径参数类型转换",
+  "description": "声明参数为 int 自动校验",
+  "exercise_type": "fill",
+  "tech_stack": "python",
+  "weight": "medium",
+  "category": "parameter",
+  "subcategory": "FastAPI",
+  "full_code": "from fastapi import FastAPI\n\napp = FastAPI()\n\n@app.get(\"/items/{item_id}\")\ndef read(item_id: int):\n    return {\"id\": item_id}",
+  "expected": "",
+  "points": [
+   {
+    "id": "type",
+    "text": "int",
+    "category": "type_annotation",
+    "min_weight": "beginner",
+    "weight_score": 1,
+    "hint": "参数类型",
+    "fill_type": "text"
+   }
+  ],
+  "hints": {
+   "level_1": "💡 `int`",
+   "level_2": "📖 类型转换",
+   "level_3": "👀 `item_id: int` 自动把字符串转 int 并校验",
+   "level_4": "📝 正确答案：from fastapi import FastAPI\n\napp = FastAPI()\n\n@app.get(\"/items/{item_id}\")\ndef read(item_id: int):\n    return {\"id\": item_id}"
+  },
+  "explanation": "FastAPI 按类型注解自动解析与校验参数（int 会校验数字）。"
+ },
+ {
+  "id": "fa-basics-029",
+  "title": "model_dump 序列化",
+  "description": "把 Pydantic 模型转字典",
+  "exercise_type": "fill",
+  "tech_stack": "python",
+  "weight": "medium",
+  "category": "pydantic",
+  "subcategory": "FastAPI",
+  "full_code": "from fastapi import FastAPI\nfrom pydantic import BaseModel\n\napp = FastAPI()\n\nclass Item(BaseModel):\n    name: str\n\n@app.get(\"/item\")\ndef get():\n    item = Item(name=\"x\")\n    return item.model_dump()",
+  "expected": "",
+  "points": [
+   {
+    "id": "dump",
+    "text": "model_dump",
+    "category": "pydantic",
+    "min_weight": "beginner",
+    "weight_score": 1,
+    "hint": "序列化方法",
+    "fill_type": "text"
+   }
+  ],
+  "hints": {
+   "level_1": "💡 `model_dump()`",
+   "level_2": "📖 模型转字典",
+   "level_3": "👀 `model_dump()` 把 Pydantic 模型转成 dict",
+   "level_4": "📝 正确答案：from fastapi import FastAPI\nfrom pydantic import BaseModel\n\napp = FastAPI()\n\nclass Item(BaseModel):\n    name: str\n\n@app.get(\"/item\")\ndef get():\n    item = Item(name=\"x\")\n    return item.model_dump()"
+  },
+  "explanation": "`model_dump()` 返回模型字段的字典，便于构造响应。"
+ },
+ {
+  "id": "fa-basics-030",
+  "title": "CORS 中间件",
+  "description": "允许跨域请求",
+  "exercise_type": "fill",
+  "tech_stack": "python",
+  "weight": "medium",
+  "category": "middleware",
+  "subcategory": "FastAPI",
+  "full_code": "from fastapi import FastAPI\nfrom fastapi.middleware.cors import CORSMiddleware\n\napp = FastAPI()\n\napp.add_middleware(CORSMiddleware, allow_origins=[\"*\"], allow_methods=[\"*\"])\n\n@app.get(\"/\")\ndef root():\n    return {\"ok\": True}",
+  "expected": "",
+  "points": [
+   {
+    "id": "cors",
+    "text": "add_middleware",
+    "category": "middleware",
+    "min_weight": "beginner",
+    "weight_score": 1,
+    "hint": "添加中间件方法",
+    "fill_type": "text"
+   }
+  ],
+  "hints": {
+   "level_1": "💡 `add_middleware`",
+   "level_2": "📖 CORS 中间件",
+   "level_3": "👀 `app.add_middleware(CORSMiddleware, ...)` 开启跨域",
+   "level_4": "📝 正确答案：from fastapi import FastAPI\nfrom fastapi.middleware.cors import CORSMiddleware\n\napp = FastAPI()\n\napp.add_middleware(CORSMiddleware, allow_origins=[\"*\"], allow_methods=[\"*\"])\n\n@app.get(\"/\")\ndef root():\n    return {\"ok\": True}"
+  },
+  "explanation": "`add_middleware(CORSMiddleware)` 配置允许的跨域来源与方法。"
+ }
+]

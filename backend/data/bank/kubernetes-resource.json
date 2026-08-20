@@ -1,0 +1,1325 @@
+[
+  {
+    "id": "k8s-res-001",
+    "title": "创建 Secret 数据",
+    "description": "创建 Opaque 类型 Secret，data 中存 base64 值",
+    "exercise_type": "config",
+    "tech_stack": "kubernetes",
+    "weight": "easy",
+    "category": "secret",
+    "subcategory": "资源配置",
+    "full_code": "apiVersion: v1\nkind: Secret\nmetadata:\n  name: db-creds\ntype: Opaque\ndata:\n  username: YWRtaW4=\n  password: c2VjcmV0",
+    "expected": "",
+    "points": [
+      {
+        "id": "type",
+        "text": "Opaque",
+        "category": "secret_type",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "Secret 的 type（Opaque/kubernetes.io/tls 等）",
+        "fill_type": "text"
+      },
+      {
+        "id": "pwd",
+        "text": "c2VjcmV0",
+        "category": "secret_data",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "data 值需 base64 编码（c2VjcmV0 = secret）",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 Secret 的 type 与编码",
+      "level_2": "📖 data 的值必须 base64；Opaque 是通用类型",
+      "level_3": "👀 `type: Opaque` / `password: c2VjcmV0`",
+      "level_4": "📝 正确答案：`Opaque` / `c2VjcmV0`"
+    },
+    "explanation": "Secret.data 的值必须 base64 编码；Opaque 表示不透明字节数据。"
+  },
+  {
+    "id": "k8s-res-002",
+    "title": "Secret 明文 stringData",
+    "description": "用 stringData 直接写明文并自动编码",
+    "exercise_type": "config",
+    "tech_stack": "kubernetes",
+    "weight": "easy",
+    "category": "secret",
+    "subcategory": "资源配置",
+    "full_code": "apiVersion: v1\nkind: Secret\nmetadata:\n  name: db-creds\ntype: Opaque\nstringData:\n  username: admin\n  password: secret",
+    "expected": "",
+    "points": [
+      {
+        "id": "k",
+        "text": "username",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "Secret 的键名",
+        "fill_type": "text"
+      },
+      {
+        "id": "val",
+        "text": "secret",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "明文密码值",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 stringData 明文键值",
+      "level_2": "📖 stringData 里不用 base64，自动编码",
+      "level_3": "👀 `username: admin` / `password: secret`",
+      "level_4": "📝 正确答案：`username` / `secret`"
+    },
+    "explanation": "`stringData` 允许明文，创建时自动编码；`data` 需手写 base64。"
+  },
+  {
+    "id": "k8s-res-003",
+    "title": "创建 ConfigMap",
+    "description": "创建含两个配置键的 ConfigMap",
+    "exercise_type": "config",
+    "tech_stack": "kubernetes",
+    "weight": "easy",
+    "category": "configmap",
+    "subcategory": "资源配置",
+    "full_code": "apiVersion: v1\nkind: ConfigMap\nmetadata:\n  name: app-config\ndata:\n  LOG_LEVEL: info\n  RETRY: \"3\"",
+    "expected": "",
+    "points": [
+      {
+        "id": "level",
+        "text": "info",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "日志级别值",
+        "fill_type": "text"
+      },
+      {
+        "id": "retry",
+        "text": "3",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "重试次数（字符串需引号）",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 ConfigMap 的键值",
+      "level_2": "📖 data 存明文；数字建议加引号",
+      "level_3": "👀 `LOG_LEVEL: info` / `RETRY: \"3\"`",
+      "level_4": "📝 正确答案：`info` / `\"3\"`"
+    },
+    "explanation": "ConfigMap.data 存非敏感配置，Pod 通过 env 或 volume 引用。"
+  },
+  {
+    "id": "k8s-res-004",
+    "title": "env 引用 ConfigMap 单项",
+    "description": "用 configMapKeyRef 注入单个配置",
+    "exercise_type": "config",
+    "tech_stack": "kubernetes",
+    "weight": "easy",
+    "category": "env",
+    "subcategory": "资源配置",
+    "full_code": "apiVersion: v1\nkind: Pod\nmetadata:\n  name: web\nspec:\n  containers:\n  - name: web\n    image: nginx\n    env:\n    - name: LOG_LEVEL\n      valueFrom:\n        configMapKeyRef:\n          name: app-config\n          key: LOG_LEVEL",
+    "expected": "",
+    "points": [
+      {
+        "id": "cmname",
+        "text": "app-config",
+        "category": "configmap",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "引用的 ConfigMap 名称",
+        "fill_type": "text"
+      },
+      {
+        "id": "key",
+        "text": "LOG_LEVEL",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "取哪个键",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_image_nginx",
+        "text": "nginx",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "补充「容器镜像」",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 env 单项取自 ConfigMap",
+      "level_2": "📖 `valueFrom.configMapKeyRef` 引用",
+      "level_3": "👀 `name: app-config` / `key: LOG_LEVEL`",
+      "level_4": "📝 正确答案：`app-config` / `LOG_LEVEL`"
+    },
+    "explanation": "`configMapKeyRef` 把某个 ConfigMap 的键注入为环境变量。"
+  },
+  {
+    "id": "k8s-res-005",
+    "title": "env 引用 Secret 单项",
+    "description": "用 secretKeyRef 注入密码环境变量",
+    "exercise_type": "config",
+    "tech_stack": "kubernetes",
+    "weight": "easy",
+    "category": "env",
+    "subcategory": "资源配置",
+    "full_code": "apiVersion: v1\nkind: Pod\nmetadata:\n  name: app\nspec:\n  containers:\n  - name: app\n    image: myapp\n    env:\n    - name: DB_PASSWORD\n      valueFrom:\n        secretKeyRef:\n          name: db-creds\n          key: password",
+    "expected": "",
+    "points": [
+      {
+        "id": "secret",
+        "text": "db-creds",
+        "category": "secret",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "引用的 Secret 名称",
+        "fill_type": "text"
+      },
+      {
+        "id": "envname",
+        "text": "DB_PASSWORD",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "容器内环境变量名",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_image_myapp",
+        "text": "myapp",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "补充「容器镜像」",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 env 取自 Secret",
+      "level_2": "📖 `valueFrom.secretKeyRef` 引用 Secret 键",
+      "level_3": "👀 `name: db-creds` / `key: password`",
+      "level_4": "📝 正确答案：`db-creds` / `DB_PASSWORD`"
+    },
+    "explanation": "`secretKeyRef` 把 Secret 的 value 注入环境变量（解密为明文）。"
+  },
+  {
+    "id": "k8s-res-006",
+    "title": "envFrom 引用整个 ConfigMap",
+    "description": "把整个 ConfigMap 作为环境变量注入",
+    "exercise_type": "config",
+    "tech_stack": "kubernetes",
+    "weight": "easy",
+    "category": "env",
+    "subcategory": "资源配置",
+    "full_code": "apiVersion: v1\nkind: Pod\nmetadata:\n  name: app\nspec:\n  containers:\n  - name: app\n    image: myapp\n    envFrom:\n    - configMapRef:\n        name: app-config",
+    "expected": "",
+    "points": [
+      {
+        "id": "name",
+        "text": "app-config",
+        "category": "configmap",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "整表引用的 ConfigMap 名",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_image_myapp",
+        "text": "myapp",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "补充「容器镜像」",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 整表注入 ConfigMap",
+      "level_2": "📖 `envFrom` 把每个键变成环境变量",
+      "level_3": "👀 `envFrom: - configMapRef: name: app-config`",
+      "level_4": "📝 正确答案：`app-config`"
+    },
+    "explanation": "`envFrom.configMapRef` 将 ConfigMap 的所有键一次性注入为环境变量。"
+  },
+  {
+    "id": "k8s-res-007",
+    "title": "ConfigMap 挂载为文件",
+    "description": "把 ConfigMap 挂到 /config 作为文件",
+    "exercise_type": "config",
+    "tech_stack": "kubernetes",
+    "weight": "medium",
+    "category": "volume",
+    "subcategory": "资源配置",
+    "full_code": "apiVersion: v1\nkind: Pod\nmetadata:\n  name: app\nspec:\n  containers:\n  - name: app\n    image: nginx\n    volumeMounts:\n    - name: config\n      mountPath: /config\n  volumes:\n  - name: config\n    configMap:\n      name: app-config",
+    "expected": "",
+    "points": [
+      {
+        "id": "mount",
+        "text": "/config",
+        "category": "mount_path",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "挂载路径",
+        "fill_type": "text"
+      },
+      {
+        "id": "cm",
+        "text": "app-config",
+        "category": "configmap",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "来源 ConfigMap 名",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_image_nginx",
+        "text": "nginx",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "补充「容器镜像」",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 ConfigMap 卷挂载",
+      "level_2": "📖 `volumes.configMap` 定义来源，`volumeMounts` 挂载",
+      "level_3": "👀 `mountPath: /config` / `name: app-config`",
+      "level_4": "📝 正确答案：`/config` / `app-config`"
+    },
+    "explanation": "把 ConfigMap 作为卷挂载后，每个键成为挂载目录下的一个文件。"
+  },
+  {
+    "id": "k8s-res-008",
+    "title": "Secret 挂载为文件",
+    "description": "把 Secret 挂到 /etc/secret 作为文件",
+    "exercise_type": "config",
+    "tech_stack": "kubernetes",
+    "weight": "medium",
+    "category": "volume",
+    "subcategory": "资源配置",
+    "full_code": "apiVersion: v1\nkind: Pod\nmetadata:\n  name: app\nspec:\n  containers:\n  - name: app\n    image: nginx\n    volumeMounts:\n    - name: creds\n      mountPath: /etc/secret\n      readOnly: true\n  volumes:\n  - name: creds\n    secret:\n      secretName: db-creds",
+    "expected": "",
+    "points": [
+      {
+        "id": "mount",
+        "text": "/etc/secret",
+        "category": "mount_path",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "挂载路径",
+        "fill_type": "text"
+      },
+      {
+        "id": "sec",
+        "text": "db-creds",
+        "category": "secret",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "来源 Secret 名",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_image_nginx",
+        "text": "nginx",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "补充「容器镜像」",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 Secret 卷挂载",
+      "level_2": "📖 `volumes.secret.secretName` 指定 Secret",
+      "level_3": "👀 `mountPath: /etc/secret` / `secretName: db-creds`",
+      "level_4": "📝 正确答案：`/etc/secret` / `db-creds`"
+    },
+    "explanation": "Secret 卷挂载后每个键成为文件，值以 base64 解密写入。"
+  },
+  {
+    "id": "k8s-res-009",
+    "title": "emptyDir 临时卷",
+    "description": "创建一个空临时卷供容器写入",
+    "exercise_type": "config",
+    "tech_stack": "kubernetes",
+    "weight": "easy",
+    "category": "volume",
+    "subcategory": "资源配置",
+    "full_code": "apiVersion: v1\nkind: Pod\nmetadata:\n  name: cache\nspec:\n  containers:\n  - name: app\n    image: nginx\n    volumeMounts:\n    - name: scratch\n      mountPath: /tmp/cache\n  volumes:\n  - name: scratch\n    emptyDir: {}",
+    "expected": "",
+    "points": [
+      {
+        "id": "mount",
+        "text": "/tmp/cache",
+        "category": "mount_path",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "临时目录挂载路径",
+        "fill_type": "text"
+      },
+      {
+        "id": "vol",
+        "text": "emptyDir: {}",
+        "category": "volume",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "空卷类型",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_image_nginx",
+        "text": "nginx",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "补充「容器镜像」",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 emptyDir 临时卷",
+      "level_2": "📖 `emptyDir` 在 Pod 生命期内存在",
+      "level_3": "👀 `emptyDir: {}`",
+      "level_4": "📝 正确答案：`/tmp/cache` / `- name: scratch; emptyDir: {}`"
+    },
+    "explanation": "emptyDir 是 Pod 内的临时空目录，Pod 删除即清空。"
+  },
+  {
+    "id": "k8s-res-010",
+    "title": "emptyDir 内存介质",
+    "description": "用内存作为 emptyDir 介质（tmpfs）",
+    "exercise_type": "config",
+    "tech_stack": "kubernetes",
+    "weight": "medium",
+    "category": "volume",
+    "subcategory": "资源配置",
+    "full_code": "apiVersion: v1\nkind: Pod\nmetadata:\n  name: cache\nspec:\n  containers:\n  - name: app\n    image: nginx\n    volumeMounts:\n    - name: mem\n      mountPath: /dev/shm\n  volumes:\n  - name: mem\n    emptyDir:\n      medium: Memory",
+    "expected": "",
+    "points": [
+      {
+        "id": "medium",
+        "text": "Memory",
+        "category": "volume",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "使用内存 tmpfs 的介质值",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_image_nginx",
+        "text": "nginx",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 0.7,
+        "hint": "补充「容器镜像」",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 内存介质 emptyDir",
+      "level_2": "📖 `emptyDir.medium: Memory` 用 tmpfs",
+      "level_3": "👀 `medium: Memory`",
+      "level_4": "📝 正确答案：`Memory`"
+    },
+    "explanation": "`medium: Memory` 让 emptyDir 使用内存（tmpfs），性能更高但不持久。"
+  },
+  {
+    "id": "k8s-res-011",
+    "title": "hostPath 卷",
+    "description": "挂载宿主机目录到容器",
+    "exercise_type": "config",
+    "tech_stack": "kubernetes",
+    "weight": "hard",
+    "category": "volume",
+    "subcategory": "资源配置",
+    "full_code": "apiVersion: v1\nkind: Pod\nmetadata:\n  name: host\nspec:\n  containers:\n  - name: app\n    image: nginx\n    volumeMounts:\n    - name: hostdir\n      mountPath: /data\n  volumes:\n  - name: hostdir\n    hostPath:\n      path: /var/log\n      type: Directory",
+    "expected": "",
+    "points": [
+      {
+        "id": "path",
+        "text": "/var/log",
+        "category": "host_path",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "宿主机上的目录路径",
+        "fill_type": "text"
+      },
+      {
+        "id": "type",
+        "text": "Directory",
+        "category": "volume",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "hostPath 检查类型",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_image_nginx",
+        "text": "nginx",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "补充「容器镜像」",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 宿主机目录挂载",
+      "level_2": "📖 `hostPath` 直连节点文件系统",
+      "level_3": "👀 `path: /var/log` / `type: Directory`",
+      "level_4": "📝 正确答案：`/var/log` / `Directory`"
+    },
+    "explanation": "hostPath 直接把节点上的目录/文件挂进容器，适合 DaemonSet 访问节点日志。"
+  },
+  {
+    "id": "k8s-res-012",
+    "title": "PVC 与 Pod 挂载",
+    "description": "申请 1Gi 存储并挂载到 /data",
+    "exercise_type": "config",
+    "tech_stack": "kubernetes",
+    "weight": "easy",
+    "category": "storage",
+    "subcategory": "资源配置",
+    "full_code": "apiVersion: v1\nkind: PersistentVolumeClaim\nmetadata:\n  name: data\nspec:\n  accessModes:\n  - ReadWriteOnce\n  resources:\n    requests:\n      storage: 1Gi\n---\napiVersion: v1\nkind: Pod\nmetadata:\n  name: app\nspec:\n  containers:\n  - name: app\n    image: nginx\n    volumeMounts:\n    - name: data\n      mountPath: /data\n  volumes:\n  - name: data\n    persistentVolumeClaim:\n      claimName: data",
+    "expected": "",
+    "points": [
+      {
+        "id": "storage",
+        "text": "1Gi",
+        "category": "storage",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "申请容量",
+        "fill_type": "text"
+      },
+      {
+        "id": "claim",
+        "text": "claimName: data",
+        "category": "pvc",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "引用 PVC 名称",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_image_nginx",
+        "text": "nginx",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "补充「容器镜像」",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 PVC 声明与挂载",
+      "level_2": "📖 先建 PVC，Pod 用 `persistentVolumeClaim.claimName` 引用",
+      "level_3": "👀 `storage: 1Gi` / `claimName: data`",
+      "level_4": "📝 正确答案：`1Gi` / `claimName: data`"
+    },
+    "explanation": "PVC 声明存储需求并绑定 PV，Pod 通过同名 volume 挂载 PVC。"
+  },
+  {
+    "id": "k8s-res-013",
+    "title": "StorageClass 定义",
+    "description": "定义一个本地存储类",
+    "exercise_type": "config",
+    "tech_stack": "kubernetes",
+    "weight": "medium",
+    "category": "storage",
+    "subcategory": "资源配置",
+    "full_code": "apiVersion: storage.k8s.io/v1\nkind: StorageClass\nmetadata:\n  name: fast\nprovisioner: kubernetes.io/aws-ebs\nparameters:\n  type: gp3\nreclaimPolicy: Delete\nvolumeBindingMode: WaitForFirstConsumer",
+    "expected": "",
+    "points": [
+      {
+        "id": "api",
+        "text": "storage.k8s.io/v1",
+        "category": "api_version",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "StorageClass 的 API 版本",
+        "fill_type": "text"
+      },
+      {
+        "id": "provisioner",
+        "text": "kubernetes.io/aws-ebs",
+        "category": "provisioner",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "卷供应器",
+        "fill_type": "text"
+      },
+      {
+        "id": "reclaim",
+        "text": "Delete",
+        "category": "reclaim_policy",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "删除时回收策略",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 StorageClass 定义动态供应",
+      "level_2": "📖 `provisioner` 指定存储插件，`reclaimPolicy` 设回收",
+      "level_3": "👀 `provisioner: kubernetes.io/aws-ebs`",
+      "level_4": "📝 正确答案：`storage.k8s.io/v1` / `kubernetes.io/aws-ebs` / `Delete`"
+    },
+    "explanation": "StorageClass 让 PVC 自动创建 PV；reclaimPolicy 控制 PV 释放后的处理。"
+  },
+  {
+    "id": "k8s-res-014",
+    "title": "livenessProbe 存活探针",
+    "description": "用 httpGet 定时探测容器是否存活",
+    "exercise_type": "config",
+    "tech_stack": "kubernetes",
+    "weight": "hard",
+    "category": "probe",
+    "subcategory": "资源配置",
+    "full_code": "apiVersion: v1\nkind: Pod\nmetadata:\n  name: web\nspec:\n  containers:\n  - name: web\n    image: nginx\n    livenessProbe:\n      httpGet:\n        path: /healthz\n        port: 80\n      initialDelaySeconds: 5\n      periodSeconds: 10",
+    "expected": "",
+    "points": [
+      {
+        "id": "port",
+        "text": "80",
+        "category": "probe_port",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "探测端口",
+        "fill_type": "text"
+      },
+      {
+        "id": "period",
+        "text": "10",
+        "category": "probe",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "探测周期(秒)",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_image_nginx",
+        "text": "nginx",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "补充「容器镜像」",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 存活探针",
+      "level_2": "📖 `livenessProbe` 失败则重启容器",
+      "level_3": "👀 `httpGet: {path: /healthz, port: 80}`",
+      "level_4": "📝 正确答案：`80` / `10`"
+    },
+    "explanation": "livenessProbe 判断容器是否还活着，失败 Kubernetes 会重启容器。"
+  },
+  {
+    "id": "k8s-res-015",
+    "title": "readinessProbe 就绪探针",
+    "description": "用 tcpSocket 判断服务是否就绪",
+    "exercise_type": "config",
+    "tech_stack": "kubernetes",
+    "weight": "hard",
+    "category": "probe",
+    "subcategory": "资源配置",
+    "full_code": "apiVersion: v1\nkind: Pod\nmetadata:\n  name: app\nspec:\n  containers:\n  - name: app\n    image: myapp\n    readinessProbe:\n      tcpSocket:\n        port: 8080\n      initialDelaySeconds: 3\n      periodSeconds: 5",
+    "expected": "",
+    "points": [
+      {
+        "id": "port",
+        "text": "8080",
+        "category": "probe_port",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "探测端口",
+        "fill_type": "text"
+      },
+      {
+        "id": "probe",
+        "text": "tcpSocket",
+        "category": "probe",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "TCP 连接探测类型",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_image_myapp",
+        "text": "myapp",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "补充「容器镜像」",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 就绪探针",
+      "level_2": "📖 `readinessProbe` 就绪前不接收流量",
+      "level_3": "👀 `tcpSocket: {port: 8080}`",
+      "level_4": "📝 正确答案：`8080` / `tcpSocket`"
+    },
+    "explanation": "readinessProbe 通过后 Pod 才被加入 Service 端点接收流量。"
+  },
+  {
+    "id": "k8s-res-016",
+    "title": "startupProbe 启动探针",
+    "description": "给慢启动容器配置启动探测",
+    "exercise_type": "config",
+    "tech_stack": "kubernetes",
+    "weight": "medium",
+    "category": "probe",
+    "subcategory": "资源配置",
+    "full_code": "apiVersion: v1\nkind: Pod\nmetadata:\n  name: slow\nspec:\n  containers:\n  - name: slow\n    image: myapp\n    startupProbe:\n      tcpSocket:\n        port: 8080\n      failureThreshold: 30\n      periodSeconds: 10",
+    "expected": "",
+    "points": [
+      {
+        "id": "threshold",
+        "text": "30",
+        "category": "probe",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "失败多少次算启动失败",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_image_myapp",
+        "text": "myapp",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 0.7,
+        "hint": "补充「容器镜像」",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_port_8080",
+        "text": "8080",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "补充「服务/探针端口」",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 启动探针",
+      "level_2": "📖 `startupProbe` 成功前禁用其它探针",
+      "level_3": "👀 `failureThreshold: 30`",
+      "level_4": "📝 正确答案：`30`"
+    },
+    "explanation": "startupProbe 给慢启动应用充足时间，成功后交由 liveness/readiness 接管。"
+  },
+  {
+    "id": "k8s-res-017",
+    "title": "镜像拉取策略",
+    "description": "强制每次拉取最新镜像",
+    "exercise_type": "config",
+    "tech_stack": "kubernetes",
+    "weight": "easy",
+    "category": "image",
+    "subcategory": "资源配置",
+    "full_code": "apiVersion: v1\nkind: Pod\nmetadata:\n  name: app\nspec:\n  containers:\n  - name: app\n    image: myapp:latest\n    imagePullPolicy: Always",
+    "expected": "",
+    "points": [
+      {
+        "id": "policy",
+        "text": "Always",
+        "category": "image_pull_policy",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "每次拉取的策略值",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_image_myapplatest",
+        "text": "myapp:latest",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "补充「容器镜像」",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 镜像拉取策略",
+      "level_2": "📖 Always/Never/IfNotPresent",
+      "level_3": "👀 `imagePullPolicy: Always`",
+      "level_4": "📝 正确答案：`Always`"
+    },
+    "explanation": "imagePullPolicy 控制拉取时机；latest 标签默认 Always。"
+  },
+  {
+    "id": "k8s-res-018",
+    "title": "容器资源请求",
+    "description": "声明 CPU 100m / 内存 64Mi 请求",
+    "exercise_type": "config",
+    "tech_stack": "kubernetes",
+    "weight": "easy",
+    "category": "resources",
+    "subcategory": "资源配置",
+    "full_code": "apiVersion: v1\nkind: Pod\nmetadata:\n  name: app\nspec:\n  containers:\n  - name: app\n    image: nginx\n    resources:\n      requests:\n        cpu: 100m\n        memory: 64Mi",
+    "expected": "",
+    "points": [
+      {
+        "id": "cpu",
+        "text": "100m",
+        "category": "resource",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "CPU 请求（100m = 0.1 核）",
+        "fill_type": "text"
+      },
+      {
+        "id": "mem",
+        "text": "64Mi",
+        "category": "resource",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "内存请求",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_image_nginx",
+        "text": "nginx",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "补充「容器镜像」",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 资源 requests",
+      "level_2": "📖 `requests` 是调度保证，`limits` 是硬上限",
+      "level_3": "👀 `cpu: 100m` / `memory: 64Mi`",
+      "level_4": "📝 正确答案：`100m` / `64Mi`"
+    },
+    "explanation": "requests 声明所需最小资源，调度器据此放置 Pod。"
+  },
+  {
+    "id": "k8s-res-019",
+    "title": "Pod 使用 ServiceAccount",
+    "description": "为 Pod 指定 ServiceAccount",
+    "exercise_type": "config",
+    "tech_stack": "kubernetes",
+    "weight": "easy",
+    "category": "sa",
+    "subcategory": "资源配置",
+    "full_code": "apiVersion: v1\nkind: Pod\nmetadata:\n  name: app\nspec:\n  serviceAccountName: app-runner\n  containers:\n  - name: app\n    image: nginx",
+    "expected": "",
+    "points": [
+      {
+        "id": "sa",
+        "text": "app-runner",
+        "category": "serviceaccount",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "ServiceAccount 名称",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_image_nginx",
+        "text": "nginx",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "补充「容器镜像」",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 指定 ServiceAccount",
+      "level_2": "📖 `spec.serviceAccountName` 声明身份",
+      "level_3": "👀 `serviceAccountName: app-runner`",
+      "level_4": "📝 正确答案：`app-runner`"
+    },
+    "explanation": "Pod 通过 serviceAccountName 以指定身份访问 API；默认 default。"
+  },
+  {
+    "id": "k8s-res-020",
+    "title": "nodeSelector 调度",
+    "description": "只调度到 gpu=true 标签的节点",
+    "exercise_type": "config",
+    "tech_stack": "kubernetes",
+    "weight": "medium",
+    "category": "scheduling",
+    "subcategory": "资源配置",
+    "full_code": "apiVersion: v1\nkind: Pod\nmetadata:\n  name: gpu\nspec:\n  nodeSelector:\n    gpu: \"true\"\n  containers:\n  - name: app\n    image: nginx",
+    "expected": "",
+    "points": [
+      {
+        "id": "key",
+        "text": "gpu",
+        "category": "label",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "节点标签键",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_image_nginx",
+        "text": "nginx",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 0.7,
+        "hint": "补充「容器镜像」",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 按标签调度",
+      "level_2": "📖 `nodeSelector` 匹配节点标签键值",
+      "level_3": "👀 `nodeSelector: {gpu: \"true\"}`",
+      "level_4": "📝 正确答案：`gpu`"
+    },
+    "explanation": "nodeSelector 把 Pod 调度到带指定标签的节点上。"
+  },
+  {
+    "id": "k8s-res-021",
+    "title": "容忍调度",
+    "description": "容忍 NoSchedule 污点让 Pod 调度到特殊节点",
+    "exercise_type": "config",
+    "tech_stack": "kubernetes",
+    "weight": "hard",
+    "category": "scheduling",
+    "subcategory": "资源配置",
+    "full_code": "apiVersion: v1\nkind: Pod\nmetadata:\n  name: util\nspec:\n  tolerations:\n  - key: app\n    operator: Exists\n    effect: NoSchedule\n  containers:\n  - name: app\n    image: nginx",
+    "expected": "",
+    "points": [
+      {
+        "id": "effect",
+        "text": "NoSchedule",
+        "category": "taint_effect",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "污点效果",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_image_nginx",
+        "text": "nginx",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 0.7,
+        "hint": "补充「容器镜像」",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 容忍污点",
+      "level_2": "📖 `tolerations` 匹配节点污点的 key/effect",
+      "level_3": "👀 `effect: NoSchedule`",
+      "level_4": "📝 正确答案：`NoSchedule`"
+    },
+    "explanation": "tolerations 允许 Pod 被调度到带对应污点的节点。"
+  },
+  {
+    "id": "k8s-res-022",
+    "title": "节点亲和性",
+    "description": "用 requiredDuringScheduling 亲和指定节点",
+    "exercise_type": "config",
+    "tech_stack": "kubernetes",
+    "weight": "hard",
+    "category": "scheduling",
+    "subcategory": "资源配置",
+    "full_code": "apiVersion: v1\nkind: Pod\nmetadata:\n  name: app\nspec:\n  affinity:\n    nodeAffinity:\n      requiredDuringSchedulingIgnoredDuringExecution:\n        nodeSelectorTerms:\n        - matchExpressions:\n          - key: zone\n            operator: In\n            values:\n            - us-east-1\n  containers:\n  - name: app\n    image: nginx",
+    "expected": "",
+    "points": [
+      {
+        "id": "key",
+        "text": "zone",
+        "category": "label",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "节点标签键",
+        "fill_type": "text"
+      },
+      {
+        "id": "value",
+        "text": "us-east-1",
+        "category": "label",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "期望的标签值",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_image_nginx",
+        "text": "nginx",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 0.7,
+        "hint": "补充「容器镜像」",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 节点亲和性",
+      "level_2": "📖 `nodeAffinity` 用表达式选择节点",
+      "level_3": "👀 `key: zone` / `values: [us-east-1]`",
+      "level_4": "📝 正确答案：`zone` / `us-east-1`"
+    },
+    "explanation": "nodeAffinity 比 nodeSelector 更灵活，可处理 In/NotIn 等操作符。"
+  },
+  {
+    "id": "k8s-res-023",
+    "title": "subPath 挂载子路径",
+    "description": "只挂载 ConfigMap 的单个键为文件",
+    "exercise_type": "config",
+    "tech_stack": "kubernetes",
+    "weight": "medium",
+    "category": "volume",
+    "subcategory": "资源配置",
+    "full_code": "apiVersion: v1\nkind: Pod\nmetadata:\n  name: app\nspec:\n  containers:\n  - name: app\n    image: nginx\n    volumeMounts:\n    - name: config\n      mountPath: /etc/app.yml\n      subPath: app.yml\n  volumes:\n  - name: config\n    configMap:\n      name: app-config",
+    "expected": "",
+    "points": [
+      {
+        "id": "mount",
+        "text": "/etc/app.yml",
+        "category": "mount_path",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "挂载成的文件路径",
+        "fill_type": "text"
+      },
+      {
+        "id": "sub",
+        "text": "subPath: app.yml",
+        "category": "volume",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "只挂某键子路径",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_image_nginx",
+        "text": "nginx",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "补充「容器镜像」",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 挂载单个文件",
+      "level_2": "📖 `subPath` 只挂卷中的某个键",
+      "level_3": "👀 `mountPath: /etc/app.yml; subPath: app.yml`",
+      "level_4": "📝 正确答案：`/etc/app.yml` / `subPath: app.yml`"
+    },
+    "explanation": "subPath 让你只把卷里的一个文件（键）挂到目标路径，不影响更新。"
+  },
+  {
+    "id": "k8s-res-024",
+    "title": "securityContext 非 root",
+    "description": "以 UID 1000 非 root 运行容器",
+    "exercise_type": "config",
+    "tech_stack": "kubernetes",
+    "weight": "medium",
+    "category": "security",
+    "subcategory": "资源配置",
+    "full_code": "apiVersion: v1\nkind: Pod\nmetadata:\n  name: secure\nspec:\n  securityContext:\n    runAsUser: 1000\n    runAsNonRoot: true\n  containers:\n  - name: app\n    image: nginx",
+    "expected": "",
+    "points": [
+      {
+        "id": "uid",
+        "text": "1000",
+        "category": "security",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "运行用户 UID",
+        "fill_type": "text"
+      },
+      {
+        "id": "nonroot",
+        "text": "runAsNonRoot: true",
+        "category": "security",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "强制非 root 运行",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_image_nginx",
+        "text": "nginx",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "补充「容器镜像」",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 以非 root 运行",
+      "level_2": "📖 `securityContext` 设置运行身份",
+      "level_3": "👀 `runAsUser: 1000` / `runAsNonRoot: true`",
+      "level_4": "📝 正确答案：`1000` / `runAsNonRoot: true`"
+    },
+    "explanation": "以非 root 用户运行提升安全性；runAsNonRoot 校验镜像不以 root 运行。"
+  },
+  {
+    "id": "k8s-res-025",
+    "title": "只读根文件系统",
+    "description": "让容器根文件系统只读",
+    "exercise_type": "config",
+    "tech_stack": "kubernetes",
+    "weight": "medium",
+    "category": "security",
+    "subcategory": "资源配置",
+    "full_code": "apiVersion: v1\nkind: Pod\nmetadata:\n  name: locked\nspec:\n  containers:\n  - name: app\n    image: nginx\n    securityContext:\n      readOnlyRootFilesystem: true",
+    "expected": "",
+    "points": [
+      {
+        "id": "ro",
+        "text": "readOnlyRootFilesystem: true",
+        "category": "security",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "只读根文件系统选项",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_image_nginx",
+        "text": "nginx",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 0.7,
+        "hint": "补充「容器镜像」",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 根文件系统只读",
+      "level_2": "📖 容器只读降低被篡改风险",
+      "level_3": "👀 `readOnlyRootFilesystem: true`",
+      "level_4": "📝 正确答案：`readOnlyRootFilesystem: true`"
+    },
+    "explanation": "只读根文件系统防止写入持久化恶意内容，需配合可写卷使用。"
+  },
+  {
+    "id": "k8s-res-026",
+    "title": "多容器共享卷",
+    "description": "sidecar 容器与主容器共享 emptyDir",
+    "exercise_type": "config",
+    "tech_stack": "kubernetes",
+    "weight": "hard",
+    "category": "multi_container",
+    "subcategory": "资源配置",
+    "full_code": "apiVersion: v1\nkind: Pod\nmetadata:\n  name: sidecar\nspec:\n  containers:\n  - name: app\n    image: nginx\n    volumeMounts:\n    - name: shared\n      mountPath: /var/log\n  - name: logger\n    image: fluentbit\n    volumeMounts:\n    - name: shared\n      mountPath: /logs\n  volumes:\n  - name: shared\n    emptyDir: {}",
+    "expected": "",
+    "points": [
+      {
+        "id": "mv",
+        "text": "/logs",
+        "category": "mount_path",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "sidecar 的挂载路径",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_image_nginx",
+        "text": "nginx",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "补充「容器镜像」",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_image_fluentbit",
+        "text": "fluentbit",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "补充「容器镜像」",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 sidecar 共享卷",
+      "level_2": "📖 同一卷被两个容器挂载即共享",
+      "level_3": "👀 `mountPath: /logs`",
+      "level_4": "📝 正确答案：`/logs`"
+    },
+    "explanation": "多容器共享同一卷实现日志/数据互通，是 sidecar 模式的基石。"
+  },
+  {
+    "id": "k8s-res-027",
+    "title": "initContainer 初始化",
+    "description": "用 init 容器准备数据后再启动主容器",
+    "exercise_type": "config",
+    "tech_stack": "kubernetes",
+    "weight": "medium",
+    "category": "init_container",
+    "subcategory": "资源配置",
+    "full_code": "apiVersion: v1\nkind: Pod\nmetadata:\n  name: init-example\nspec:\n  initContainers:\n  - name: setup\n    image: busybox\n    command: [\"sh\", \"-c\", \"echo init \u003e /work/data.txt\"]\n    volumeMounts:\n    - name: work\n      mountPath: /work\n  containers:\n  - name: app\n    image: nginx\n    volumeMounts:\n    - name: work\n      mountPath: /data\n  volumes:\n  - name: work\n    emptyDir: {}",
+    "expected": "",
+    "points": [
+      {
+        "id": "initname",
+        "text": "setup",
+        "category": "init_container",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "init 容器名称",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_image_busybox",
+        "text": "busybox",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "补充「容器镜像」",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_image_nginx",
+        "text": "nginx",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "补充「容器镜像」",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 init 容器",
+      "level_2": "📖 `initContainers` 在主容器前依序运行",
+      "level_3": "👀 `initContainers: - name: setup`",
+      "level_4": "📝 正确答案：`setup`"
+    },
+    "explanation": "init 容器完成前置初始化，主容器成功前不会启动。"
+  },
+  {
+    "id": "k8s-res-028",
+    "title": "Pod 终止宽限期",
+    "description": "设置优雅停机时间 30 秒",
+    "exercise_type": "config",
+    "tech_stack": "kubernetes",
+    "weight": "easy",
+    "category": "lifecycle",
+    "subcategory": "资源配置",
+    "full_code": "apiVersion: v1\nkind: Pod\nmetadata:\n  name: app\nspec:\n  terminationGracePeriodSeconds: 30\n  containers:\n  - name: app\n    image: nginx",
+    "expected": "",
+    "points": [
+      {
+        "id": "grace",
+        "text": "30",
+        "category": "lifecycle",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "终止宽限期秒数",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_image_nginx",
+        "text": "nginx",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "补充「容器镜像」",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 优雅停机时间",
+      "level_2": "📖 `terminationGracePeriodSeconds` 给应用收尾时间",
+      "level_3": "👀 `terminationGracePeriodSeconds: 30`",
+      "level_4": "📝 正确答案：`30`"
+    },
+    "explanation": "删除 Pod 时给容器这段宽限期处理退出前清理，超时才强杀。"
+  },
+  {
+    "id": "k8s-res-029",
+    "title": "生命周期钩子 preStop",
+    "description": "删除前执行优雅退出命令",
+    "exercise_type": "config",
+    "tech_stack": "kubernetes",
+    "weight": "hard",
+    "category": "lifecycle",
+    "subcategory": "资源配置",
+    "full_code": "apiVersion: v1\nkind: Pod\nmetadata:\n  name: app\nspec:\n  containers:\n  - name: app\n    image: nginx\n    lifecycle:\n      preStop:\n        exec:\n          command: [\"sh\", \"-c\", \"sleep 5; exit 0\"]",
+    "expected": "",
+    "points": [
+      {
+        "id": "hook",
+        "text": "preStop",
+        "category": "lifecycle",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "删除前执行的钩子",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_image_nginx",
+        "text": "nginx",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 0.7,
+        "hint": "补充「容器镜像」",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 生命周期钩子",
+      "level_2": "📖 `preStop` 在终止宽限期内先执行",
+      "level_3": "👀 `lifecycle: {preStop: {exec: ...}}`",
+      "level_4": "📝 正确答案：`preStop`"
+    },
+    "explanation": "preStop 钩子在 SIGTERM 前执行，可做优雅下线/摘流量。"
+  },
+  {
+    "id": "k8s-res-030",
+    "title": "自定义 DNS 策略",
+    "description": "使用 ClusterFirstWithHostNet 的 DNS 策略",
+    "exercise_type": "config",
+    "tech_stack": "kubernetes",
+    "weight": "medium",
+    "category": "dns",
+    "subcategory": "资源配置",
+    "full_code": "apiVersion: v1\nkind: Pod\nmetadata:\n  name: app\nspec:\n  dnsPolicy: ClusterFirstWithHostNet\n  containers:\n  - name: app\n    image: nginx",
+    "expected": "",
+    "points": [
+      {
+        "id": "dns",
+        "text": "ClusterFirstWithHostNet",
+        "category": "dns",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "DNS 策略值",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_image_nginx",
+        "text": "nginx",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 0.7,
+        "hint": "补充「容器镜像」",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 DNS 策略",
+      "level_2": "📖 配合 hostNetwork 使用集群 DNS",
+      "level_3": "👀 `dnsPolicy: ClusterFirstWithHostNet`",
+      "level_4": "📝 正确答案：`ClusterFirstWithHostNet`"
+    },
+    "explanation": "hostNetwork 时默认 DNS 失效，需用 ClusterFirstWithHostNet 保留集群解析。"
+  }
+]

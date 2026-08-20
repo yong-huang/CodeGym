@@ -1,0 +1,1100 @@
+[
+  {
+    "id": "k8s-sched-001",
+    "title": "查看调度器组件",
+    "description": "查看 kube-system 下的调度器 Pod",
+    "exercise_type": "command",
+    "tech_stack": "kubernetes",
+    "weight": "easy",
+    "category": "scheduler",
+    "subcategory": "调度",
+    "full_code": "kubectl get pods -n kube-system -l component=kube-scheduler",
+    "expected": "",
+    "points": [
+      {
+        "id": "flag",
+        "text": "-l component=kube-scheduler",
+        "category": "command_flag",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "按组件标签筛选",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 查看调度器的命令",
+      "level_2": "📖 `-l component=kube-scheduler` 选中调度器 Pod",
+      "level_3": "👀 `kubectl get pods -n kube-system -l component=kube-scheduler`",
+      "level_4": "📝 正确答案：kubectl get pods -n kube-system -l component=kube-scheduler"
+    },
+    "explanation": "kube-scheduler 以 Pod 形式运行在 kube-system，用标签筛选查看。"
+  },
+  {
+    "id": "k8s-sched-002",
+    "title": "给节点打污点",
+    "description": "给 node-1 打 NoSchedule 污点",
+    "exercise_type": "command",
+    "tech_stack": "kubernetes",
+    "weight": "easy",
+    "category": "taint",
+    "subcategory": "调度",
+    "full_code": "kubectl taint nodes node-1 gpu=true:NoSchedule",
+    "expected": "",
+    "points": [
+      {
+        "id": "effect",
+        "text": "NoSchedule",
+        "category": "taint_effect",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "污点效果",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 污点的 effect",
+      "level_2": "📖 NoSchedule 阻止无容忍 Pod 调度",
+      "level_3": "👀 `gpu=true:NoSchedule`",
+      "level_4": "📝 正确答案：kubectl taint nodes node-1 gpu=true:NoSchedule"
+    },
+    "explanation": "污点 `key=value:effect`，effect 用 NoSchedule 阻止调度。"
+  },
+  {
+    "id": "k8s-sched-003",
+    "title": "节点不可调度",
+    "description": "将 node-1 标记为不可调度",
+    "exercise_type": "command",
+    "tech_stack": "kubernetes",
+    "weight": "easy",
+    "category": "scheduling",
+    "subcategory": "调度",
+    "full_code": "kubectl cordon node-1",
+    "expected": "",
+    "points": [
+      {
+        "id": "verb",
+        "text": "cordon",
+        "category": "command_verb",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "标记不可调度",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 标记不可调度的命令",
+      "level_2": "📖 `kubectl cordon \u003c节点\u003e`",
+      "level_3": "👀 `kubectl cordon node-1`",
+      "level_4": "📝 正确答案：kubectl cordon node-1"
+    },
+    "explanation": "`cordon` 给节点打 unschedulable，新 Pod 不再调度到它。"
+  },
+  {
+    "id": "k8s-sched-004",
+    "title": "恢复节点调度",
+    "description": "取消 node-1 的不可调度状态",
+    "exercise_type": "command",
+    "tech_stack": "kubernetes",
+    "weight": "easy",
+    "category": "scheduling",
+    "subcategory": "调度",
+    "full_code": "kubectl uncordon node-1",
+    "expected": "",
+    "points": [
+      {
+        "id": "verb",
+        "text": "uncordon",
+        "category": "command_verb",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "恢复调度",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 恢复调度的命令",
+      "level_2": "📖 `kubectl uncordon \u003c节点\u003e`",
+      "level_3": "👀 `kubectl uncordon node-1`",
+      "level_4": "📝 正确答案：kubectl uncordon node-1"
+    },
+    "explanation": "`uncordon` 移除 unschedulable，节点重新接收调度。"
+  },
+  {
+    "id": "k8s-sched-005",
+    "title": "驱逐节点 Pod",
+    "description": "排空节点以便维护",
+    "exercise_type": "command",
+    "tech_stack": "kubernetes",
+    "weight": "easy",
+    "category": "scheduling",
+    "subcategory": "调度",
+    "full_code": "kubectl drain node-1 --ignore-daemonsets",
+    "expected": "",
+    "points": [
+      {
+        "id": "flag",
+        "text": "--ignore-daemonsets",
+        "category": "command_flag",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "忽略 DaemonSet",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 驱逐 Pod 的选项",
+      "level_2": "📖 `--ignore-daemonsets` 保留 DaemonSet",
+      "level_3": "👀 `kubectl drain node-1 --ignore-daemonsets`",
+      "level_4": "📝 正确答案：kubectl drain node-1 --ignore-daemonsets"
+    },
+    "explanation": "`drain` 驱逐节点上所有可迁移 Pod，常配合 cordon 使用。"
+  },
+  {
+    "id": "k8s-sched-006",
+    "title": "查看 Pod 所在节点",
+    "description": "用 wide 输出查看 NODE 列",
+    "exercise_type": "command",
+    "tech_stack": "kubernetes",
+    "weight": "easy",
+    "category": "scheduling",
+    "subcategory": "调度",
+    "full_code": "kubectl get pods -o wide",
+    "expected": "",
+    "points": [
+      {
+        "id": "flag",
+        "text": "-o wide",
+        "category": "command_flag",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "宽表输出",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 查看节点列的命令",
+      "level_2": "📖 `-o wide` 显示 NODE/IP 列",
+      "level_3": "👀 `kubectl get pods -o wide`",
+      "level_4": "📝 正确答案：kubectl get pods -o wide"
+    },
+    "explanation": "`-o wide` 展示 Pod 被调度到的节点，排障调度结果常用。"
+  },
+  {
+    "id": "k8s-sched-007",
+    "title": "查看调度器日志",
+    "description": "查看 kube-scheduler 日志",
+    "exercise_type": "command",
+    "tech_stack": "kubernetes",
+    "weight": "easy",
+    "category": "scheduler",
+    "subcategory": "调度",
+    "full_code": "kubectl logs -n kube-system -l component=kube-scheduler",
+    "expected": "",
+    "points": [
+      {
+        "id": "flag",
+        "text": "-l component=kube-scheduler",
+        "category": "command_flag",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "按组件标签选日志",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 查看调度器日志的命令",
+      "level_2": "📖 `-l component=kube-scheduler` 选中调度器",
+      "level_3": "👀 `kubectl logs -n kube-system -l component=kube-scheduler`",
+      "level_4": "📝 正确答案：kubectl logs -n kube-system -l component=kube-scheduler"
+    },
+    "explanation": "调度器日志会记录绑定与调度失败原因。"
+  },
+  {
+    "id": "k8s-sched-008",
+    "title": "查看节点标签",
+    "description": "用 show-labels 列出节点标签",
+    "exercise_type": "command",
+    "tech_stack": "kubernetes",
+    "weight": "easy",
+    "category": "node",
+    "subcategory": "调度",
+    "full_code": "kubectl get nodes --show-labels",
+    "expected": "",
+    "points": [
+      {
+        "id": "flag",
+        "text": "--show-labels",
+        "category": "command_flag",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "显示标签",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 查看节点标签的命令",
+      "level_2": "📖 `--show-labels` 显示每节点标签",
+      "level_3": "👀 `kubectl get nodes --show-labels`",
+      "level_4": "📝 正确答案：kubectl get nodes --show-labels"
+    },
+    "explanation": "节点标签是 nodeSelector/亲和性的匹配依据。"
+  },
+  {
+    "id": "k8s-sched-009",
+    "title": "打节点标签",
+    "description": "给 node-1 打 disktype=ssd 标签",
+    "exercise_type": "command",
+    "tech_stack": "kubernetes",
+    "weight": "easy",
+    "category": "node",
+    "subcategory": "调度",
+    "full_code": "kubectl label nodes node-1 disktype=ssd",
+    "expected": "",
+    "points": [
+      {
+        "id": "label",
+        "text": "disktype=ssd",
+        "category": "labels",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "标签键值",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 打节点标签的命令",
+      "level_2": "📖 `kubectl label nodes \u003c节点\u003e \u003c键\u003e=\u003c值\u003e`",
+      "level_3": "👀 `kubectl label nodes node-1 disktype=ssd`",
+      "level_4": "📝 正确答案：kubectl label nodes node-1 disktype=ssd"
+    },
+    "explanation": "给节点打标签后，可用 nodeSelector 把 Pod 调度到这类节点。"
+  },
+  {
+    "id": "k8s-sched-010",
+    "title": "按节点过滤 Pod",
+    "description": "筛选调度到 node-1 的 Pod",
+    "exercise_type": "command",
+    "tech_stack": "kubernetes",
+    "weight": "easy",
+    "category": "scheduling",
+    "subcategory": "调度",
+    "full_code": "kubectl get pods --field-selector spec.nodeName=node-1",
+    "expected": "",
+    "points": [
+      {
+        "id": "flag",
+        "text": "--field-selector spec.nodeName=node-1",
+        "category": "command_flag",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "按字段筛选",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 按节点筛选的命令",
+      "level_2": "📖 `--field-selector spec.nodeName=\u003c节点\u003e`",
+      "level_3": "👀 `kubectl get pods --field-selector spec.nodeName=node-1`",
+      "level_4": "📝 正确答案：kubectl get pods --field-selector spec.nodeName=node-1"
+    },
+    "explanation": "用 field-selector 按 spec.nodeName 找出已调度到某节点的 Pod。"
+  },
+  {
+    "id": "k8s-sched-011",
+    "title": "查看 PriorityClass",
+    "description": "列出优先级类",
+    "exercise_type": "command",
+    "tech_stack": "kubernetes",
+    "weight": "easy",
+    "category": "priority",
+    "subcategory": "调度",
+    "full_code": "kubectl get priorityclasses",
+    "expected": "",
+    "points": [
+      {
+        "id": "res",
+        "text": "priorityclasses",
+        "category": "resource",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "优先级类资源名",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 PriorityClass 资源名",
+      "level_2": "📖 `kubectl get priorityclasses`",
+      "level_3": "👀 `kubectl get priorityclasses`",
+      "level_4": "📝 正确答案：kubectl get priorityclasses"
+    },
+    "explanation": "PriorityClass 决定调度顺序与抢占，值越大优先级越高。"
+  },
+  {
+    "id": "k8s-sched-012",
+    "title": "查看 Pod 调度详情",
+    "description": "describe 查看调度事件与节点",
+    "exercise_type": "command",
+    "tech_stack": "kubernetes",
+    "weight": "easy",
+    "category": "scheduling",
+    "subcategory": "调度",
+    "full_code": "kubectl describe pod web-1",
+    "expected": "",
+    "points": [
+      {
+        "id": "verb",
+        "text": "describe",
+        "category": "command_verb",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "查看详情",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 查看调度详情的命令",
+      "level_2": "📖 `kubectl describe pod \u003c名\u003e`",
+      "level_3": "👀 `kubectl describe pod web-1`",
+      "level_4": "📝 正确答案：kubectl describe pod web-1"
+    },
+    "explanation": "describe 里的 Events 会显示调度失败（如节点资源不足/污点）。"
+  },
+  {
+    "id": "k8s-sched-013",
+    "title": "查看节点资源用量",
+    "description": "查看节点资源占用",
+    "exercise_type": "command",
+    "tech_stack": "kubernetes",
+    "weight": "easy",
+    "category": "node",
+    "subcategory": "调度",
+    "full_code": "kubectl top node",
+    "expected": "",
+    "points": [
+      {
+        "id": "verb",
+        "text": "top",
+        "category": "command_verb",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "查看资源用量",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 查看节点资源用量的命令",
+      "level_2": "📖 `kubectl top node`",
+      "level_3": "👀 `kubectl top node`",
+      "level_4": "📝 正确答案：kubectl top node"
+    },
+    "explanation": "`kubectl top node` 查看节点实际资源占用，判断是否资源不足导致调度失败。"
+  },
+  {
+    "id": "k8s-sched-014",
+    "title": "查看 Pending Pod",
+    "description": "筛选处于 Pending 的 Pod",
+    "exercise_type": "command",
+    "tech_stack": "kubernetes",
+    "weight": "easy",
+    "category": "scheduling",
+    "subcategory": "调度",
+    "full_code": "kubectl get pods -A --field-selector status.phase=Pending",
+    "expected": "",
+    "points": [
+      {
+        "id": "flag",
+        "text": "--field-selector status.phase=Pending",
+        "category": "command_flag",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "按状态筛选",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 查看未调度 Pod 的命令",
+      "level_2": "📖 `--field-selector status.phase=Pending`",
+      "level_3": "👀 `kubectl get pods -A --field-selector status.phase=Pending`",
+      "level_4": "📝 正确答案：kubectl get pods -A --field-selector status.phase=Pending"
+    },
+    "explanation": "Pending 通常是调度器还没成功绑定（无可用节点/资源不足/污点）。"
+  },
+  {
+    "id": "k8s-sched-015",
+    "title": "nodeSelector 定向调度",
+    "description": "只调度到 ssd 标签的节点",
+    "exercise_type": "config",
+    "tech_stack": "kubernetes",
+    "weight": "medium",
+    "category": "affinity",
+    "subcategory": "调度",
+    "full_code": "apiVersion: v1\nkind: Pod\nmetadata:\n  name: ssd\nspec:\n  nodeSelector:\n    disktype: ssd\n  containers:\n  - name: c\n    image: nginx",
+    "expected": "",
+    "points": [
+      {
+        "id": "sel",
+        "text": "disktype: ssd",
+        "category": "selector",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "节点标签键值",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_image_nginx",
+        "text": "nginx",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "补充「容器镜像」",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 `disktype: ssd`",
+      "level_2": "📖 nodeSelector",
+      "level_3": "👀 nodeSelector 匹配节点标签，只有带该标签的节点被选中",
+      "level_4": "📝 正确答案：apiVersion: v1\nkind: Pod\nmetadata:\n  name: ssd\nspec:\n  nodeSelector:\n    disktype: ssd\n  containers:\n  - name: c\n    image: nginx"
+    },
+    "explanation": "`nodeSelector` 按节点标签定向调度，是最简单的调度约束。"
+  },
+  {
+    "id": "k8s-sched-016",
+    "title": "固定节点 nodeName",
+    "description": "直接把 Pod 绑到 node-1",
+    "exercise_type": "config",
+    "tech_stack": "kubernetes",
+    "weight": "medium",
+    "category": "scheduling",
+    "subcategory": "调度",
+    "full_code": "apiVersion: v1\nkind: Pod\nmetadata:\n  name: pinned\nspec:\n  nodeName: node-1\n  containers:\n  - name: c\n    image: nginx",
+    "expected": "",
+    "points": [
+      {
+        "id": "node",
+        "text": "node-1",
+        "category": "node",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "目标节点名",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_image_nginx",
+        "text": "nginx",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "补充「容器镜像」",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 `node-1`",
+      "level_2": "📖 nodeName 直绑",
+      "level_3": "👀 spec.nodeName 绕过调度器直接绑定节点",
+      "level_4": "📝 正确答案：apiVersion: v1\nkind: Pod\nmetadata:\n  name: pinned\nspec:\n  nodeName: node-1\n  containers:\n  - name: c\n    image: nginx"
+    },
+    "explanation": "`spec.nodeName` 直接指定节点，调度器跳过选择过程。"
+  },
+  {
+    "id": "k8s-sched-017",
+    "title": "required 节点亲和性",
+    "description": "硬性要求调度到 ssd 节点",
+    "exercise_type": "config",
+    "tech_stack": "kubernetes",
+    "weight": "medium",
+    "category": "affinity",
+    "subcategory": "调度",
+    "full_code": "apiVersion: v1\nkind: Pod\nmetadata:\n  name: aff\nspec:\n  affinity:\n    nodeAffinity:\n      requiredDuringSchedulingIgnoredDuringExecution:\n        nodeSelectorTerms:\n        - matchExpressions:\n          - key: disktype\n            operator: In\n            values:\n            - ssd\n  containers:\n  - name: c\n    image: nginx",
+    "expected": "",
+    "points": [
+      {
+        "id": "key",
+        "text": "disktype",
+        "category": "labels",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "匹配的节点标签键",
+        "fill_type": "text"
+      },
+      {
+        "id": "op",
+        "text": "In",
+        "category": "operator",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "匹配操作符",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_image_nginx",
+        "text": "nginx",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 0.7,
+        "hint": "补充「容器镜像」",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 `disktype` / `In`",
+      "level_2": "📖 required 亲和性",
+      "level_3": "👀 required 是硬约束，没有满足节点就不调度",
+      "level_4": "📝 正确答案：apiVersion: v1\nkind: Pod\nmetadata:\n  name: aff\nspec:\n  affinity:\n    nodeAffinity:\n      requiredDuringSchedulingIgnoredDuringExecution:\n        nodeSelectorTerms:\n        - matchExpressions:\n          - key: disktype\n            operator: In\n            values:\n            - ssd\n  containers:\n  - name: c\n    image: nginx"
+    },
+    "explanation": "nodeAffinity 的 required 子句是硬性要求，比 nodeSelector 支持 In/NotIn 等操作符。"
+  },
+  {
+    "id": "k8s-sched-018",
+    "title": "preferred 节点亲和性",
+    "description": "优先调度到 ssd 节点但不强制",
+    "exercise_type": "config",
+    "tech_stack": "kubernetes",
+    "weight": "medium",
+    "category": "affinity",
+    "subcategory": "调度",
+    "full_code": "apiVersion: v1\nkind: Pod\nmetadata:\n  name: pref\nspec:\n  affinity:\n    nodeAffinity:\n      preferredDuringSchedulingIgnoredDuringExecution:\n      - weight: 100\n        preference:\n          matchExpressions:\n          - key: disktype\n            operator: In\n            values:\n            - ssd\n  containers:\n  - name: c\n    image: nginx",
+    "expected": "",
+    "points": [
+      {
+        "id": "weight",
+        "text": "100",
+        "category": "weight",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "偏好权重",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_image_nginx",
+        "text": "nginx",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 0.7,
+        "hint": "补充「容器镜像」",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 `100`",
+      "level_2": "📖 preferred 亲和性",
+      "level_3": "👀 preferred 是软偏好，权重影响但不强制",
+      "level_4": "📝 正确答案：apiVersion: v1\nkind: Pod\nmetadata:\n  name: pref\nspec:\n  affinity:\n    nodeAffinity:\n      preferredDuringSchedulingIgnoredDuringExecution:\n      - weight: 100\n        preference:\n          matchExpressions:\n          - key: disktype\n            operator: In\n            values:\n            - ssd\n  containers:\n  - name: c\n    image: nginx"
+    },
+    "explanation": "preferred 子句按 weight 加分，节点不满足也能调度，只是优先级低。"
+  },
+  {
+    "id": "k8s-sched-019",
+    "title": "Pod 亲和性",
+    "description": "与 web 标签的 Pod 同节点调度",
+    "exercise_type": "config",
+    "tech_stack": "kubernetes",
+    "weight": "medium",
+    "category": "affinity",
+    "subcategory": "调度",
+    "full_code": "apiVersion: v1\nkind: Pod\nmetadata:\n  name: co\nspec:\n  affinity:\n    podAffinity:\n      requiredDuringSchedulingIgnoredDuringExecution:\n      - labelSelector:\n          matchExpressions:\n          - key: app\n            operator: In\n            values:\n            - web\n        topologyKey: kubernetes.io/hostname\n  containers:\n  - name: c\n    image: nginx",
+    "expected": "",
+    "points": [
+      {
+        "id": "topo",
+        "text": "kubernetes.io/hostname",
+        "category": "topology",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "拓扑键",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_image_nginx",
+        "text": "nginx",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 0.7,
+        "hint": "补充「容器镜像」",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 `kubernetes.io/hostname`",
+      "level_2": "📖 podAffinity",
+      "level_3": "👀 与满足标签的 Pod 在相同拓扑域内调度",
+      "level_4": "📝 正确答案：apiVersion: v1\nkind: Pod\nmetadata:\n  name: co\nspec:\n  affinity:\n    podAffinity:\n      requiredDuringSchedulingIgnoredDuringExecution:\n      - labelSelector:\n          matchExpressions:\n          - key: app\n            operator: In\n            values:\n            - web\n        topologyKey: kubernetes.io/hostname\n  containers:\n  - name: c\n    image: nginx"
+    },
+    "explanation": "podAffinity 让新 Pod 与已有 Pod 靠近（同节点/同区域）。"
+  },
+  {
+    "id": "k8s-sched-020",
+    "title": "Pod 反亲和性",
+    "description": "避免与 web Pod 同节点",
+    "exercise_type": "config",
+    "tech_stack": "kubernetes",
+    "weight": "medium",
+    "category": "affinity",
+    "subcategory": "调度",
+    "full_code": "apiVersion: v1\nkind: Pod\nmetadata:\n  name: anti\nspec:\n  affinity:\n    podAntiAffinity:\n      requiredDuringSchedulingIgnoredDuringExecution:\n      - labelSelector:\n          matchExpressions:\n          - key: app\n            operator: In\n            values:\n            - web\n        topologyKey: kubernetes.io/hostname\n  containers:\n  - name: c\n    image: nginx",
+    "expected": "",
+    "points": [
+      {
+        "id": "anti",
+        "text": "podAntiAffinity",
+        "category": "affinity",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "反亲和字段",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_image_nginx",
+        "text": "nginx",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 0.7,
+        "hint": "补充「容器镜像」",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 `podAntiAffinity`",
+      "level_2": "📖 podAntiAffinity",
+      "level_3": "👀 避免与特定 Pod 在同一拓扑域，常用于分散副本",
+      "level_4": "📝 正确答案：apiVersion: v1\nkind: Pod\nmetadata:\n  name: anti\nspec:\n  affinity:\n    podAntiAffinity:\n      requiredDuringSchedulingIgnoredDuringExecution:\n      - labelSelector:\n          matchExpressions:\n          - key: app\n            operator: In\n            values:\n            - web\n        topologyKey: kubernetes.io/hostname\n  containers:\n  - name: c\n    image: nginx"
+    },
+    "explanation": "podAntiAffinity 让副本分散到不同节点/区域，提升可用性。"
+  },
+  {
+    "id": "k8s-sched-021",
+    "title": "容忍污点",
+    "description": "容忍 NoSchedule 污点以便调度",
+    "exercise_type": "config",
+    "tech_stack": "kubernetes",
+    "weight": "medium",
+    "category": "taint",
+    "subcategory": "调度",
+    "full_code": "apiVersion: v1\nkind: Pod\nmetadata:\n  name: util\nspec:\n  tolerations:\n  - key: gpu\n    operator: Exists\n    effect: NoSchedule\n  containers:\n  - name: c\n    image: nginx",
+    "expected": "",
+    "points": [
+      {
+        "id": "effect",
+        "text": "NoSchedule",
+        "category": "taint_effect",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "污点效果",
+        "fill_type": "text"
+      },
+      {
+        "id": "op",
+        "text": "Exists",
+        "category": "operator",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "容忍操作符",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_image_nginx",
+        "text": "nginx",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 0.7,
+        "hint": "补充「容器镜像」",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 `NoSchedule` / `Exists`",
+      "level_2": "📖 tolerations",
+      "level_3": "👀 容忍匹配污点的 key/effect 才能调度",
+      "level_4": "📝 正确答案：apiVersion: v1\nkind: Pod\nmetadata:\n  name: util\nspec:\n  tolerations:\n  - key: gpu\n    operator: Exists\n    effect: NoSchedule\n  containers:\n  - name: c\n    image: nginx"
+    },
+    "explanation": "Pod 声明 tolerations 匹配节点污点后，才能被调度到该节点。"
+  },
+  {
+    "id": "k8s-sched-022",
+    "title": "容忍 key 匹配",
+    "description": "只容忍指定 key 的污点",
+    "exercise_type": "config",
+    "tech_stack": "kubernetes",
+    "weight": "medium",
+    "category": "taint",
+    "subcategory": "调度",
+    "full_code": "apiVersion: v1\nkind: Pod\nmetadata:\n  name: gpu\nspec:\n  tolerations:\n  - key: gpu\n    operator: Equal\n    value: \"true\"\n    effect: NoSchedule\n  containers:\n  - name: c\n    image: nginx",
+    "expected": "",
+    "points": [
+      {
+        "id": "key",
+        "text": "gpu",
+        "category": "taint_key",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "污点键",
+        "fill_type": "text"
+      },
+      {
+        "id": "val",
+        "text": "true",
+        "category": "taint_value",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "污点值",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_image_nginx",
+        "text": "nginx",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 0.7,
+        "hint": "补充「容器镜像」",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 `gpu` / `\"true\"`",
+      "level_2": "📖 tolerations 精确匹配",
+      "level_3": "👀 Equal 操作符要求 key+value 都匹配",
+      "level_4": "📝 正确答案：apiVersion: v1\nkind: Pod\nmetadata:\n  name: gpu\nspec:\n  tolerations:\n  - key: gpu\n    operator: Equal\n    value: \"true\"\n    effect: NoSchedule\n  containers:\n  - name: c\n    image: nginx"
+    },
+    "explanation": "Equal 容忍要求污点 key 与 value 都匹配，比 Exists 更精确。"
+  },
+  {
+    "id": "k8s-sched-023",
+    "title": "PriorityClass 定义",
+    "description": "定义高优先级类",
+    "exercise_type": "config",
+    "tech_stack": "kubernetes",
+    "weight": "medium",
+    "category": "priority",
+    "subcategory": "调度",
+    "full_code": "apiVersion: scheduling.k8s.io/v1\nkind: PriorityClass\nmetadata:\n  name: high-priority\nvalue: 1000000\nglobalDefault: false",
+    "expected": "",
+    "points": [
+      {
+        "id": "api",
+        "text": "scheduling.k8s.io/v1",
+        "category": "api_version",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "PriorityClass 的 API 组",
+        "fill_type": "text"
+      },
+      {
+        "id": "val",
+        "text": "1000000",
+        "category": "priority",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "优先级数值",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 `scheduling.k8s.io/v1` / `1000000`",
+      "level_2": "📖 PriorityClass",
+      "level_3": "👀 值越大优先级越高，可抢占低优先级 Pod",
+      "level_4": "📝 正确答案：apiVersion: scheduling.k8s.io/v1\nkind: PriorityClass\nmetadata:\n  name: high-priority\nvalue: 1000000\nglobalDefault: false"
+    },
+    "explanation": "PriorityClass 定义优先级，调度器先调度高优先级，必要时抢占。"
+  },
+  {
+    "id": "k8s-sched-024",
+    "title": "Pod 引用优先级",
+    "description": "指定 pod 使用 high-priority 类",
+    "exercise_type": "config",
+    "tech_stack": "kubernetes",
+    "weight": "medium",
+    "category": "priority",
+    "subcategory": "调度",
+    "full_code": "apiVersion: v1\nkind: Pod\nmetadata:\n  name: hp\nspec:\n  priorityClassName: high-priority\n  containers:\n  - name: c\n    image: nginx",
+    "expected": "",
+    "points": [
+      {
+        "id": "pri",
+        "text": "high-priority",
+        "category": "priority",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "优先级类名",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_image_nginx",
+        "text": "nginx",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 0.7,
+        "hint": "补充「容器镜像」",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 `high-priority`",
+      "level_2": "📖 priorityClassName",
+      "level_3": "👀 spec.priorityClassName 引用 PriorityClass",
+      "level_4": "📝 正确答案：apiVersion: v1\nkind: Pod\nmetadata:\n  name: hp\nspec:\n  priorityClassName: high-priority\n  containers:\n  - name: c\n    image: nginx"
+    },
+    "explanation": "Pod 通过 priorityClassName 指定优先级，参与调度排队与抢占。"
+  },
+  {
+    "id": "k8s-sched-025",
+    "title": "拓扑分布约束",
+    "description": "副本按可用区分散",
+    "exercise_type": "config",
+    "tech_stack": "kubernetes",
+    "weight": "medium",
+    "category": "topology",
+    "subcategory": "调度",
+    "full_code": "apiVersion: v1\nkind: Pod\nmetadata:\n  name: web\n  labels:\n    app: web\nspec:\n  topologySpreadConstraints:\n  - maxSkew: 1\n    topologyKey: topology.kubernetes.io/zone\n    whenUnsatisfiable: ScheduleAnyway\n    labelSelector:\n      matchLabels:\n        app: web\n  containers:\n  - name: web\n    image: nginx",
+    "expected": "",
+    "points": [
+      {
+        "id": "skew",
+        "text": "1",
+        "category": "topology",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "最大不均衡数",
+        "fill_type": "text"
+      },
+      {
+        "id": "key",
+        "text": "topology.kubernetes.io/zone",
+        "category": "topology",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "拓扑键",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_app_web",
+        "text": "web",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 0.7,
+        "hint": "补充「标签 app 的值」",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_image_nginx",
+        "text": "nginx",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "补充「容器镜像」",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 `1` / `topology.kubernetes.io/zone`",
+      "level_2": "📖 TopologySpread",
+      "level_3": "👀 控制副本在各拓扑域的分布，避免集中",
+      "level_4": "📝 正确答案：apiVersion: v1\nkind: Pod\nmetadata:\n  name: web\n  labels:\n    app: web\nspec:\n  topologySpreadConstraints:\n  - maxSkew: 1\n    topologyKey: topology.kubernetes.io/zone\n    whenUnsatisfiable: ScheduleAnyway\n    labelSelector:\n      matchLabels:\n        app: web\n  containers:\n  - name: web\n    image: nginx"
+    },
+    "explanation": "TopologySpreadConstraints 让副本按区域/节点均匀分布。"
+  },
+  {
+    "id": "k8s-sched-026",
+    "title": "资源请求（调度依据）",
+    "description": "声明 CPU 请求供调度",
+    "exercise_type": "config",
+    "tech_stack": "kubernetes",
+    "weight": "medium",
+    "category": "resources",
+    "subcategory": "调度",
+    "full_code": "apiVersion: v1\nkind: Pod\nmetadata:\n  name: r\nspec:\n  containers:\n  - name: c\n    image: nginx\n    resources:\n      requests:\n        cpu: \"500m\"\n        memory: \"256Mi\"",
+    "expected": "",
+    "points": [
+      {
+        "id": "cpu",
+        "text": "500m",
+        "category": "resource",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "CPU 请求",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_image_nginx",
+        "text": "nginx",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "补充「容器镜像」",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_memory_256Mi",
+        "text": "256Mi",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "补充「内存配额」",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 `500m`",
+      "level_2": "📖 resources.requests",
+      "level_3": "👀 调度器按 requests 评估节点剩余容量",
+      "level_4": "📝 正确答案：apiVersion: v1\nkind: Pod\nmetadata:\n  name: r\nspec:\n  containers:\n  - name: c\n    image: nginx\n    resources:\n      requests:\n        cpu: \"500m\"\n        memory: \"256Mi\""
+    },
+    "explanation": "调度器只依据 requests（而非 limits）判断节点是否放得下。"
+  },
+  {
+    "id": "k8s-sched-027",
+    "title": "自定义调度器",
+    "description": "用自定义 schedulerName 调度",
+    "exercise_type": "config",
+    "tech_stack": "kubernetes",
+    "weight": "medium",
+    "category": "scheduler",
+    "subcategory": "调度",
+    "full_code": "apiVersion: v1\nkind: Pod\nmetadata:\n  name: custom\nspec:\n  schedulerName: my-scheduler\n  containers:\n  - name: c\n    image: nginx",
+    "expected": "",
+    "points": [
+      {
+        "id": "name",
+        "text": "my-scheduler",
+        "category": "scheduler",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "自定义调度器名",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_image_nginx",
+        "text": "nginx",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 0.7,
+        "hint": "补充「容器镜像」",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 `my-scheduler`",
+      "level_2": "📖 schedulerName",
+      "level_3": "👀 默认调度器是 default-scheduler，可指定其它调度器",
+      "level_4": "📝 正确答案：apiVersion: v1\nkind: Pod\nmetadata:\n  name: custom\nspec:\n  schedulerName: my-scheduler\n  containers:\n  - name: c\n    image: nginx"
+    },
+    "explanation": "spec.schedulerName 指定自定义调度器，实现个性化的调度策略。"
+  },
+  {
+    "id": "k8s-sched-028",
+    "title": "DaemonSet 逐节点调度",
+    "description": "DaemonSet 在每个节点各跑一个",
+    "exercise_type": "config",
+    "tech_stack": "kubernetes",
+    "weight": "medium",
+    "category": "daemonset",
+    "subcategory": "调度",
+    "full_code": "apiVersion: apps/v1\nkind: DaemonSet\nmetadata:\n  name: fluentd\nspec:\n  selector:\n    matchLabels:\n      app: fluentd\n  template:\n    metadata:\n      labels:\n        app: fluentd\n    spec:\n      containers:\n      - name: fluentd\n        image: fluent/fluentd",
+    "expected": "",
+    "points": [
+      {
+        "id": "kind",
+        "text": "DaemonSet",
+        "category": "kind",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "资源类型",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_app_fluentd",
+        "text": "fluentd",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "补充「标签 app 的值」",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 `DaemonSet`",
+      "level_2": "📖 DaemonSet 调度",
+      "level_3": "👀 DaemonSet 在每个节点各放一个 Pod，不经过常规调度选择",
+      "level_4": "📝 正确答案：apiVersion: apps/v1\nkind: DaemonSet\nmetadata:\n  name: fluentd\nspec:\n  selector:\n    matchLabels:\n      app: fluentd\n  template:\n    metadata:\n      labels:\n        app: fluentd\n    spec:\n      containers:\n      - name: fluentd\n        image: fluent/fluentd"
+    },
+    "explanation": "DaemonSet 由控制器保证每节点一个，调度器不做放置决策。"
+  },
+  {
+    "id": "k8s-sched-029",
+    "title": "PodDisruptionBudget",
+    "description": "保证可用副本数",
+    "exercise_type": "config",
+    "tech_stack": "kubernetes",
+    "weight": "medium",
+    "category": "pdb",
+    "subcategory": "调度",
+    "full_code": "apiVersion: policy/v1\nkind: PodDisruptionBudget\nmetadata:\n  name: web-pdb\nspec:\n  minAvailable: 2\n  selector:\n    matchLabels:\n      app: web",
+    "expected": "",
+    "points": [
+      {
+        "id": "min",
+        "text": "2",
+        "category": "pdb",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "最少可用副本数",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_app_web",
+        "text": "web",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 0.7,
+        "hint": "补充「标签 app 的值」",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 `2`",
+      "level_2": "📖 PodDisruptionBudget",
+      "level_3": "👀 PDB 限制自愿驱逐（节点维护）时可同时不可用数量",
+      "level_4": "📝 正确答案：apiVersion: policy/v1\nkind: PodDisruptionBudget\nmetadata:\n  name: web-pdb\nspec:\n  minAvailable: 2\n  selector:\n    matchLabels:\n      app: web"
+    },
+    "explanation": "PDB 保证自愿中断（如 drain）时仍有足够副本在线。"
+  },
+  {
+    "id": "k8s-sched-030",
+    "title": "污点 + 容忍组合",
+    "description": "节点污点与 Pod 容忍配合",
+    "exercise_type": "config",
+    "tech_stack": "kubernetes",
+    "weight": "medium",
+    "category": "taint",
+    "subcategory": "调度",
+    "full_code": "apiVersion: v1\nkind: Pod\nmetadata:\n  name: dedicated\nspec:\n  nodeSelector:\n    dedicated: infra\n  tolerations:\n  - key: dedicated\n    operator: Exists\n    effect: NoSchedule\n  containers:\n  - name: c\n    image: nginx",
+    "expected": "",
+    "points": [
+      {
+        "id": "tol",
+        "text": "dedicated",
+        "category": "taint_key",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "容忍的污点键",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_image_nginx",
+        "text": "nginx",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 0.7,
+        "hint": "补充「容器镜像」",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 `dedicated`",
+      "level_2": "📖 污点 + nodeSelector",
+      "level_3": "👀 节点打污点拒绝普通 Pod，专用 Pod 用容忍 + 标签定向",
+      "level_4": "📝 正确答案：apiVersion: v1\nkind: Pod\nmetadata:\n  name: dedicated\nspec:\n  nodeSelector:\n    dedicated: infra\n  tolerations:\n  - key: dedicated\n    operator: Exists\n    effect: NoSchedule\n  containers:\n  - name: c\n    image: nginx"
+    },
+    "explanation": "污点阻止默认 Pod，专用 Pod 用 tolerations 匹配并通过 nodeSelector 定向。"
+  }
+]

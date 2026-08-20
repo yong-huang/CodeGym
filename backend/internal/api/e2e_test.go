@@ -347,7 +347,10 @@ func TestE2E_Favorites(t *testing.T) {
 	// a different user must see no favorites (isolation)
 	req2, _ := http.NewRequest("GET", base+"/favorites", nil)
 	req2.Header.Set("X-User-Id", "other-user")
-	resp2, _ := http.DefaultClient.Do(req2)
+	resp2, err := http.DefaultClient.Do(req2)
+	if err != nil {
+		t.Fatalf("get other-user favorites: %v", err)
+	}
 	defer resp2.Body.Close()
 	var other []model.FavoriteItem
 	json.NewDecoder(resp2.Body).Decode(&other)
@@ -369,8 +372,8 @@ func TestE2E_ExerciseListAndVariant(t *testing.T) {
 		PointCount   int    `json:"point_count"`
 	}
 	doJSON(t, "GET", base+"/exercises", nil, &list)
-	if len(list) != 435 {
-		t.Fatalf("expected 435 exercises (405 + 30 Prometheus), got %d", len(list))
+	if len(list) != 465 {
+		t.Fatalf("expected 465 exercises (435 + 30 FastAPI), got %d", len(list))
 	}
 	var ids []string
 	for _, ex := range list {
@@ -389,8 +392,8 @@ func TestE2E_ExerciseListAndVariant(t *testing.T) {
 	// 2. filter by tech stack
 	var pyList []map[string]any
 	doJSON(t, "GET", base+"/exercises?tech_stack=python", nil, &pyList)
-	if len(pyList) != 54 {
-		t.Errorf("expected 54 python exercises, got %d", len(pyList))
+	if len(pyList) != 84 {
+		t.Errorf("expected 84 python exercises (54 基础 + 30 FastAPI), got %d", len(pyList))
 	}
 
 // 3. variant masking + weight bounds
@@ -1084,8 +1087,8 @@ func TestE2E_ExportImport(t *testing.T) {
 	if err := json.NewDecoder(resp.Body).Decode(&exported); err != nil {
 		t.Fatal(err)
 	}
-	if len(exported) != 435 {
-		t.Fatalf("export count = %d, want 435", len(exported))
+	if len(exported) != 465 {
+		t.Fatalf("export count = %d, want 465", len(exported))
 	}
 
 	// import: delete one exercise, then restore it from the exported blob

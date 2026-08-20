@@ -1,0 +1,1502 @@
+[
+  {
+    "id": "py-basics-001",
+    "title": "Hello Python",
+    "description": "输出问候语",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "beginner",
+    "category": "syntax",
+    "subcategory": "基础",
+    "full_code": "print(\"Hello, Python\")",
+    "expected": "Hello, Python",
+    "points": [
+      {
+        "id": "msg",
+        "text": "Hello, Python",
+        "category": "string",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "要输出的字符串",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 输出一个字符串",
+      "level_2": "📖 用 `print(\"Hello, Python\")`",
+      "level_3": "👀 `print(\"Hello, Python\")`",
+      "level_4": "📝 正确答案：`\"Hello, Python\"`"
+    },
+    "explanation": "Python 用 `print()` 输出，字符串用引号包裹。"
+  },
+  {
+    "id": "py-basics-002",
+    "title": "变量与 f-string",
+    "description": "用 f-string 格式化字符串",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "syntax",
+    "subcategory": "基础",
+    "full_code": "name = \"Alice\"\nprint(f\"Hi, {name}!\")",
+    "expected": "Hi, Alice!",
+    "points": [
+      {
+        "id": "fstr",
+        "text": "{name}",
+        "category": "string",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "f-string 中插入变量的写法",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 f-string 插入变量",
+      "level_2": "📖 `f\"Hi, {name}!\"`",
+      "level_3": "👀 `f\"Hi, {name}!\"`",
+      "level_4": "📝 正确答案：`{name}`"
+    },
+    "explanation": "f-string 以 `f` 开头，用 `{}` 插入变量或表达式。"
+  },
+  {
+    "id": "py-basics-003",
+    "title": "幂运算",
+    "description": "计算 2 的 10 次方",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "beginner",
+    "category": "arithmetic",
+    "subcategory": "基础",
+    "full_code": "print(2 ** 10)",
+    "expected": "1024",
+    "points": [
+      {
+        "id": "exp",
+        "text": "2 ** 10",
+        "category": "expression",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "幂运算表达式",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 幂运算",
+      "level_2": "📖 `**` 是幂运算符",
+      "level_3": "👀 `print(2 ** 10)`",
+      "level_4": "📝 正确答案：`2 ** 10`"
+    },
+    "explanation": "`**` 计算幂，`2 ** 10 = 1024`；`//` 整除、`%` 取模。"
+  },
+  {
+    "id": "py-basics-004",
+    "title": "整除与取模",
+    "description": "计算商和余数",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "beginner",
+    "category": "arithmetic",
+    "subcategory": "基础",
+    "full_code": "print(17 // 5, 17 % 5)",
+    "expected": "3 2",
+    "points": [
+      {
+        "id": "mod",
+        "text": "17 % 5",
+        "category": "expression",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "取余数表达式",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 整除与取模",
+      "level_2": "📖 `//` 整除，`%` 取余",
+      "level_3": "👀 `print(17 // 5, 17 % 5)`",
+      "level_4": "📝 正确答案：`17 % 5`"
+    },
+    "explanation": "`17 // 5 = 3`（整除），`17 % 5 = 2`（余数）。"
+  },
+  {
+    "id": "py-basics-005",
+    "title": "字符串转整数",
+    "description": "把字符串转成整数再运算",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "conversion",
+    "subcategory": "基础",
+    "full_code": "s = \"42\"\nn = int(s)\nprint(n + 1)",
+    "expected": "43",
+    "points": [
+      {
+        "id": "conv",
+        "text": "int(s)",
+        "category": "conversion",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "字符串转整数的函数",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 类型转换",
+      "level_2": "📖 `int()` 把字符串/浮点转整数",
+      "level_3": "👀 `n = int(s)`",
+      "level_4": "📝 正确答案：`int(s)`"
+    },
+    "explanation": "`int()` 将内容为数字的字符串转换为整数。"
+  },
+  {
+    "id": "py-basics-006",
+    "title": "格式化小数",
+    "description": "用 f-string 保留两位小数",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "format",
+    "subcategory": "基础",
+    "full_code": "price = 3.14159\nprint(f\"{price:.2f}\")",
+    "expected": "3.14",
+    "points": [
+      {
+        "id": "fmt",
+        "text": "{price:.2f}",
+        "category": "format",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "保留两位小数的格式",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 格式化小数",
+      "level_2": "📖 `:.2f` 保留两位小数",
+      "level_3": "👀 `print(f\"{price:.2f}\")`",
+      "level_4": "📝 正确答案：`{price:.2f}`"
+    },
+    "explanation": "`:.2f` 把浮点按保留 2 位小数输出。"
+  },
+  {
+    "id": "py-basics-007",
+    "title": "if 判断奇偶",
+    "description": "判断 7 是偶数还是奇数",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "beginner",
+    "category": "if",
+    "subcategory": "基础",
+    "full_code": "n = 7\nif n % 2 == 0:\n    print(\"even\")\nelse:\n    print(\"odd\")",
+    "expected": "odd",
+    "points": [
+      {
+        "id": "cond",
+        "text": "n % 2 == 0",
+        "category": "condition",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "偶数的判断条件",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 if 条件",
+      "level_2": "📖 偶数条件 `n % 2 == 0`",
+      "level_3": "👀 `if n % 2 == 0:`",
+      "level_4": "📝 正确答案：`n % 2 == 0`"
+    },
+    "explanation": "`if` 分支靠缩进（4 空格）划分代码块，`elif` 中间判断。"
+  },
+  {
+    "id": "py-basics-008",
+    "title": "成绩等级",
+    "description": "用 if-elif-else 判断分数等级",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "if",
+    "subcategory": "基础",
+    "full_code": "score = 85\nif score \u003e= 90:\n    print(\"A\")\nelif score \u003e= 80:\n    print(\"B\")\nelif score \u003e= 70:\n    print(\"C\")\nelse:\n    print(\"D\")",
+    "expected": "B",
+    "points": [
+      {
+        "id": "cond",
+        "text": "score \u003e= 80",
+        "category": "condition",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "B 等级的条件",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 elif 分支",
+      "level_2": "📖 85 处于 80-89 区间",
+      "level_3": "👀 `elif score \u003e= 80: print(\"B\")`",
+      "level_4": "📝 正确答案：`score \u003e= 80`"
+    },
+    "explanation": "`elif` 依次短路判断，从高到低写条件更清晰。"
+  },
+  {
+    "id": "py-basics-009",
+    "title": "for 求和",
+    "description": "用 for 计算 1 到 10 的和",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "for",
+    "subcategory": "基础",
+    "full_code": "total = 0\nfor i in range(1, 11):\n    total += i\nprint(total)",
+    "expected": "55",
+    "points": [
+      {
+        "id": "range",
+        "text": "range(1, 11)",
+        "category": "range",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "1 到 10（含头不含尾）",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 range 范围",
+      "level_2": "📖 `range(1, 11)` 产生 1..10",
+      "level_3": "👀 `total += i`",
+      "level_4": "📝 正确答案：`range(1, 11)`"
+    },
+    "explanation": "`range(1, 11)` 含 1 不含 11；`total += i` 累加。"
+  },
+  {
+    "id": "py-basics-010",
+    "title": "while 循环",
+    "description": "用 while 计数到 5",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "while",
+    "subcategory": "基础",
+    "full_code": "n = 0\nwhile n \u003c 5:\n    n += 1\nprint(n)",
+    "expected": "5",
+    "points": [
+      {
+        "id": "cond",
+        "text": "n \u003c 5",
+        "category": "condition",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "循环继续条件",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 while 条件",
+      "level_2": "📖 `n \u003c 5` 时继续循环",
+      "level_3": "👀 `n += 1`",
+      "level_4": "📝 正确答案：`n \u003c 5`"
+    },
+    "explanation": "`while` 在条件为真时反复执行；要确保条件终将变假避免死循环。"
+  },
+  {
+    "id": "py-basics-011",
+    "title": "break 跳出",
+    "description": "遇到 3 就跳出循环",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "control_flow",
+    "subcategory": "基础",
+    "full_code": "s = \"\"\nfor i in range(1, 10):\n    if i \u003e 3:\n        break\n    s += str(i)\nprint(s)",
+    "expected": "123",
+    "points": [
+      {
+        "id": "bk",
+        "text": "break",
+        "category": "keyword",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "跳出循环的关键字",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 跳出循环",
+      "level_2": "📖 `break` 立即结束循环",
+      "level_3": "👀 `if i \u003e 3: break`",
+      "level_4": "📝 正确答案：`break`"
+    },
+    "explanation": "`break` 提前终止整个循环，不再执行后续迭代。"
+  },
+  {
+    "id": "py-basics-012",
+    "title": "continue 跳过",
+    "description": "跳过偶数只打印奇数",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "control_flow",
+    "subcategory": "基础",
+    "full_code": "for i in range(1, 6):\n    if i % 2 == 0:\n        continue\n    print(i)",
+    "expected": "1\n3\n5",
+    "points": [
+      {
+        "id": "ct",
+        "text": "continue",
+        "category": "keyword",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "跳过本次循环",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 跳过本次",
+      "level_2": "📖 `continue` 跳到下一次循环",
+      "level_3": "👀 `if i % 2 == 0: continue`",
+      "level_4": "📝 正确答案：`continue`"
+    },
+    "explanation": "`continue` 跳过当前迭代剩余代码，进入下一次迭代。"
+  },
+  {
+    "id": "py-basics-013",
+    "title": "列表索引",
+    "description": "访问列表下标元素",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "beginner",
+    "category": "list",
+    "subcategory": "基础",
+    "full_code": "lst = [10, 20, 30]\nprint(lst[1])",
+    "expected": "20",
+    "points": [
+      {
+        "id": "idx",
+        "text": "lst[1]",
+        "category": "list",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "取第 2 个元素",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 列表下标",
+      "level_2": "📖 下标从 0 开始",
+      "level_3": "👀 `lst[1]` = 20",
+      "level_4": "📝 正确答案：`lst[1]`"
+    },
+    "explanation": "列表下标从 0 开始，`lst[1]` 是第二个元素。"
+  },
+  {
+    "id": "py-basics-014",
+    "title": "append 追加",
+    "description": "向列表追加元素",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "beginner",
+    "category": "list",
+    "subcategory": "基础",
+    "full_code": "lst = [1]\nlst.append(2)\nlst.append(3)\nprint(lst)",
+    "expected": "[1, 2, 3]",
+    "points": [
+      {
+        "id": "app",
+        "text": "append",
+        "category": "method",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "追加元素的方法",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 追加元素",
+      "level_2": "📖 `lst.append(2)` 加到末尾",
+      "level_3": "👀 `print(lst)`",
+      "level_4": "📝 正确答案：`append`"
+    },
+    "explanation": "`list.append` 在列表末尾追加元素。"
+  },
+  {
+    "id": "py-basics-015",
+    "title": "列表切片",
+    "description": "取切片 data[1:4]",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "list",
+    "subcategory": "基础",
+    "full_code": "data = [0, 1, 2, 3, 4]\nprint(data[1:4])",
+    "expected": "[1, 2, 3]",
+    "points": [
+      {
+        "id": "slice",
+        "text": "data[1:4]",
+        "category": "slice",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "含首不含尾的切片",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 列表切片",
+      "level_2": "📖 `data[1:4]` 取下标 1..3",
+      "level_3": "👀 `print(data[1:4])`",
+      "level_4": "📝 正确答案：`data[1:4]`"
+    },
+    "explanation": "切片 `[开始:结束]` 含开始不含结束；`data[-1]` 取末尾。"
+  },
+  {
+    "id": "py-basics-016",
+    "title": "列表推导式平方",
+    "description": "用推导式生成平方列表",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "comprehension",
+    "subcategory": "基础",
+    "full_code": "print([x * x for x in range(5)])",
+    "expected": "[0, 1, 4, 9, 16]",
+    "points": [
+      {
+        "id": "expr",
+        "text": "x * x",
+        "category": "expression",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "每个元素的平方",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 列表推导式",
+      "level_2": "📖 `[x * x for x in ...]` 逐个平方",
+      "level_3": "👀 `[x * x for x in range(5)]`",
+      "level_4": "📝 正确答案：`x * x`"
+    },
+    "explanation": "列表推导式 `[表达式 for 变量 in 序列]` 简洁生成新列表。"
+  },
+  {
+    "id": "py-basics-017",
+    "title": "推导式筛选偶数",
+    "description": "用推导式 + if 筛选偶数",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "comprehension",
+    "subcategory": "基础",
+    "full_code": "print([x for x in range(10) if x % 2 == 0])",
+    "expected": "[0, 2, 4, 6, 8]",
+    "points": [
+      {
+        "id": "cond",
+        "text": "x % 2 == 0",
+        "category": "condition",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "筛选偶数的条件",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 推导式筛选",
+      "level_2": "📖 `if` 过滤元素",
+      "level_3": "👀 `[x for x in range(10) if x % 2 == 0]`",
+      "level_4": "📝 正确答案：`x % 2 == 0`"
+    },
+    "explanation": "推导式后跟 `if` 可过滤，只保留满足条件的元素。"
+  },
+  {
+    "id": "py-basics-018",
+    "title": "字符串长度",
+    "description": "用 len 求字符串长度",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "beginner",
+    "category": "builtins",
+    "subcategory": "基础",
+    "full_code": "print(len(\"python\"))",
+    "expected": "6",
+    "points": [
+      {
+        "id": "len",
+        "text": "len",
+        "category": "function",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "长度函数",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 求长度",
+      "level_2": "📖 `len(\"python\")` = 6",
+      "level_3": "👀 `print(len(\"python\"))`",
+      "level_4": "📝 正确答案：`len`"
+    },
+    "explanation": "`len()` 返回序列的长度（字符串/列表/元组等）。"
+  },
+  {
+    "id": "py-basics-019",
+    "title": "sum 求和",
+    "description": "用 sum 计算列表之和",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "beginner",
+    "category": "builtins",
+    "subcategory": "基础",
+    "full_code": "print(sum([1, 2, 3, 4, 5]))",
+    "expected": "15",
+    "points": [
+      {
+        "id": "sum",
+        "text": "sum",
+        "category": "function",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "求和函数",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 求和",
+      "level_2": "📖 `sum([1..5])` = 15",
+      "level_3": "👀 `print(sum([1, 2, 3, 4, 5]))`",
+      "level_4": "📝 正确答案：`sum`"
+    },
+    "explanation": "`sum()` 对可迭代对象求和。"
+  },
+  {
+    "id": "py-basics-020",
+    "title": "max 与 min",
+    "description": "求最大值与最小值",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "beginner",
+    "category": "builtins",
+    "subcategory": "基础",
+    "full_code": "print(max(3, 7, 2), min(3, 7, 2))",
+    "expected": "7 2",
+    "points": [
+      {
+        "id": "max",
+        "text": "max",
+        "category": "function",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "最大值函数",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 取最大/最小",
+      "level_2": "📖 `max(3,7,2)` = 7",
+      "level_3": "👀 `print(max(3, 7, 2), min(3, 7, 2))`",
+      "level_4": "📝 正确答案：`max`"
+    },
+    "explanation": "`max()`/`min()` 返回最大/最小值。"
+  },
+  {
+    "id": "py-basics-021",
+    "title": "sorted 排序",
+    "description": "对列表排序",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "builtins",
+    "subcategory": "基础",
+    "full_code": "print(sorted([3, 1, 2]))",
+    "expected": "[1, 2, 3]",
+    "points": [
+      {
+        "id": "sort",
+        "text": "sorted",
+        "category": "function",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "排序函数",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 排序",
+      "level_2": "📖 `sorted` 返回新排序列表",
+      "level_3": "👀 `print(sorted([3, 1, 2]))`",
+      "level_4": "📝 正确答案：`sorted`"
+    },
+    "explanation": "`sorted()` 返回排好序的新列表，不修改原列表。"
+  },
+  {
+    "id": "py-basics-022",
+    "title": "元组访问",
+    "description": "访问元组元素",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "beginner",
+    "category": "tuple",
+    "subcategory": "基础",
+    "full_code": "t = (1, 2, 3)\nprint(t[1])",
+    "expected": "2",
+    "points": [
+      {
+        "id": "idx",
+        "text": "t[1]",
+        "category": "tuple",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "取元组第 2 个元素",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 元组下标",
+      "level_2": "📖 元组不可变",
+      "level_3": "👀 `t[1]` = 2",
+      "level_4": "📝 正确答案：`t[1]`"
+    },
+    "explanation": "元组 `()` 定义，不可变；按下标访问。"
+  },
+  {
+    "id": "py-basics-023",
+    "title": "元组解包",
+    "description": "把元组解包到多个变量",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "tuple",
+    "subcategory": "基础",
+    "full_code": "a, b, c = (1, 2, 3)\nprint(a + c)",
+    "expected": "4",
+    "points": [
+      {
+        "id": "unpack",
+        "text": "a, b, c",
+        "category": "unpack",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "多变量解包",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 解包",
+      "level_2": "📖 左边变量数=元组长度",
+      "level_3": "👀 `a, b, c = (1, 2, 3)`",
+      "level_4": "📝 正确答案：`a, b, c`"
+    },
+    "explanation": "序列解包把每个元素赋给对应变量。"
+  },
+  {
+    "id": "py-basics-024",
+    "title": "字典读取",
+    "description": "按键读取字典值",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "beginner",
+    "category": "dict",
+    "subcategory": "基础",
+    "full_code": "d = {\"name\": \"py\"}\nprint(d[\"name\"])",
+    "expected": "py",
+    "points": [
+      {
+        "id": "key",
+        "text": "d[\"name\"]",
+        "category": "dict",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "按键取值",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 字典取值",
+      "level_2": "📖 用键取值",
+      "level_3": "👀 `print(d[\"name\"])`",
+      "level_4": "📝 正确答案：`d[\"name\"]`"
+    },
+    "explanation": "字典 `{键: 值}`，用 `d[键]` 取值；键不存在会报 KeyError。"
+  },
+  {
+    "id": "py-basics-025",
+    "title": "字典写入",
+    "description": "向字典添加键值",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "beginner",
+    "category": "dict",
+    "subcategory": "基础",
+    "full_code": "d = {}\nd[\"x\"] = 1\nprint(d[\"x\"])",
+    "expected": "1",
+    "points": [
+      {
+        "id": "write",
+        "text": "d[\"x\"]",
+        "category": "dict",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "写入键 x",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 字典写入",
+      "level_2": "📖 `d[\"x\"] = 1` 新增键",
+      "level_3": "👀 `print(d[\"x\"])`",
+      "level_4": "📝 正确答案：`d[\"x\"]`"
+    },
+    "explanation": "字典用 `d[键] = 值` 写入，键不存在则新增。"
+  },
+  {
+    "id": "py-basics-026",
+    "title": "dict.get 默认值",
+    "description": "用 get 取键并给默认值",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "dict",
+    "subcategory": "基础",
+    "full_code": "d = {\"a\": 1}\nprint(d.get(\"z\", 0))",
+    "expected": "0",
+    "points": [
+      {
+        "id": "get",
+        "text": ".get(\"z\", 0)",
+        "category": "dict",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "取键带默认值",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 get 默认值",
+      "level_2": "📖 键不存在返回默认 0",
+      "level_3": "👀 `print(d.get(\"z\", 0))`",
+      "level_4": "📝 正确答案：`.get(\"z\", 0)`"
+    },
+    "explanation": "`dict.get(键, 默认)` 键缺失时返回默认值，不会抛错。"
+  },
+  {
+    "id": "py-basics-027",
+    "title": "遍历字典值",
+    "description": "累加字典所有值",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "dict",
+    "subcategory": "基础",
+    "full_code": "d = {\"a\": 1, \"b\": 2, \"c\": 3}\ntotal = 0\nfor v in d.values():\n    total += v\nprint(total)",
+    "expected": "6",
+    "points": [
+      {
+        "id": "vals",
+        "text": "d.values()",
+        "category": "dict",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "取所有值",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 遍历值",
+      "level_2": "📖 `d.values()` 返回所有值",
+      "level_3": "👀 `for v in d.values()`",
+      "level_4": "📝 正确答案：`d.values()`"
+    },
+    "explanation": "`d.values()` / `d.keys()` / `d.items()` 遍历字典。"
+  },
+  {
+    "id": "py-basics-028",
+    "title": "set 去重",
+    "description": "用集合去重并求个数",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "set",
+    "subcategory": "基础",
+    "full_code": "s = {1, 1, 2, 3}\nprint(len(s))",
+    "expected": "3",
+    "points": [
+      {
+        "id": "len",
+        "text": "len(s)",
+        "category": "set",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "集合元素个数",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 集合去重",
+      "level_2": "📖 集合自动去重",
+      "level_3": "👀 `print(len(s))`",
+      "level_4": "📝 正确答案：`len(s)`"
+    },
+    "explanation": "集合 `{}` 自动去重，`len()` 得元素个数。"
+  },
+  {
+    "id": "py-basics-029",
+    "title": "字符串大写",
+    "description": "用 upper 转大写",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "beginner",
+    "category": "string",
+    "subcategory": "基础",
+    "full_code": "print(\"go\".upper())",
+    "expected": "GO",
+    "points": [
+      {
+        "id": "upper",
+        "text": ".upper()",
+        "category": "method",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "大写方法",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 转大写",
+      "level_2": "📖 `\"go\".upper()` → GO",
+      "level_3": "👀 `print(\"go\".upper())`",
+      "level_4": "📝 正确答案：`.upper()`"
+    },
+    "explanation": "`str.upper()` 返回全大写；`lower()` 全小写。"
+  },
+  {
+    "id": "py-basics-030",
+    "title": "strip 去空白",
+    "description": "去掉字符串首尾空格",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "string",
+    "subcategory": "基础",
+    "full_code": "print(\"  hi  \".strip())",
+    "expected": "hi",
+    "points": [
+      {
+        "id": "strip",
+        "text": ".strip()",
+        "category": "method",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "去除首尾空白",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 去空白",
+      "level_2": "📖 `\"  hi  \".strip()` → hi",
+      "level_3": "👀 `print(\"  hi  \".strip())`",
+      "level_4": "📝 正确答案：`.strip()`"
+    },
+    "explanation": "`str.strip()` 去掉首尾空白，`lstrip`/`rstrip` 只去一边。"
+  },
+  {
+    "id": "py-basics-031",
+    "title": "split 与 join",
+    "description": "切分再拼接字符串",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "string",
+    "subcategory": "基础",
+    "full_code": "words = \"a,b,c\".split(\",\")\nprint(\"-\".join(words))",
+    "expected": "a-b-c",
+    "points": [
+      {
+        "id": "split",
+        "text": ".split(\",\")",
+        "category": "method",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "按逗号切分",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 切分与拼接",
+      "level_2": "📖 `split` 变列表，`join` 反拼接",
+      "level_3": "👀 `\"-\".join(words)`",
+      "level_4": "📝 正确答案：`.split(\",\")`"
+    },
+    "explanation": "`split()` 按分隔符切开，`join()` 用分隔符合并为字符串。"
+  },
+  {
+    "id": "py-basics-032",
+    "title": "replace 替换",
+    "description": "替换字符串中的字符",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "string",
+    "subcategory": "基础",
+    "full_code": "print(\"a-b-c\".replace(\"-\", \"+\"))",
+    "expected": "a+b+c",
+    "points": [
+      {
+        "id": "rep",
+        "text": "replace(\"-\", \"+\")",
+        "category": "method",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "替换函数",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 字符串替换",
+      "level_2": "📖 把所有 - 换成 +",
+      "level_3": "👀 `print(\"a-b-c\".replace(\"-\", \"+\"))`",
+      "level_4": "📝 正确答案：`replace(\"-\", \"+\")`"
+    },
+    "explanation": "`str.replace(旧, 新)` 把所有匹配子串替换。"
+  },
+  {
+    "id": "py-basics-033",
+    "title": "find 查找",
+    "description": "找子串位置",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "string",
+    "subcategory": "基础",
+    "full_code": "print(\"hello\".find(\"ll\"))",
+    "expected": "2",
+    "points": [
+      {
+        "id": "find",
+        "text": "find(\"ll\")",
+        "category": "method",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "查找子串下标",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 查找下标",
+      "level_2": "📖 找不到返回 -1",
+      "level_3": "👀 `print(\"hello\".find(\"ll\"))`",
+      "level_4": "📝 正确答案：`find(\"ll\")`"
+    },
+    "explanation": "`str.find(子串)` 返回首次出现的下标，找不到返回 -1。"
+  },
+  {
+    "id": "py-basics-034",
+    "title": "startswith 判断",
+    "description": "判断前缀",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "string",
+    "subcategory": "基础",
+    "full_code": "print(\"python\".startswith(\"py\"))",
+    "expected": "True",
+    "points": [
+      {
+        "id": "starts",
+        "text": "startswith(\"py\")",
+        "category": "method",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "前缀判断",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 判断前缀",
+      "level_2": "📖 返回布尔值",
+      "level_3": "👀 `print(\"python\".startswith(\"py\"))`",
+      "level_4": "📝 正确答案：`startswith(\"py\")`"
+    },
+    "explanation": "`startswith()`/`endswith()` 判断前缀/后缀，返回 True/False。"
+  },
+  {
+    "id": "py-basics-035",
+    "title": "enumerate 遍历",
+    "description": "遍历并带下标",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "iteration",
+    "subcategory": "基础",
+    "full_code": "names = [\"a\", \"b\"]\nfor i, n in enumerate(names):\n    print(i, n)",
+    "expected": "0 a\n1 b",
+    "points": [
+      {
+        "id": "enum",
+        "text": "enumerate(names)",
+        "category": "function",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "带下标的遍历",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 带下标遍历",
+      "level_2": "📖 同时拿到下标和值",
+      "level_3": "👀 `for i, n in enumerate(names)`",
+      "level_4": "📝 正确答案：`enumerate(names)`"
+    },
+    "explanation": "`enumerate()` 同时产出下标与元素，遍历时免去手动计数。"
+  },
+  {
+    "id": "py-basics-036",
+    "title": "zip 配对",
+    "description": "把两个列表配对",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "builtins",
+    "subcategory": "基础",
+    "full_code": "print(list(zip([1, 2], [3, 4])))",
+    "expected": "[(1, 3), (2, 4)]",
+    "points": [
+      {
+        "id": "zip",
+        "text": "zip",
+        "category": "function",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "配对函数",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 序列配对",
+      "level_2": "📖 `zip` 把对应元素组成元组",
+      "level_3": "👀 `print(list(zip([1, 2], [3, 4])))`",
+      "level_4": "📝 正确答案：`zip`"
+    },
+    "explanation": "`zip()` 把多个序列按位置配对；`list()` 转成列表查看。"
+  },
+  {
+    "id": "py-basics-037",
+    "title": "map 转换",
+    "description": "把数字列表转成字符串",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "functional",
+    "subcategory": "基础",
+    "full_code": "print(list(map(str, [1, 2, 3])))",
+    "expected": "['1', '2', '3']",
+    "points": [
+      {
+        "id": "map",
+        "text": "map",
+        "category": "function",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "批量转换函数",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 批量映射",
+      "level_2": "📖 `map(str, ...)` 逐项转字符串",
+      "level_3": "👀 `print(list(map(str, [1, 2, 3])))`",
+      "level_4": "📝 正确答案：`map`"
+    },
+    "explanation": "`map()` 把函数应用到序列每个元素；需 `list()` 取出结果。"
+  },
+  {
+    "id": "py-basics-038",
+    "title": "lambda 平方",
+    "description": "用 lambda 定义匿名函数",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "functional",
+    "subcategory": "基础",
+    "full_code": "f = lambda x: x ** 2\nprint(f(5))",
+    "expected": "25",
+    "points": [
+      {
+        "id": "lambda",
+        "text": "lambda x: x ** 2",
+        "category": "lambda",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "匿名函数",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 匿名函数",
+      "level_2": "📖 `lambda 参数: 表达式`",
+      "level_3": "👀 `f(5)` = 25",
+      "level_4": "📝 正确答案：`lambda x: x ** 2`"
+    },
+    "explanation": "`lambda` 定义一次性匿名小函数，结果就是返回值。"
+  },
+  {
+    "id": "py-basics-039",
+    "title": "filter 筛选",
+    "description": "用 filter 筛选偶数",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "functional",
+    "subcategory": "基础",
+    "full_code": "print(list(filter(lambda x: x % 2 == 0, range(10))))",
+    "expected": "[0, 2, 4, 6, 8]",
+    "points": [
+      {
+        "id": "filter",
+        "text": "filter",
+        "category": "function",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "筛选函数",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 筛选元素",
+      "level_2": "📖 保留 lambda 为真的元素",
+      "level_3": "👀 `print(list(filter(...)))`",
+      "level_4": "📝 正确答案：`filter`"
+    },
+    "explanation": "`filter()` 保留使函数返回真的元素，与 `lambda` 常搭配。"
+  },
+  {
+    "id": "py-basics-040",
+    "title": "函数定义",
+    "description": "定义并调用 add 函数",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "function",
+    "subcategory": "基础",
+    "full_code": "def add(a, b):\n    return a + b\nprint(add(2, 3))",
+    "expected": "5",
+    "points": [
+      {
+        "id": "ret",
+        "text": "return a + b",
+        "category": "function",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "返回值",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 函数定义",
+      "level_2": "📖 `def` 定义，`return` 返回",
+      "level_3": "👀 `add(2, 3)`",
+      "level_4": "📝 正确答案：`return a + b`"
+    },
+    "explanation": "`def 名(参数):` 定义函数，`return` 返回计算结果。"
+  },
+  {
+    "id": "py-basics-041",
+    "title": "默认参数",
+    "description": "给函数参数设默认值",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "function",
+    "subcategory": "基础",
+    "full_code": "def greet(name=\"world\"):\n    return f\"hi {name}\"\nprint(greet())",
+    "expected": "hi world",
+    "points": [
+      {
+        "id": "default",
+        "text": "name=\"world\"",
+        "category": "function",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "默认参数值",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 默认参数",
+      "level_2": "📖 不传参时用默认值",
+      "level_3": "👀 `greet()`",
+      "level_4": "📝 正确答案：`name=\"world\"`"
+    },
+    "explanation": "参数可设默认值，调用时不传则使用默认。"
+  },
+  {
+    "id": "py-basics-042",
+    "title": "多返回值",
+    "description": "函数返回总和与个数",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "function",
+    "subcategory": "基础",
+    "full_code": "def stats(nums):\n    return sum(nums), len(nums)\ns, c = stats([1, 2, 3])\nprint(s, c)",
+    "expected": "6 3",
+    "points": [
+      {
+        "id": "ret",
+        "text": "sum(nums), len(nums)",
+        "category": "function",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "返回多个值",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 多返回值",
+      "level_2": "📖 用逗号返回多个值",
+      "level_3": "👀 `s, c = stats([1, 2, 3])`",
+      "level_4": "📝 正确答案：`sum(nums), len(nums)`"
+    },
+    "explanation": "Python 函数可用逗号一次返回多个值，接收时解包。"
+  },
+  {
+    "id": "py-basics-043",
+    "title": "*args 变长参数",
+    "description": "接受任意数量参数",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "function",
+    "subcategory": "基础",
+    "full_code": "def total(*args):\n    return sum(args)\nprint(total(1, 2, 3))",
+    "expected": "6",
+    "points": [
+      {
+        "id": "args",
+        "text": "*args",
+        "category": "function",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "变长位置参数",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 可变参数",
+      "level_2": "📖 `*args` 收集所有位置参数",
+      "level_3": "👀 `total(1, 2, 3)`",
+      "level_4": "📝 正确答案：`*args`"
+    },
+    "explanation": "`*args` 收集任意数量的位置参数为元组。"
+  },
+  {
+    "id": "py-basics-044",
+    "title": "递归阶乘",
+    "description": "用递归计算阶乘",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "recursion",
+    "subcategory": "基础",
+    "full_code": "def fact(n):\n    return 1 if n \u003c= 1 else n * fact(n - 1)\nprint(fact(5))",
+    "expected": "120",
+    "points": [
+      {
+        "id": "rec",
+        "text": "n * fact(n - 1)",
+        "category": "recursion",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "递推式",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 递归",
+      "level_2": "📖 递归 = 基线 + 递推",
+      "level_3": "👀 `fact(5)` = 120",
+      "level_4": "📝 正确答案：`n * fact(n - 1)`"
+    },
+    "explanation": "`fact(n) = n * fact(n-1)`，基线 `n\u003c=1` 返回 1。"
+  },
+  {
+    "id": "py-basics-045",
+    "title": "递归斐波那契",
+    "description": "用递归求第 10 个斐波那契数",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "recursion",
+    "subcategory": "基础",
+    "full_code": "def fib(n):\n    return n if n \u003c 2 else fib(n - 1) + fib(n - 2)\nprint(fib(10))",
+    "expected": "55",
+    "points": [
+      {
+        "id": "rec",
+        "text": "fib(n - 1) + fib(n - 2)",
+        "category": "recursion",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "递推式",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 递归斐波那契",
+      "level_2": "📖 前两项之和",
+      "level_3": "👀 `fib(10)` = 55",
+      "level_4": "📝 正确答案：`fib(n - 1) + fib(n - 2)`"
+    },
+    "explanation": "`fib(n) = fib(n-1) + fib(n-2)`，基线 `n\u003c2` 返回 n。"
+  },
+  {
+    "id": "py-basics-046",
+    "title": "try/except 捕获",
+    "description": "捕获转换异常",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "exception",
+    "subcategory": "基础",
+    "full_code": "try:\n    print(int(\"abc\"))\nexcept ValueError:\n    print(\"bad\")",
+    "expected": "bad",
+    "points": [
+      {
+        "id": "conv",
+        "text": "int(\"abc\")",
+        "category": "exception",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "会抛异常的操作",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 异常处理",
+      "level_2": "📖 转换失败抛 ValueError",
+      "level_3": "👀 `except ValueError: print(\"bad\")`",
+      "level_4": "📝 正确答案：`int(\"abc\")`"
+    },
+    "explanation": "`try/except` 捕获异常；`int(\"abc\")` 无法转换抛出 ValueError。"
+  },
+  {
+    "id": "py-basics-047",
+    "title": "除零异常",
+    "description": "捕获 ZeroDivisionError",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "exception",
+    "subcategory": "基础",
+    "full_code": "try:\n    print(1 / 0)\nexcept ZeroDivisionError:\n    print(\"no\")",
+    "expected": "no",
+    "points": [
+      {
+        "id": "exc",
+        "text": "ZeroDivisionError",
+        "category": "exception",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "除零异常类型",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 异常类型",
+      "level_2": "📖 除零抛 ZeroDivisionError",
+      "level_3": "👀 `except ZeroDivisionError`",
+      "level_4": "📝 正确答案：`ZeroDivisionError`"
+    },
+    "explanation": "除以 0 抛出 `ZeroDivisionError`，用对应异常类型捕获。"
+  },
+  {
+    "id": "py-basics-048",
+    "title": "math 开方",
+    "description": "用 math.sqrt 求平方根",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "module",
+    "subcategory": "基础",
+    "full_code": "import math\nprint(math.sqrt(16))",
+    "expected": "4.0",
+    "points": [
+      {
+        "id": "sqrt",
+        "text": "math.sqrt",
+        "category": "module",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "开方函数",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 导入模块",
+      "level_2": "📖 `import math` 后使用",
+      "level_3": "👀 `math.sqrt(16)` = 4.0",
+      "level_4": "📝 正确答案：`math.sqrt`"
+    },
+    "explanation": "`import math` 导入标准库，`math.sqrt` 开平方。"
+  },
+  {
+    "id": "py-basics-049",
+    "title": "自定义类",
+    "description": "定义类与方法",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "class",
+    "subcategory": "基础",
+    "full_code": "class Dog:\n    def __init__(self, name):\n        self.name = name\n    def bark(self):\n        return self.name + \"!\"\nd = Dog(\"rex\")\nprint(d.bark())",
+    "expected": "rex!",
+    "points": [
+      {
+        "id": "ret",
+        "text": "self.name + \"!\"",
+        "category": "class",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "方法返回值",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 类与方法",
+      "level_2": "📖 `__init__` 构造，`self` 指实例",
+      "level_3": "👀 `d.bark()`",
+      "level_4": "📝 正确答案：`self.name + \"!\"`"
+    },
+    "explanation": "`class` 定义类，`__init__` 初始化，方法首参 `self` 指向实例。"
+  },
+  {
+    "id": "py-basics-050",
+    "title": "f-string 表达式",
+    "description": "在 f-string 中直接计算",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "format",
+    "subcategory": "基础",
+    "full_code": "a = 3\nb = 4\nprint(f\"{a}+{b}={a + b}\")",
+    "expected": "3+4=7",
+    "points": [
+      {
+        "id": "expr",
+        "text": "{a + b}",
+        "category": "format",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "f-string 内计算",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 f-string 表达式",
+      "level_2": "📖 `{}` 里可放任意表达式",
+      "level_3": "👀 `f\"{a}+{b}={a + b}\"`",
+      "level_4": "📝 正确答案：`{a + b}`"
+    },
+    "explanation": "f-string 的 `{}` 内可直接写表达式并求值插入。"
+  }
+]

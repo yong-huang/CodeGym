@@ -1,0 +1,1010 @@
+[
+  {
+    "id": "oc-diff-001",
+    "title": "DeploymentConfig 与 Deployment",
+    "description": "用 oc 查看 DeploymentConfig（K8s 没有的对象）",
+    "exercise_type": "command",
+    "tech_stack": "openshift",
+    "weight": "easy",
+    "category": "dc",
+    "subcategory": "对比",
+    "full_code": "oc get dc",
+    "expected": "",
+    "points": [
+      {
+        "id": "res",
+        "text": "dc",
+        "category": "resource",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "DeploymentConfig 缩写",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 DeploymentConfig 的缩写",
+      "level_2": "📖 `dc` = DeploymentConfig",
+      "level_3": "👀 `oc get dc`",
+      "level_4": "📝 正确答案：oc get dc"
+    },
+    "explanation": "DeploymentConfig 是 OCP 对 Deployment 的扩展，支持触发器自动部署。"
+  },
+  {
+    "id": "oc-diff-002",
+    "title": "ClusterOperator",
+    "description": "查看集群级 Operator 状态",
+    "exercise_type": "command",
+    "tech_stack": "openshift",
+    "weight": "easy",
+    "category": "operator",
+    "subcategory": "对比",
+    "full_code": "oc get co",
+    "expected": "",
+    "points": [
+      {
+        "id": "res",
+        "text": "co",
+        "category": "resource",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "ClusterOperator 缩写",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 ClusterOperator 的缩写",
+      "level_2": "📖 `co` = ClusterOperator",
+      "level_3": "👀 `oc get co`",
+      "level_4": "📝 正确答案：oc get co"
+    },
+    "explanation": "ClusterOperator 管理集群组件，K8s 没有此对象；OCP 用它做组件级自愈。"
+  },
+  {
+    "id": "oc-diff-003",
+    "title": "MachineConfig",
+    "description": "查看 MachineConfig（OCP 节点配置）",
+    "exercise_type": "command",
+    "tech_stack": "openshift",
+    "weight": "easy",
+    "category": "machine",
+    "subcategory": "对比",
+    "full_code": "oc get mc",
+    "expected": "",
+    "points": [
+      {
+        "id": "res",
+        "text": "mc",
+        "category": "resource",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "MachineConfig 缩写",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 MachineConfig 的缩写",
+      "level_2": "📖 `mc` = MachineConfig",
+      "level_3": "👀 `oc get mc`",
+      "level_4": "📝 正确答案：oc get mc"
+    },
+    "explanation": "MachineConfig 给节点（RHCOS）注入系统配置，是 OCP 节点管理核心。"
+  },
+  {
+    "id": "oc-diff-004",
+    "title": "MachineConfigPool",
+    "description": "查看 MachineConfigPool",
+    "exercise_type": "command",
+    "tech_stack": "openshift",
+    "weight": "easy",
+    "category": "machine",
+    "subcategory": "对比",
+    "full_code": "oc get mcp",
+    "expected": "",
+    "points": [
+      {
+        "id": "res",
+        "text": "mcp",
+        "category": "resource",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "MachineConfigPool 缩写",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 MachineConfigPool 的缩写",
+      "level_2": "📖 `mcp` = MachineConfigPool",
+      "level_3": "👀 `oc get mcp`",
+      "level_4": "📝 正确答案：oc get mcp"
+    },
+    "explanation": "MachineConfigPool 把节点分组，滚动应用 MachineConfig，类似控制面/工作节点分组。"
+  },
+  {
+    "id": "oc-diff-005",
+    "title": "MachineSet",
+    "description": "查看 MachineSet（Machine API）",
+    "exercise_type": "command",
+    "tech_stack": "openshift",
+    "weight": "easy",
+    "category": "machine",
+    "subcategory": "对比",
+    "full_code": "oc get machineset",
+    "expected": "",
+    "points": [
+      {
+        "id": "res",
+        "text": "machineset",
+        "category": "resource",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "MachineSet 资源名",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 MachineSet 资源名",
+      "level_2": "📖 `oc get machineset`",
+      "level_3": "👀 `oc get machineset`",
+      "level_4": "📝 正确答案：oc get machineset"
+    },
+    "explanation": "MachineSet 通过 Machine API 管理云上节点生命周期，K8s 仅靠 kubelet+云驱动。"
+  },
+  {
+    "id": "oc-diff-006",
+    "title": "Machine",
+    "description": "查看 Machine（节点底层对象）",
+    "exercise_type": "command",
+    "tech_stack": "openshift",
+    "weight": "easy",
+    "category": "machine",
+    "subcategory": "对比",
+    "full_code": "oc get machines",
+    "expected": "",
+    "points": [
+      {
+        "id": "res",
+        "text": "machines",
+        "category": "resource",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "Machine 资源名",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 Machine 资源名",
+      "level_2": "📖 `oc get machines`",
+      "level_3": "👀 `oc get machines`",
+      "level_4": "📝 正确答案：oc get machines"
+    },
+    "explanation": "Machine 是 Machine API 对底层实例的抽象；OCP 节点增删都经 Machine。"
+  },
+  {
+    "id": "oc-diff-007",
+    "title": "ClusterVersion",
+    "description": "查看集群升级状态",
+    "exercise_type": "command",
+    "tech_stack": "openshift",
+    "weight": "easy",
+    "category": "upgrade",
+    "subcategory": "对比",
+    "full_code": "oc get clusterversion",
+    "expected": "",
+    "points": [
+      {
+        "id": "res",
+        "text": "clusterversion",
+        "category": "resource",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "集群版本对象",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 集群版本资源名",
+      "level_2": "📖 `oc get clusterversion`",
+      "level_3": "👀 `oc get clusterversion`",
+      "level_4": "📝 正确答案：oc get clusterversion"
+    },
+    "explanation": "ClusterVersion 记录 OCP 版本与升级状态，K8s 无对应集群级升级对象。"
+  },
+  {
+    "id": "oc-diff-008",
+    "title": "OLM Subscription",
+    "description": "查看 Operator 订阅",
+    "exercise_type": "command",
+    "tech_stack": "openshift",
+    "weight": "easy",
+    "category": "olm",
+    "subcategory": "对比",
+    "full_code": "oc get subscription",
+    "expected": "",
+    "points": [
+      {
+        "id": "res",
+        "text": "subscription",
+        "category": "resource",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "OLM 订阅资源名",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 OLM 订阅资源名",
+      "level_2": "📖 `oc get subscription`",
+      "level_3": "👀 `oc get subscription`",
+      "level_4": "📝 正确答案：oc get subscription"
+    },
+    "explanation": "Subscription 是 OLM 的订阅，把 Operator 从 catalog 安装到集群。"
+  },
+  {
+    "id": "oc-diff-009",
+    "title": "ClusterServiceVersion",
+    "description": "查看 CSV（Operator 打包）",
+    "exercise_type": "command",
+    "tech_stack": "openshift",
+    "weight": "easy",
+    "category": "olm",
+    "subcategory": "对比",
+    "full_code": "oc get csv",
+    "expected": "",
+    "points": [
+      {
+        "id": "res",
+        "text": "csv",
+        "category": "resource",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "CSV 缩写",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 ClusterServiceVersion 的缩写",
+      "level_2": "📖 `csv` = ClusterServiceVersion",
+      "level_3": "👀 `oc get csv`",
+      "level_4": "📝 正确答案：oc get csv"
+    },
+    "explanation": "CSV 描述一个 Operator 的元数据与安装，是 OLM 的核心对象。"
+  },
+  {
+    "id": "oc-diff-010",
+    "title": "PackageManifest",
+    "description": "查看 OperatorHub 可安装的包",
+    "exercise_type": "command",
+    "tech_stack": "openshift",
+    "weight": "easy",
+    "category": "olm",
+    "subcategory": "对比",
+    "full_code": "oc get packagemanifest",
+    "expected": "",
+    "points": [
+      {
+        "id": "res",
+        "text": "packagemanifest",
+        "category": "resource",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "包清单资源名",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 可安装 Operator 的资源名",
+      "level_2": "📖 `oc get packagemanifest`",
+      "level_3": "👀 `oc get packagemanifest`",
+      "level_4": "📝 正确答案：oc get packagemanifest"
+    },
+    "explanation": "PackageManifest 来自 OperatorHub，列出可订阅安装的 Operator。"
+  },
+  {
+    "id": "oc-diff-011",
+    "title": "Route 与 Ingress",
+    "description": "用 oc 查看 Route（对应 K8s Ingress）",
+    "exercise_type": "command",
+    "tech_stack": "openshift",
+    "weight": "easy",
+    "category": "route",
+    "subcategory": "对比",
+    "full_code": "oc get routes",
+    "expected": "",
+    "points": [
+      {
+        "id": "res",
+        "text": "routes",
+        "category": "resource",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "Route 资源名",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 Route 资源名",
+      "level_2": "📖 `oc get routes`",
+      "level_3": "👀 `oc get routes`",
+      "level_4": "📝 正确答案：oc get routes"
+    },
+    "explanation": "Route 是 OCP 对 Ingress 的增强：自带 TLS 终止、权重路由等。"
+  },
+  {
+    "id": "oc-diff-012",
+    "title": "SecurityContextConstraints",
+    "description": "查看 SCC（安全上下文约束）",
+    "exercise_type": "command",
+    "tech_stack": "openshift",
+    "weight": "easy",
+    "category": "scc",
+    "subcategory": "对比",
+    "full_code": "oc get scc",
+    "expected": "",
+    "points": [
+      {
+        "id": "res",
+        "text": "scc",
+        "category": "resource",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "SCC 缩写",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 SCC 的缩写",
+      "level_2": "📖 `scc` = SecurityContextConstraints",
+      "level_3": "👀 `oc get scc`",
+      "level_4": "📝 正确答案：oc get scc"
+    },
+    "explanation": "SCC 取代了废弃的 PodSecurityPolicy，控制 Pod 能以什么身份运行。"
+  },
+  {
+    "id": "oc-diff-013",
+    "title": "ImageStream",
+    "description": "查看镜像流",
+    "exercise_type": "command",
+    "tech_stack": "openshift",
+    "weight": "easy",
+    "category": "imagestream",
+    "subcategory": "对比",
+    "full_code": "oc get is",
+    "expected": "",
+    "points": [
+      {
+        "id": "res",
+        "text": "is",
+        "category": "resource",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "ImageStream 缩写",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 ImageStream 的缩写",
+      "level_2": "📖 `is` = ImageStream",
+      "level_3": "👀 `oc get is`",
+      "level_4": "📝 正确答案：oc get is"
+    },
+    "explanation": "ImageStream 是 OCP 的镜像抽象（K8s 无），连接构建与部署的镜像来源。"
+  },
+  {
+    "id": "oc-diff-014",
+    "title": "BuildConfig",
+    "description": "查看构建配置",
+    "exercise_type": "command",
+    "tech_stack": "openshift",
+    "weight": "easy",
+    "category": "build",
+    "subcategory": "对比",
+    "full_code": "oc get bc",
+    "expected": "",
+    "points": [
+      {
+        "id": "res",
+        "text": "bc",
+        "category": "resource",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "BuildConfig 缩写",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 BuildConfig 的缩写",
+      "level_2": "📖 `bc` = BuildConfig",
+      "level_3": "👀 `oc get bc`",
+      "level_4": "📝 正确答案：oc get bc"
+    },
+    "explanation": "BuildConfig 定义从源码构建镜像的流程，K8s 本身没有内置构建能力。"
+  },
+  {
+    "id": "oc-diff-015",
+    "title": "集群升级",
+    "description": "用 oc adm 触发集群升级",
+    "exercise_type": "command",
+    "tech_stack": "openshift",
+    "weight": "easy",
+    "category": "upgrade",
+    "subcategory": "对比",
+    "full_code": "oc adm upgrade",
+    "expected": "",
+    "points": [
+      {
+        "id": "verb",
+        "text": "adm upgrade",
+        "category": "command_verb",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "管理员升级命令",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 集群升级的命令",
+      "level_2": "📖 `oc adm upgrade`",
+      "level_3": "👀 `oc adm upgrade`",
+      "level_4": "📝 正确答案：oc adm upgrade"
+    },
+    "explanation": "`oc adm upgrade` 管理 OCP 集群升级（K8s 用 kubeadm/托管平台）。"
+  },
+  {
+    "id": "oc-diff-016",
+    "title": "批准 CSR",
+    "description": "批准待处理的证书请求",
+    "exercise_type": "command",
+    "tech_stack": "openshift",
+    "weight": "easy",
+    "category": "admin",
+    "subcategory": "对比",
+    "full_code": "oc adm certificate approve node-abc",
+    "expected": "",
+    "points": [
+      {
+        "id": "verb",
+        "text": "certificate approve",
+        "category": "command_verb",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "批准证书子命令",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 批准 CSR 的命令",
+      "level_2": "📖 `oc adm certificate approve \u003c名\u003e`",
+      "level_3": "👀 `oc adm certificate approve node-abc`",
+      "level_4": "📝 正确答案：oc adm certificate approve node-abc"
+    },
+    "explanation": "节点加入集群时需 `oc adm certificate approve` 批准其 CSR（K8s 用 kubectl）。"
+  },
+  {
+    "id": "oc-diff-017",
+    "title": "节点维护",
+    "description": "用 oc adm 驱逐节点 Pod",
+    "exercise_type": "command",
+    "tech_stack": "openshift",
+    "weight": "easy",
+    "category": "admin",
+    "subcategory": "对比",
+    "full_code": "oc adm drain node-1 --ignore-daemonsets",
+    "expected": "",
+    "points": [
+      {
+        "id": "flag",
+        "text": "--ignore-daemonsets",
+        "category": "command_flag",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "忽略 DaemonSet",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 驱逐节点 Pod 的命令",
+      "level_2": "📖 `oc adm drain`",
+      "level_3": "👀 `oc adm drain node-1 --ignore-daemonsets`",
+      "level_4": "📝 正确答案：oc adm drain node-1 --ignore-daemonsets"
+    },
+    "explanation": "`oc adm drain` 与 kubectl 类似，是 OCP 的管理员级节点维护入口。"
+  },
+  {
+    "id": "oc-diff-018",
+    "title": "查看用户",
+    "description": "查看集群用户",
+    "exercise_type": "command",
+    "tech_stack": "openshift",
+    "weight": "easy",
+    "category": "auth",
+    "subcategory": "对比",
+    "full_code": "oc get users",
+    "expected": "",
+    "points": [
+      {
+        "id": "res",
+        "text": "users",
+        "category": "resource",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "用户资源名",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 用户资源名",
+      "level_2": "📖 `oc get users`",
+      "level_3": "👀 `oc get users`",
+      "level_4": "📝 正确答案：oc get users"
+    },
+    "explanation": "OCP 用 OAuth/身份提供方管理用户，`oc get users` 是 K8s 没有的用户对象。"
+  },
+  {
+    "id": "oc-diff-019",
+    "title": "系统项目",
+    "description": "查看项目（对应命名空间）",
+    "exercise_type": "command",
+    "tech_stack": "openshift",
+    "weight": "easy",
+    "category": "project",
+    "subcategory": "对比",
+    "full_code": "oc get projects",
+    "expected": "",
+    "points": [
+      {
+        "id": "res",
+        "text": "projects",
+        "category": "resource",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "项目资源名",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 项目资源名",
+      "level_2": "📖 `oc get projects`",
+      "level_3": "👀 `oc get projects`",
+      "level_4": "📝 正确答案：oc get projects"
+    },
+    "explanation": "Project 是 OCP 对 Namespace 的封装，自带配额与访问控制，还有 openshift-* 系统项目。"
+  },
+  {
+    "id": "oc-diff-020",
+    "title": "模板",
+    "description": "查看模板（OCP 版 Helm）",
+    "exercise_type": "command",
+    "tech_stack": "openshift",
+    "weight": "easy",
+    "category": "template",
+    "subcategory": "对比",
+    "full_code": "oc get templates",
+    "expected": "",
+    "points": [
+      {
+        "id": "res",
+        "text": "templates",
+        "category": "resource",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "模板资源名",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 模板资源名",
+      "level_2": "📖 `oc get templates`",
+      "level_3": "👀 `oc get templates`",
+      "level_4": "📝 正确答案：oc get templates"
+    },
+    "explanation": "Template 是 OCP 的参数化资源模板，早于 Helm；Helm 也受支持。"
+  },
+  {
+    "id": "oc-diff-021",
+    "title": "查看 Operator 列表",
+    "description": "查看已安装的 Operator",
+    "exercise_type": "command",
+    "tech_stack": "openshift",
+    "weight": "easy",
+    "category": "operator",
+    "subcategory": "对比",
+    "full_code": "oc get operators",
+    "expected": "",
+    "points": [
+      {
+        "id": "res",
+        "text": "operators",
+        "category": "resource",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "Operator 资源名",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 查看 Operator 的命令",
+      "level_2": "📖 `oc get operators`",
+      "level_3": "👀 `oc get operators`",
+      "level_4": "📝 正确答案：oc get operators"
+    },
+    "explanation": "OCP 自带 OLM，`oc get operators` 列出集群中安装的 Operator。"
+  },
+  {
+    "id": "oc-diff-022",
+    "title": "集群网络配置",
+    "description": "查看 OpenShift 集群网络",
+    "exercise_type": "command",
+    "tech_stack": "openshift",
+    "weight": "easy",
+    "category": "network",
+    "subcategory": "对比",
+    "full_code": "oc get network cluster",
+    "expected": "",
+    "points": [
+      {
+        "id": "res",
+        "text": "network",
+        "category": "resource",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "网络配置资源名",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 集群网络资源名",
+      "level_2": "📖 `oc get network cluster`",
+      "level_3": "👀 `oc get network cluster`",
+      "level_4": "📝 正确答案：oc get network cluster"
+    },
+    "explanation": "`oc get network cluster` 查看 OVN-Kubernetes/OpenShiftSDN 等网络插件配置。"
+  },
+  {
+    "id": "oc-diff-023",
+    "title": "Route 边缘 TLS",
+    "description": "用 edge 终止的 Route（对比 Ingress TLS）",
+    "exercise_type": "config",
+    "tech_stack": "openshift",
+    "weight": "medium",
+    "category": "route",
+    "subcategory": "对比",
+    "full_code": "apiVersion: route.openshift.io/v1\nkind: Route\nmetadata:\n  name: web\nspec:\n  to:\n    kind: Service\n    name: web\n  tls:\n    termination: edge\n    insecureEdgeTerminationPolicy: Redirect",
+    "expected": "",
+    "points": [
+      {
+        "id": "term",
+        "text": "edge",
+        "category": "tls",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "TLS 终止方式",
+        "fill_type": "text"
+      },
+      {
+        "id": "svc",
+        "text": "web",
+        "category": "service",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "后端 Service 名",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 `edge` / `web`",
+      "level_2": "📖 Route vs Ingress",
+      "level_3": "👀 Route 的 TLS 在 spec.tls 配置，edge 在路由层终止",
+      "level_4": "📝 正确答案：apiVersion: route.openshift.io/v1\nkind: Route\nmetadata:\n  name: web\nspec:\n  to:\n    kind: Service\n    name: web\n  tls:\n    termination: edge\n    insecureEdgeTerminationPolicy: Redirect"
+    },
+    "explanation": "Route 原生支持 edge/passthrough/reencrypt 三种 TLS，比 K8s Ingress 更直接。"
+  },
+  {
+    "id": "oc-diff-024",
+    "title": "DeploymentConfig 定义",
+    "description": "用 DC 定义应用（对比 Deployment）",
+    "exercise_type": "config",
+    "tech_stack": "openshift",
+    "weight": "medium",
+    "category": "dc",
+    "subcategory": "对比",
+    "full_code": "apiVersion: apps.openshift.io/v1\nkind: DeploymentConfig\nmetadata:\n  name: web\nspec:\n  replicas: 2\n  selector:\n    app: web\n  template:\n    metadata:\n      labels:\n        app: web\n    spec:\n      containers:\n      - name: web\n        image: web:latest",
+    "expected": "",
+    "points": [
+      {
+        "id": "api",
+        "text": "apps.openshift.io/v1",
+        "category": "api_version",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "DC 的 API 版本",
+        "fill_type": "text"
+      },
+      {
+        "id": "replicas",
+        "text": "2",
+        "category": "replicas",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "副本数",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_app_web",
+        "text": "web",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "补充「标签 app 的值」",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_image_weblatest",
+        "text": "web:latest",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "补充「容器镜像」",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 `apps.openshift.io/v1` / `2`",
+      "level_2": "📖 DeploymentConfig 与 Deployment",
+      "level_3": "👀 DC 用 apps.openshift.io/v1，Deployment 用 apps/v1",
+      "level_4": "📝 正确答案：apiVersion: apps.openshift.io/v1\nkind: DeploymentConfig\nmetadata:\n  name: web\nspec:\n  replicas: 2\n  selector:\n    app: web\n  template:\n    metadata:\n      labels:\n        app: web\n    spec:\n      containers:\n      - name: web\n        image: web:latest"
+    },
+    "explanation": "两者都管副本，但 DC 额外支持触发器与自动回滚，是 OCP 的增强部署对象。"
+  },
+  {
+    "id": "oc-diff-025",
+    "title": "镜像变更触发器",
+    "description": "DC 在镜像更新时自动部署",
+    "exercise_type": "config",
+    "tech_stack": "openshift",
+    "weight": "medium",
+    "category": "dc",
+    "subcategory": "对比",
+    "full_code": "apiVersion: apps.openshift.io/v1\nkind: DeploymentConfig\nmetadata:\n  name: web\nspec:\n  replicas: 1\n  triggers:\n  - type: ImageChange\n    imageChangeParams:\n      automatic: true\n      containerNames:\n      - web\n      from:\n        kind: ImageStreamTag\n        name: web:latest\n  selector:\n    app: web\n  template:\n    metadata:\n      labels:\n        app: web\n    spec:\n      containers:\n      - name: web\n        image: web:latest",
+    "expected": "",
+    "points": [
+      {
+        "id": "type",
+        "text": "ImageChange",
+        "category": "trigger",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "镜像变更触发器",
+        "fill_type": "text"
+      },
+      {
+        "id": "from",
+        "text": "web:latest",
+        "category": "image",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "监听镜像流标签",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_replicas_1",
+        "text": "1",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 0.7,
+        "hint": "补充「副本数」",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_app_web",
+        "text": "web",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "补充「标签 app 的值」",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 `ImageChange` / `web:latest`",
+      "level_2": "📖 DC 触发器",
+      "level_3": "👀 镜像更新自动触发滚动部署，Deployment 需手动改 image",
+      "level_4": "📝 正确答案：apiVersion: apps.openshift.io/v1\nkind: DeploymentConfig\nmetadata:\n  name: web\nspec:\n  replicas: 1\n  triggers:\n  - type: ImageChange\n    imageChangeParams:\n      automatic: true\n      containerNames:\n      - web\n      from:\n        kind: ImageStreamTag\n        name: web:latest\n  selector:\n    app: web\n  template:\n    metadata:\n      labels:\n        app: web\n    spec:\n      containers:\n      - name: web\n        image: web:latest"
+    },
+    "explanation": "DC 的 ImageChange 触发器在 ImageStream 更新时自动部署，K8s Deployment 需额外手段。"
+  },
+  {
+    "id": "oc-diff-026",
+    "title": "构建输出镜像流",
+    "description": "BuildConfig 输出到 ImageStreamTag",
+    "exercise_type": "config",
+    "tech_stack": "openshift",
+    "weight": "medium",
+    "category": "build",
+    "subcategory": "对比",
+    "full_code": "apiVersion: build.openshift.io/v1\nkind: BuildConfig\nmetadata:\n  name: web\nspec:\n  source:\n    type: Git\n    git:\n      uri: \"https://github.com/example/web.git\"\n  strategy:\n    type: Source\n  output:\n    to:\n      kind: ImageStreamTag\n      name: web:latest",
+    "expected": "",
+    "points": [
+      {
+        "id": "uri",
+        "text": "https://github.com/example/web.git",
+        "category": "git_uri",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "源码仓库地址",
+        "fill_type": "text"
+      },
+      {
+        "id": "out",
+        "text": "web:latest",
+        "category": "image",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "构建产物写入的镜像流标签",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 `https://github.com/example/web.git` / `web:latest`",
+      "level_2": "📖 构建流水线",
+      "level_3": "👀 OCP 源码构建输出到 ImageStreamTag",
+      "level_4": "📝 正确答案：apiVersion: build.openshift.io/v1\nkind: BuildConfig\nmetadata:\n  name: web\nspec:\n  source:\n    type: Git\n    git:\n      uri: \"https://github.com/example/web.git\"\n  strategy:\n    type: Source\n  output:\n    to:\n      kind: ImageStreamTag\n      name: web:latest"
+    },
+    "explanation": "OCP 内置 Source-to-Image 构建流水线，构建产物写入 ImageStreamTag 供部署。"
+  },
+  {
+    "id": "oc-diff-027",
+    "title": "MachineConfig 配置",
+    "description": "给节点注入内核参数",
+    "exercise_type": "config",
+    "tech_stack": "openshift",
+    "weight": "medium",
+    "category": "machine",
+    "subcategory": "对比",
+    "full_code": "apiVersion: machineconfiguration.openshift.io/v1\nkind: MachineConfig\nmetadata:\n  name: 99-worker-sysctl\n  labels:\n    machineconfiguration.openshift.io/role: worker\nspec:\n  config:\n    ignition:\n      version: 3.2.0\n    storage:\n      files:\n      - path: /etc/sysctl.d/99-fs.conf\n        contents:\n          source: data:,%20fs.file-max%20%3D%2050000\n",
+    "expected": "",
+    "points": [
+      {
+        "id": "api",
+        "text": "machineconfiguration.openshift.io/v1",
+        "category": "api_version",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "MachineConfig 的 API 组",
+        "fill_type": "text"
+      },
+      {
+        "id": "role",
+        "text": "worker",
+        "category": "label",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "作用到哪类节点（worker/master）",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 `machineconfiguration.openshift.io/v1` / `worker`",
+      "level_2": "📖 MachineConfig",
+      "level_3": "👀 用 ignition 配置节点，K8s 无此对象",
+      "level_4": "📝 正确答案：apiVersion: machineconfiguration.openshift.io/v1\nkind: MachineConfig\nmetadata:\n  name: 99-worker-sysctl\n  labels:\n    machineconfiguration.openshift.io/role: worker\nspec:\n  config:\n    ignition:\n      version: 3.2.0\n    storage:\n      files:\n      - path: /etc/sysctl.d/99-fs.conf\n        contents:\n          source: data:,%20fs.file-max%20%3D%2050000\n"
+    },
+    "explanation": "MachineConfig 用 Ignition 给 RHCOS 节点下发系统级配置，这是 OCP 节点管理核心。"
+  },
+  {
+    "id": "oc-diff-028",
+    "title": "SCC 安全约束",
+    "description": "允许特权容器",
+    "exercise_type": "config",
+    "tech_stack": "openshift",
+    "weight": "medium",
+    "category": "scc",
+    "subcategory": "对比",
+    "full_code": "apiVersion: security.openshift.io/v1\nkind: SecurityContextConstraints\nmetadata:\n  name: privileged\nallowPrivilegedContainer: true\nallowedCapabilities:\n- \"*\"\nrunAsUser:\n  type: RunAsAny",
+    "expected": "",
+    "points": [
+      {
+        "id": "api",
+        "text": "security.openshift.io/v1",
+        "category": "api_version",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "SCC 的 API 组",
+        "fill_type": "text"
+      },
+      {
+        "id": "priv",
+        "text": "allowPrivilegedContainer: true",
+        "category": "security",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "允许特权容器",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 `security.openshift.io/v1` / `true`",
+      "level_2": "📖 SCC vs PSP",
+      "level_3": "👀 SCC 用 security.openshift.io/v1，取代废弃的 PSP",
+      "level_4": "📝 正确答案：apiVersion: security.openshift.io/v1\nkind: SecurityContextConstraints\nmetadata:\n  name: privileged\nallowPrivilegedContainer: true\nallowedCapabilities:\n- \"*\"\nrunAsUser:\n  type: RunAsAny"
+    },
+    "explanation": "SCC 决定 Pod 能否以特权/root 运行，是 OCP 的安全扩展（K8s 已弃用 PSP）。"
+  },
+  {
+    "id": "oc-diff-029",
+    "title": "ImageStream 定义",
+    "description": "定义镜像流",
+    "exercise_type": "config",
+    "tech_stack": "openshift",
+    "weight": "medium",
+    "category": "imagestream",
+    "subcategory": "对比",
+    "full_code": "apiVersion: image.openshift.io/v1\nkind: ImageStream\nmetadata:\n  name: web\nspec:\n  lookupPolicy:\n    local: true",
+    "expected": "",
+    "points": [
+      {
+        "id": "api",
+        "text": "image.openshift.io/v1",
+        "category": "api_version",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "ImageStream 的 API 组",
+        "fill_type": "text"
+      },
+      {
+        "id": "name",
+        "text": "web",
+        "category": "metadata",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "镜像流名",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 `image.openshift.io/v1` / `web`",
+      "level_2": "📖 ImageStream",
+      "level_3": "👀 K8s 没有镜像流，只有镜像引用",
+      "level_4": "📝 正确答案：apiVersion: image.openshift.io/v1\nkind: ImageStream\nmetadata:\n  name: web\nspec:\n  lookupPolicy:\n    local: true"
+    },
+    "explanation": "ImageStream 用 image.openshift.io/v1，跟踪镜像标签供构建/部署使用。"
+  },
+  {
+    "id": "oc-diff-030",
+    "title": "集群网络配置",
+    "description": "查看/配置 OVN 集群网络",
+    "exercise_type": "config",
+    "tech_stack": "openshift",
+    "weight": "medium",
+    "category": "network",
+    "subcategory": "对比",
+    "full_code": "apiVersion: config.openshift.io/v1\nkind: Network\nmetadata:\n  name: cluster\nspec:\n  networkType: OVNKubernetes\n",
+    "expected": "",
+    "points": [
+      {
+        "id": "api",
+        "text": "config.openshift.io/v1",
+        "category": "api_version",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "集群配置 API 组",
+        "fill_type": "text"
+      },
+      {
+        "id": "net",
+        "text": "OVNKubernetes",
+        "category": "network",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "网络插件类型",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 `config.openshift.io/v1` / `OVNKubernetes`",
+      "level_2": "📖 集群网络",
+      "level_3": "👀 Network 对象配置网络插件，K8s 无此集群级对象",
+      "level_4": "📝 正确答案：apiVersion: config.openshift.io/v1\nkind: Network\nmetadata:\n  name: cluster\nspec:\n  networkType: OVNKubernetes\n"
+    },
+    "explanation": "OCP 用 `Network` 集群对象配置 OVN-Kubernetes 网络插件，K8s 由 CNI 提供者自行管理。"
+  }
+]

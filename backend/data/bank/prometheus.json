@@ -1,0 +1,911 @@
+[
+  {
+    "id": "prom-basics-001",
+    "title": "检查配置",
+    "description": "用 promtool 校验配置文件",
+    "exercise_type": "command",
+    "tech_stack": "prometheus",
+    "weight": "easy",
+    "category": "promtool",
+    "subcategory": "基础",
+    "full_code": "promtool check config prometheus.yml",
+    "expected": "",
+    "points": [
+      {
+        "id": "verb",
+        "text": "check config",
+        "category": "command_verb",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "校验配置的子命令",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 校验配置的命令",
+      "level_2": "📖 `promtool check config \u003c文件\u003e`",
+      "level_3": "👀 `promtool check config prometheus.yml`",
+      "level_4": "📝 正确答案：promtool check config prometheus.yml"
+    },
+    "explanation": "`promtool check config` 校验配置语法与告警规则文件。"
+  },
+  {
+    "id": "prom-basics-002",
+    "title": "检查告警规则",
+    "description": "校验规则文件",
+    "exercise_type": "command",
+    "tech_stack": "prometheus",
+    "weight": "easy",
+    "category": "promtool",
+    "subcategory": "基础",
+    "full_code": "promtool check rules rules.yml",
+    "expected": "",
+    "points": [
+      {
+        "id": "file",
+        "text": "rules.yml",
+        "category": "file",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "规则文件名",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 校验规则的命令",
+      "level_2": "📖 `promtool check rules \u003c文件\u003e`",
+      "level_3": "👀 `promtool check rules rules.yml`",
+      "level_4": "📝 正确答案：promtool check rules rules.yml"
+    },
+    "explanation": "`promtool check rules` 校验告警/记录规则语法。"
+  },
+  {
+    "id": "prom-basics-003",
+    "title": "promtool 查询",
+    "description": "用 promtool 执行 PromQL 查询",
+    "exercise_type": "command",
+    "tech_stack": "prometheus",
+    "weight": "easy",
+    "category": "promql",
+    "subcategory": "基础",
+    "full_code": "promtool query 'up'",
+    "expected": "",
+    "points": [
+      {
+        "id": "query",
+        "text": "'up'",
+        "category": "promql",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "PromQL 表达式",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 promtool 查询的命令",
+      "level_2": "📖 `promtool query '\u003c表达式\u003e'`",
+      "level_3": "👀 `promtool query 'up'`",
+      "level_4": "📝 正确答案：promtool query 'up'"
+    },
+    "explanation": "`promtool query` 对本地 Prometheus 执行即时查询，输出表达式结果。"
+  },
+  {
+    "id": "prom-basics-004",
+    "title": "即时查询 API",
+    "description": "用 HTTP API 查询即时值",
+    "exercise_type": "command",
+    "tech_stack": "prometheus",
+    "weight": "easy",
+    "category": "api",
+    "subcategory": "基础",
+    "full_code": "curl 'http://localhost:9090/api/v1/query?query=up'",
+    "expected": "",
+    "points": [
+      {
+        "id": "q",
+        "text": "query=up",
+        "category": "api",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "查询参数",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 即时查询的 API",
+      "level_2": "📖 `/api/v1/query?query=\u003c表达式\u003e`",
+      "level_3": "👀 `curl '.../api/v1/query?query=up'`",
+      "level_4": "📝 正确答案：curl 'http://localhost:9090/api/v1/query?query=up'"
+    },
+    "explanation": "`/api/v1/query` 返回某个时间点的即时查询结果。"
+  },
+  {
+    "id": "prom-basics-005",
+    "title": "健康检查",
+    "description": "查看 Prometheus 自身健康",
+    "exercise_type": "command",
+    "tech_stack": "prometheus",
+    "weight": "easy",
+    "category": "api",
+    "subcategory": "基础",
+    "full_code": "curl http://localhost:9090/-/healthy",
+    "expected": "",
+    "points": [
+      {
+        "id": "path",
+        "text": "/-/healthy",
+        "category": "api",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "健康检查端点",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 健康检查的端点",
+      "level_2": "📖 `/-/healthy` 返回 200",
+      "level_3": "👀 `curl http://localhost:9090/-/healthy`",
+      "level_4": "📝 正确答案：curl http://localhost:9090/-/healthy"
+    },
+    "explanation": "`/-/healthy` 是内置健康端点，返回 200 表示正常。"
+  },
+  {
+    "id": "prom-basics-006",
+    "title": "目标列表",
+    "description": "查看抓取目标",
+    "exercise_type": "command",
+    "tech_stack": "prometheus",
+    "weight": "easy",
+    "category": "api",
+    "subcategory": "基础",
+    "full_code": "curl http://localhost:9090/api/v1/targets",
+    "expected": "",
+    "points": [
+      {
+        "id": "path",
+        "text": "/api/v1/targets",
+        "category": "api",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "目标端点",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 查看抓取目标的 API",
+      "level_2": "📖 `/api/v1/targets`",
+      "level_3": "👀 `curl http://localhost:9090/api/v1/targets`",
+      "level_4": "📝 正确答案：curl http://localhost:9090/api/v1/targets"
+    },
+    "explanation": "`/api/v1/targets` 列出所有抓取目标及健康状态。"
+  },
+  {
+    "id": "prom-basics-007",
+    "title": "指标名列表",
+    "description": "查看所有指标名",
+    "exercise_type": "command",
+    "tech_stack": "prometheus",
+    "weight": "easy",
+    "category": "api",
+    "subcategory": "基础",
+    "full_code": "curl http://localhost:9090/api/v1/label/__name__/values",
+    "expected": "",
+    "points": [
+      {
+        "id": "label",
+        "text": "__name__",
+        "category": "api",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "指标名标签",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 查看指标名的 API",
+      "level_2": "📖 `/api/v1/label/__name__/values`",
+      "level_3": "👀 `curl .../api/v1/label/__name__/values`",
+      "level_4": "📝 正确答案：curl http://localhost:9090/api/v1/label/__name__/values"
+    },
+    "explanation": "`__name__` 是指标名标签，values 返回全部指标名。"
+  },
+  {
+    "id": "prom-basics-008",
+    "title": "热重载配置",
+    "description": "不重启即可加载新配置",
+    "exercise_type": "command",
+    "tech_stack": "prometheus",
+    "weight": "easy",
+    "category": "api",
+    "subcategory": "基础",
+    "full_code": "curl -X POST http://localhost:9090/-/reload",
+    "expected": "",
+    "points": [
+      {
+        "id": "method",
+        "text": "-X POST",
+        "category": "api",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "HTTP 方法",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 热重载的命令",
+      "level_2": "📖 `curl -X POST .../-/reload`",
+      "level_3": "👀 `curl -X POST http://localhost:9090/-/reload`",
+      "level_4": "📝 正确答案：curl -X POST http://localhost:9090/-/reload"
+    },
+    "explanation": "`/-/reload` 触发配置热重载，无需重启进程。"
+  },
+  {
+    "id": "prom-basics-009",
+    "title": "故障实例数",
+    "description": "统计 down 的目标",
+    "exercise_type": "command",
+    "tech_stack": "prometheus",
+    "weight": "easy",
+    "category": "promql",
+    "subcategory": "基础",
+    "full_code": "promtool query 'count(up == 0)'",
+    "expected": "",
+    "points": [
+      {
+        "id": "expr",
+        "text": "up == 0",
+        "category": "promql",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "过滤 down 的表达式",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 统计故障目标的表达式",
+      "level_2": "📖 `count(up == 0)`",
+      "level_3": "👀 `count(up == 0)`",
+      "level_4": "📝 正确答案：promtool query 'count(up == 0)'"
+    },
+    "explanation": "`up` 为 0 表示目标不可达，count 统计数量。"
+  },
+  {
+    "id": "prom-basics-010",
+    "title": "按指标名前缀匹配",
+    "description": "用正则匹配指标名",
+    "exercise_type": "command",
+    "tech_stack": "prometheus",
+    "weight": "easy",
+    "category": "promql",
+    "subcategory": "基础",
+    "full_code": "promtool query '{__name__=~\"node_.*\"}'",
+    "expected": "",
+    "points": [
+      {
+        "id": "regex",
+        "text": "__name__=~\"node_.*\"",
+        "category": "promql",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "正则匹配指标名",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 正则匹配指标名的表达式",
+      "level_2": "📖 `{__name__=~\"node_.*\"}`",
+      "level_3": "👀 `{__name__=~\"node_.*\"}`",
+      "level_4": "📝 正确答案：promtool query '{__name__=~\"node_.*\"}'"
+    },
+    "explanation": "`__name__=~` 用正则匹配指标名前缀，选出所有 node_ 指标。"
+  },
+  {
+    "id": "prom-basics-011",
+    "title": "增长率 rate",
+    "description": "计算计数器 5 分钟增长率",
+    "exercise_type": "command",
+    "tech_stack": "prometheus",
+    "weight": "easy",
+    "category": "promql",
+    "subcategory": "基础",
+    "full_code": "rate(http_requests_total[5m])",
+    "expected": "",
+    "points": [
+      {
+        "id": "range",
+        "text": "[5m]",
+        "category": "promql",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "时间范围",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 增长率的表达式",
+      "level_2": "📖 `rate(指标[5m])` 每秒平均增量",
+      "level_3": "👀 `rate(http_requests_total[5m])`",
+      "level_4": "📝 正确答案：rate(http_requests_total[5m])"
+    },
+    "explanation": "`rate` 计算计数器在时间窗口内的每秒平均增长率，常用于 QPS。"
+  },
+  {
+    "id": "prom-basics-012",
+    "title": "按 job 求和",
+    "description": "聚合出每个 job 的请求量",
+    "exercise_type": "command",
+    "tech_stack": "prometheus",
+    "weight": "easy",
+    "category": "promql",
+    "subcategory": "基础",
+    "full_code": "sum(rate(http_requests_total[5m])) by (job)",
+    "expected": "",
+    "points": [
+      {
+        "id": "by",
+        "text": "by (job)",
+        "category": "promql",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "聚合维度",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 按 job 聚合的表达式",
+      "level_2": "📖 `sum(...) by (job)`",
+      "level_3": "👀 `sum(rate(http_requests_total[5m])) by (job)`",
+      "level_4": "📝 正确答案：sum(rate(http_requests_total[5m])) by (job)"
+    },
+    "explanation": "`sum ... by (job)` 按 job 标签分组求和。"
+  },
+  {
+    "id": "prom-basics-013",
+    "title": "增量 increase",
+    "description": "统计 1 小时增量",
+    "exercise_type": "command",
+    "tech_stack": "prometheus",
+    "weight": "easy",
+    "category": "promql",
+    "subcategory": "基础",
+    "full_code": "increase(node_network_receive_bytes_total[1h])",
+    "expected": "",
+    "points": [
+      {
+        "id": "fn",
+        "text": "increase",
+        "category": "promql",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "增量函数",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 计算增量的函数",
+      "level_2": "📖 `increase(指标[1h])` 时间窗内增量",
+      "level_3": "👀 `increase(...[1h])`",
+      "level_4": "📝 正确答案：increase(node_network_receive_bytes_total[1h])"
+    },
+    "explanation": "`increase` 返回计数器在窗口内增加的总量（近似）。"
+  },
+  {
+    "id": "prom-basics-014",
+    "title": "窗口平均 avg_over_time",
+    "description": "计算区间平均值",
+    "exercise_type": "command",
+    "tech_stack": "prometheus",
+    "weight": "easy",
+    "category": "promql",
+    "subcategory": "基础",
+    "full_code": "avg_over_time(up[10m])",
+    "expected": "",
+    "points": [
+      {
+        "id": "fn",
+        "text": "avg_over_time",
+        "category": "promql",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "区间聚合函数",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 区间平均的函数",
+      "level_2": "📖 `avg_over_time(指标[窗口])`",
+      "level_3": "👀 `avg_over_time(up[10m])`",
+      "level_4": "📝 正确答案：avg_over_time(up[10m])"
+    },
+    "explanation": "`avg_over_time` 对时间窗口内的所有样本取平均值。"
+  },
+  {
+    "id": "prom-basics-015",
+    "title": "直方图分位数",
+    "description": "计算请求延迟的 90 分位",
+    "exercise_type": "command",
+    "tech_stack": "prometheus",
+    "weight": "easy",
+    "category": "promql",
+    "subcategory": "基础",
+    "full_code": "histogram_quantile(0.9, rate(http_request_duration_seconds_bucket[5m]))",
+    "expected": "",
+    "points": [
+      {
+        "id": "q",
+        "text": "0.9",
+        "category": "promql",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "分位数",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 直方图分位数的表达式",
+      "level_2": "📖 `histogram_quantile(0.9, rate(..._bucket[5m]))`",
+      "level_3": "👀 `histogram_quantile(0.9, ...)`",
+      "level_4": "📝 正确答案：histogram_quantile(0.9, rate(http_request_duration_seconds_bucket[5m]))"
+    },
+    "explanation": "`histogram_quantile(0.9, ...)` 从直方图 bucket 计算 90 分位延迟。"
+  },
+  {
+    "id": "prom-basics-016",
+    "title": "请求错误率",
+    "description": "计算 5xx 占全部请求比例",
+    "exercise_type": "command",
+    "tech_stack": "prometheus",
+    "weight": "easy",
+    "category": "promql",
+    "subcategory": "基础",
+    "full_code": "sum(rate(http_requests_total{status=~\"5..\"}[5m])) / sum(rate(http_requests_total[5m]))",
+    "expected": "",
+    "points": [
+      {
+        "id": "filter",
+        "text": "status=~\"5..\"",
+        "category": "promql",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "状态码正则过滤",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 错误率的表达式",
+      "level_2": "📖 `{status=~\"5..\"}` 匹配 5xx 状态",
+      "level_3": "👀 `sum(rate({status=~\"5..\"}[5m])) / sum(rate([5m]))`",
+      "level_4": "📝 正确答案：sum(rate(http_requests_total{status=~\"5..\"}[5m])) / sum(rate(http_requests_total[5m]))"
+    },
+    "explanation": "用正则 `status=~\"5..\"` 筛出 5xx，再除以总请求即错误率。"
+  },
+  {
+    "id": "prom-basics-017",
+    "title": "故障计数",
+    "description": "统计 up==0 的实例数",
+    "exercise_type": "command",
+    "tech_stack": "prometheus",
+    "weight": "easy",
+    "category": "promql",
+    "subcategory": "基础",
+    "full_code": "count(up == 0)",
+    "expected": "",
+    "points": [
+      {
+        "id": "fn",
+        "text": "count",
+        "category": "promql",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "计数函数",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 计数的函数",
+      "level_2": "📖 `count(up == 0)` 统计故障数",
+      "level_3": "👀 `count(up == 0)`",
+      "level_4": "📝 正确答案：count(up == 0)"
+    },
+    "explanation": "`count` 统计满足条件的序列数量；`up == 0` 为故障目标。"
+  },
+  {
+    "id": "prom-basics-018",
+    "title": "按标签过滤",
+    "description": "只看指定实例的 up",
+    "exercise_type": "command",
+    "tech_stack": "prometheus",
+    "weight": "easy",
+    "category": "promql",
+    "subcategory": "基础",
+    "full_code": "up{instance=\"host1:9100\"}",
+    "expected": "",
+    "points": [
+      {
+        "id": "sel",
+        "text": "{instance=\"host1:9100\"}",
+        "category": "promql",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "标签选择器",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 按实例过滤的表达式",
+      "level_2": "📖 `up{instance=\"host1:9100\"}`",
+      "level_3": "👀 `up{instance=\"host1:9100\"}`",
+      "level_4": "📝 正确答案：up{instance=\"host1:9100\"}"
+    },
+    "explanation": "`{标签=值}` 选择器按标签过滤序列。"
+  },
+  {
+    "id": "prom-basics-019",
+    "title": "布尔比较",
+    "description": "过滤内存使用大于 1G 的节点",
+    "exercise_type": "command",
+    "tech_stack": "prometheus",
+    "weight": "easy",
+    "category": "promql",
+    "subcategory": "基础",
+    "full_code": "node_memory_used_bytes \u003e 1e9",
+    "expected": "",
+    "points": [
+      {
+        "id": "cmp",
+        "text": "\u003e 1e9",
+        "category": "promql",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "比较表达式",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 比较过滤的表达式",
+      "level_2": "📖 `指标 \u003e 阈值`",
+      "level_3": "👀 `node_memory_used_bytes \u003e 1e9`",
+      "level_4": "📝 正确答案：node_memory_used_bytes \u003e 1e9"
+    },
+    "explanation": "PromQL 支持 `\u003e、\u003c、==` 比较，保留满足条件的序列。"
+  },
+  {
+    "id": "prom-basics-020",
+    "title": "求最大值",
+    "description": "取每个实例的最大请求率",
+    "exercise_type": "command",
+    "tech_stack": "prometheus",
+    "weight": "easy",
+    "category": "promql",
+    "subcategory": "基础",
+    "full_code": "max(rate(http_requests_total[5m])) by (instance)",
+    "expected": "",
+    "points": [
+      {
+        "id": "fn",
+        "text": "max",
+        "category": "promql",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "最大值函数",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 求最大的函数",
+      "level_2": "📖 `max(...) by (instance)`",
+      "level_3": "👀 `max(rate(http_requests_total[5m])) by (instance)`",
+      "level_4": "📝 正确答案：max(rate(http_requests_total[5m])) by (instance)"
+    },
+    "explanation": "`max` 聚合取最大值，`by (instance)` 按实例分组。"
+  },
+  {
+    "id": "prom-basics-021",
+    "title": "保留时间",
+    "description": "设置数据保留 15 天",
+    "exercise_type": "command",
+    "tech_stack": "prometheus",
+    "weight": "easy",
+    "category": "storage",
+    "subcategory": "基础",
+    "full_code": "prometheus --storage.tsdb.retention.time=15d",
+    "expected": "",
+    "points": [
+      {
+        "id": "flag",
+        "text": "--storage.tsdb.retention.time=15d",
+        "category": "flag",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "保留时间参数",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 设置保留时间的参数",
+      "level_2": "📖 `--storage.tsdb.retention.time=15d`",
+      "level_3": "👀 `prometheus --storage.tsdb.retention.time=15d`",
+      "level_4": "📝 正确答案：prometheus --storage.tsdb.retention.time=15d"
+    },
+    "explanation": "用 `--storage.tsdb.retention.time` 控制 TSDB 数据保留时长。"
+  },
+  {
+    "id": "prom-basics-022",
+    "title": "global 抓取间隔",
+    "description": "配置全局抓取周期",
+    "exercise_type": "config",
+    "tech_stack": "prometheus",
+    "weight": "medium",
+    "category": "config",
+    "subcategory": "基础",
+    "full_code": "global:\n  scrape_interval: 15s\n  evaluation_interval: 15s",
+    "expected": "",
+    "points": [
+      {
+        "id": "scrape",
+        "text": "15s",
+        "category": "interval",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "抓取间隔",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 `15s`",
+      "level_2": "📖 global 抓取间隔",
+      "level_3": "👀 `scrape_interval` 决定多久抓一次目标",
+      "level_4": "📝 正确答案：global:\n  scrape_interval: 15s\n  evaluation_interval: 15s"
+    },
+    "explanation": "`global.scrape_interval` 是默认抓取周期，可被 job 覆盖。"
+  },
+  {
+    "id": "prom-basics-023",
+    "title": "抓取任务与目标",
+    "description": "定义一个抓取 job 及目标",
+    "exercise_type": "config",
+    "tech_stack": "prometheus",
+    "weight": "medium",
+    "category": "config",
+    "subcategory": "基础",
+    "full_code": "scrape_configs:\n- job_name: node\n  static_configs:\n  - targets:\n    - localhost:9100",
+    "expected": "",
+    "points": [
+      {
+        "id": "job",
+        "text": "node",
+        "category": "job",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "任务名",
+        "fill_type": "text"
+      },
+      {
+        "id": "target",
+        "text": "localhost:9100",
+        "category": "target",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "抓取目标",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 `node` / `localhost:9100`",
+      "level_2": "📖 scrape_configs",
+      "level_3": "👀 `job_name` 分组抓取，`targets` 列目标",
+      "level_4": "📝 正确答案：scrape_configs:\n- job_name: node\n  static_configs:\n  - targets:\n    - localhost:9100"
+    },
+    "explanation": "`scrape_configs` 定义抓取任务，`static_configs.targets` 列出地址。"
+  },
+  {
+    "id": "prom-basics-024",
+    "title": "metrics_path",
+    "description": "抓取自定义指标路径",
+    "exercise_type": "config",
+    "tech_stack": "prometheus",
+    "weight": "medium",
+    "category": "config",
+    "subcategory": "基础",
+    "full_code": "scrape_configs:\n- job_name: app\n  metrics_path: /metrics\n  static_configs:\n  - targets:\n    - localhost:8080",
+    "expected": "",
+    "points": [
+      {
+        "id": "path",
+        "text": "/metrics",
+        "category": "path",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "指标路径",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 `/metrics`",
+      "level_2": "📖 metrics_path",
+      "level_3": "👀 默认抓 `/metrics`，可改自定义路径",
+      "level_4": "📝 正确答案：scrape_configs:\n- job_name: app\n  metrics_path: /metrics\n  static_configs:\n  - targets:\n    - localhost:8080"
+    },
+    "explanation": "`metrics_path` 指定抓取指标端点路径，默认 `/metrics`。"
+  },
+  {
+    "id": "prom-basics-025",
+    "title": "规则文件",
+    "description": "引用告警/记录规则文件",
+    "exercise_type": "config",
+    "tech_stack": "prometheus",
+    "weight": "medium",
+    "category": "config",
+    "subcategory": "基础",
+    "full_code": "rule_files:\n- \"rules/*.yml\"",
+    "expected": "",
+    "points": [
+      {
+        "id": "files",
+        "text": "\"rules/*.yml\"",
+        "category": "file",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "规则文件路径",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 `\"rules/*.yml\"`",
+      "level_2": "📖 rule_files",
+      "level_3": "👀 `rule_files` 加载告警与记录规则",
+      "level_4": "📝 正确答案：rule_files:\n- \"rules/*.yml\""
+    },
+    "explanation": "`rule_files` 列出规则文件，Prometheus 启动时加载。"
+  },
+  {
+    "id": "prom-basics-026",
+    "title": "告警通知",
+    "description": "配置 Alertmanager 地址",
+    "exercise_type": "config",
+    "tech_stack": "prometheus",
+    "weight": "medium",
+    "category": "config",
+    "subcategory": "基础",
+    "full_code": "alerting:\n  alertmanagers:\n  - static_configs:\n    - targets:\n      - localhost:9093",
+    "expected": "",
+    "points": [
+      {
+        "id": "am",
+        "text": "localhost:9093",
+        "category": "alertmanager",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "Alertmanager 地址",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 `localhost:9093`",
+      "level_2": "📖 alerting 配置",
+      "level_3": "👀 `alerting.alertmanagers` 指定通知接收方",
+      "level_4": "📝 正确答案：alerting:\n  alertmanagers:\n  - static_configs:\n    - targets:\n      - localhost:9093"
+    },
+    "explanation": "`alerting.alertmanagers` 告诉 Prometheus 把告警发给哪个 Alertmanager（默认 9093）。"
+  },
+  {
+    "id": "prom-basics-027",
+    "title": "监控自身",
+    "description": "抓取 Prometheus 自己的指标",
+    "exercise_type": "config",
+    "tech_stack": "prometheus",
+    "weight": "medium",
+    "category": "config",
+    "subcategory": "基础",
+    "full_code": "scrape_configs:\n- job_name: prometheus\n  static_configs:\n  - targets:\n    - localhost:9090",
+    "expected": "",
+    "points": [
+      {
+        "id": "job",
+        "text": "prometheus",
+        "category": "job",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "任务名",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 `prometheus`",
+      "level_2": "📖 自监控",
+      "level_3": "👀 默认样例自带抓取 Prometheus 自身的 job",
+      "level_4": "📝 正确答案：scrape_configs:\n- job_name: prometheus\n  static_configs:\n  - targets:\n    - localhost:9090"
+    },
+    "explanation": "自监控 job 抓取 Prometheus 自身的 `/metrics`（默认 9090）。"
+  },
+  {
+    "id": "prom-basics-028",
+    "title": "标签过滤抓取",
+    "description": "抓取时过滤标签",
+    "exercise_type": "config",
+    "tech_stack": "prometheus",
+    "weight": "medium",
+    "category": "config",
+    "subcategory": "基础",
+    "full_code": "scrape_configs:\n- job_name: web\n  static_configs:\n  - targets:\n    - localhost:8080\n    - localhost:8081\n  relabel_configs:\n  - source_labels: [__address__]\n    regex: \".*:8080\"\n    action: keep",
+    "expected": "",
+    "points": [
+      {
+        "id": "action",
+        "text": "keep",
+        "category": "relabel",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "保留匹配项的动作",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 `keep`",
+      "level_2": "📖 relabel 过滤",
+      "level_3": "👀 `relabel_configs` 在抓取前改写/过滤标签",
+      "level_4": "📝 正确答案：scrape_configs:\n- job_name: web\n  static_configs:\n  - targets:\n    - localhost:8080\n    - localhost:8081\n  relabel_configs:\n  - source_labels: [__address__]\n    regex: \".*:8080\"\n    action: keep"
+    },
+    "explanation": "`relabel_configs` 用 keep 只保留匹配 8080 的目标。"
+  },
+  {
+    "id": "prom-basics-029",
+    "title": "scrape_timeout",
+    "description": "设置抓取超时",
+    "exercise_type": "config",
+    "tech_stack": "prometheus",
+    "weight": "medium",
+    "category": "config",
+    "subcategory": "基础",
+    "full_code": "global:\n  scrape_timeout: 10s\n  evaluation_interval: 15s",
+    "expected": "",
+    "points": [
+      {
+        "id": "timeout",
+        "text": "10s",
+        "category": "timeout",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "抓取超时",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 `10s`",
+      "level_2": "📖 scrape_timeout",
+      "level_3": "👀 `scrape_timeout` 限制单次抓取耗时",
+      "level_4": "📝 正确答案：global:\n  scrape_timeout: 10s\n  evaluation_interval: 15s"
+    },
+    "explanation": "`global.scrape_timeout` 默认 10s，超时目标会标为 unhealthy。"
+  },
+  {
+    "id": "prom-basics-030",
+    "title": "外部标签",
+    "description": "抓取数据附加全局标签",
+    "exercise_type": "config",
+    "tech_stack": "prometheus",
+    "weight": "medium",
+    "category": "config",
+    "subcategory": "基础",
+    "full_code": "global:\n  external_labels:\n    cluster: prod\n  scrape_interval: 15s",
+    "expected": "",
+    "points": [
+      {
+        "id": "cluster",
+        "text": "prod",
+        "category": "labels",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "外部标签值",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 `cluster: prod`",
+      "level_2": "📖 external_labels",
+      "level_3": "👀 `external_labels` 给所有序列附加标签",
+      "level_4": "📝 正确答案：global:\n  external_labels:\n    cluster: prod\n  scrape_interval: 15s"
+    },
+    "explanation": "`global.external_labels` 为所有指标附加固定的全局标签。"
+  }
+]

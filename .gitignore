@@ -9,6 +9,7 @@ backend/bin/
 # runtime data
 backend/data/*
 !backend/data/library/
+!backend/data/bank/
 
 # logs
 *.log

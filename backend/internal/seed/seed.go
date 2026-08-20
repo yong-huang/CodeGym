@@ -48,6 +48,97 @@ type seedExercise struct {
 	explanation  string
 }
 
+// bankPointJSON is the on-disk JSON schema of one fill point. Locations are
+// NOT stored: spans are recomputed from `text` in the code on every load, so
+// the JSON stays hand-editable.
+type bankPointJSON struct {
+	ID                string   `json:"id"`
+	Text              string   `json:"text"`
+	Category          string   `json:"category"`
+	MinWeight         string   `json:"min_weight"`
+	WeightScore       float64  `json:"weight_score"`
+	Hint              string   `json:"hint"`
+	FillType          string   `json:"fill_type"`
+	Options           []string `json:"options,omitempty"`
+	AcceptableAnswers []string `json:"acceptable_answers,omitempty"`
+	AlwaysFill        bool     `json:"always_fill,omitempty"`
+	Occurrence        int      `json:"occurrence,omitempty"`
+}
+
+// bankSeedJSON is the on-disk JSON schema of one question.
+type bankSeedJSON struct {
+	ID           string           `json:"id"`
+	Title        string           `json:"title"`
+	Description  string           `json:"description"`
+	ExerciseType string           `json:"exercise_type"`
+	TechStack    string           `json:"tech_stack"`
+	Weight       string           `json:"weight"`
+	Category     string           `json:"category"`
+	Subcategory  string           `json:"subcategory,omitempty"`
+	FullCode     string           `json:"full_code"`
+	BuggyCode    string           `json:"buggy_code,omitempty"`
+	BugDesc      string           `json:"bug_description,omitempty"`
+	BugLoc       string           `json:"bug_location,omitempty"`
+	Expected     string           `json:"expected"`
+	Validation   string           `json:"validation_code,omitempty"`
+	TestCases    []model.TestCase `json:"test_cases,omitempty"`
+	Points       []bankPointJSON  `json:"points"`
+	Hints        model.SpotterHints `json:"hints"`
+	Explanation  string           `json:"explanation,omitempty"`
+}
+
+func (j bankPointJSON) toSeed() seedPoint {
+	return seedPoint{
+		id: j.ID, text: j.Text, category: j.Category, minWeight: j.MinWeight,
+		weightScore: j.WeightScore, hint: j.Hint, fillType: j.FillType,
+		options: j.Options, acceptableAnswers: j.AcceptableAnswers,
+		alwaysFill: j.AlwaysFill, occurrence: j.Occurrence,
+	}
+}
+
+func (p seedPoint) toBankJSON() bankPointJSON {
+	return bankPointJSON{
+		ID: p.id, Text: p.text, Category: p.category, MinWeight: p.minWeight,
+		WeightScore: p.weightScore, Hint: p.hint, FillType: p.fillType,
+		Options: p.options, AcceptableAnswers: p.acceptableAnswers,
+		AlwaysFill: p.alwaysFill, Occurrence: p.occurrence,
+	}
+}
+
+func (j bankSeedJSON) toSeed() seedExercise {
+	points := make([]seedPoint, 0, len(j.Points))
+	for _, p := range j.Points {
+		points = append(points, p.toSeed())
+	}
+	return seedExercise{
+		id: j.ID, title: j.Title, description: j.Description,
+		exerciseType: j.ExerciseType, techStack: j.TechStack,
+		weight: j.Weight, category: j.Category, subcategory: j.Subcategory,
+		fullCode: j.FullCode, buggyCode: j.BuggyCode,
+		bugDesc: j.BugDesc, bugLoc: j.BugLoc,
+		expected: j.Expected, validation: j.Validation,
+		testCases: j.TestCases, points: points,
+		hints: j.Hints, explanation: j.Explanation,
+	}
+}
+
+func (s seedExercise) toBankJSON() bankSeedJSON {
+	points := make([]bankPointJSON, 0, len(s.points))
+	for _, p := range s.points {
+		points = append(points, p.toBankJSON())
+	}
+	return bankSeedJSON{
+		ID: s.id, Title: s.title, Description: s.description,
+		ExerciseType: s.exerciseType, TechStack: s.techStack,
+		Weight: s.weight, Category: s.category, Subcategory: s.subcategory,
+		FullCode: s.fullCode, BuggyCode: s.buggyCode,
+		BugDesc: s.bugDesc, BugLoc: s.bugLoc,
+		Expected: s.expected, Validation: s.validation,
+		TestCases: s.testCases, Points: points,
+		Hints: s.hints, Explanation: s.explanation,
+	}
+}
+
 func buildExercise(s seedExercise) (model.Exercise, error) {
 	ex := model.Exercise{
 		ID:             s.id,
@@ -102,23 +193,8 @@ func buildExercise(s seedExercise) (model.Exercise, error) {
 			Options:           p.options,
 		})
 	}
-	// large config YAML gets extra fill points so higher weights fill more
-	if s.exerciseType == model.ExerciseTypeConfig {
-		extra := enrichYamlPoints(s.points, code, 6)
-		if len(extra) > len(s.points) {
-			for i := len(s.points); i < len(extra); i++ {
-				p := extra[i]
-				start, ok := occurrenceIndex(code, p.text, 0)
-				if ok {
-					ex.FillPoints.Points = append(ex.FillPoints.Points, model.FillPoint{
-						ID: p.id, Location: model.FillLocation{Type: "span", SpanStart: start, SpanEnd: start + len(p.text)},
-						OriginalText: p.text, Category: p.category, MinWeight: p.minWeight,
-						WeightScore: p.weightScore, Hint: p.hint, FillType: p.fillType,
-					})
-				}
-			}
-		}
-	}
+	// fill points are fully baked into the bank JSON (including auto ones),
+	// so no extra enrichment happens at build time.
 	ensureBeginnerPoint(ex.FillPoints.Points)
 	return ex, nil
 }
@@ -157,184 +233,6 @@ func occurrenceIndex(s, sub string, n int) (int, bool) {
 	return idx, true
 }
 
-// addVerbPoint no longer auto-appends trivial "get/list"-style verb points:
-// filling in a bare verb like `get` is not a meaningful challenge, so command
-// exercises keep only their hand-authored (meaningful) fill points.
-func addVerbPoint(points []seedPoint, _ string) []seedPoint {
-	return points
-}
-
-// goTokenHints lists salient Go concurrency tokens to auto-add as fill points.
-var goTokenHints = []struct {
-	pattern, category, hint string
-}{
-	{"go func", "goroutine", "用 go 关键字启动协程"},
-	{"wg.Add(1)", "waitgroup", "启动前计数器 +1"},
-	{"wg.Wait()", "waitgroup", "等待所有协程完成"},
-	{"defer wg.Done()", "waitgroup", "协程完成时 -1"},
-	{"mu.Lock()", "mutex", "进入临界区加锁"},
-	{"mu.Unlock()", "mutex", "退出临界区解锁"},
-	{"mu.RLock()", "rwmutex", "读操作加读锁"},
-	{"once.Do", "once", "只执行一次的初始化"},
-	{"atomic.AddInt64", "atomic", "原子自增"},
-	{"atomic.StoreInt64", "atomic", "原子写入"},
-	{"atomic.LoadInt64", "atomic", "原子读取"},
-	{"atomic.CompareAndSwapInt64", "atomic", "原子比较交换"},
-	{"cond.Wait()", "cond", "等待条件满足"},
-	{"cond.Broadcast()", "cond", "唤醒所有等待者"},
-	{"time.NewTicker", "ticker", "周期定时器"},
-	{"time.After(", "timeout", "超时通道"},
-	{"ctx.Done()", "context", "取消/超时通知"},
-	{"cancel()", "context", "触发取消"},
-	{"<-done", "channel", "接收退出信号"},
-	{"close(done)", "channel", "关闭即广播放行"},
-	{"close(ch)", "channel", "关闭 channel 结束接收"},
-	{"make(chan", "channel", "创建 channel"},
-	{"ch <- ", "channel", "向 channel 发送"},
-	{"<-ch", "channel", "从 channel 接收"},
-	{"select {", "select", "多路复用选择"},
-}
-
-// enrichGoPoints scans a Go program and appends concurrency fill points for
-// salient tokens (go/waitgroup/mutex/chan/context…), each with escalating
-// difficulty, so higher weight levels visibly fill more. Skips texts already
-// covered and caps additions.
-func enrichGoPoints(points []seedPoint, code string, maxAdded int) []seedPoint {
-	hasText := func(t string) bool {
-		for _, p := range points {
-			if p.text == t {
-				return true
-			}
-		}
-		return false
-	}
-	levels := []string{"easy", "easy", "medium", "medium", "hard", "hard", "expert"}
-	li := 0
-	added := 0
-	for _, t := range goTokenHints {
-		if added >= maxAdded {
-			break
-		}
-		if !strings.Contains(code, t.pattern) || hasText(t.pattern) {
-			continue
-		}
-		lvl := levels[li]
-		if li < len(levels)-1 {
-			li++
-		}
-		points = append(points, seedPoint{
-			id: "auto_" + sanitizeID(t.pattern), text: t.pattern, category: t.category,
-			minWeight: lvl, weightScore: 0.7, hint: t.hint, fillType: "text",
-		})
-		added++
-	}
-	return points
-}
-
-// sanitizeID makes an arbitrary token usable as a fill point id.
-func sanitizeID(s string) string {
-	var b strings.Builder
-	for _, r := range s {
-		if (r >= 'a' && r <= 'z') || (r >= 'A' && r <= 'Z') || (r >= '0' && r <= '9') || r == '_' {
-			b.WriteRune(r)
-		}
-	}
-	if b.Len() == 0 {
-		return "x"
-	}
-	return b.String()
-}
-
-// yamlFillHints maps config field keys to a short hint for auto-added points.
-var yamlFillHints = map[string]string{
-	"replicas":      "副本数",
-	"image":         "容器镜像",
-	"containerPort": "容器端口",
-	"targetPort":    "后端目标端口",
-	"nodePort":      "节点端口",
-	"port":          "服务/探针端口",
-	"storage":       "存储容量",
-	"cpu":           "CPU 配额",
-	"memory":        "内存配额",
-	"host":          "域名/主机名",
-	"uri":           "源/仓库地址",
-	"path":          "路径",
-	"medium":        "介质/类型",
-	"termination":   "终止方式",
-	"strategy":      "构建策略",
-	"reclaimPolicy": "回收策略",
-	"provisioner":   "卷供应器",
-	"app":           "标签 app 的值",
-}
-
-// enrichYamlPoints inspects a config YAML and appends additional fill points
-// for salient scalar fields (replicas, image, ports, storage, cpu…), each with
-// an escalating difficulty, so higher weight levels visibly fill more.
-// Small configs (a few fields) are left with their existing points; only
-// larger YAML blocks get extra fill points (capped at maxAdded).
-func enrichYamlPoints(points []seedPoint, code string, maxAdded int) []seedPoint {
-	// count meaningful YAML lines; small snippets stay simple (1-2 points)
-	meaningful := 0
-	var lines []string
-	for _, ln := range strings.Split(code, "\n") {
-		t := strings.TrimSpace(ln)
-		if t == "" || strings.HasPrefix(t, "#") {
-			continue
-		}
-		meaningful++
-		lines = append(lines, t)
-	}
-	if meaningful < 6 {
-		return points
-	}
-
-	hasText := func(t string) bool {
-		for _, p := range points {
-			if p.text == t {
-				return true
-			}
-		}
-		return false
-	}
-	levels := []string{"easy", "easy", "medium", "medium", "hard", "hard", "expert"}
-	li := 0
-	added := 0
-	for _, t := range lines {
-		if added >= maxAdded {
-			break
-		}
-		if strings.HasPrefix(t, "- ") {
-			continue
-		}
-		idx := strings.Index(t, ":")
-		if idx <= 0 {
-			continue
-		}
-		key := strings.TrimSpace(t[:idx])
-		hint, ok := yamlFillHints[key]
-		if !ok || hint == "" {
-			continue
-		}
-		val := strings.Trim(strings.TrimSpace(t[idx+1:]), `'"+ `)
-		if val == "" || strings.ContainsAny(val, "{[]}/\\") || len(val) > 40 {
-			continue
-		}
-		if hasText(val) {
-			continue
-		}
-		lvl := levels[li]
-		if li < len(levels)-1 {
-			li++
-		}
-		points = append(points, seedPoint{
-			id: "auto_" + key + "_" + sanitizeID(val), text: val, category: "config",
-			minWeight: lvl, weightScore: 0.7, hint: "补充「" + hint + "」", fillType: "text",
-		})
-		added++
-	}
-	return points
-}
-
 // CategoryPair is a (tech_stack, subcategory) default managed category.
 type CategoryPair struct {
 	Tech  string
@@ -346,6 +244,10 @@ type CategoryPair struct {
 func CategoryPlan() []CategoryPair {
 	return []CategoryPair{
 		{Tech: "python", Sub: "基础"},
+		{Tech: "python", Sub: "FastAPI"},
+		{Tech: "python", Sub: "高级"},
+		{Tech: "python", Sub: "实战"},
+		{Tech: "python", Sub: "web"},
 		{Tech: "javascript", Sub: "基础"},
 		{Tech: "go", Sub: "基础"},
 		{Tech: "go", Sub: "高级"},
@@ -371,505 +273,109 @@ func CategoryPlan() []CategoryPair {
 		{Tech: "prometheus", Sub: "高级"},
 		{Tech: "prometheus", Sub: "实战"},
 		{Tech: "prometheus", Sub: "web"},
+		{Tech: "fastapi", Sub: "基础"},
+		{Tech: "fastapi", Sub: "高级"},
+		{Tech: "fastapi", Sub: "实战"},
+		{Tech: "fastapi", Sub: "web"},
 	}
 }
 
-// LoadLibrary reads all question-bank JSON files (*.json) in dir and returns
-// the exercises. When the directory is missing/empty it returns nil so the
-// caller can fall back to the built-in builders.
-func LoadLibrary(dir string) ([]model.Exercise, error) {
-	entries, err := os.ReadDir(dir)
-	if err != nil {
-		return nil, nil // no library dir configured -> fall back to built-in
+// resolveBankDir locates the question-bank JSON directory: an explicit path,
+// else $CODEGYM_BANK_DIR, else the nearest ancestor of cwd containing data/bank.
+func resolveBankDir(dir string) string {
+	if dir != "" {
+		return dir
 	}
-	var out []model.Exercise
-	for _, e := range entries {
-		if e.IsDir() || !strings.HasSuffix(e.Name(), ".json") {
-			continue
+	if env := os.Getenv("CODEGYM_BANK_DIR"); env != "" {
+		return env
+	}
+	if cwd, err := os.Getwd(); err == nil {
+		for p := cwd; ; p = filepath.Dir(p) {
+			cand := filepath.Join(p, "data", "bank")
+			if fi, err := os.Stat(cand); err == nil && fi.IsDir() {
+				return cand
+			}
+			if filepath.Dir(p) == p {
+				break
+			}
 		}
-		data, err := os.ReadFile(filepath.Join(dir, e.Name()))
-		if err != nil {
-			return nil, err
-		}
-		var list []model.Exercise
-		if err := json.Unmarshal(data, &list); err != nil {
-			return nil, fmt.Errorf("parse %s: %w", e.Name(), err)
-		}
-		out = append(out, list...)
+	}
+	return filepath.Join("data", "bank")
+}
+
+// LoadBank reads one question-bank JSON file (raw seed sources) from dir.
+func LoadBank(dir, file string) ([]seedExercise, error) {
+	if dir == "" {
+		dir = resolveBankDir("")
+	}
+	data, err := os.ReadFile(filepath.Join(dir, file+".json"))
+	if err != nil {
+		return nil, err
+	}
+	return parseBank(file+".json", data)
+}
+
+// parseBank parses one bank JSON file into raw seed sources.
+func parseBank(name string, data []byte) ([]seedExercise, error) {
+	var list []bankSeedJSON
+	if err := json.Unmarshal(data, &list); err != nil {
+		return nil, fmt.Errorf("parse %s: %w", name, err)
+	}
+	out := make([]seedExercise, 0, len(list))
+	for _, j := range list {
+		out = append(out, j.toSeed())
 	}
 	return out, nil
 }
 
-// All returns every seeded exercise, ready for Upsert.
-func All() ([]model.Exercise, error) {
-	seedExercises := []seedExercise{
-		{
-			id:          "py-lc-001",
-			title:       "列表推导式 - 偶数平方",
-			description: "将 numbers 列表中的偶数筛选出来并计算平方，生成新列表",
-			exerciseType: model.ExerciseTypeFill,
-			techStack:   "python",
-			weight:      model.DefaultWeightLevel,
-			category:    "list_comprehension",
-			fullCode:    "numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]\nresult = [x**2 for x in numbers if x % 2 == 0]\nprint(result)",
-			expected:    "[4, 16, 36, 64, 100]",
-			points: []seedPoint{
-				{id: "expr", text: "x**2", category: "expression", minWeight: "beginner", weightScore: 0.6,
-					hint: "计算每个元素的平方，可以使用幂运算符或乘法", fillType: "text"},
-				{id: "cond", text: "x % 2 == 0", category: "condition", minWeight: "medium", weightScore: 0.8,
-					hint: "偶数的数学特征是什么？能被什么整除？", fillType: "text"},
-				{id: "iter", text: "numbers", category: "iterator", minWeight: "easy", weightScore: 0.4,
-					hint: "对哪个可迭代对象做推导？", fillType: "text", occurrence: 1},
-			},
-			hints: model.SpotterHints{
-				Level1: "💡 想一想，偶数的数学特征是什么？",
-				Level2: "📖 偶数能被 2 整除，用取模运算符 % 来判断",
-				Level3: "👀 条件表达式应该是 `x % 2 == 0` 这样的形式",
-				Level4: "📝 正确答案：`x % 2 == 0`",
-			},
-			explanation: "列表推导式 `[expr for item in iterable if condition]`。`x**2` 计算平方，`x % 2 == 0` 筛选偶数，两者都满足时保留并平方。",
-		},
-		{
-			id:          "py-palindrome-002",
-			title:       "回文判断函数",
-			description: "实现 is_palindrome 函数，判断字符串是否正反相同",
-			exerciseType: model.ExerciseTypeFill,
-			techStack:   "python",
-			weight:      model.DefaultWeightLevel,
-			category:    "function",
-			fullCode:    "def is_palindrome(s: str) -> bool:\n    return s == s[::-1]\n\nprint(is_palindrome('racecar'))\nprint(is_palindrome('hello'))",
-			expected:    "True\nFalse",
-			points: []seedPoint{
-				{id: "return_expr", text: "s[::-1]", category: "expression", minWeight: "beginner", weightScore: 0.5,
-					hint: "想想字符串反转的方法（切片）", fillType: "text"},
-				{id: "return_type", text: "-> bool", category: "type_annotation", minWeight: "easy", weightScore: 0.3,
-					hint: "返回值是什么类型？布尔值", fillType: "text"},
-				{id: "compare", text: "s == s[::-1]", category: "condition", minWeight: "medium", weightScore: 0.8,
-					hint: "正序和反转后相等即为回文", fillType: "text", occurrence: 0},
-				{id: "call_arg", text: "'hello'", category: "argument", minWeight: "hard", weightScore: 0.6,
-					hint: "第二个测试用例的反例参数", fillType: "text", occurrence: 0},
-			},
-			hints: model.SpotterHints{
-				Level1: "💡 判断回文只需比较原串与反转后的串",
-				Level2: "📖 切片 `s[::-1]` 可以反转字符串",
-				Level3: "👀 `return s == s[::-1]`",
-				Level4: "📝 正确答案：`return s == s[::-1]`",
-			},
-			explanation: "切片 `s[::-1]` 返回反转后的字符串。`s == s[::-1]` 在正反相同（回文）时返回 True。",
-		},
-		{
-			id:          "py-factorial-bug-003",
-			title:       "阶乘 Bug 修复",
-			description: "find and fix the off-by-one bug in factorial",
-			exerciseType: model.ExerciseTypeBugfix,
-			techStack:   "python",
-			weight:      "hard",
-			category:    "bugfix",
-			fullCode:    "def factorial(n):\n    result = 1\n    for i in range(1, n + 1):\n        result *= i\n    return result",
-			buggyCode:   "def factorial(n):\n    result = 1\n    for i in range(n):\n        result *= i\n    return result",
-			bugDesc:     "n=5 时输出 0，预期 120。range(n) 从 0 开始，result 乘以 0 后永远为 0",
-			bugLoc:      "for i in range(n)",
-			expected:    "120\n6",
-			validation:  "\nprint(factorial(5))\nprint(factorial(3))",
-			testCases:   []model.TestCase{{Output: "120"}, {Output: "6"}},
-			points: []seedPoint{
-				{id: "loop", text: "for i in range(n)", category: "loop", minWeight: "beginner", weightScore: 1,
-					hint: "range(n) 从 0 开始，为什么结果会是 0？", fillType: "code"},
-			},
-			hints: model.SpotterHints{
-				Level1: "💡 仔细看循环的起始值，乘以 0 会发生什么？",
-				Level2: "📖 range(n) 生成 [0..n-1]，第一次循环 result *= 0 把结果清成 0",
-				Level3: "👀 循环应从 1 开始到 n 结束",
-				Level4: "📝 正确答案：`for i in range(1, n + 1):`",
-			},
-			explanation: "off-by-one：range(n) 从 0 开始，第一次迭代 `result *= 0` 使结果恒为 0。改为 `range(1, n + 1)` 即可。",
-		},
-		{
-			id:          "py-fizzbuzz-004",
-			title:       "FizzBuzz 函数",
-			description: "实现 FizzBuzz：3 的倍数输出 Fizz，5 的倍数输出 Buzz，同时是 3 和 5 的倍数输出 FizzBuzz",
-			exerciseType: model.ExerciseTypeFill,
-			techStack:   "python",
-			weight:      "medium",
-			category:    "control_flow",
-			fullCode:    "def fizzbuzz(n):\n    if n % 15 == 0:\n        return 'FizzBuzz'\n    if n % 3 == 0:\n        return 'Fizz'\n    if n % 5 == 0:\n        return 'Buzz'\n    return str(n)\n\nprint(fizzbuzz(15))\nprint(fizzbuzz(9))\nprint(fizzbuzz(10))\nprint(fizzbuzz(7))",
-			expected:    "FizzBuzz\nFizz\nBuzz\n7",
-			points: []seedPoint{
-				{id: "fizzbuzz", text: "n % 15 == 0", category: "condition", minWeight: "beginner", weightScore: 0.8,
-					hint: "同时是 3 和 5 的倍数的最小公倍数是多少？", fillType: "text"},
-				{id: "fizz", text: "n % 3 == 0", category: "condition", minWeight: "easy", weightScore: 0.5,
-					hint: "3 的倍数如何判断？", fillType: "text"},
-				{id: "buzz", text: "n % 5 == 0", category: "condition", minWeight: "easy", weightScore: 0.5,
-					hint: "5 的倍数如何判断？", fillType: "text"},
-				{id: "fallback", text: "str(n)", category: "expression", minWeight: "medium", weightScore: 0.4,
-					hint: "都不是倍数时返回数字本身，注意类型", fillType: "text"},
-			},
-			hints: model.SpotterHints{
-				Level1: "💡 三个条件都有取模运算",
-				Level2: "📖 n % 15 == 0 表示能同时被 3 和 5 整除",
-				Level3: "👀 依次判断 15、3、5 的倍数",
-				Level4: "📝 正确答案：`n % 15 == 0` / `n % 3 == 0` / `n % 5 == 0` / `str(n)`",
-			},
-			explanation: "先判断是否同时是 3 和 5 的倍数（15 的倍数），再分别判断 3 和 5，最后返回原数字的字符串形式。",
-		},
-		{
-			id:          "kubectl-getpods-005",
-			title:       "kubectl 查看所有命名空间的 Pod",
-			description: "补全命令，查看所有命名空间的 Pod",
-			exerciseType: model.ExerciseTypeCommand,
-			techStack:   "kubernetes",
-			weight:      "easy",
-			category:    "command",
-			fullCode:    "# 查看所有命名空间的 Pod\nkubectl get pods -A",
-			expected:    "",
-			points: []seedPoint{
-				{id: "flag", text: "-A", category: "command_flag", minWeight: "beginner", weightScore: 1,
-					hint: "可以用短参数 -A 或长参数 --all-namespaces", fillType: "select",
-					options: []string{"-A", "--all-namespaces", "-n default", "--namespace all"},
-					acceptableAnswers: []string{"--all-namespaces"}},
-			},
-			hints: model.SpotterHints{
-				Level1: "💡 所有命名空间的关键词是什么？",
-				Level2: "📖 `--all-namespaces` 或短参数 `-A`",
-				Level3: "👀 `kubectl get pods -A`",
-				Level4: "📝 正确答案：`-A`（等价 `--all-namespaces`）",
-			},
-			explanation: "`-A` 是 `--all-namespaces` 的短参数，列出所有命名空间中的 Pod。",
-		},
-		{
-			id:          "k8s-nginx-pod-006",
-			title:       "Nginx Pod 配置",
-			description: "补全 Kubernetes Pod YAML 中的关键字段",
-			exerciseType: model.ExerciseTypeConfig,
-			techStack:   "kubernetes",
-			weight:      "medium",
-			category:    "manifest",
-			fullCode:    "apiVersion: v1\nkind: Pod\nmetadata:\n  name: nginx-pod\nspec:\n  containers:\n  - name: nginx\n    image: nginx:1.25\n    ports:\n    - containerPort: 80",
-			expected:    "",
-			points: []seedPoint{
-				{id: "image", text: "nginx:1.25", category: "image", minWeight: "beginner", weightScore: 0.7,
-					hint: "Nginx 镜像及版本标签", fillType: "text"},
-				{id: "port", text: "80", category: "port", minWeight: "easy", weightScore: 0.6,
-					hint: "Nginx 默认监听端口", fillType: "text"},
-				{id: "name", text: "nginx-pod", category: "metadata", minWeight: "medium", weightScore: 0.5,
-					hint: "Pod 的名称字段", fillType: "text"},
-			},
-			hints: model.SpotterHints{
-				Level1: "💡 镜像与端口分别填写什么？",
-				Level2: "📖 镜像 `nginx:1.25`，Nginx 默认 80 端口",
-				Level3: "👀 `image: nginx:1.25` / `containerPort: 80`",
-				Level4: "📝 正确答案：`nginx:1.25` 与 `80`",
-			},
-			explanation: "Pod 资源要求镜像名称（含标签）与容器端口，`nginx:1.25` 对应官方镜像，Nginx 默认监听 80。",
-		},
-		{
-			id:          "js-even-squares-007",
-			title:       "JS 数组处理 - 偶数平方",
-			description: "用 filter 和 map 生成偶数的平方数组",
-			exerciseType: model.ExerciseTypeFill,
-			techStack:   "javascript",
-			weight:      model.DefaultWeightLevel,
-			category:    "array_methods",
-			fullCode:    "const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];\nconst result = numbers.filter(x => x % 2 === 0).map(x => x ** 2);\nconsole.log(JSON.stringify(result));",
-			expected:    "[4,16,36,64,100]",
-			points: []seedPoint{
-				{id: "filter_cond", text: "x % 2 === 0", category: "condition", minWeight: "medium", weightScore: 0.7,
-					hint: "筛选偶数的条件（严格相等）", fillType: "text"},
-				{id: "map_fn", text: "x ** 2", category: "expression", minWeight: "beginner", weightScore: 0.5,
-					hint: "计算平方的箭头函数体", fillType: "text"},
-			},
-			hints: model.SpotterHints{
-				Level1: "💡 filter 筛选，map 变换",
-				Level2: "📖 偶数条件 `x % 2 === 0`，平方 `x ** 2`",
-				Level3: "👀 `.filter(x => x % 2 === 0).map(x => x ** 2)`",
-				Level4: "📝 正确答案：`x % 2 === 0` 与 `x ** 2`",
-			},
-			explanation: "`filter` 保留满足条件的元素，`map` 对每个元素做变换，链式调用即可完成筛选并平方。",
-		},
-		// ---------- Go 题库 ----------
-		{
-			id:          "go-even-squares-101",
-			title:       "Geven 偶数平方过滤",
-			description: "用 for + 取模筛选偶数并计算平方，收集到新的切片",
-			exerciseType: model.ExerciseTypeFill,
-			techStack:   "go",
-			weight:      model.DefaultWeightLevel,
-			category:    "slice",
-			fullCode:    "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tnumbers := []int{1, 2, 3, 4, 5, 6, 7, 8}\n\tresult := []int{}\n\tfor _, n := range numbers {\n\t\tif n%2 == 0 {\n\t\t\tresult = append(result, n*n)\n\t\t}\n\t}\n\tfmt.Println(result)\n}",
-			expected:    "[4 16 36 64]",
-			points: []seedPoint{
-				{id: "cond", text: "n%2 == 0", category: "condition", minWeight: "easy", weightScore: 0.7,
-					hint: "用取模判断偶数的条件是什么？", fillType: "text"},
-				{id: "square", text: "n*n", category: "expression", minWeight: "beginner", weightScore: 0.6,
-					hint: "计算 n 的平方（乘法表达式）", fillType: "text"},
-				{id: "append", text: "append", category: "function", minWeight: "easy", weightScore: 0.5,
-					hint: "向切片末尾追加元素的 Go 内置函数", fillType: "text"},
-			},
-			hints: model.SpotterHints{
-				Level1: "💡 偶数能被 2 整除，平方用乘法",
-				Level2: "📖 判断 `n%2 == 0`，计算 `n*n`，追加 `append`",
-				Level3: "👀 `n%2 == 0` → `result = append(result, n*n)`",
-				Level4: "📝 正确答案：`n%2 == 0` / `n*n` / `append`",
-			},
-			explanation: "`n%2 == 0` 判断偶数，`n*n` 计算平方，`append` 向切片追加元素。",
-		},
-		{
-			id:          "go-palindrome-102",
-			title:       "Goure 回文判断",
-			description: "实现 isPalindrome，比较字符串首尾字符判断回文",
-			exerciseType: model.ExerciseTypeFill,
-			techStack:   "go",
-			weight:      model.DefaultWeightLevel,
-			category:    "string",
-			fullCode:    "package main\n\nimport \"fmt\"\n\nfunc isPalindrome(s string) bool {\n\trunes := []rune(s)\n\tfor i := 0; i < len(runes); i++ {\n\t\tif runes[i] != runes[len(runes)-1-i] {\n\t\t\treturn false\n\t\t}\n\t}\n\treturn true\n}\n\nfunc main() {\n\tfmt.Println(isPalindrome(\"racecar\"))\n\tfmt.Println(isPalindrome(\"hello\"))\n}",
-			expected:    "true\nfalse",
-			points: []seedPoint{
-				{id: "cond", text: "runes[i] != runes[len(runes)-1-i]", category: "condition", minWeight: "medium", weightScore: 0.8,
-					hint: "比较第 i 个与倒数第 i 个字符，不对称返回 false", fillType: "text"},
-				{id: "init", text: "i := 0", category: "init", minWeight: "beginner", weightScore: 0.4,
-					hint: "循环起始下标（occurrence：for 循环的初始化）", fillType: "text"}, 
-				{id: "incr", text: "i++", category: "iteration", minWeight: "easy", weightScore: 0.4,
-					hint: "每次循环下标加一", fillType: "text"},
-				{id: "arg", text: "\"hello\"", category: "argument", minWeight: "hard", weightScore: 0.5,
-					hint: "第二个测试用例的反例字符串", fillType: "text", occurrence: 0},
-			},
-			hints: model.SpotterHints{
-				Level1: "💡 首尾字符逐一比较",
-				Level2: "📖 `runes[i]` 与 `runes[len(runes)-1-i]` 对称比较，不等则 false",
-				Level3: "👀 `if runes[i] != runes[len(runes)-1-i] { return false }`",
-				Level4: "📝 正确答案：`runes[i] != runes[len(runes)-1-i]`",
-			},
-			explanation: "双指针式循环：`runes[i]` 是首部字符，`runes[len(runes)-1-i]` 是对称尾部字符，任何一对不等即非回文。",
-		},
-		{
-			id:          "go-factorial-bug-103",
-			title:       "Goto 阶乘 Bug 修复",
-			description: "修复阶乘计算的 off-by-one 与初始值 bug",
-			exerciseType: model.ExerciseTypeBugfix,
-			techStack:   "go",
-			weight:      "hard",
-			category:    "bugfix",
-			fullCode:    "package main\n\nimport \"fmt\"\n\nfunc factorial(n int) int {\n\tresult := 1\n\tfor i := 1; i <= n; i++ {\n\t\tresult *= i\n\t}\n\treturn result\n}\n\nfunc main() {\n\tfmt.Println(factorial(5))\n\tfmt.Println(factorial(3))\n}",
-			buggyCode:   "package main\n\nimport \"fmt\"\n\nfunc factorial(n int) int {\n\tresult := 1\n\tfor i := 0; i <= n; i++ {\n\t\tresult *= i\n\t}\n\treturn result\n}\n\nfunc main() {\n\tfmt.Println(factorial(5))\n\tfmt.Println(factorial(3))\n}",
-			bugDesc:     "n=5 时输出 0，预期 120：循环从 i:=0 开始，第一次 result 乘以 0 后恒为 0",
-			bugLoc:      "for i := 0; i <= n; i++",
-			expected:    "120\n6",
-			testCases:   []model.TestCase{{Output: "120"}, {Output: "6"}},
-			points: []seedPoint{
-				{id: "loop", text: "for i := 0; i <= n; i++", category: "loop", minWeight: "beginner", weightScore: 1,
-					hint: "循环从哪个数开始？乘以 0 会发生什么？", fillType: "code", occurrence: 0},
-			},
-			hints: model.SpotterHints{
-				Level1: "💡 循环起始值可能是问题所在",
-				Level2: "📖 i 从 0 开始，第一次 result *= 0 直接把结果清零",
-				Level3: "👀 改为 `for i := 1; i <= n; i++`",
-				Level4: "📝 正确答案：`for i := 1; i <= n; i++`",
-			},
-			explanation: "Go 的 for 循环三条语句用分号分隔；`i := 0` 使第一次迭代 result 乘 0，结果恒为 0，应改为 `i := 1; i <= n; i++`。",
-		},
-		{
-			id:          "go-fizzbuzz-104",
-			title:       "Goz 思路 FizzBuzz",
-			description: "实现 fizzbuzz：3 的倍数输出 Fizz，5 的倍数输出 Buzz，同倍数输出 FizzBuzz",
-			exerciseType: model.ExerciseTypeFill,
-			techStack:   "go",
-			weight:      "medium",
-			category:    "control_flow",
-			fullCode:    "package main\n\nimport \"fmt\"\n\nfunc fizzbuzz(n int) string {\n\tif n%15 == 0 {\n\t\treturn \"FizzBuzz\"\n\t}\n\tif n%3 == 0 {\n\t\treturn \"Fizz\"\n\t}\n\tif n%5 == 0 {\n\t\treturn \"Buzz\"\n\t}\n\treturn fmt.Sprint(n)\n}\n\nfunc main() {\n\tfmt.Println(fizzbuzz(15))\n\tfmt.Println(fizzbuzz(9))\n\tfmt.Println(fizzbuzz(10))\n\tfmt.Println(fizzbuzz(7))\n}",
-			expected:    "FizzBuzz\nFizz\nBuzz\n7",
-			points: []seedPoint{
-				{id: "both", text: "n%15 == 0", category: "condition", minWeight: "beginner", weightScore: 0.8,
-					hint: "同时是 3 和 5 的倍数，用最小公倍数 15 判断", fillType: "text"},
-				{id: "fizz", text: "n%3 == 0", category: "condition", minWeight: "easy", weightScore: 0.5,
-					hint: "3 的倍数", fillType: "text"},
-				{id: "buzz", text: "n%5 == 0", category: "condition", minWeight: "easy", weightScore: 0.5,
-					hint: "5 的倍数", fillType: "text"},
-				{id: "fallback", text: "fmt.Sprint(n)", category: "expression", minWeight: "medium", weightScore: 0.5,
-					hint: "都不是倍数时转成字符串返回", fillType: "text"},
-			},
-			hints: model.SpotterHints{
-				Level1: "💡 三个分支都做取模判断",
-				Level2: "📖 15、3、5 的倍数顺序判断，最后 `fmt.Sprint(n)`",
-				Level3: "👀 `if n%15 == 0` / `if n%3 == 0` / `if n%5 == 0`",
-				Level4: "📝 正确答案：`n%15==0` / `n%3==0` / `n%5==0` / `fmt.Sprint(n)`",
-			},
-			explanation: "先判 15 的倍数（同时满足 3 和 5），再分别判 3、5，最后返回字符串化的数字，注意 Go 里 int 不能直接与 string 拼接。",
-		},
-		{
-			id:          "go-fib-105",
-			title:       "Goz 斐波那契数列",
-			description: "用递归实现 fib，返回第 n 个斐波那契数",
-			exerciseType: model.ExerciseTypeFill,
-			techStack:   "go",
-			weight:      "medium",
-			category:    "recursion",
-			fullCode:    "package main\n\nimport \"fmt\"\n\nfunc fib(n int) int {\n\tif n < 2 {\n\t\treturn n\n\t}\n\treturn fib(n-1) + fib(n-2)\n}\n\nfunc main() {\n\tfmt.Println(fib(10))\n}",
-			expected:    "55",
-			points: []seedPoint{
-				{id: "base", text: "n < 2", category: "condition", minWeight: "beginner", weightScore: 0.6,
-					hint: "递归终止条件：n 小于几时直接返回？", fillType: "text"},
-				{id: "recur", text: "fib(n-1) + fib(n-2)", category: "expression", minWeight: "medium", weightScore: 0.9,
-					hint: "斐波那契递推式：前两项之和", fillType: "text"},
-				{id: "call", text: "10", category: "argument", minWeight: "easy", weightScore: 0.4,
-					hint: "主程序求解第几个斐波那契数？", fillType: "text", occurrence: 0},
-			},
-			hints: model.SpotterHints{
-				Level1: "💡 递归 = 终止条件 + 递推式",
-				Level2: "📖 `n<2` 返回 n；否则 `fib(n-1)+fib(n-2)`",
-				Level3: "👀 `if n < 2 { return n }` 否则 `return fib(n-1) + fib(n-2)`",
-				Level4: "📝 正确答案：`n < 2` / `fib(n-1) + fib(n-2)` / `10`",
-			},
-			explanation: "Fib(0)=0、Fib(1)=1，其余为前两项之和；`fib(10)=55`。",
-		},
-		{
-			id:          "go-concurrent-106",
-			title:       "Gocon 并发求和",
-			description: "用 goroutine 并发计算 1..100 的和，练习 sync.WaitGroup 与 Mutex",
-			exerciseType: model.ExerciseTypeFill,
-			techStack:   "go",
-			weight:      "hard",
-			category:    "concurrency",
-			fullCode:    "package main\n\nimport (\n\t\"fmt\"\n\t\"sync\"\n)\n\nfunc main() {\n\tvar wg sync.WaitGroup\n\tvar mu sync.Mutex\n\tsum := 0\n\tfor i := 1; i <= 100; i++ {\n\t\twg.Add(1)\n\t\tgo func(n int) {\n\t\t\tdefer wg.Done()\n\t\t\tmu.Lock()\n\t\t\tdefer mu.Unlock()\n\t\t\tsum += n\n\t\t}(i)\n\t}\n\twg.Wait()\n\tfmt.Println(sum)\n}",
-			expected:    "5050",
-			points: []seedPoint{
-				{id: "add", text: "wg.Add(1)", category: "statement", minWeight: "beginner", weightScore: 0.5,
-					hint: "每启动一个 goroutine 前计数器加一", fillType: "text"},
-				{id: "done", text: "defer wg.Done()", category: "statement", minWeight: "easy", weightScore: 0.6,
-					hint: "goroutine 结束时计数器减一", fillType: "text"},
-				{id: "lock", text: "mu.Lock()", category: "statement", minWeight: "medium", weightScore: 0.5,
-					hint: "并发修改 sum 前加互斥锁", fillType: "text"},
-				{id: "goroutine", text: "go func", category: "keyword", minWeight: "easy", weightScore: 0.4,
-					hint: "启动 goroutine 的关键字", fillType: "text"},
-			},
-			hints: model.SpotterHints{
-				Level1: "💡 WaitGroup 管等待，Mutex 管互斥",
-				Level2: "📖 `wg.Add(1)` 启动前增加，`defer wg.Done()` 退出前减少，写 sum 前 `mu.Lock()`",
-				Level3: "👀 `go func(n int){ defer wg.Done(); mu.Lock(); ... }(i)`",
-				Level4: "📝 正确答案：`wg.Add(1)` / `defer wg.Done()` / `mu.Lock()` / `go func`",
-			},
-			explanation: "`go` 关键字启动 goroutine；`WaitGroup` 等待所有 goroutine 完成；`Mutex` 保证并发写 sum 互斥。1..100 求和为 5050。",
-		},
-		{
-			id:          "go-wordcount-107",
-			title:       "Goword 词频统计",
-			description: "用 map 统计一段文本中单词出现的次数",
-			exerciseType: model.ExerciseTypeFill,
-			techStack:   "go",
-			weight:      "easy",
-			category:    "map",
-			fullCode:    "package main\n\nimport (\n\t\"fmt\"\n\t\"strings\"\n)\n\nfunc main() {\n\ttext := \"go go python go go\"\n\twords := strings.Fields(text)\n\tcounts := map[string]int{}\n\tfor _, w := range words {\n\t\tcounts[w]++\n\t}\n\tfmt.Println(counts[\"go\"], counts[\"python\"], counts[\"rust\"])\n}",
-			expected:    "4 1 0",
-			points: []seedPoint{
-				{id: "fields", text: "strings.Fields", category: "function", minWeight: "beginner", weightScore: 0.5,
-					hint: "按空白切分字符串成切片的内置函数", fillType: "text"},
-				{id: "incr", text: "counts[w]++", category: "statement", minWeight: "easy", weightScore: 0.6,
-					hint: "单词出现次数加一（map 写入）", fillType: "text"},
-				{id: "lookup", text: "counts[\"python\"]", category: "expression", minWeight: "medium", weightScore: 0.5,
-					hint: "读取 python 出现的次数", fillType: "text"},
-			},
-			hints: model.SpotterHints{
-				Level1: "💡 切分文本 + map 计数",
-				Level2: "📖 `strings.Fields(text)` 切词，`counts[w]++` 计数",
-				Level3: "👀 `words := strings.Fields(text)` 然后 `counts[w]++`",
-				Level4: "📝 正确答案：`strings.Fields` / `counts[w]++` / `counts[\"python\"]`",
-			},
-			explanation: "`strings.Fields` 把字符串按空格切成切片；`map[string]int` 统计词频。",
-		},
-		{
-			id:          "go-map-missing-108",
-			title:       "Gomap map 键缺失处理 Bug 修复",
-			description: "读取 map 中不存在的键时会返回零值并设置 ok=false，修复忽略 ok 的 bug",
-			exerciseType: model.ExerciseTypeBugfix,
-			techStack:   "go",
-			weight:      "medium",
-			category:    "bugfix",
-			fullCode:    "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tscores := map[string]int{\"alice\": 90, \"bob\": 80}\n\tscore, ok := scores[\"carol\"]\n\tif !ok {\n\t\tfmt.Println(\"not found\")\n\t} else {\n\t\tfmt.Println(score)\n\t}\n}",
-			buggyCode:   "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tscores := map[string]int{\"alice\": 90, \"bob\": 80}\n\tscore, _ := scores[\"carol\"]\n\tfmt.Println(score)\n}",
-			bugDesc:     "carol 不在 map 中，忽略 ok 会直接输出零值 0，期望输出 not found",
-			bugLoc:      "score, _ := scores[\"carol\"]",
-			expected:    "not found",
-			testCases:   []model.TestCase{{Output: "not found"}},
-			points: []seedPoint{
-				{id: "read", text: "score, _ := scores[\"carol\"]", category: "statement", minWeight: "beginner", weightScore: 1,
-					hint: "map 读取返回两个值，第二个是键是否存在的布尔值，忽略它就会漏判", fillType: "code", occurrence: 0},
-			},
-			hints: model.SpotterHints{
-				Level1: "💡 map 返回两个值：值和是否存在",
-				Level2: "📖 用 `ok` 接收第二个返回值，`if !ok` 时输出 not found",
-				Level3: "👀 `score, ok := scores[\"carol\"]; if !ok { fmt.Println(\"not found\") }`",
-				Level4: "📝 正确答案：`score, ok := scores[\"carol\"]` 并判断 `if !ok`",
-			},
-			explanation: "Go 中读取 map 缺失键返回零值且 ok=false；必须检查 ok 才能真正区分「值存在但为 0」与「键不存在」。",
-		},
+// buildBank loads one bank file and builds every exercise in it.
+func buildBank(dir, file string) ([]model.Exercise, error) {
+	list, err := LoadBank(dir, file)
+	if err != nil {
+		return nil, err
 	}
-
-	out := make([]model.Exercise, 0, len(seedExercises)+50+50)
-	for _, s := range seedExercises {
+	out := make([]model.Exercise, 0, len(list))
+	for _, s := range list {
 		ex, err := buildExercise(s)
 		if err != nil {
 			return nil, err
 		}
 		out = append(out, ex)
 	}
-	// Kubernetes 基础题库（50 题）
-	k8s, err := K8sBasics()
-	if err != nil {
-		return nil, err
-	}
-	out = append(out, k8s...)
-	// Go 基础题库（50 题）
-	gob, err := GoBasics()
-	if err != nil {
-		return nil, err
-	}
-	out = append(out, gob...)
-	// Go 并发题库（50 题）
-	gcc, err := GoConcurrency()
-	if err != nil {
-		return nil, err
-	}
-	out = append(out, gcc...)
-	// Python 基础题库（50 题）
-	pyb, err := PythonBasics()
-	if err != nil {
-		return nil, err
-	}
-	out = append(out, pyb...)
-	// OpenShift 基础题库（50 题）
-	ocb, err := OpenShiftBasics()
-	if err != nil {
-		return nil, err
-	}
-	out = append(out, ocb...)
-	// OpenShift 对比 Kubernetes（30 题）
-	ocd, err := OpenShiftDiff()
-	if err != nil {
-		return nil, err
-	}
-	out = append(out, ocd...)
-	// Docker 基础题库（50 题）
-	dkb, err := DockerBasics()
-	if err != nil {
-		return nil, err
-	}
-	out = append(out, dkb...)
-	// Kubernetes 资源配置系列（30 题）
-	res, err := K8sResourceConfig()
-	if err != nil {
-		return nil, err
-	}
-	out = append(out, res...)
-	// Kubernetes 调度专项（30 题）
-	sch, err := K8sScheduler()
-	if err != nil {
-		return nil, err
-	}
-	out = append(out, sch...)
-	// Prometheus 基础题库（30 题）
-	prom, err := PrometheusBasics()
-	if err != nil {
-		return nil, err
-	}
-	out = append(out, prom...)
 	return out, nil
+}
+
+// BuildAll loads every bank JSON file in dir and builds the exercises.
+func BuildAll(dir string) ([]model.Exercise, error) {
+	if dir == "" {
+		dir = resolveBankDir("")
+	}
+	entries, err := os.ReadDir(dir)
+	if err != nil {
+		return nil, err
+	}
+	var out []model.Exercise
+	for _, e := range entries {
+		if e.IsDir() || !strings.HasSuffix(e.Name(), ".json") {
+			continue
+		}
+		list, err := LoadBank(dir, strings.TrimSuffix(e.Name(), ".json"))
+		if err != nil {
+			return nil, err
+		}
+		for _, s := range list {
+			ex, err := buildExercise(s)
+			if err != nil {
+				return nil, err
+			}
+			out = append(out, ex)
+		}
+	}
+	return out, nil
+}
+
+// All returns every seeded exercise, ready for Upsert. It loads all question
+// banks from the data/bank JSON directory (see resolveBankDir).
+func All() ([]model.Exercise, error) {
+	return BuildAll("")
 }

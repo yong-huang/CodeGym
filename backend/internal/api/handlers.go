@@ -352,7 +352,9 @@ func (s *Server) execute(w http.ResponseWriter, r *http.Request) {
 	}
 	rebuilt := variant.ApplyAnswers(ex.FullCode, points, req.FillAnswers)
 
-	executable := ex.TechStack == "python" || ex.TechStack == "go"
+	// FastAPI（python/FastAPI 子类）是答案匹配题：需要 fastapi 运行时且无
+	// stdout 输出，不本地执行，与命令/配置题走同一格分路径。
+	executable := (ex.TechStack == "python" || ex.TechStack == "go") && ex.Subcategory != "FastAPI"
 	if executable {
 		run, runErr := s.engine.Run(r.Context(), ex.TechStack, rebuilt, time.Duration(ex.TimeLimitSecs)*time.Second)
 		result.Output = run.Stdout

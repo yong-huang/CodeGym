@@ -1,0 +1,1691 @@
+[
+  {
+    "id": "oc-basics-001",
+    "title": "查看当前用户",
+    "description": "查看当前登录的 OpenShift 用户",
+    "exercise_type": "command",
+    "tech_stack": "openshift",
+    "weight": "easy",
+    "category": "oc_command",
+    "subcategory": "基础",
+    "full_code": "oc whoami",
+    "expected": "",
+    "points": [
+      {
+        "id": "verb",
+        "text": "whoami",
+        "category": "command_verb",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "查看当前身份的子命令",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 查看当前用户的命令",
+      "level_2": "📖 `oc whoami`",
+      "level_3": "👀 `oc whoami`",
+      "level_4": "📝 正确答案：oc whoami"
+    },
+    "explanation": "`oc whoami` 显示当前登录用户；`oc whoami -t` 显示 token。"
+  },
+  {
+    "id": "oc-basics-002",
+    "title": "查看项目列表",
+    "description": "列出所有可访问的项目",
+    "exercise_type": "command",
+    "tech_stack": "openshift",
+    "weight": "easy",
+    "category": "oc_project",
+    "subcategory": "基础",
+    "full_code": "oc get projects",
+    "expected": "",
+    "points": [
+      {
+        "id": "res",
+        "text": "projects",
+        "category": "resource",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "项目资源名",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 查看项目的资源名",
+      "level_2": "📖 `oc get projects`",
+      "level_3": "👀 `oc get projects`",
+      "level_4": "📝 正确答案：oc get projects"
+    },
+    "explanation": "项目（Project）是 OpenShift 对命名空间的一层封装，`get projects` 列出全部。"
+  },
+  {
+    "id": "oc-basics-003",
+    "title": "查看当前项目",
+    "description": "查看当前使用的项目/命名空间",
+    "exercise_type": "command",
+    "tech_stack": "openshift",
+    "weight": "easy",
+    "category": "oc_project",
+    "subcategory": "基础",
+    "full_code": "oc project",
+    "expected": "",
+    "points": [
+      {
+        "id": "verb",
+        "text": "project",
+        "category": "command_verb",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "查看/切换项目的子命令",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 查看当前项目的命令",
+      "level_2": "📖 `oc project`",
+      "level_3": "👀 `oc project`",
+      "level_4": "📝 正确答案：oc project"
+    },
+    "explanation": "不带参数 `oc project` 显示当前项目，带参数则切换。"
+  },
+  {
+    "id": "oc-basics-004",
+    "title": "切换项目",
+    "description": "切换到 my-project 项目",
+    "exercise_type": "command",
+    "tech_stack": "openshift",
+    "weight": "easy",
+    "category": "oc_project",
+    "subcategory": "基础",
+    "full_code": "oc project my-project",
+    "expected": "",
+    "points": [
+      {
+        "id": "name",
+        "text": "my-project",
+        "category": "project",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "目标项目名",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 切换项目的命令",
+      "level_2": "📖 `oc project \u003c项目名\u003e`",
+      "level_3": "👀 `oc project my-project`",
+      "level_4": "📝 正确答案：oc project my-project"
+    },
+    "explanation": "`oc project \u003c名\u003e` 切换当前上下文的项目，相当于 `kubectl -n`。"
+  },
+  {
+    "id": "oc-basics-005",
+    "title": "创建项目",
+    "description": "创建名为 demo 的项目",
+    "exercise_type": "command",
+    "tech_stack": "openshift",
+    "weight": "easy",
+    "category": "oc_project",
+    "subcategory": "基础",
+    "full_code": "oc new-project demo",
+    "expected": "",
+    "points": [
+      {
+        "id": "name",
+        "text": "demo",
+        "category": "project",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "项目名",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 创建项目的命令",
+      "level_2": "📖 `oc new-project demo`",
+      "level_3": "👀 `oc new-project demo`",
+      "level_4": "📝 正确答案：oc new-project demo"
+    },
+    "explanation": "`new-project` 创建独立项目（含配额与角色绑定），是 OpenShift 特有命令。"
+  },
+  {
+    "id": "oc-basics-006",
+    "title": "删除项目",
+    "description": "删除名为 demo 的项目",
+    "exercise_type": "command",
+    "tech_stack": "openshift",
+    "weight": "easy",
+    "category": "oc_project",
+    "subcategory": "基础",
+    "full_code": "oc delete project demo",
+    "expected": "",
+    "points": [
+      {
+        "id": "verb",
+        "text": "delete",
+        "category": "command_verb",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "删除资源的动词",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 删除项目的命令",
+      "level_2": "📖 `oc delete project demo`",
+      "level_3": "👀 `oc delete project demo`",
+      "level_4": "📝 正确答案：oc delete project demo"
+    },
+    "explanation": "删除项目会连带删除其中所有资源，需谨慎。"
+  },
+  {
+    "id": "oc-basics-007",
+    "title": "查看 Pod",
+    "description": "列出当前项目下的 Pod",
+    "exercise_type": "command",
+    "tech_stack": "openshift",
+    "weight": "easy",
+    "category": "oc_get",
+    "subcategory": "基础",
+    "full_code": "oc get pods",
+    "expected": "",
+    "points": [
+      {
+        "id": "res",
+        "text": "pods",
+        "category": "resource",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "Pod 资源名",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 查看 Pod 的命令",
+      "level_2": "📖 `oc get pods`",
+      "level_3": "👀 `oc get pods`",
+      "level_4": "📝 正确答案：oc get pods"
+    },
+    "explanation": "`oc get pods` 与 kubectl 一致，列出 Pod。"
+  },
+  {
+    "id": "oc-basics-008",
+    "title": "查看 DeploymentConfig",
+    "description": "列出 DeploymentConfig",
+    "exercise_type": "command",
+    "tech_stack": "openshift",
+    "weight": "easy",
+    "category": "oc_get",
+    "subcategory": "基础",
+    "full_code": "oc get dc",
+    "expected": "",
+    "points": [
+      {
+        "id": "res",
+        "text": "dc",
+        "category": "resource",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "DeploymentConfig 缩写",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 DeploymentConfig 的缩写",
+      "level_2": "📖 `dc` = DeploymentConfig",
+      "level_3": "👀 `oc get dc`",
+      "level_4": "📝 正确答案：oc get dc"
+    },
+    "explanation": "DeploymentConfig（dc）是 OpenShift 的部署对象，支持自动构建/回滚触发。"
+  },
+  {
+    "id": "oc-basics-009",
+    "title": "查看 Service",
+    "description": "列出 Service",
+    "exercise_type": "command",
+    "tech_stack": "openshift",
+    "weight": "easy",
+    "category": "oc_get",
+    "subcategory": "基础",
+    "full_code": "oc get svc",
+    "expected": "",
+    "points": [
+      {
+        "id": "res",
+        "text": "svc",
+        "category": "resource",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "Service 缩写",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 Service 的缩写",
+      "level_2": "📖 `svc` = Service",
+      "level_3": "👀 `oc get svc`",
+      "level_4": "📝 正确答案：oc get svc"
+    },
+    "explanation": "`svc` 是 Service 的缩写，与 kubectl 一致。"
+  },
+  {
+    "id": "oc-basics-010",
+    "title": "查看 Route",
+    "description": "列出路由（外部访问入口）",
+    "exercise_type": "command",
+    "tech_stack": "openshift",
+    "weight": "easy",
+    "category": "oc_get",
+    "subcategory": "基础",
+    "full_code": "oc get routes",
+    "expected": "",
+    "points": [
+      {
+        "id": "res",
+        "text": "routes",
+        "category": "resource",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "Route 资源名",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 Route 资源名",
+      "level_2": "📖 `oc get routes`",
+      "level_3": "👀 `oc get routes`",
+      "level_4": "📝 正确答案：oc get routes"
+    },
+    "explanation": "Route 是 OpenShift 对外暴露服务的入口，生成可访问的主机名。"
+  },
+  {
+    "id": "oc-basics-011",
+    "title": "查看 BuildConfig",
+    "description": "列出构建配置",
+    "exercise_type": "command",
+    "tech_stack": "openshift",
+    "weight": "easy",
+    "category": "oc_get",
+    "subcategory": "基础",
+    "full_code": "oc get bc",
+    "expected": "",
+    "points": [
+      {
+        "id": "res",
+        "text": "bc",
+        "category": "resource",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "BuildConfig 缩写",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 BuildConfig 的缩写",
+      "level_2": "📖 `bc` = BuildConfig",
+      "level_3": "👀 `oc get bc`",
+      "level_4": "📝 正确答案：oc get bc"
+    },
+    "explanation": "BuildConfig（bc）定义如何从源码构建镜像。"
+  },
+  {
+    "id": "oc-basics-012",
+    "title": "查看 ImageStream",
+    "description": "列出镜像流",
+    "exercise_type": "command",
+    "tech_stack": "openshift",
+    "weight": "easy",
+    "category": "oc_get",
+    "subcategory": "基础",
+    "full_code": "oc get is",
+    "expected": "",
+    "points": [
+      {
+        "id": "res",
+        "text": "is",
+        "category": "resource",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "ImageStream 缩写",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 ImageStream 的缩写",
+      "level_2": "📖 `is` = ImageStream",
+      "level_3": "👀 `oc get is`",
+      "level_4": "📝 正确答案：oc get is"
+    },
+    "explanation": "ImageStream（is）管理镜像与标签，提供构建/部署的镜像来源。"
+  },
+  {
+    "id": "oc-basics-013",
+    "title": "应用清单",
+    "description": "用 apply 应用 YAML 清单",
+    "exercise_type": "command",
+    "tech_stack": "openshift",
+    "weight": "easy",
+    "category": "oc_apply",
+    "subcategory": "基础",
+    "full_code": "oc apply -f deploymentconfig.yaml",
+    "expected": "",
+    "points": [
+      {
+        "id": "flag",
+        "text": "-f deploymentconfig.yaml",
+        "category": "command_flag",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "指定清单文件",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 应用清单的选项",
+      "level_2": "📖 `-f \u003c文件\u003e`",
+      "level_3": "👀 `oc apply -f deploymentconfig.yaml`",
+      "level_4": "📝 正确答案：oc apply -f deploymentconfig.yaml"
+    },
+    "explanation": "`oc apply -f` 声明式应用清单，语法与 kubectl 相同。"
+  },
+  {
+    "id": "oc-basics-014",
+    "title": "从源码建应用",
+    "description": "从 Git 仓库创建应用",
+    "exercise_type": "command",
+    "tech_stack": "openshift",
+    "weight": "easy",
+    "category": "oc_newapp",
+    "subcategory": "基础",
+    "full_code": "oc new-app https://github.com/example/demo.git",
+    "expected": "",
+    "points": [
+      {
+        "id": "url",
+        "text": "https://github.com/example/demo.git",
+        "category": "source",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "源码仓库地址",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 从源码创建应用的命令",
+      "level_2": "📖 `oc new-app \u003c仓库\u003e`",
+      "level_3": "👀 `oc new-app https://github.com/example/demo.git`",
+      "level_4": "📝 正确答案：oc new-app https://github.com/example/demo.git"
+    },
+    "explanation": "`new-app` 自动识别语言、创建 BuildConfig/DeploymentConfig/Service 等。"
+  },
+  {
+    "id": "oc-basics-015",
+    "title": "从镜像建应用",
+    "description": "用镜像创建应用",
+    "exercise_type": "command",
+    "tech_stack": "openshift",
+    "weight": "easy",
+    "category": "oc_newapp",
+    "subcategory": "基础",
+    "full_code": "oc new-app --image=nginx:1.25",
+    "expected": "",
+    "points": [
+      {
+        "id": "flag",
+        "text": "--image=nginx:1.25",
+        "category": "command_flag",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "指定镜像",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 用镜像创建应用的选项",
+      "level_2": "📖 `--image=\u003c镜像\u003e`",
+      "level_3": "👀 `oc new-app --image=nginx:1.25`",
+      "level_4": "📝 正确答案：oc new-app --image=nginx:1.25"
+    },
+    "explanation": "`new-app --image` 直接以现成镜像部署，不触发源码构建。"
+  },
+  {
+    "id": "oc-basics-016",
+    "title": "暴露服务",
+    "description": "把 Service 暴露为 Route",
+    "exercise_type": "command",
+    "tech_stack": "openshift",
+    "weight": "easy",
+    "category": "oc_expose",
+    "subcategory": "基础",
+    "full_code": "oc expose svc/myapp",
+    "expected": "",
+    "points": [
+      {
+        "id": "verb",
+        "text": "expose",
+        "category": "command_verb",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "创建 Route 的动词",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 暴露服务为路由的命令",
+      "level_2": "📖 `oc expose svc/\u003c名\u003e`",
+      "level_3": "👀 `oc expose svc/myapp`",
+      "level_4": "📝 正确答案：oc expose svc/myapp"
+    },
+    "explanation": "`oc expose` 为 Service 生成 Route，对外可访问。"
+  },
+  {
+    "id": "oc-basics-017",
+    "title": "启动构建",
+    "description": "手动触发一次构建",
+    "exercise_type": "command",
+    "tech_stack": "openshift",
+    "weight": "easy",
+    "category": "oc_build",
+    "subcategory": "基础",
+    "full_code": "oc start-build myapp",
+    "expected": "",
+    "points": [
+      {
+        "id": "verb",
+        "text": "start-build",
+        "category": "command_verb",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "触发构建的命令",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 触发构建的命令",
+      "level_2": "📖 `oc start-build \u003cbc\u003e`",
+      "level_3": "👀 `oc start-build myapp`",
+      "level_4": "📝 正确答案：oc start-build myapp"
+    },
+    "explanation": "`start-build` 手动触发 BuildConfig 执行一次构建。"
+  },
+  {
+    "id": "oc-basics-018",
+    "title": "查看构建日志",
+    "description": "实时查看构建日志",
+    "exercise_type": "command",
+    "tech_stack": "openshift",
+    "weight": "easy",
+    "category": "oc_build",
+    "subcategory": "基础",
+    "full_code": "oc logs -f bc/myapp",
+    "expected": "",
+    "points": [
+      {
+        "id": "flag",
+        "text": "-f",
+        "category": "command_flag",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "实时跟随日志",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 跟随日志的选项",
+      "level_2": "📖 `-f` 实时跟随",
+      "level_3": "👀 `oc logs -f bc/myapp`",
+      "level_4": "📝 正确答案：oc logs -f bc/myapp"
+    },
+    "explanation": "`oc logs -f bc/\u003c名\u003e` 跟踪构建过程日志，排障构建失败用。"
+  },
+  {
+    "id": "oc-basics-019",
+    "title": "进入容器终端",
+    "description": "打开容器的交互式终端",
+    "exercise_type": "command",
+    "tech_stack": "openshift",
+    "weight": "easy",
+    "category": "oc_debug",
+    "subcategory": "基础",
+    "full_code": "oc rsh myapp-pod",
+    "expected": "",
+    "points": [
+      {
+        "id": "verb",
+        "text": "rsh",
+        "category": "command_verb",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "进容器执行命令",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 进入容器终端的命令",
+      "level_2": "📖 `oc rsh \u003cpod\u003e`",
+      "level_3": "👀 `oc rsh myapp-pod`",
+      "level_4": "📝 正确答案：oc rsh myapp-pod"
+    },
+    "explanation": "`oc rsh` 相当于 `kubectl exec -it` 的快捷方式，进入容器 shell。"
+  },
+  {
+    "id": "oc-basics-020",
+    "title": "复制文件",
+    "description": "在本地与容器之间复制文件",
+    "exercise_type": "command",
+    "tech_stack": "openshift",
+    "weight": "easy",
+    "category": "oc_debug",
+    "subcategory": "基础",
+    "full_code": "oc rsync ./local myapp-pod:/tmp",
+    "expected": "",
+    "points": [
+      {
+        "id": "verb",
+        "text": "rsync",
+        "category": "command_verb",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "复制文件的命令",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 复制文件的命令",
+      "level_2": "📖 `oc rsync \u003c本地\u003e \u003cpod\u003e:\u003c路径\u003e`",
+      "level_3": "👀 `oc rsync ./local myapp-pod:/tmp`",
+      "level_4": "📝 正确答案：oc rsync ./local myapp-pod:/tmp"
+    },
+    "explanation": "`oc rsync` 在本地与容器间同步文件，调试与注入文件常用。"
+  },
+  {
+    "id": "oc-basics-021",
+    "title": "端口转发",
+    "description": "把服务端口转发到本地",
+    "exercise_type": "command",
+    "tech_stack": "openshift",
+    "weight": "easy",
+    "category": "oc_debug",
+    "subcategory": "基础",
+    "full_code": "oc port-forward service/myapp 8080:80",
+    "expected": "",
+    "points": [
+      {
+        "id": "ports",
+        "text": "8080:80",
+        "category": "port",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "本地端口:目标端口",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 端口转发的写法",
+      "level_2": "📖 `本地端口:目标端口`",
+      "level_3": "👀 `oc port-forward service/myapp 8080:80`",
+      "level_4": "📝 正确答案：oc port-forward service/myapp 8080:80"
+    },
+    "explanation": "`oc port-forward` 把集群内端口转发到本地，便于本地调试。"
+  },
+  {
+    "id": "oc-basics-022",
+    "title": "查看事件",
+    "description": "查看集群事件",
+    "exercise_type": "command",
+    "tech_stack": "openshift",
+    "weight": "easy",
+    "category": "oc_get",
+    "subcategory": "基础",
+    "full_code": "oc get events",
+    "expected": "",
+    "points": [
+      {
+        "id": "res",
+        "text": "events",
+        "category": "resource",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "事件资源名",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 查看事件的资源名",
+      "level_2": "📖 `oc get events`",
+      "level_3": "👀 `oc get events`",
+      "level_4": "📝 正确答案：oc get events"
+    },
+    "explanation": "`events` 记录调度、镜像拉取、重启等事件，排障重要。"
+  },
+  {
+    "id": "oc-basics-023",
+    "title": "查看节点",
+    "description": "列出集群节点",
+    "exercise_type": "command",
+    "tech_stack": "openshift",
+    "weight": "easy",
+    "category": "oc_get",
+    "subcategory": "基础",
+    "full_code": "oc get nodes",
+    "expected": "",
+    "points": [
+      {
+        "id": "res",
+        "text": "nodes",
+        "category": "resource",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "节点资源名",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 查看节点的命令",
+      "level_2": "📖 `oc get nodes`",
+      "level_3": "👀 `oc get nodes`",
+      "level_4": "📝 正确答案：oc get nodes"
+    },
+    "explanation": "`oc get nodes` 查看集群工作节点。"
+  },
+  {
+    "id": "oc-basics-024",
+    "title": "查看集群 Operator",
+    "description": "列出集群级 Operator 状态",
+    "exercise_type": "command",
+    "tech_stack": "openshift",
+    "weight": "easy",
+    "category": "oc_get",
+    "subcategory": "基础",
+    "full_code": "oc get co",
+    "expected": "",
+    "points": [
+      {
+        "id": "res",
+        "text": "co",
+        "category": "resource",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "ClusterOperator 缩写",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 ClusterOperator 的缩写",
+      "level_2": "📖 `co` = ClusterOperator",
+      "level_3": "👀 `oc get co`",
+      "level_4": "📝 正确答案：oc get co"
+    },
+    "explanation": "`co` 查看集群各组件的 Operator 健康状态，是 OpenShift 特有的运维视角。"
+  },
+  {
+    "id": "oc-basics-025",
+    "title": "查看项目内全部资源",
+    "description": "一条命令列出项目内主要资源",
+    "exercise_type": "command",
+    "tech_stack": "openshift",
+    "weight": "easy",
+    "category": "oc_get",
+    "subcategory": "基础",
+    "full_code": "oc get all",
+    "expected": "",
+    "points": [
+      {
+        "id": "res",
+        "text": "all",
+        "category": "resource",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "聚合资源关键字",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 列出全部资源的命令",
+      "level_2": "📖 `oc get all`",
+      "level_3": "👀 `oc get all`",
+      "level_4": "📝 正确答案：oc get all"
+    },
+    "explanation": "`oc get all` 快速列出项目内 Pod/DC/Service/Route 等主要资源。"
+  },
+  {
+    "id": "oc-basics-026",
+    "title": "扩缩容 DeploymentConfig",
+    "description": "把 myapp 扩到 3 个副本",
+    "exercise_type": "command",
+    "tech_stack": "openshift",
+    "weight": "easy",
+    "category": "oc_scale",
+    "subcategory": "基础",
+    "full_code": "oc scale dc/myapp --replicas=3",
+    "expected": "",
+    "points": [
+      {
+        "id": "flag",
+        "text": "--replicas=3",
+        "category": "command_flag",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "设置副本数",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 设置副本数的选项",
+      "level_2": "📖 `--replicas=\u003c数\u003e`",
+      "level_3": "👀 `oc scale dc/myapp --replicas=3`",
+      "level_4": "📝 正确答案：oc scale dc/myapp --replicas=3"
+    },
+    "explanation": "`oc scale` 调整 DeploymentConfig 副本数。"
+  },
+  {
+    "id": "oc-basics-027",
+    "title": "按标签筛选",
+    "description": "筛选 app=myapp 的 Pod",
+    "exercise_type": "command",
+    "tech_stack": "openshift",
+    "weight": "easy",
+    "category": "oc_get",
+    "subcategory": "基础",
+    "full_code": "oc get pods -l app=myapp",
+    "expected": "",
+    "points": [
+      {
+        "id": "flag",
+        "text": "-l app=myapp",
+        "category": "command_flag",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "标签选择器",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 标签筛选的选项",
+      "level_2": "📖 `-l \u003ckey\u003e=\u003cvalue\u003e`",
+      "level_3": "👀 `oc get pods -l app=myapp`",
+      "level_4": "📝 正确答案：oc get pods -l app=myapp"
+    },
+    "explanation": "`-l` 按标签选择器过滤，支持多个键值。"
+  },
+  {
+    "id": "oc-basics-028",
+    "title": "查看滚动状态",
+    "description": "查看 DeploymentConfig 滚动状态",
+    "exercise_type": "command",
+    "tech_stack": "openshift",
+    "weight": "easy",
+    "category": "oc_rollout",
+    "subcategory": "基础",
+    "full_code": "oc rollout status dc/myapp",
+    "expected": "",
+    "points": [
+      {
+        "id": "verb",
+        "text": "status",
+        "category": "command_verb",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "查看状态子命令",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 查看滚动状态的命令",
+      "level_2": "📖 `oc rollout status dc/\u003c名\u003e`",
+      "level_3": "👀 `oc rollout status dc/myapp`",
+      "level_4": "📝 正确答案：oc rollout status dc/myapp"
+    },
+    "explanation": "`oc rollout status` 阻塞直到部署完成。"
+  },
+  {
+    "id": "oc-basics-029",
+    "title": "回滚部署",
+    "description": "回滚 DeploymentConfig 到上一版本",
+    "exercise_type": "command",
+    "tech_stack": "openshift",
+    "weight": "easy",
+    "category": "oc_rollout",
+    "subcategory": "基础",
+    "full_code": "oc rollout undo dc/myapp",
+    "expected": "",
+    "points": [
+      {
+        "id": "verb",
+        "text": "undo",
+        "category": "command_verb",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "回滚子命令",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 回滚的命令",
+      "level_2": "📖 `oc rollout undo dc/\u003c名\u003e`",
+      "level_3": "👀 `oc rollout undo dc/myapp`",
+      "level_4": "📝 正确答案：oc rollout undo dc/myapp"
+    },
+    "explanation": "`oc rollout undo` 回滚到上一版本，`--to-revision` 指定版本。"
+  },
+  {
+    "id": "oc-basics-030",
+    "title": "编辑资源",
+    "description": "编辑 DeploymentConfig",
+    "exercise_type": "command",
+    "tech_stack": "openshift",
+    "weight": "easy",
+    "category": "oc_edit",
+    "subcategory": "基础",
+    "full_code": "oc edit dc/myapp",
+    "expected": "",
+    "points": [
+      {
+        "id": "verb",
+        "text": "edit",
+        "category": "command_verb",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "编辑动词",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 编辑资源的命令",
+      "level_2": "📖 `oc edit dc/\u003c名\u003e`",
+      "level_3": "👀 `oc edit dc/myapp`",
+      "level_4": "📝 正确答案：oc edit dc/myapp"
+    },
+    "explanation": "`oc edit` 打开编辑器修改资源，保存即生效。"
+  },
+  {
+    "id": "oc-basics-031",
+    "title": "删除 Pod",
+    "description": "删除指定 Pod",
+    "exercise_type": "command",
+    "tech_stack": "openshift",
+    "weight": "easy",
+    "category": "oc_delete",
+    "subcategory": "基础",
+    "full_code": "oc delete pod myapp-abc",
+    "expected": "",
+    "points": [
+      {
+        "id": "verb",
+        "text": "delete",
+        "category": "command_verb",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "删除动词",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 删除资源的命令",
+      "level_2": "📖 `oc delete pod \u003c名\u003e`",
+      "level_3": "👀 `oc delete pod myapp-abc`",
+      "level_4": "📝 正确答案：oc delete pod myapp-abc"
+    },
+    "explanation": "`oc delete` 删除资源，DeploymentConfig 会自动重建被删的 Pod。"
+  },
+  {
+    "id": "oc-basics-032",
+    "title": "打标签",
+    "description": "给应用打标签",
+    "exercise_type": "command",
+    "tech_stack": "openshift",
+    "weight": "easy",
+    "category": "oc_label",
+    "subcategory": "基础",
+    "full_code": "oc label pod myapp app=web",
+    "expected": "",
+    "points": [
+      {
+        "id": "verb",
+        "text": "label",
+        "category": "command_verb",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "管理标签动词",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 管理标签的命令",
+      "level_2": "📖 `oc label \u003c资源\u003e \u003ckey\u003e=\u003cvalue\u003e`",
+      "level_3": "👀 `oc label pod myapp app=web`",
+      "level_4": "📝 正确答案：oc label pod myapp app=web"
+    },
+    "explanation": "`oc label` 增改标签，用于选择器与路由。"
+  },
+  {
+    "id": "oc-basics-033",
+    "title": "查看版本",
+    "description": "查看 oc 与集群版本",
+    "exercise_type": "command",
+    "tech_stack": "openshift",
+    "weight": "easy",
+    "category": "oc_get",
+    "subcategory": "基础",
+    "full_code": "oc version",
+    "expected": "",
+    "points": [
+      {
+        "id": "verb",
+        "text": "version",
+        "category": "command_verb",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "查看版本命令",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 查看版本的命令",
+      "level_2": "📖 `oc version`",
+      "level_3": "👀 `oc version`",
+      "level_4": "📝 正确答案：oc version"
+    },
+    "explanation": "`oc version` 显示客户端与集群版本。"
+  },
+  {
+    "id": "oc-basics-034",
+    "title": "登录集群",
+    "description": "用用户名密码登录",
+    "exercise_type": "command",
+    "tech_stack": "openshift",
+    "weight": "easy",
+    "category": "oc_login",
+    "subcategory": "基础",
+    "full_code": "oc login -u admin -p secret https://api.example.com",
+    "expected": "",
+    "points": [
+      {
+        "id": "url",
+        "text": "https://api.example.com",
+        "category": "server",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "API 服务器地址",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 登录的命令",
+      "level_2": "📖 `oc login -u admin`",
+      "level_3": "👀 `oc login -u admin -p secret \u003capi\u003e`",
+      "level_4": "📝 正确答案：oc login -u admin -p secret https://api.example.com"
+    },
+    "explanation": "`oc login` 登录集群并写入 kubeconfig；也可用 token 登录。"
+  },
+  {
+    "id": "oc-basics-035",
+    "title": "查看当前 token",
+    "description": "显示当前用户的服务令牌",
+    "exercise_type": "command",
+    "tech_stack": "openshift",
+    "weight": "easy",
+    "category": "oc_login",
+    "subcategory": "基础",
+    "full_code": "oc whoami -t",
+    "expected": "",
+    "points": [
+      {
+        "id": "flag",
+        "text": "-t",
+        "category": "command_flag",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "输出 token 选项",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 显示 token 的选项",
+      "level_2": "📖 `-t` 输出 token",
+      "level_3": "👀 `oc whoami -t`",
+      "level_4": "📝 正确答案：oc whoami -t"
+    },
+    "explanation": "`oc whoami -t` 输出当前用户 token，用于集成/脚本。"
+  },
+  {
+    "id": "oc-basics-036",
+    "title": "查看 Secret",
+    "description": "列出 Secret",
+    "exercise_type": "command",
+    "tech_stack": "openshift",
+    "weight": "easy",
+    "category": "oc_get",
+    "subcategory": "基础",
+    "full_code": "oc get secrets",
+    "expected": "",
+    "points": [
+      {
+        "id": "res",
+        "text": "secrets",
+        "category": "resource",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "Secret 资源名",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 Secret 资源名",
+      "level_2": "📖 `oc get secrets`",
+      "level_3": "👀 `oc get secrets`",
+      "level_4": "📝 正确答案：oc get secrets"
+    },
+    "explanation": "`secrets` 存放敏感信息，Deployment 常以环境变量注入。"
+  },
+  {
+    "id": "oc-basics-037",
+    "title": "查看 ConfigMap",
+    "description": "列出 ConfigMap",
+    "exercise_type": "command",
+    "tech_stack": "openshift",
+    "weight": "easy",
+    "category": "oc_get",
+    "subcategory": "基础",
+    "full_code": "oc get configmaps",
+    "expected": "",
+    "points": [
+      {
+        "id": "res",
+        "text": "configmaps",
+        "category": "resource",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "ConfigMap 资源名",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 ConfigMap 资源名",
+      "level_2": "📖 `oc get configmaps`",
+      "level_3": "👀 `oc get configmaps`",
+      "level_4": "📝 正确答案：oc get configmaps"
+    },
+    "explanation": "ConfigMap 存非敏感配置，可挂载为文件或注入环境变量。"
+  },
+  {
+    "id": "oc-basics-038",
+    "title": "查看 PVC",
+    "description": "列出持久卷声明",
+    "exercise_type": "command",
+    "tech_stack": "openshift",
+    "weight": "easy",
+    "category": "oc_get",
+    "subcategory": "基础",
+    "full_code": "oc get pvc",
+    "expected": "",
+    "points": [
+      {
+        "id": "res",
+        "text": "pvc",
+        "category": "resource",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "PVC 缩写",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 PVC 的缩写",
+      "level_2": "📖 `pvc` = PersistentVolumeClaim",
+      "level_3": "👀 `oc get pvc`",
+      "level_4": "📝 正确答案：oc get pvc"
+    },
+    "explanation": "PVC 请求持久存储，Deployment 中挂载用于有状态应用。"
+  },
+  {
+    "id": "oc-basics-039",
+    "title": "查看 ServiceAccount",
+    "description": "列出 ServiceAccount",
+    "exercise_type": "command",
+    "tech_stack": "openshift",
+    "weight": "easy",
+    "category": "oc_get",
+    "subcategory": "基础",
+    "full_code": "oc get serviceaccounts",
+    "expected": "",
+    "points": [
+      {
+        "id": "res",
+        "text": "serviceaccounts",
+        "category": "resource",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "ServiceAccount 资源名",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 ServiceAccount 资源名",
+      "level_2": "📖 `oc get serviceaccounts`",
+      "level_3": "👀 `oc get serviceaccounts`",
+      "level_4": "📝 正确答案：oc get serviceaccounts"
+    },
+    "explanation": "ServiceAccount 供容器内进程以特定身份访问集群。"
+  },
+  {
+    "id": "oc-basics-040",
+    "title": "查看资源配额",
+    "description": "列出配额用量",
+    "exercise_type": "command",
+    "tech_stack": "openshift",
+    "weight": "easy",
+    "category": "oc_get",
+    "subcategory": "基础",
+    "full_code": "oc get quota",
+    "expected": "",
+    "points": [
+      {
+        "id": "res",
+        "text": "quota",
+        "category": "resource",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "配额资源名",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 配额资源名",
+      "level_2": "📖 `oc get quota`",
+      "level_3": "👀 `oc get quota`",
+      "level_4": "📝 正确答案：oc get quota"
+    },
+    "explanation": "`quota` 显示项目资源配额及当前用量。"
+  },
+  {
+    "id": "oc-basics-041",
+    "title": "DeploymentConfig 基础",
+    "description": "定义 2 副本的 DeploymentConfig",
+    "exercise_type": "config",
+    "tech_stack": "openshift",
+    "weight": "easy",
+    "category": "yaml_dc",
+    "subcategory": "基础",
+    "full_code": "apiVersion: apps.openshift.io/v1\nkind: DeploymentConfig\nmetadata:\n  name: myapp\nspec:\n  replicas: 2\n  selector:\n    app: myapp\n  template:\n    metadata:\n      labels:\n        app: myapp\n    spec:\n      containers:\n      - name: myapp\n        image: myapp:latest",
+    "expected": "",
+    "points": [
+      {
+        "id": "api",
+        "text": "apps.openshift.io/v1",
+        "category": "api_version",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "DeploymentConfig 的 API 版本",
+        "fill_type": "text"
+      },
+      {
+        "id": "replicas",
+        "text": "2",
+        "category": "replicas",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "副本数",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_app_myapp",
+        "text": "myapp",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "补充「标签 app 的值」",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_image_myapplatest",
+        "text": "myapp:latest",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "补充「容器镜像」",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 `apps.openshift.io/v1` / `replicas: 2`",
+      "level_2": "📖 DeploymentConfig 定义",
+      "level_3": "👀 属于 openshift apps 组",
+      "level_4": "📝 正确答案：apiVersion: apps.openshift.io/v1\nkind: DeploymentConfig\nmetadata:\n  name: myapp\nspec:\n  replicas: 2\n  selector:\n    app: myapp\n  template:\n    metadata:\n      labels:\n        app: myapp\n    spec:\n      containers:\n      - name: myapp\n        image: myapp:latest"
+    },
+    "explanation": "DeploymentConfig（DC）用 apps.openshift.io/v1，支持触发器自动更新。"
+  },
+  {
+    "id": "oc-basics-042",
+    "title": "Route 暴露服务",
+    "description": "把 myapp 服务暴露到指定域名",
+    "exercise_type": "config",
+    "tech_stack": "openshift",
+    "weight": "easy",
+    "category": "yaml_route",
+    "subcategory": "基础",
+    "full_code": "apiVersion: route.openshift.io/v1\nkind: Route\nmetadata:\n  name: myapp\nspec:\n  host: myapp.example.com\n  to:\n    kind: Service\n    name: myapp\n  port:\n    targetPort: 8080",
+    "expected": "",
+    "points": [
+      {
+        "id": "host",
+        "text": "myapp.example.com",
+        "category": "host",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "对外域名",
+        "fill_type": "text"
+      },
+      {
+        "id": "svc",
+        "text": "myapp",
+        "category": "service",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "后端 Service 名",
+        "fill_type": "text"
+      },
+      {
+        "id": "port",
+        "text": "8080",
+        "category": "port",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "目标端口",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 `myapp.example.com` / `myapp` / `8080`",
+      "level_2": "📖 Route 定义",
+      "level_3": "👀 `route.openshift.io/v1`，`to.name` 指 Service",
+      "level_4": "📝 正确答案：apiVersion: route.openshift.io/v1\nkind: Route\nmetadata:\n  name: myapp\nspec:\n  host: myapp.example.com\n  to:\n    kind: Service\n    name: myapp\n  port:\n    targetPort: 8080"
+    },
+    "explanation": "Route 用 route.openshift.io/v1，host 对外的域名，转发到后端 Service 端口。"
+  },
+  {
+    "id": "oc-basics-043",
+    "title": "BuildConfig 源码构建",
+    "description": "定义从 Git 构建 Source 镜像",
+    "exercise_type": "config",
+    "tech_stack": "openshift",
+    "weight": "medium",
+    "category": "yaml_build",
+    "subcategory": "基础",
+    "full_code": "apiVersion: build.openshift.io/v1\nkind: BuildConfig\nmetadata:\n  name: demo\nspec:\n  source:\n    type: Git\n    git:\n      uri: \"https://github.com/example/demo.git\"\n  strategy:\n    type: Source\n  output:\n    to:\n      kind: ImageStreamTag\n      name: demo:latest",
+    "expected": "",
+    "points": [
+      {
+        "id": "uri",
+        "text": "https://github.com/example/demo.git",
+        "category": "git_uri",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "源码仓库地址",
+        "fill_type": "text"
+      },
+      {
+        "id": "strategy",
+        "text": "Source",
+        "category": "build_strategy",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "构建策略类型",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 `https://github.com/example/demo.git` / `Source`",
+      "level_2": "📖 BuildConfig 定义",
+      "level_3": "👀 `build.openshift.io/v1`，`strategy.type` 决定构建方式",
+      "level_4": "📝 正确答案：apiVersion: build.openshift.io/v1\nkind: BuildConfig\nmetadata:\n  name: demo\nspec:\n  source:\n    type: Git\n    git:\n      uri: \"https://github.com/example/demo.git\"\n  strategy:\n    type: Source\n  output:\n    to:\n      kind: ImageStreamTag\n      name: demo:latest"
+    },
+    "explanation": "BuildConfig 从 Git 拉取源码并构建；Source strategy 产出自定义镜像。"
+  },
+  {
+    "id": "oc-basics-044",
+    "title": "ImageStream 定义",
+    "description": "创建镜像流并允许按名解析",
+    "exercise_type": "config",
+    "tech_stack": "openshift",
+    "weight": "easy",
+    "category": "yaml_is",
+    "subcategory": "基础",
+    "full_code": "apiVersion: image.openshift.io/v1\nkind: ImageStream\nmetadata:\n  name: demo\nspec:\n  lookupPolicy:\n    local: true",
+    "expected": "",
+    "points": [
+      {
+        "id": "api",
+        "text": "image.openshift.io/v1",
+        "category": "api_version",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "ImageStream 的 API 版本",
+        "fill_type": "text"
+      },
+      {
+        "id": "name",
+        "text": "demo",
+        "category": "metadata",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "镜像流名称",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 `image.openshift.io/v1` / `demo`",
+      "level_2": "📖 ImageStream 定义",
+      "level_3": "👀 `image.openshift.io/v1`，`lookupPolicy.local` 允许本地解析",
+      "level_4": "📝 正确答案：apiVersion: image.openshift.io/v1\nkind: ImageStream\nmetadata:\n  name: demo\nspec:\n  lookupPolicy:\n    local: true"
+    },
+    "explanation": "ImageStream 跟踪镜像标签，是构建/部署之间的镜像来源。"
+  },
+  {
+    "id": "oc-basics-045",
+    "title": "Service 定义",
+    "description": "为应用定义 Service",
+    "exercise_type": "config",
+    "tech_stack": "openshift",
+    "weight": "easy",
+    "category": "yaml_service",
+    "subcategory": "基础",
+    "full_code": "apiVersion: v1\nkind: Service\nmetadata:\n  name: myapp\nspec:\n  selector:\n    app: myapp\n  ports:\n  - port: 8080\n    targetPort: 8080",
+    "expected": "",
+    "points": [
+      {
+        "id": "selector",
+        "text": "app: myapp",
+        "category": "selector",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "选中后端 Pod 的标签",
+        "fill_type": "text"
+      },
+      {
+        "id": "port",
+        "text": "8080",
+        "category": "port",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "服务端口",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_app_myapp",
+        "text": "myapp",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "补充「标签 app 的值」",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 `app: myapp` / `8080`",
+      "level_2": "📖 Service 定义",
+      "level_3": "👀 `selector` 匹配 Pod 标签",
+      "level_4": "📝 正确答案：apiVersion: v1\nkind: Service\nmetadata:\n  name: myapp\nspec:\n  selector:\n    app: myapp\n  ports:\n  - port: 8080\n    targetPort: 8080"
+    },
+    "explanation": "Service 通过 selector 匹配 Pod，提供稳定的访问入口。"
+  },
+  {
+    "id": "oc-basics-046",
+    "title": "Route 配置 TLS",
+    "description": "用 edge 终止的 TLS 路由",
+    "exercise_type": "config",
+    "tech_stack": "openshift",
+    "weight": "medium",
+    "category": "yaml_route",
+    "subcategory": "基础",
+    "full_code": "apiVersion: route.openshift.io/v1\nkind: Route\nmetadata:\n  name: secure\nspec:\n  to:\n    kind: Service\n    name: secure-app\n  tls:\n    termination: edge\n    insecureEdgeTerminationPolicy: Redirect",
+    "expected": "",
+    "points": [
+      {
+        "id": "termination",
+        "text": "edge",
+        "category": "tls",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "TLS 终止方式",
+        "fill_type": "text"
+      },
+      {
+        "id": "svc",
+        "text": "secure-app",
+        "category": "service",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "后端 Service 名",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 `edge` / `secure-app`",
+      "level_2": "📖 TLS 路由",
+      "level_3": "👀 `termination: edge` 在路由层终止 TLS",
+      "level_4": "📝 正确答案：apiVersion: route.openshift.io/v1\nkind: Route\nmetadata:\n  name: secure\nspec:\n  to:\n    kind: Service\n    name: secure-app\n  tls:\n    termination: edge\n    insecureEdgeTerminationPolicy: Redirect"
+    },
+    "explanation": "边缘终止（edge）在 Router 层解密后明文转发到后端，还可强制重定向 https。"
+  },
+  {
+    "id": "oc-basics-047",
+    "title": "DeploymentConfig 触发器",
+    "description": "配置镜像变更自动部署",
+    "exercise_type": "config",
+    "tech_stack": "openshift",
+    "weight": "medium",
+    "category": "yaml_dc",
+    "subcategory": "基础",
+    "full_code": "apiVersion: apps.openshift.io/v1\nkind: DeploymentConfig\nmetadata:\n  name: myapp\nspec:\n  replicas: 2\n  triggers:\n  - type: ConfigChange\n  - type: ImageChange\n    imageChangeParams:\n      automatic: true\n      containerNames:\n      - myapp\n      from:\n        kind: ImageStreamTag\n        name: myapp:latest\n  selector:\n    app: myapp\n  template:\n    metadata:\n      labels:\n        app: myapp\n    spec:\n      containers:\n      - name: myapp\n        image: myapp:latest",
+    "expected": "",
+    "points": [
+      {
+        "id": "type",
+        "text": "ImageChange",
+        "category": "trigger",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "镜像变更触发器类型",
+        "fill_type": "text"
+      },
+      {
+        "id": "img",
+        "text": "myapp:latest",
+        "category": "image",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "监听镜像流标签",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_replicas_2",
+        "text": "2",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 0.7,
+        "hint": "补充「副本数」",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_app_myapp",
+        "text": "myapp",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "补充「标签 app 的值」",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 `ImageChange` / `myapp:latest`",
+      "level_2": "📖 部署触发器",
+      "level_3": "👀 `ImageChange` 在镜像更新时自动部署",
+      "level_4": "📝 正确答案：apiVersion: apps.openshift.io/v1\nkind: DeploymentConfig\nmetadata:\n  name: myapp\nspec:\n  replicas: 2\n  triggers:\n  - type: ConfigChange\n  - type: ImageChange\n    imageChangeParams:\n      automatic: true\n      containerNames:\n      - myapp\n      from:\n        kind: ImageStreamTag\n        name: myapp:latest\n  selector:\n    app: myapp\n  template:\n    metadata:\n      labels:\n        app: myapp\n    spec:\n      containers:\n      - name: myapp\n        image: myapp:latest"
+    },
+    "explanation": "触发器（triggers）让 DC 在配置或镜像变化时自动滚动部署。"
+  },
+  {
+    "id": "oc-basics-048",
+    "title": "存活探针",
+    "description": "给 DC 容器配 liveness 探针",
+    "exercise_type": "config",
+    "tech_stack": "openshift",
+    "weight": "medium",
+    "category": "yaml_probe",
+    "subcategory": "基础",
+    "full_code": "apiVersion: apps.openshift.io/v1\nkind: DeploymentConfig\nmetadata:\n  name: web\nspec:\n  replicas: 1\n  selector:\n    app: web\n  template:\n    metadata:\n      labels:\n        app: web\n    spec:\n      containers:\n      - name: web\n        image: nginx\n        livenessProbe:\n          httpGet:\n            path: /healthz\n            port: 80\n          initialDelaySeconds: 5\n          periodSeconds: 10",
+    "expected": "",
+    "points": [
+      {
+        "id": "probe",
+        "text": "livenessProbe",
+        "category": "probe",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "存活探针字段",
+        "fill_type": "text"
+      },
+      {
+        "id": "port",
+        "text": "80",
+        "category": "probe_port",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "探测端口",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_replicas_1",
+        "text": "1",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "补充「副本数」",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_app_web",
+        "text": "web",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "补充「标签 app 的值」",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_image_nginx",
+        "text": "nginx",
+        "category": "config",
+        "min_weight": "medium",
+        "weight_score": 0.7,
+        "hint": "补充「容器镜像」",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 `livenessProbe` / `80`",
+      "level_2": "📖 存活探针",
+      "level_3": "👀 `httpGet` 探测 /healthz",
+      "level_4": "📝 正确答案：apiVersion: apps.openshift.io/v1\nkind: DeploymentConfig\nmetadata:\n  name: web\nspec:\n  replicas: 1\n  selector:\n    app: web\n  template:\n    metadata:\n      labels:\n        app: web\n    spec:\n      containers:\n      - name: web\n        image: nginx\n        livenessProbe:\n          httpGet:\n            path: /healthz\n            port: 80\n          initialDelaySeconds: 5\n          periodSeconds: 10"
+    },
+    "explanation": "livenessProbe 判断容器存活，失败则重启容器。"
+  },
+  {
+    "id": "oc-basics-049",
+    "title": "环境变量引用 ConfigMap",
+    "description": "把 ConfigMap 值注入环境变量",
+    "exercise_type": "config",
+    "tech_stack": "openshift",
+    "weight": "easy",
+    "category": "yaml_env",
+    "subcategory": "基础",
+    "full_code": "apiVersion: apps.openshift.io/v1\nkind: DeploymentConfig\nmetadata:\n  name: app\nspec:\n  selector:\n    app: app\n  template:\n    metadata:\n      labels:\n        app: app\n    spec:\n      containers:\n      - name: app\n        image: myapp\n        env:\n        - name: LOG_LEVEL\n          valueFrom:\n            configMapKeyRef:\n              name: app-config\n              key: LOG_LEVEL",
+    "expected": "",
+    "points": [
+      {
+        "id": "cm",
+        "text": "app-config",
+        "category": "configmap",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "ConfigMap 名",
+        "fill_type": "text"
+      },
+      {
+        "id": "key",
+        "text": "LOG_LEVEL",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "取的键",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_app_app",
+        "text": "app",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "补充「标签 app 的值」",
+        "fill_type": "text"
+      },
+      {
+        "id": "auto_image_myapp",
+        "text": "myapp",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "补充「容器镜像」",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 `app-config` / `LOG_LEVEL`",
+      "level_2": "📖 env 引用 ConfigMap",
+      "level_3": "👀 `configMapKeyRef` 注入",
+      "level_4": "📝 正确答案：apiVersion: apps.openshift.io/v1\nkind: DeploymentConfig\nmetadata:\n  name: app\nspec:\n  selector:\n    app: app\n  template:\n    metadata:\n      labels:\n        app: app\n    spec:\n      containers:\n      - name: app\n        image: myapp\n        env:\n        - name: LOG_LEVEL\n          valueFrom:\n            configMapKeyRef:\n              name: app-config\n              key: LOG_LEVEL"
+    },
+    "explanation": "通过 configMapKeyRef 把 ConfigMap 的键注入为环境变量。"
+  },
+  {
+    "id": "oc-basics-050",
+    "title": "PVC 持久存储",
+    "description": "申请 1Gi 存储供应用使用",
+    "exercise_type": "config",
+    "tech_stack": "openshift",
+    "weight": "easy",
+    "category": "yaml_pvc",
+    "subcategory": "基础",
+    "full_code": "apiVersion: v1\nkind: PersistentVolumeClaim\nmetadata:\n  name: data\nspec:\n  accessModes:\n  - ReadWriteOnce\n  resources:\n    requests:\n      storage: 1Gi",
+    "expected": "",
+    "points": [
+      {
+        "id": "mode",
+        "text": "ReadWriteOnce",
+        "category": "access_mode",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "访问模式",
+        "fill_type": "text"
+      },
+      {
+        "id": "storage",
+        "text": "1Gi",
+        "category": "storage",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "申请容量",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 `ReadWriteOnce` / `1Gi`",
+      "level_2": "📖 PVC 定义",
+      "level_3": "👀 `accessModes` 访问模式，`storage` 容量",
+      "level_4": "📝 正确答案：apiVersion: v1\nkind: PersistentVolumeClaim\nmetadata:\n  name: data\nspec:\n  accessModes:\n  - ReadWriteOnce\n  resources:\n    requests:\n      storage: 1Gi"
+    },
+    "explanation": "PVC 请求持久存储并与 PV 绑定，之后在 DC 中挂载。"
+  }
+]

@@ -17,7 +17,7 @@ func main() {
 	addr := flag.String("addr", ":8090", "listen address")
 	dbPath := flag.String("db", "data/codegym.db", "sqlite database path")
 	pyBin := flag.String("python", firstNonEmpty(os.Getenv("PYTHON_BIN"), "python3"), "python interpreter")
-	libDir := flag.String("library", "data/library", "内置题库 JSON 目录（可指向外部目录；留空则用内置构建器）")
+	bankDir := flag.String("bank", "data/bank", "题库 JSON 目录（唯一数据源，可用 $CODEGYM_BANK_DIR 或留空自动定位）")
 	flag.Parse()
 
 	st, err := store.Open(*dbPath)
@@ -26,7 +26,7 @@ func main() {
 	}
 	defer st.Close()
 
-	if err := seedExercises(st, *libDir); err != nil {
+	if err := seedExercises(st, *bankDir); err != nil {
 		log.Printf("seed: %v", err)
 	}
 	if err := seedCategories(st); err != nil {
@@ -45,23 +45,15 @@ func main() {
 	}
 }
 
-// seedExercises loads the question bank: prefer the JSON library directory
-// (editable without recompiling), falling back to the built-in builders.
+// seedExercises loads the whole question bank from the JSON library directory
+// (the single source of truth; editable without recompiling) and upserts it.
 // Only the exercises table is touched; progress/favorites are never modified.
-func seedExercises(st *store.Store, libDir string) error {
-	exs, err := seed.LoadLibrary(libDir)
+func seedExercises(st *store.Store, bankDir string) error {
+	exs, err := seed.BuildAll(bankDir)
 	if err != nil {
 		return err
 	}
-	if len(exs) == 0 {
-		exs, err = seed.All()
-		if err != nil {
-			return err
-		}
-		log.Printf("library dir 为空，使用内置题库构建器")
-	} else {
-		log.Printf("从题库 JSON 目录加载 %d 题（%s）", len(exs), libDir)
-	}
+	log.Printf("从题库 JSON 目录加载 %d 题（%s）", len(exs), bankDir)
 	for _, ex := range exs {
 		if err := st.UpsertExercise(ex); err != nil {
 			return err

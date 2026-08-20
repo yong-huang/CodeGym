@@ -2,6 +2,7 @@ package judge
 
 import (
 	"math"
+	"sort"
 	"strings"
 
 	"codegym/backend/internal/model"
@@ -88,11 +89,21 @@ func GradeLabel(grade string) string {
 
 // GradeFill judges the whole exercise after execution per design section 7.
 // hintUsage maps fill point id -> max hint level used.
+// Results are returned in code position order (top-to-bottom), so the score
+// table matches the code the user sees.
 func GradeFill(ex model.Exercise, points []model.FillPoint, answers map[string]string, output, expected string, hintUsage map[string]int) ([]model.FillResult, float64) {
+	ordered := make([]model.FillPoint, len(points))
+	copy(ordered, points)
+	// sort by absolute span offset (top-to-bottom in code). Some hand-imported
+	// exercises store Line=0, so SpanStart is the authoritative order key.
+	sort.SliceStable(ordered, func(i, j int) bool {
+		return ordered[i].Location.SpanStart < ordered[j].Location.SpanStart
+	})
+
 	var results []model.FillResult
 	totalWeight, weightedSum := 0.0, 0.0
 
-	for _, p := range points {
+	for _, p := range ordered {
 		user := strings.TrimSpace(answers["FILL_"+p.ID])
 		exp := p.OriginalText
 		fr := model.FillResult{

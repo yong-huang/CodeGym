@@ -1,1634 +1,1634 @@
 [
-  {
-    "id": "go-basics-001",
-    "title": "Hello Go",
-    "description": "输出问候语",
-    "exercise_type": "fill",
-    "tech_stack": "go",
-    "weight": "beginner",
-    "category": "syntax",
-    "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tfmt.Println(\"Hello, Go\")\n}",
-    "expected": "Hello, Go",
-    "points": [
-      {
-        "id": "msg",
-        "text": "\"Hello, Go\"",
-        "category": "string",
-        "min_weight": "beginner",
-        "weight_score": 1,
-        "hint": "要输出的字符串",
-        "fill_type": "text"
-      }
-    ],
-    "hints": {
-      "level_1": "💡 输出一个字符串",
-      "level_2": "📖 用 `fmt.Println(\"Hello, Go\")`",
-      "level_3": "👀 `fmt.Println(\"Hello, Go\")`",
-      "level_4": "📝 正确答案：`\"Hello, Go\"`"
-    },
-    "explanation": "`fmt.Println` 打印并换行；字符串用双引号包裹。"
-  },
-  {
-    "id": "go-basics-002",
-    "title": "变量声明",
-    "description": "用 := 声明两个变量并打印",
-    "exercise_type": "fill",
-    "tech_stack": "go",
-    "weight": "beginner",
-    "category": "variables",
-    "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tname := \"gopher\"\n\tage := 5\n\tfmt.Println(name, age)\n}",
-    "expected": "gopher 5",
-    "points": [
-      {
-        "id": "name",
-        "text": "\"gopher\"",
-        "category": "string",
-        "min_weight": "beginner",
-        "weight_score": 1,
-        "hint": "字符串变量值",
-        "fill_type": "text"
-      },
-      {
-        "id": "age",
-        "text": "5",
-        "category": "number",
-        "min_weight": "beginner",
-        "weight_score": 1,
-        "hint": "整数变量值",
-        "fill_type": "text"
-      }
-    ],
-    "hints": {
-      "level_1": "💡 用 := 声明的两个变量",
-      "level_2": "📖 `name := \"gopher\"`，`age := 5`",
-      "level_3": "👀 `fmt.Println(name, age)`",
-      "level_4": "📝 正确答案：`\"gopher\"` / `5`"
-    },
-    "explanation": "`:=` 声明并初始化变量，类型由右侧推断；`var` 可显式声明。"
-  },
-  {
-    "id": "go-basics-003",
-    "title": "常量 const",
-    "description": "声明并打印常量",
-    "exercise_type": "fill",
-    "tech_stack": "go",
-    "weight": "beginner",
-    "category": "constants",
-    "full_code": "package main\n\nimport \"fmt\"\n\nconst pi = 3.14159\n\nfunc main() {\n\tfmt.Println(pi)\n}",
-    "expected": "3.14159",
-    "points": [
-      {
-        "id": "val",
-        "text": "3.14159",
-        "category": "constant",
-        "min_weight": "beginner",
-        "weight_score": 1,
-        "hint": "圆周率常量值",
-        "fill_type": "text"
-      }
-    ],
-    "hints": {
-      "level_1": "💡 常量的值",
-      "level_2": "📖 `const pi = 3.14159`",
-      "level_3": "👀 `fmt.Println(pi)`",
-      "level_4": "📝 正确答案：`3.14159`"
-    },
-    "explanation": "`const` 定义编译期常量，运行期不能修改。"
-  },
-  {
-    "id": "go-basics-004",
-    "title": "if-else 判断奇偶",
-    "description": "判断 7 的奇偶性",
-    "exercise_type": "fill",
-    "tech_stack": "go",
-    "weight": "beginner",
-    "category": "if",
-    "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tn := 7\n\tif n%2 == 0 {\n\t\tfmt.Println(\"even\")\n\t} else {\n\t\tfmt.Println(\"odd\")\n\t}\n}",
-    "expected": "odd",
-    "points": [
-      {
-        "id": "cond",
-        "text": "n%2 == 0",
-        "category": "condition",
-        "min_weight": "beginner",
-        "weight_score": 1,
-        "hint": "偶数的判断条件",
-        "fill_type": "text"
-      }
-    ],
-    "hints": {
-      "level_1": "💡 偶数的取模条件",
-      "level_2": "📖 `n%2 == 0` 为真则是偶数",
-      "level_3": "👀 `if n%2 == 0 { } else { }`",
-      "level_4": "📝 正确答案：`n%2 == 0`"
-    },
-    "explanation": "Go 的 if/else 条件不需要括号，但必须用花括号包裹分支。"
-  },
-  {
-    "id": "go-basics-005",
-    "title": "for 循环 1 到 5",
-    "description": "用 for 打印 1..5",
-    "exercise_type": "fill",
-    "tech_stack": "go",
-    "weight": "beginner",
-    "category": "for",
-    "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tfor i := 1; i \u003c= 5; i++ {\n\t\tfmt.Println(i)\n\t}\n}",
-    "expected": "1\n2\n3\n4\n5",
-    "points": [
-      {
-        "id": "cond",
-        "text": "i \u003c= 5",
-        "category": "condition",
-        "min_weight": "beginner",
-        "weight_score": 1,
-        "hint": "循环继续条件",
-        "fill_type": "text"
-      }
-    ],
-    "hints": {
-      "level_1": "💡 循环的终止条件",
-      "level_2": "📖 `i \u003c= 5` 时继续",
-      "level_3": "👀 `for i := 1; i \u003c= 5; i++ { }`",
-      "level_4": "📝 正确答案：`i \u003c= 5`"
-    },
-    "explanation": "Go 只有 `for` 一种循环；`初始;条件;步进` 三段式写法类似其它语言。"
-  },
-  {
-    "id": "go-basics-006",
-    "title": "switch 匹配分支",
-    "description": "用 switch 判断星期",
-    "exercise_type": "fill",
-    "tech_stack": "go",
-    "weight": "easy",
-    "category": "switch",
-    "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tday := \"mon\"\n\tswitch day {\n\tcase \"mon\":\n\t\tfmt.Println(\"start\")\n\tcase \"fri\":\n\t\tfmt.Println(\"tgif\")\n\tdefault:\n\t\tfmt.Println(\"other\")\n\t}\n}",
-    "expected": "start",
-    "points": [
-      {
-        "id": "case",
-        "text": "case \"mon\":",
-        "category": "case",
-        "min_weight": "beginner",
-        "weight_score": 1,
-        "hint": "匹配 day==\"mon\" 的分支",
-        "fill_type": "text"
-      }
-    ],
-    "hints": {
-      "level_1": "💡 匹配字符串的分支写法",
-      "level_2": "📖 `case \"mon\":` 匹配 day",
-      "level_3": "👀 `switch day { case \"mon\": ... }`",
-      "level_4": "📝 正确答案：`case \"mon\":`"
-    },
-    "explanation": "Go 的 switch 无需 break，匹配到分支后自动退出。"
-  },
-  {
-    "id": "go-basics-007",
-    "title": "数组求和",
-    "description": "用 range 遍历数组求和",
-    "exercise_type": "fill",
-    "tech_stack": "go",
-    "weight": "easy",
-    "category": "array",
-    "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tnums := [4]int{10, 20, 30, 40}\n\tsum := 0\n\tfor _, n := range nums {\n\t\tsum += n\n\t}\n\tfmt.Println(sum)\n}",
-    "expected": "100",
-    "points": [
-      {
-        "id": "acc",
-        "text": "sum += n",
-        "category": "statement",
-        "min_weight": "beginner",
-        "weight_score": 1,
-        "hint": "累加每个元素",
-        "fill_type": "text"
-      }
-    ],
-    "hints": {
-      "level_1": "💡 累加当前元素",
-      "level_2": "📖 `for _, n := range nums` 遍历",
-      "level_3": "👀 `sum += n`",
-      "level_4": "📝 正确答案：`sum += n`"
-    },
-    "explanation": "`range` 遍历返回索引和值，用 `_` 忽略索引；对数组、切片、map、字符串都适用。"
-  },
-  {
-    "id": "go-basics-008",
-    "title": "切片追加 append",
-    "description": "向切片追加元素",
-    "exercise_type": "fill",
-    "tech_stack": "go",
-    "weight": "easy",
-    "category": "slice",
-    "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tnums := []int{1, 2}\n\tnums = append(nums, 3, 4)\n\tfmt.Println(nums)\n}",
-    "expected": "[1 2 3 4]",
-    "points": [
-      {
-        "id": "fn",
-        "text": "append",
-        "category": "function",
-        "min_weight": "beginner",
-        "weight_score": 1,
-        "hint": "追加元素的内置函数",
-        "fill_type": "text"
-      }
-    ],
-    "hints": {
-      "level_1": "💡 切片追加的内置函数",
-      "level_2": "📖 `append(nums, 3, 4)`",
-      "level_3": "👀 `nums = append(nums, 3, 4)`",
-      "level_4": "📝 正确答案：`append`"
-    },
-    "explanation": "`append` 追加元素，容量不够时自动扩容；必须把返回值赋回变量。"
-  },
-  {
-    "id": "go-basics-009",
-    "title": "切片切片",
-    "description": "取 a[1:3] 生成新切片",
-    "exercise_type": "fill",
-    "tech_stack": "go",
-    "weight": "easy",
-    "category": "slice",
-    "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\ta := []int{1, 2, 3, 4, 5}\n\tb := a[1:3]\n\tfmt.Println(b)\n}",
-    "expected": "[2 3]",
-    "points": [
-      {
-        "id": "slice",
-        "text": "a[1:3]",
-        "category": "slice",
-        "min_weight": "beginner",
-        "weight_score": 1,
-        "hint": "截取下标 1 到 2",
-        "fill_type": "text"
-      }
-    ],
-    "hints": {
-      "level_1": "💡 截取下标 1..2",
-      "level_2": "📖 `a[1:3]` 含头不含尾",
-      "level_3": "👀 `b := a[1:3]`",
-      "level_4": "📝 正确答案：`a[1:3]`"
-    },
-    "explanation": "切片 `a[low:high]` 含 low 不含 high，这里是下标 1、2。"
-  },
-  {
-    "id": "go-basics-010",
-    "title": "make 创建切片",
-    "description": "用 make 创建长度为 3 的切片",
-    "exercise_type": "fill",
-    "tech_stack": "go",
-    "weight": "easy",
-    "category": "make",
-    "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\ts := make([]int, 3)\n\tfmt.Println(len(s))\n}",
-    "expected": "3",
-    "points": [
-      {
-        "id": "make",
-        "text": "make([]int, 3)",
-        "category": "function",
-        "min_weight": "beginner",
-        "weight_score": 1,
-        "hint": "创建容量为 3 的切片",
-        "fill_type": "text"
-      }
-    ],
-    "hints": {
-      "level_1": "💡 创建切片的函数",
-      "level_2": "📖 `make([]int, 3)` 长度 3",
-      "level_3": "👀 `s := make([]int, 3)`",
-      "level_4": "📝 正确答案：`make([]int, 3)`"
-    },
-    "explanation": "`make` 用于创建切片、map、channel；第二个参数是长度。"
-  },
-  {
-    "id": "go-basics-011",
-    "title": "map 写入",
-    "description": "向 map 写入并读取",
-    "exercise_type": "fill",
-    "tech_stack": "go",
-    "weight": "easy",
-    "category": "map",
-    "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tcounts := map[string]int{\"a\": 1, \"b\": 2}\n\tcounts[\"c\"] = 3\n\tfmt.Println(counts[\"c\"])\n}",
-    "expected": "3",
-    "points": [
-      {
-        "id": "write",
-        "text": "counts[\"c\"] = 3",
-        "category": "statement",
-        "min_weight": "beginner",
-        "weight_score": 1,
-        "hint": "写入键 c",
-        "fill_type": "text"
-      }
-    ],
-    "hints": {
-      "level_1": "💡 写入 map 键值",
-      "level_2": "📖 `counts[\"c\"] = 3`",
-      "level_3": "👀 `fmt.Println(counts[\"c\"])`",
-      "level_4": "📝 正确答案：`counts[\"c\"] = 3`"
-    },
-    "explanation": "map 用 `m[key] = value` 写入，`m[key]` 读取；读取不存在的键返回零值。"
-  },
-  {
-    "id": "go-basics-012",
-    "title": "字符串拼接",
-    "description": "拼接字符串并查看长度",
-    "exercise_type": "fill",
-    "tech_stack": "go",
-    "weight": "easy",
+ {
+  "id": "go-basics-001",
+  "title": "Hello Go",
+  "description": "输出问候语",
+  "exercise_type": "fill",
+  "tech_stack": "go",
+  "weight": "beginner",
+  "category": "syntax",
+  "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tfmt.Println(\"Hello, Go\")\n}",
+  "expected": "Hello, Go",
+  "points": [
+   {
+    "id": "msg",
+    "text": "\"Hello, Go\"",
     "category": "string",
-    "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tgreet := \"Hello, \" + \"Go\"\n\tfmt.Println(greet, len(greet))\n}",
-    "expected": "Hello, Go 9",
-    "points": [
-      {
-        "id": "part",
-        "text": "\"Hello, \"",
-        "category": "string",
-        "min_weight": "beginner",
-        "weight_score": 1,
-        "hint": "拼接的一部分",
-        "fill_type": "text"
-      }
-    ],
-    "hints": {
-      "level_1": "💡 要拼接的字符串",
-      "level_2": "📖 `\"Hello, \" + \"Go\"`",
-      "level_3": "👀 `len(greet)`",
-      "level_4": "📝 正确答案：`\"Hello, \"`"
-    },
-    "explanation": "字符串用 `+` 拼接；`len` 返回字节数。"
+    "min_weight": "beginner",
+    "weight_score": 1,
+    "hint": "要输出的字符串",
+    "fill_type": "text"
+   }
+  ],
+  "hints": {
+   "level_1": "💡 输出一个字符串",
+   "level_2": "📖 用 `fmt.Println(\"Hello, Go\")`",
+   "level_3": "👀 `fmt.Println(\"Hello, Go\")`",
+   "level_4": "📝 正确答案：`\"Hello, Go\"`"
   },
-  {
-    "id": "go-basics-013",
-    "title": "函数返回",
-    "description": "定义 add 函数并调用",
-    "exercise_type": "fill",
-    "tech_stack": "go",
-    "weight": "easy",
+  "explanation": "`fmt.Println` 打印并换行；字符串用双引号包裹。"
+ },
+ {
+  "id": "go-basics-002",
+  "title": "变量声明",
+  "description": "用 := 声明两个变量并打印",
+  "exercise_type": "fill",
+  "tech_stack": "go",
+  "weight": "beginner",
+  "category": "variables",
+  "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tname := \"gopher\"\n\tage := 5\n\tfmt.Println(name, age)\n}",
+  "expected": "gopher 5",
+  "points": [
+   {
+    "id": "name",
+    "text": "\"gopher\"",
+    "category": "string",
+    "min_weight": "beginner",
+    "weight_score": 1,
+    "hint": "字符串变量值",
+    "fill_type": "text"
+   },
+   {
+    "id": "age",
+    "text": "5",
+    "category": "number",
+    "min_weight": "beginner",
+    "weight_score": 1,
+    "hint": "整数变量值",
+    "fill_type": "text"
+   }
+  ],
+  "hints": {
+   "level_1": "💡 用 := 声明的两个变量",
+   "level_2": "📖 `name := \"gopher\"`，`age := 5`",
+   "level_3": "👀 `fmt.Println(name, age)`",
+   "level_4": "📝 正确答案：`\"gopher\"` / `5`"
+  },
+  "explanation": "`:=` 声明并初始化变量，类型由右侧推断；`var` 可显式声明。"
+ },
+ {
+  "id": "go-basics-003",
+  "title": "常量 const",
+  "description": "声明并打印常量",
+  "exercise_type": "fill",
+  "tech_stack": "go",
+  "weight": "beginner",
+  "category": "constants",
+  "full_code": "package main\n\nimport \"fmt\"\n\nconst pi = 3.14159\n\nfunc main() {\n\tfmt.Println(pi)\n}",
+  "expected": "3.14159",
+  "points": [
+   {
+    "id": "val",
+    "text": "3.14159",
+    "category": "constant",
+    "min_weight": "beginner",
+    "weight_score": 1,
+    "hint": "圆周率常量值",
+    "fill_type": "text"
+   }
+  ],
+  "hints": {
+   "level_1": "💡 常量的值",
+   "level_2": "📖 `const pi = 3.14159`",
+   "level_3": "👀 `fmt.Println(pi)`",
+   "level_4": "📝 正确答案：`3.14159`"
+  },
+  "explanation": "`const` 定义编译期常量，运行期不能修改。"
+ },
+ {
+  "id": "go-basics-004",
+  "title": "if-else 判断奇偶",
+  "description": "判断 7 的奇偶性",
+  "exercise_type": "fill",
+  "tech_stack": "go",
+  "weight": "beginner",
+  "category": "if",
+  "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tn := 7\n\tif n%2 == 0 {\n\t\tfmt.Println(\"even\")\n\t} else {\n\t\tfmt.Println(\"odd\")\n\t}\n}",
+  "expected": "odd",
+  "points": [
+   {
+    "id": "cond",
+    "text": "n%2 == 0",
+    "category": "condition",
+    "min_weight": "beginner",
+    "weight_score": 1,
+    "hint": "偶数的判断条件",
+    "fill_type": "text"
+   }
+  ],
+  "hints": {
+   "level_1": "💡 偶数的取模条件",
+   "level_2": "📖 `n%2 == 0` 为真则是偶数",
+   "level_3": "👀 `if n%2 == 0 { } else { }`",
+   "level_4": "📝 正确答案：`n%2 == 0`"
+  },
+  "explanation": "Go 的 if/else 条件不需要括号，但必须用花括号包裹分支。"
+ },
+ {
+  "id": "go-basics-005",
+  "title": "for 循环 1 到 5",
+  "description": "用 for 打印 1..5",
+  "exercise_type": "fill",
+  "tech_stack": "go",
+  "weight": "beginner",
+  "category": "for",
+  "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tfor i := 1; i <= 5; i++ {\n\t\tfmt.Println(i)\n\t}\n}",
+  "expected": "1\n2\n3\n4\n5",
+  "points": [
+   {
+    "id": "cond",
+    "text": "i <= 5",
+    "category": "condition",
+    "min_weight": "beginner",
+    "weight_score": 1,
+    "hint": "循环继续条件",
+    "fill_type": "text"
+   }
+  ],
+  "hints": {
+   "level_1": "💡 循环的终止条件",
+   "level_2": "📖 `i <= 5` 时继续",
+   "level_3": "👀 `for i := 1; i <= 5; i++ { }`",
+   "level_4": "📝 正确答案：`i <= 5`"
+  },
+  "explanation": "Go 只有 `for` 一种循环；`初始;条件;步进` 三段式写法类似其它语言。"
+ },
+ {
+  "id": "go-basics-006",
+  "title": "switch 匹配分支",
+  "description": "用 switch 判断星期",
+  "exercise_type": "fill",
+  "tech_stack": "go",
+  "weight": "easy",
+  "category": "switch",
+  "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tday := \"mon\"\n\tswitch day {\n\tcase \"mon\":\n\t\tfmt.Println(\"start\")\n\tcase \"fri\":\n\t\tfmt.Println(\"tgif\")\n\tdefault:\n\t\tfmt.Println(\"other\")\n\t}\n}",
+  "expected": "start",
+  "points": [
+   {
+    "id": "case",
+    "text": "case \"mon\":",
+    "category": "case",
+    "min_weight": "beginner",
+    "weight_score": 1,
+    "hint": "匹配 day==\"mon\" 的分支",
+    "fill_type": "text"
+   }
+  ],
+  "hints": {
+   "level_1": "💡 匹配字符串的分支写法",
+   "level_2": "📖 `case \"mon\":` 匹配 day",
+   "level_3": "👀 `switch day { case \"mon\": ... }`",
+   "level_4": "📝 正确答案：`case \"mon\":`"
+  },
+  "explanation": "Go 的 switch 无需 break，匹配到分支后自动退出。"
+ },
+ {
+  "id": "go-basics-007",
+  "title": "数组求和",
+  "description": "用 range 遍历数组求和",
+  "exercise_type": "fill",
+  "tech_stack": "go",
+  "weight": "easy",
+  "category": "array",
+  "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tnums := [4]int{10, 20, 30, 40}\n\tsum := 0\n\tfor _, n := range nums {\n\t\tsum += n\n\t}\n\tfmt.Println(sum)\n}",
+  "expected": "100",
+  "points": [
+   {
+    "id": "acc",
+    "text": "sum += n",
+    "category": "statement",
+    "min_weight": "beginner",
+    "weight_score": 1,
+    "hint": "累加每个元素",
+    "fill_type": "text"
+   }
+  ],
+  "hints": {
+   "level_1": "💡 累加当前元素",
+   "level_2": "📖 `for _, n := range nums` 遍历",
+   "level_3": "👀 `sum += n`",
+   "level_4": "📝 正确答案：`sum += n`"
+  },
+  "explanation": "`range` 遍历返回索引和值，用 `_` 忽略索引；对数组、切片、map、字符串都适用。"
+ },
+ {
+  "id": "go-basics-008",
+  "title": "切片追加 append",
+  "description": "向切片追加元素",
+  "exercise_type": "fill",
+  "tech_stack": "go",
+  "weight": "easy",
+  "category": "slice",
+  "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tnums := []int{1, 2}\n\tnums = append(nums, 3, 4)\n\tfmt.Println(nums)\n}",
+  "expected": "[1 2 3 4]",
+  "points": [
+   {
+    "id": "fn",
+    "text": "append",
     "category": "function",
-    "full_code": "package main\n\nimport \"fmt\"\n\nfunc add(a, b int) int {\n\treturn a + b\n}\n\nfunc main() {\n\tfmt.Println(add(2, 3))\n}",
-    "expected": "5",
-    "points": [
-      {
-        "id": "ret",
-        "text": "return a + b",
-        "category": "statement",
-        "min_weight": "beginner",
-        "weight_score": 1,
-        "hint": "返回两数之和",
-        "fill_type": "text"
-      }
-    ],
-    "hints": {
-      "level_1": "💡 返回表达式",
-      "level_2": "📖 `func add(a, b int) int`",
-      "level_3": "👀 `return a + b`",
-      "level_4": "📝 正确答案：`return a + b`"
-    },
-    "explanation": "函数签名 `func 名(参数) 返回类型`，`return` 返回值。"
+    "min_weight": "beginner",
+    "weight_score": 1,
+    "hint": "追加元素的内置函数",
+    "fill_type": "text"
+   }
+  ],
+  "hints": {
+   "level_1": "💡 切片追加的内置函数",
+   "level_2": "📖 `append(nums, 3, 4)`",
+   "level_3": "👀 `nums = append(nums, 3, 4)`",
+   "level_4": "📝 正确答案：`append`"
   },
-  {
-    "id": "go-basics-014",
-    "title": "多返回值",
-    "description": "函数返回商和余数",
-    "exercise_type": "fill",
-    "tech_stack": "go",
-    "weight": "easy",
+  "explanation": "`append` 追加元素，容量不够时自动扩容；必须把返回值赋回变量。"
+ },
+ {
+  "id": "go-basics-009",
+  "title": "切片切片",
+  "description": "取 a[1:3] 生成新切片",
+  "exercise_type": "fill",
+  "tech_stack": "go",
+  "weight": "easy",
+  "category": "slice",
+  "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\ta := []int{1, 2, 3, 4, 5}\n\tb := a[1:3]\n\tfmt.Println(b)\n}",
+  "expected": "[2 3]",
+  "points": [
+   {
+    "id": "slice",
+    "text": "a[1:3]",
+    "category": "slice",
+    "min_weight": "beginner",
+    "weight_score": 1,
+    "hint": "截取下标 1 到 2",
+    "fill_type": "text"
+   }
+  ],
+  "hints": {
+   "level_1": "💡 截取下标 1..2",
+   "level_2": "📖 `a[1:3]` 含头不含尾",
+   "level_3": "👀 `b := a[1:3]`",
+   "level_4": "📝 正确答案：`a[1:3]`"
+  },
+  "explanation": "切片 `a[low:high]` 含 low 不含 high，这里是下标 1、2。"
+ },
+ {
+  "id": "go-basics-010",
+  "title": "make 创建切片",
+  "description": "用 make 创建长度为 3 的切片",
+  "exercise_type": "fill",
+  "tech_stack": "go",
+  "weight": "easy",
+  "category": "make",
+  "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\ts := make([]int, 3)\n\tfmt.Println(len(s))\n}",
+  "expected": "3",
+  "points": [
+   {
+    "id": "make",
+    "text": "make([]int, 3)",
     "category": "function",
-    "full_code": "package main\n\nimport \"fmt\"\n\nfunc div(a, b int) (int, int) {\n\treturn a / b, a % b\n}\n\nfunc main() {\n\tq, r := div(10, 3)\n\tfmt.Println(q, r)\n}",
-    "expected": "3 1",
-    "points": [
-      {
-        "id": "sig",
-        "text": "(int, int)",
-        "category": "signature",
-        "min_weight": "beginner",
-        "weight_score": 1,
-        "hint": "两个返回值的类型列表",
-        "fill_type": "text"
-      }
-    ],
-    "hints": {
-      "level_1": "💡 多返回值的类型",
-      "level_2": "📖 `(int, int)` 声明两个 int 返回",
-      "level_3": "👀 `q, r := div(10, 3)`",
-      "level_4": "📝 正确答案：`(int, int)`"
-    },
-    "explanation": "Go 支持多返回值，常用于 `返回值, error` 的惯用法。"
+    "min_weight": "beginner",
+    "weight_score": 1,
+    "hint": "创建容量为 3 的切片",
+    "fill_type": "text"
+   }
+  ],
+  "hints": {
+   "level_1": "💡 创建切片的函数",
+   "level_2": "📖 `make([]int, 3)` 长度 3",
+   "level_3": "👀 `s := make([]int, 3)`",
+   "level_4": "📝 正确答案：`make([]int, 3)`"
   },
-  {
-    "id": "go-basics-015",
-    "title": "具名返回",
-    "description": "用具名返回值求和",
-    "exercise_type": "fill",
-    "tech_stack": "go",
-    "weight": "medium",
-    "category": "function",
-    "full_code": "package main\n\nimport \"fmt\"\n\nfunc sum(nums []int) (total int) {\n\tfor _, n := range nums {\n\t\ttotal += n\n\t}\n\treturn\n}\n\nfunc main() {\n\tfmt.Println(sum([]int{1, 2, 3}))\n}",
-    "expected": "6",
-    "points": [
-      {
-        "id": "sig",
-        "text": "(total int)",
-        "category": "signature",
-        "min_weight": "beginner",
-        "weight_score": 1,
-        "hint": "具名返回值的声明",
-        "fill_type": "text"
-      }
-    ],
-    "hints": {
-      "level_1": "💡 具名返回值写法",
-      "level_2": "📖 `(total int)` 定义变量 total",
-      "level_3": "👀 裸 `return` 返回具名变量",
-      "level_4": "📝 正确答案：`(total int)`"
-    },
-    "explanation": "具名返回值在函数内自动声明，裸 `return` 返回它们。"
+  "explanation": "`make` 用于创建切片、map、channel；第二个参数是长度。"
+ },
+ {
+  "id": "go-basics-011",
+  "title": "map 写入",
+  "description": "向 map 写入并读取",
+  "exercise_type": "fill",
+  "tech_stack": "go",
+  "weight": "easy",
+  "category": "map",
+  "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tcounts := map[string]int{\"a\": 1, \"b\": 2}\n\tcounts[\"c\"] = 3\n\tfmt.Println(counts[\"c\"])\n}",
+  "expected": "3",
+  "points": [
+   {
+    "id": "write",
+    "text": "counts[\"c\"] = 3",
+    "category": "statement",
+    "min_weight": "beginner",
+    "weight_score": 1,
+    "hint": "写入键 c",
+    "fill_type": "text"
+   }
+  ],
+  "hints": {
+   "level_1": "💡 写入 map 键值",
+   "level_2": "📖 `counts[\"c\"] = 3`",
+   "level_3": "👀 `fmt.Println(counts[\"c\"])`",
+   "level_4": "📝 正确答案：`counts[\"c\"] = 3`"
   },
-  {
-    "id": "go-basics-016",
-    "title": "可变参数",
-    "description": "用 ...int 接受任意数量参数取最大值",
-    "exercise_type": "fill",
-    "tech_stack": "go",
-    "weight": "medium",
+  "explanation": "map 用 `m[key] = value` 写入，`m[key]` 读取；读取不存在的键返回零值。"
+ },
+ {
+  "id": "go-basics-012",
+  "title": "字符串拼接",
+  "description": "拼接字符串并查看长度",
+  "exercise_type": "fill",
+  "tech_stack": "go",
+  "weight": "easy",
+  "category": "string",
+  "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tgreet := \"Hello, \" + \"Go\"\n\tfmt.Println(greet, len(greet))\n}",
+  "expected": "Hello, Go 9",
+  "points": [
+   {
+    "id": "part",
+    "text": "\"Hello, \"",
+    "category": "string",
+    "min_weight": "beginner",
+    "weight_score": 1,
+    "hint": "拼接的一部分",
+    "fill_type": "text"
+   }
+  ],
+  "hints": {
+   "level_1": "💡 要拼接的字符串",
+   "level_2": "📖 `\"Hello, \" + \"Go\"`",
+   "level_3": "👀 `len(greet)`",
+   "level_4": "📝 正确答案：`\"Hello, \"`"
+  },
+  "explanation": "字符串用 `+` 拼接；`len` 返回字节数。"
+ },
+ {
+  "id": "go-basics-013",
+  "title": "函数返回",
+  "description": "定义 add 函数并调用",
+  "exercise_type": "fill",
+  "tech_stack": "go",
+  "weight": "easy",
+  "category": "function",
+  "full_code": "package main\n\nimport \"fmt\"\n\nfunc add(a, b int) int {\n\treturn a + b\n}\n\nfunc main() {\n\tfmt.Println(add(2, 3))\n}",
+  "expected": "5",
+  "points": [
+   {
+    "id": "ret",
+    "text": "return a + b",
+    "category": "statement",
+    "min_weight": "beginner",
+    "weight_score": 1,
+    "hint": "返回两数之和",
+    "fill_type": "text"
+   }
+  ],
+  "hints": {
+   "level_1": "💡 返回表达式",
+   "level_2": "📖 `func add(a, b int) int`",
+   "level_3": "👀 `return a + b`",
+   "level_4": "📝 正确答案：`return a + b`"
+  },
+  "explanation": "函数签名 `func 名(参数) 返回类型`，`return` 返回值。"
+ },
+ {
+  "id": "go-basics-014",
+  "title": "多返回值",
+  "description": "函数返回商和余数",
+  "exercise_type": "fill",
+  "tech_stack": "go",
+  "weight": "easy",
+  "category": "function",
+  "full_code": "package main\n\nimport \"fmt\"\n\nfunc div(a, b int) (int, int) {\n\treturn a / b, a % b\n}\n\nfunc main() {\n\tq, r := div(10, 3)\n\tfmt.Println(q, r)\n}",
+  "expected": "3 1",
+  "points": [
+   {
+    "id": "sig",
+    "text": "(int, int)",
+    "category": "signature",
+    "min_weight": "beginner",
+    "weight_score": 1,
+    "hint": "两个返回值的类型列表",
+    "fill_type": "text"
+   }
+  ],
+  "hints": {
+   "level_1": "💡 多返回值的类型",
+   "level_2": "📖 `(int, int)` 声明两个 int 返回",
+   "level_3": "👀 `q, r := div(10, 3)`",
+   "level_4": "📝 正确答案：`(int, int)`"
+  },
+  "explanation": "Go 支持多返回值，常用于 `返回值, error` 的惯用法。"
+ },
+ {
+  "id": "go-basics-015",
+  "title": "具名返回",
+  "description": "用具名返回值求和",
+  "exercise_type": "fill",
+  "tech_stack": "go",
+  "weight": "medium",
+  "category": "function",
+  "full_code": "package main\n\nimport \"fmt\"\n\nfunc sum(nums []int) (total int) {\n\tfor _, n := range nums {\n\t\ttotal += n\n\t}\n\treturn\n}\n\nfunc main() {\n\tfmt.Println(sum([]int{1, 2, 3}))\n}",
+  "expected": "6",
+  "points": [
+   {
+    "id": "sig",
+    "text": "(total int)",
+    "category": "signature",
+    "min_weight": "beginner",
+    "weight_score": 1,
+    "hint": "具名返回值的声明",
+    "fill_type": "text"
+   }
+  ],
+  "hints": {
+   "level_1": "💡 具名返回值写法",
+   "level_2": "📖 `(total int)` 定义变量 total",
+   "level_3": "👀 裸 `return` 返回具名变量",
+   "level_4": "📝 正确答案：`(total int)`"
+  },
+  "explanation": "具名返回值在函数内自动声明，裸 `return` 返回它们。"
+ },
+ {
+  "id": "go-basics-016",
+  "title": "可变参数",
+  "description": "用 ...int 接受任意数量参数取最大值",
+  "exercise_type": "fill",
+  "tech_stack": "go",
+  "weight": "medium",
+  "category": "variadic",
+  "full_code": "package main\n\nimport \"fmt\"\n\nfunc max(nums ...int) int {\n\tm := nums[0]\n\tfor _, n := range nums {\n\t\tif n > m {\n\t\t\tm = n\n\t\t}\n\t}\n\treturn m\n}\n\nfunc main() {\n\tfmt.Println(max(3, 7, 2))\n}",
+  "expected": "7",
+  "points": [
+   {
+    "id": "sig",
+    "text": "...int",
     "category": "variadic",
-    "full_code": "package main\n\nimport \"fmt\"\n\nfunc max(nums ...int) int {\n\tm := nums[0]\n\tfor _, n := range nums {\n\t\tif n \u003e m {\n\t\t\tm = n\n\t\t}\n\t}\n\treturn m\n}\n\nfunc main() {\n\tfmt.Println(max(3, 7, 2))\n}",
-    "expected": "7",
-    "points": [
-      {
-        "id": "sig",
-        "text": "...int",
-        "category": "variadic",
-        "min_weight": "beginner",
-        "weight_score": 1,
-        "hint": "可变参数的写法",
-        "fill_type": "text"
-      }
-    ],
-    "hints": {
-      "level_1": "💡 可变参数写法",
-      "level_2": "📖 `nums ...int` 收集成切片",
-      "level_3": "👀 `max(3, 7, 2)`",
-      "level_4": "📝 正确答案：`...int`"
-    },
-    "explanation": "`...T` 声明可变参数，函数内表现为类型 T 的切片。"
+    "min_weight": "beginner",
+    "weight_score": 1,
+    "hint": "可变参数的写法",
+    "fill_type": "text"
+   }
+  ],
+  "hints": {
+   "level_1": "💡 可变参数写法",
+   "level_2": "📖 `nums ...int` 收集成切片",
+   "level_3": "👀 `max(3, 7, 2)`",
+   "level_4": "📝 正确答案：`...int`"
   },
-  {
-    "id": "go-basics-017",
-    "title": "defer 延迟执行",
-    "description": "打印后再执行延迟语句",
-    "exercise_type": "fill",
-    "tech_stack": "go",
-    "weight": "easy",
-    "category": "defer",
-    "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tdefer fmt.Println(\"done\")\n\tfmt.Println(\"start\")\n}",
-    "expected": "start\ndone",
-    "points": [
-      {
-        "id": "defer",
-        "text": "defer",
-        "category": "keyword",
-        "min_weight": "beginner",
-        "weight_score": 1,
-        "hint": "延迟执行关键字",
-        "fill_type": "text"
-      }
-    ],
-    "hints": {
-      "level_1": "💡 延迟执行的关键字",
-      "level_2": "📖 `defer` 在函数返回时执行",
-      "level_3": "👀 `defer fmt.Println(\"done\")`",
-      "level_4": "📝 正确答案：`defer`"
-    },
-    "explanation": "`defer` 延迟到函数返回前执行，常用于关闭资源，多个 defer 按后进先出。"
+  "explanation": "`...T` 声明可变参数，函数内表现为类型 T 的切片。"
+ },
+ {
+  "id": "go-basics-017",
+  "title": "defer 延迟执行",
+  "description": "打印后再执行延迟语句",
+  "exercise_type": "fill",
+  "tech_stack": "go",
+  "weight": "easy",
+  "category": "defer",
+  "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tdefer fmt.Println(\"done\")\n\tfmt.Println(\"start\")\n}",
+  "expected": "start\ndone",
+  "points": [
+   {
+    "id": "defer",
+    "text": "defer",
+    "category": "keyword",
+    "min_weight": "beginner",
+    "weight_score": 1,
+    "hint": "延迟执行关键字",
+    "fill_type": "text"
+   }
+  ],
+  "hints": {
+   "level_1": "💡 延迟执行的关键字",
+   "level_2": "📖 `defer` 在函数返回时执行",
+   "level_3": "👀 `defer fmt.Println(\"done\")`",
+   "level_4": "📝 正确答案：`defer`"
   },
-  {
-    "id": "go-basics-018",
-    "title": "闭包计数器",
-    "description": "闭包捕获并累计变量",
-    "exercise_type": "fill",
-    "tech_stack": "go",
-    "weight": "medium",
+  "explanation": "`defer` 延迟到函数返回前执行，常用于关闭资源，多个 defer 按后进先出。"
+ },
+ {
+  "id": "go-basics-018",
+  "title": "闭包计数器",
+  "description": "闭包捕获并累计变量",
+  "exercise_type": "fill",
+  "tech_stack": "go",
+  "weight": "medium",
+  "category": "closure",
+  "full_code": "package main\n\nimport \"fmt\"\n\nfunc counter() func() int {\n\tn := 0\n\treturn func() int {\n\t\tn++\n\t\treturn n\n\t}\n}\n\nfunc main() {\n\tc := counter()\n\tfmt.Println(c(), c(), c())\n}",
+  "expected": "1 2 3",
+  "points": [
+   {
+    "id": "ret",
+    "text": "return func() int",
     "category": "closure",
-    "full_code": "package main\n\nimport \"fmt\"\n\nfunc counter() func() int {\n\tn := 0\n\treturn func() int {\n\t\tn++\n\t\treturn n\n\t}\n}\n\nfunc main() {\n\tc := counter()\n\tfmt.Println(c(), c(), c())\n}",
-    "expected": "1 2 3",
-    "points": [
-      {
-        "id": "ret",
-        "text": "return func() int",
-        "category": "closure",
-        "min_weight": "beginner",
-        "weight_score": 1,
-        "hint": "返回一个函数字面量",
-        "fill_type": "text"
-      }
-    ],
-    "hints": {
-      "level_1": "💡 返回匿名函数",
-      "level_2": "📖 闭包捕获外层变量 n",
-      "level_3": "👀 `func() int { n++; return n }`",
-      "level_4": "📝 正确答案：`return func() int`"
-    },
-    "explanation": "闭包可以捕获并修改外层局部变量，形成带状态函数。"
+    "min_weight": "beginner",
+    "weight_score": 1,
+    "hint": "返回一个函数字面量",
+    "fill_type": "text"
+   }
+  ],
+  "hints": {
+   "level_1": "💡 返回匿名函数",
+   "level_2": "📖 闭包捕获外层变量 n",
+   "level_3": "👀 `func() int { n++; return n }`",
+   "level_4": "📝 正确答案：`return func() int`"
   },
-  {
-    "id": "go-basics-019",
-    "title": "字符串转整数",
-    "description": "用 strconv.Atoi 解析字符串",
-    "exercise_type": "fill",
-    "tech_stack": "go",
-    "weight": "easy",
-    "category": "strconv",
-    "full_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"strconv\"\n)\n\nfunc main() {\n\tn, err := strconv.Atoi(\"123\")\n\tif err != nil {\n\t\tfmt.Println(\"bad\")\n\t} else {\n\t\tfmt.Println(n)\n\t}\n}",
-    "expected": "123",
-    "points": [
-      {
-        "id": "fn",
-        "text": "strconv.Atoi",
-        "category": "function",
-        "min_weight": "beginner",
-        "weight_score": 1,
-        "hint": "字符串转整数的函数",
-        "fill_type": "text"
-      }
-    ],
-    "hints": {
-      "level_1": "💡 字符串转整数",
-      "level_2": "📖 `strconv.Atoi(\"123\")` 返回 (int, error)",
-      "level_3": "👀 `n, err := strconv.Atoi(\"123\")`",
-      "level_4": "📝 正确答案：`strconv.Atoi`"
-    },
-    "explanation": "`Atoi` 把字符串解析为 int，第二个返回值 error 需检查。"
+  "explanation": "闭包可以捕获并修改外层局部变量，形成带状态函数。"
+ },
+ {
+  "id": "go-basics-019",
+  "title": "字符串转整数",
+  "description": "用 strconv.Atoi 解析字符串",
+  "exercise_type": "fill",
+  "tech_stack": "go",
+  "weight": "easy",
+  "category": "strconv",
+  "full_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"strconv\"\n)\n\nfunc main() {\n\tn, err := strconv.Atoi(\"123\")\n\tif err != nil {\n\t\tfmt.Println(\"bad\")\n\t} else {\n\t\tfmt.Println(n)\n\t}\n}",
+  "expected": "123",
+  "points": [
+   {
+    "id": "fn",
+    "text": "strconv.Atoi",
+    "category": "function",
+    "min_weight": "beginner",
+    "weight_score": 1,
+    "hint": "字符串转整数的函数",
+    "fill_type": "text"
+   }
+  ],
+  "hints": {
+   "level_1": "💡 字符串转整数",
+   "level_2": "📖 `strconv.Atoi(\"123\")` 返回 (int, error)",
+   "level_3": "👀 `n, err := strconv.Atoi(\"123\")`",
+   "level_4": "📝 正确答案：`strconv.Atoi`"
   },
-  {
-    "id": "go-basics-020",
-    "title": "返回错误",
-    "description": "函数返回自定义 error",
-    "exercise_type": "fill",
-    "tech_stack": "go",
-    "weight": "medium",
+  "explanation": "`Atoi` 把字符串解析为 int，第二个返回值 error 需检查。"
+ },
+ {
+  "id": "go-basics-020",
+  "title": "返回错误",
+  "description": "函数返回自定义 error",
+  "exercise_type": "fill",
+  "tech_stack": "go",
+  "weight": "medium",
+  "category": "error",
+  "full_code": "package main\n\nimport (\n\t\"errors\"\n\t\"fmt\"\n)\n\nfunc half(x int) (int, error) {\n\tif x%2 != 0 {\n\t\treturn 0, errors.New(\"odd\")\n\t}\n\treturn x / 2, nil\n}\n\nfunc main() {\n\tv, err := half(8)\n\tif err != nil {\n\t\tfmt.Println(err)\n\t} else {\n\t\tfmt.Println(v)\n\t}\n}",
+  "expected": "4",
+  "points": [
+   {
+    "id": "err",
+    "text": "errors.New(\"odd\")",
     "category": "error",
-    "full_code": "package main\n\nimport (\n\t\"errors\"\n\t\"fmt\"\n)\n\nfunc half(x int) (int, error) {\n\tif x%2 != 0 {\n\t\treturn 0, errors.New(\"odd\")\n\t}\n\treturn x / 2, nil\n}\n\nfunc main() {\n\tv, err := half(8)\n\tif err != nil {\n\t\tfmt.Println(err)\n\t} else {\n\t\tfmt.Println(v)\n\t}\n}",
-    "expected": "4",
-    "points": [
-      {
-        "id": "err",
-        "text": "errors.New(\"odd\")",
-        "category": "error",
-        "min_weight": "beginner",
-        "weight_score": 1,
-        "hint": "构造错误对象",
-        "fill_type": "text"
-      }
-    ],
-    "hints": {
-      "level_1": "💡 构造一个错误",
-      "level_2": "📖 `errors.New` 返回 error 值",
-      "level_3": "👀 `return 0, errors.New(\"odd\")`",
-      "level_4": "📝 正确答案：`errors.New(\"odd\")`"
-    },
-    "explanation": "`errors.New` 创建一个简单的 error，惯用法是返回 `值, nil` 表示成功。"
+    "min_weight": "beginner",
+    "weight_score": 1,
+    "hint": "构造错误对象",
+    "fill_type": "text"
+   }
+  ],
+  "hints": {
+   "level_1": "💡 构造一个错误",
+   "level_2": "📖 `errors.New` 返回 error 值",
+   "level_3": "👀 `return 0, errors.New(\"odd\")`",
+   "level_4": "📝 正确答案：`errors.New(\"odd\")`"
   },
-  {
-    "id": "go-basics-021",
-    "title": "结构体",
-    "description": "定义并初始化结构体",
-    "exercise_type": "fill",
-    "tech_stack": "go",
-    "weight": "easy",
+  "explanation": "`errors.New` 创建一个简单的 error，惯用法是返回 `值, nil` 表示成功。"
+ },
+ {
+  "id": "go-basics-021",
+  "title": "结构体",
+  "description": "定义并初始化结构体",
+  "exercise_type": "fill",
+  "tech_stack": "go",
+  "weight": "easy",
+  "category": "struct",
+  "full_code": "package main\n\nimport \"fmt\"\n\ntype User struct {\n\tName string\n\tAge  int\n}\n\nfunc main() {\n\tu := User{Name: \"gopher\", Age: 3}\n\tfmt.Println(u.Name, u.Age)\n}",
+  "expected": "gopher 3",
+  "points": [
+   {
+    "id": "init",
+    "text": "User{Name: \"gopher\", Age: 3}",
     "category": "struct",
-    "full_code": "package main\n\nimport \"fmt\"\n\ntype User struct {\n\tName string\n\tAge  int\n}\n\nfunc main() {\n\tu := User{Name: \"gopher\", Age: 3}\n\tfmt.Println(u.Name, u.Age)\n}",
-    "expected": "gopher 3",
-    "points": [
-      {
-        "id": "init",
-        "text": "User{Name: \"gopher\", Age: 3}",
-        "category": "struct",
-        "min_weight": "beginner",
-        "weight_score": 1,
-        "hint": "结构体字面量",
-        "fill_type": "text"
-      }
-    ],
-    "hints": {
-      "level_1": "💡 结构体初始化",
-      "level_2": "📖 `User{Name:..., Age:...}`",
-      "level_3": "👀 `u.Name` 访问字段",
-      "level_4": "📝 正确答案：`User{Name: \"gopher\", Age: 3}`"
-    },
-    "explanation": "`type X struct` 定义复合类型；`X{字段: 值}` 构造实例。"
+    "min_weight": "beginner",
+    "weight_score": 1,
+    "hint": "结构体字面量",
+    "fill_type": "text"
+   }
+  ],
+  "hints": {
+   "level_1": "💡 结构体初始化",
+   "level_2": "📖 `User{Name:..., Age:...}`",
+   "level_3": "👀 `u.Name` 访问字段",
+   "level_4": "📝 正确答案：`User{Name: \"gopher\", Age: 3}`"
   },
-  {
-    "id": "go-basics-022",
-    "title": "结构体方法",
-    "description": "定义圆面积方法",
-    "exercise_type": "fill",
-    "tech_stack": "go",
-    "weight": "medium",
+  "explanation": "`type X struct` 定义复合类型；`X{字段: 值}` 构造实例。"
+ },
+ {
+  "id": "go-basics-022",
+  "title": "结构体方法",
+  "description": "定义圆面积方法",
+  "exercise_type": "fill",
+  "tech_stack": "go",
+  "weight": "medium",
+  "category": "method",
+  "full_code": "package main\n\nimport \"fmt\"\n\ntype Circle struct {\n\tRadius float64\n}\n\nfunc (c Circle) Area() float64 {\n\treturn 3.14 * c.Radius * c.Radius\n}\n\nfunc main() {\n\tc := Circle{Radius: 2}\n\tfmt.Println(c.Area())\n}",
+  "expected": "12.56",
+  "points": [
+   {
+    "id": "m",
+    "text": "func (c Circle) Area()",
     "category": "method",
-    "full_code": "package main\n\nimport \"fmt\"\n\ntype Circle struct {\n\tRadius float64\n}\n\nfunc (c Circle) Area() float64 {\n\treturn 3.14 * c.Radius * c.Radius\n}\n\nfunc main() {\n\tc := Circle{Radius: 2}\n\tfmt.Println(c.Area())\n}",
-    "expected": "12.56",
-    "points": [
-      {
-        "id": "m",
-        "text": "func (c Circle) Area()",
-        "category": "method",
-        "min_weight": "beginner",
-        "weight_score": 1,
-        "hint": "方法的接收者与名",
-        "fill_type": "text"
-      }
-    ],
-    "hints": {
-      "level_1": "💡 方法定义格式",
-      "level_2": "📖 `(c Circle)` 是接收者",
-      "level_3": "👀 `c.Area()` 调用",
-      "level_4": "📝 正确答案：`func (c Circle) Area()`"
-    },
-    "explanation": "方法 = 带接收者的函数；接收者 `c Circle` 使函数绑定到类型。"
+    "min_weight": "beginner",
+    "weight_score": 1,
+    "hint": "方法的接收者与名",
+    "fill_type": "text"
+   }
+  ],
+  "hints": {
+   "level_1": "💡 方法定义格式",
+   "level_2": "📖 `(c Circle)` 是接收者",
+   "level_3": "👀 `c.Area()` 调用",
+   "level_4": "📝 正确答案：`func (c Circle) Area()`"
   },
-  {
-    "id": "go-basics-023",
-    "title": "指针参数",
-    "description": "用指针在函数内修改变量",
-    "exercise_type": "fill",
-    "tech_stack": "go",
-    "weight": "medium",
+  "explanation": "方法 = 带接收者的函数；接收者 `c Circle` 使函数绑定到类型。"
+ },
+ {
+  "id": "go-basics-023",
+  "title": "指针参数",
+  "description": "用指针在函数内修改变量",
+  "exercise_type": "fill",
+  "tech_stack": "go",
+  "weight": "medium",
+  "category": "pointer",
+  "full_code": "package main\n\nimport \"fmt\"\n\nfunc setVal(x *int) {\n\t*x = 42\n}\n\nfunc main() {\n\tn := 0\n\tsetVal(&n)\n\tfmt.Println(n)\n}",
+  "expected": "42",
+  "points": [
+   {
+    "id": "ptype",
+    "text": "*int",
     "category": "pointer",
-    "full_code": "package main\n\nimport \"fmt\"\n\nfunc setVal(x *int) {\n\t*x = 42\n}\n\nfunc main() {\n\tn := 0\n\tsetVal(\u0026n)\n\tfmt.Println(n)\n}",
-    "expected": "42",
-    "points": [
-      {
-        "id": "ptype",
-        "text": "*int",
-        "category": "pointer",
-        "min_weight": "beginner",
-        "weight_score": 1,
-        "hint": "指向 int 的指针类型",
-        "fill_type": "text"
-      },
-      {
-        "id": "addr",
-        "text": "\u0026n",
-        "category": "pointer",
-        "min_weight": "medium",
-        "weight_score": 1,
-        "hint": "取变量地址",
-        "fill_type": "text"
-      }
-    ],
-    "hints": {
-      "level_1": "💡 指针类型与取地址",
-      "level_2": "📖 `*int` 声明指针，`\u0026n` 取地址",
-      "level_3": "👀 `*x = 42` 解引用赋值",
-      "level_4": "📝 正确答案：`*int` / `\u0026n`"
-    },
-    "explanation": "`*` 解引用，`\u0026` 取地址；通过指针可在函数内修改调用方变量。"
+    "min_weight": "beginner",
+    "weight_score": 1,
+    "hint": "指向 int 的指针类型",
+    "fill_type": "text"
+   },
+   {
+    "id": "addr",
+    "text": "&n",
+    "category": "pointer",
+    "min_weight": "medium",
+    "weight_score": 1,
+    "hint": "取变量地址",
+    "fill_type": "text"
+   }
+  ],
+  "hints": {
+   "level_1": "💡 指针类型与取地址",
+   "level_2": "📖 `*int` 声明指针，`&n` 取地址",
+   "level_3": "👀 `*x = 42` 解引用赋值",
+   "level_4": "📝 正确答案：`*int` / `&n`"
   },
-  {
-    "id": "go-basics-024",
-    "title": "接口",
-    "description": "用接口类型保存正方形并调用方法",
-    "exercise_type": "fill",
-    "tech_stack": "go",
-    "weight": "medium",
+  "explanation": "`*` 解引用，`&` 取地址；通过指针可在函数内修改调用方变量。"
+ },
+ {
+  "id": "go-basics-024",
+  "title": "接口",
+  "description": "用接口类型保存正方形并调用方法",
+  "exercise_type": "fill",
+  "tech_stack": "go",
+  "weight": "medium",
+  "category": "interface",
+  "full_code": "package main\n\nimport \"fmt\"\n\ntype Shape interface {\n\tArea() float64\n}\n\ntype Square struct {\n\tSide float64\n}\n\nfunc (s Square) Area() float64 {\n\treturn s.Side * s.Side\n}\n\nfunc main() {\n\tvar s Shape = Square{Side: 4}\n\tfmt.Println(s.Area())\n}",
+  "expected": "16",
+  "points": [
+   {
+    "id": "var",
+    "text": "var s Shape",
     "category": "interface",
-    "full_code": "package main\n\nimport \"fmt\"\n\ntype Shape interface {\n\tArea() float64\n}\n\ntype Square struct {\n\tSide float64\n}\n\nfunc (s Square) Area() float64 {\n\treturn s.Side * s.Side\n}\n\nfunc main() {\n\tvar s Shape = Square{Side: 4}\n\tfmt.Println(s.Area())\n}",
-    "expected": "16",
-    "points": [
-      {
-        "id": "var",
-        "text": "var s Shape",
-        "category": "interface",
-        "min_weight": "beginner",
-        "weight_score": 1,
-        "hint": "声明接口变量",
-        "fill_type": "text"
-      }
-    ],
-    "hints": {
-      "level_1": "💡 声明接口类型变量",
-      "level_2": "📖 `Square` 自动满足 `Shape` 接口",
-      "level_3": "👀 `var s Shape = Square{Side: 4}`",
-      "level_4": "📝 正确答案：`var s Shape`"
-    },
-    "explanation": "接口定义方法集合，类型实现全部方法即满足接口（隐式实现）。"
+    "min_weight": "beginner",
+    "weight_score": 1,
+    "hint": "声明接口变量",
+    "fill_type": "text"
+   }
+  ],
+  "hints": {
+   "level_1": "💡 声明接口类型变量",
+   "level_2": "📖 `Square` 自动满足 `Shape` 接口",
+   "level_3": "👀 `var s Shape = Square{Side: 4}`",
+   "level_4": "📝 正确答案：`var s Shape`"
   },
-  {
-    "id": "go-basics-025",
-    "title": "指针接收者",
-    "description": "用指针接收者修改结构体字段",
-    "exercise_type": "fill",
-    "tech_stack": "go",
-    "weight": "medium",
+  "explanation": "接口定义方法集合，类型实现全部方法即满足接口（隐式实现）。"
+ },
+ {
+  "id": "go-basics-025",
+  "title": "指针接收者",
+  "description": "用指针接收者修改结构体字段",
+  "exercise_type": "fill",
+  "tech_stack": "go",
+  "weight": "medium",
+  "category": "method",
+  "full_code": "package main\n\nimport \"fmt\"\n\ntype Counter struct {\n\tn int\n}\n\nfunc (c *Counter) Inc() {\n\tc.n++\n}\n\nfunc main() {\n\tc := &Counter{}\n\tc.Inc()\n\tfmt.Println(c.n)\n}",
+  "expected": "1",
+  "points": [
+   {
+    "id": "m",
+    "text": "func (c *Counter) Inc()",
     "category": "method",
-    "full_code": "package main\n\nimport \"fmt\"\n\ntype Counter struct {\n\tn int\n}\n\nfunc (c *Counter) Inc() {\n\tc.n++\n}\n\nfunc main() {\n\tc := \u0026Counter{}\n\tc.Inc()\n\tfmt.Println(c.n)\n}",
-    "expected": "1",
-    "points": [
-      {
-        "id": "m",
-        "text": "func (c *Counter) Inc()",
-        "category": "method",
-        "min_weight": "beginner",
-        "weight_score": 1,
-        "hint": "指针接收者的方法",
-        "fill_type": "text"
-      }
-    ],
-    "hints": {
-      "level_1": "💡 指针接收者",
-      "level_2": "📖 `(c *Counter)` 可修改字段",
-      "level_3": "👀 `c := \u0026Counter{}`",
-      "level_4": "📝 正确答案：`func (c *Counter) Inc()`"
-    },
-    "explanation": "指针接收者方法能修改结构体字段；`\u0026Counter{}` 取实例地址。"
+    "min_weight": "beginner",
+    "weight_score": 1,
+    "hint": "指针接收者的方法",
+    "fill_type": "text"
+   }
+  ],
+  "hints": {
+   "level_1": "💡 指针接收者",
+   "level_2": "📖 `(c *Counter)` 可修改字段",
+   "level_3": "👀 `c := &Counter{}`",
+   "level_4": "📝 正确答案：`func (c *Counter) Inc()`"
   },
-  {
-    "id": "go-basics-026",
-    "title": "Goroutine 并发求和",
-    "description": "用 goroutine + 互斥锁并发求和",
-    "exercise_type": "fill",
-    "tech_stack": "go",
-    "weight": "hard",
-    "category": "concurrency",
-    "full_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"sync\"\n)\n\nfunc main() {\n\tvar wg sync.WaitGroup\n\tvar mu sync.Mutex\n\tsum := 0\n\tfor i := 1; i \u003c= 10; i++ {\n\t\twg.Add(1)\n\t\tgo func(n int) {\n\t\t\tdefer wg.Done()\n\t\t\tmu.Lock()\n\t\t\tsum += n\n\t\t\tmu.Unlock()\n\t\t}(i)\n\t}\n\twg.Wait()\n\tfmt.Println(sum)\n}",
-    "expected": "55",
-    "points": [
-      {
-        "id": "go",
-        "text": "go func",
-        "category": "keyword",
-        "min_weight": "beginner",
-        "weight_score": 1,
-        "hint": "启动 goroutine 的关键字",
-        "fill_type": "text"
-      },
-      {
-        "id": "wait",
-        "text": "wg.Wait()",
-        "category": "statement",
-        "min_weight": "easy",
-        "weight_score": 1,
-        "hint": "等待所有 goroutine 完成",
-        "fill_type": "text"
-      },
-      {
-        "id": "auto_wgAdd1",
-        "text": "wg.Add(1)",
-        "category": "waitgroup",
-        "min_weight": "easy",
-        "weight_score": 0.7,
-        "hint": "启动前计数器 +1",
-        "fill_type": "text"
-      },
-      {
-        "id": "auto_deferwgDone",
-        "text": "defer wg.Done()",
-        "category": "waitgroup",
-        "min_weight": "easy",
-        "weight_score": 0.7,
-        "hint": "协程完成时 -1",
-        "fill_type": "text"
-      },
-      {
-        "id": "auto_muLock",
-        "text": "mu.Lock()",
-        "category": "mutex",
-        "min_weight": "medium",
-        "weight_score": 0.7,
-        "hint": "进入临界区加锁",
-        "fill_type": "text"
-      },
-      {
-        "id": "auto_muUnlock",
-        "text": "mu.Unlock()",
-        "category": "mutex",
-        "min_weight": "medium",
-        "weight_score": 0.7,
-        "hint": "退出临界区解锁",
-        "fill_type": "text"
-      }
-    ],
-    "hints": {
-      "level_1": "💡 启动协程与等待",
-      "level_2": "📖 `go` 关键字启动协程，`WaitGroup` 等待",
-      "level_3": "👀 `wg.Wait()` 阻塞直到计数归零",
-      "level_4": "📝 正确答案：`go func` / `wg.Wait()`"
-    },
-    "explanation": "`go` 启动并发 goroutine；`WaitGroup.Wait` 等待；Mutex 保证并发写互斥。"
+  "explanation": "指针接收者方法能修改结构体字段；`&Counter{}` 取实例地址。"
+ },
+ {
+  "id": "go-basics-026",
+  "title": "Goroutine 并发求和",
+  "description": "用 goroutine + 互斥锁并发求和",
+  "exercise_type": "fill",
+  "tech_stack": "go",
+  "weight": "hard",
+  "category": "concurrency",
+  "full_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"sync\"\n)\n\nfunc main() {\n\tvar wg sync.WaitGroup\n\tvar mu sync.Mutex\n\tsum := 0\n\tfor i := 1; i <= 10; i++ {\n\t\twg.Add(1)\n\t\tgo func(n int) {\n\t\t\tdefer wg.Done()\n\t\t\tmu.Lock()\n\t\t\tsum += n\n\t\t\tmu.Unlock()\n\t\t}(i)\n\t}\n\twg.Wait()\n\tfmt.Println(sum)\n}",
+  "expected": "55",
+  "points": [
+   {
+    "id": "go",
+    "text": "go func",
+    "category": "keyword",
+    "min_weight": "beginner",
+    "weight_score": 1,
+    "hint": "启动 goroutine 的关键字",
+    "fill_type": "text"
+   },
+   {
+    "id": "wait",
+    "text": "wg.Wait()",
+    "category": "statement",
+    "min_weight": "easy",
+    "weight_score": 1,
+    "hint": "等待所有 goroutine 完成",
+    "fill_type": "text"
+   },
+   {
+    "id": "auto_wgAdd1",
+    "text": "wg.Add(1)",
+    "category": "waitgroup",
+    "min_weight": "easy",
+    "weight_score": 0.7,
+    "hint": "启动前计数器 +1",
+    "fill_type": "text"
+   },
+   {
+    "id": "auto_deferwgDone",
+    "text": "defer wg.Done()",
+    "category": "waitgroup",
+    "min_weight": "easy",
+    "weight_score": 0.7,
+    "hint": "协程完成时 -1",
+    "fill_type": "text"
+   },
+   {
+    "id": "auto_muLock",
+    "text": "mu.Lock()",
+    "category": "mutex",
+    "min_weight": "medium",
+    "weight_score": 0.7,
+    "hint": "进入临界区加锁",
+    "fill_type": "text"
+   },
+   {
+    "id": "auto_muUnlock",
+    "text": "mu.Unlock()",
+    "category": "mutex",
+    "min_weight": "medium",
+    "weight_score": 0.7,
+    "hint": "退出临界区解锁",
+    "fill_type": "text"
+   }
+  ],
+  "hints": {
+   "level_1": "💡 启动协程与等待",
+   "level_2": "📖 `go` 关键字启动协程，`WaitGroup` 等待",
+   "level_3": "👀 `wg.Wait()` 阻塞直到计数归零",
+   "level_4": "📝 正确答案：`go func` / `wg.Wait()`"
   },
-  {
-    "id": "go-basics-027",
-    "title": "Channel 发送接收",
-    "description": "向有缓冲 channel 发送并接收",
-    "exercise_type": "fill",
-    "tech_stack": "go",
-    "weight": "easy",
+  "explanation": "`go` 启动并发 goroutine；`WaitGroup.Wait` 等待；Mutex 保证并发写互斥。"
+ },
+ {
+  "id": "go-basics-027",
+  "title": "Channel 发送接收",
+  "description": "向有缓冲 channel 发送并接收",
+  "exercise_type": "fill",
+  "tech_stack": "go",
+  "weight": "easy",
+  "category": "channel",
+  "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tch := make(chan int, 1)\n\tch <- 7\n\tfmt.Println(<-ch)\n}",
+  "expected": "7",
+  "points": [
+   {
+    "id": "recv",
+    "text": "<-ch",
     "category": "channel",
-    "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tch := make(chan int, 1)\n\tch \u003c- 7\n\tfmt.Println(\u003c-ch)\n}",
-    "expected": "7",
-    "points": [
-      {
-        "id": "recv",
-        "text": "\u003c-ch",
-        "category": "channel",
-        "min_weight": "beginner",
-        "weight_score": 1,
-        "hint": "从 channel 接收值",
-        "fill_type": "text"
-      },
-      {
-        "id": "auto_makechan",
-        "text": "make(chan",
-        "category": "channel",
-        "min_weight": "easy",
-        "weight_score": 0.7,
-        "hint": "创建 channel",
-        "fill_type": "text"
-      },
-      {
-        "id": "auto_ch",
-        "text": "ch \u003c- ",
-        "category": "channel",
-        "min_weight": "easy",
-        "weight_score": 0.7,
-        "hint": "向 channel 发送",
-        "fill_type": "text"
-      }
-    ],
-    "hints": {
-      "level_1": "💡 从 channel 取值",
-      "level_2": "📖 `ch \u003c- 7` 发送，`\u003c-ch` 接收",
-      "level_3": "👀 `fmt.Println(\u003c-ch)`",
-      "level_4": "📝 正确答案：`\u003c-ch`"
-    },
-    "explanation": "`chan` 类型通信；`ch \u003c- v` 发送，`v := \u003c-ch` 接收；带缓冲容量 1 不阻塞发送。"
-  },
-  {
-    "id": "go-basics-028",
-    "title": "Channel 通信",
-    "description": "goroutine 间用 channel 传值",
-    "exercise_type": "fill",
-    "tech_stack": "go",
-    "weight": "medium",
+    "min_weight": "beginner",
+    "weight_score": 1,
+    "hint": "从 channel 接收值",
+    "fill_type": "text"
+   },
+   {
+    "id": "auto_makechan",
+    "text": "make(chan",
     "category": "channel",
-    "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tch := make(chan int)\n\tgo func() { ch \u003c- 1 }()\n\tv := \u003c-ch\n\tfmt.Println(v)\n}",
-    "expected": "1",
-    "points": [
-      {
-        "id": "ch",
-        "text": "make(chan int)",
-        "category": "channel",
-        "min_weight": "medium",
-        "weight_score": 1,
-        "hint": "创建无缓冲 channel",
-        "fill_type": "text"
-      },
-      {
-        "id": "auto_gofunc",
-        "text": "go func",
-        "category": "goroutine",
-        "min_weight": "beginner",
-        "weight_score": 0.7,
-        "hint": "用 go 关键字启动协程",
-        "fill_type": "text"
-      },
-      {
-        "id": "auto_makechan",
-        "text": "make(chan",
-        "category": "channel",
-        "min_weight": "easy",
-        "weight_score": 0.7,
-        "hint": "创建 channel",
-        "fill_type": "text"
-      },
-      {
-        "id": "auto_ch",
-        "text": "ch \u003c- ",
-        "category": "channel",
-        "min_weight": "medium",
-        "weight_score": 0.7,
-        "hint": "向 channel 发送",
-        "fill_type": "text"
-      },
-      {
-        "id": "auto_ch",
-        "text": "\u003c-ch",
-        "category": "channel",
-        "min_weight": "medium",
-        "weight_score": 0.7,
-        "hint": "从 channel 接收",
-        "fill_type": "text"
-      }
-    ],
-    "hints": {
-      "level_1": "💡 创建无缓冲 channel",
-      "level_2": "📖 无缓冲发送会阻塞直到接收",
-      "level_3": "👀 `go func() { ch \u003c- 1 }()`",
-      "level_4": "📝 正确答案：`make(chan int)`"
-    },
-    "explanation": "无缓冲 channel 发送和接收同步阻塞；用 goroutine 发、主程序收。"
+    "min_weight": "easy",
+    "weight_score": 0.7,
+    "hint": "创建 channel",
+    "fill_type": "text"
+   },
+   {
+    "id": "auto_ch",
+    "text": "ch <- ",
+    "category": "channel",
+    "min_weight": "easy",
+    "weight_score": 0.7,
+    "hint": "向 channel 发送",
+    "fill_type": "text"
+   }
+  ],
+  "hints": {
+   "level_1": "💡 从 channel 取值",
+   "level_2": "📖 `ch <- 7` 发送，`<-ch` 接收",
+   "level_3": "👀 `fmt.Println(<-ch)`",
+   "level_4": "📝 正确答案：`<-ch`"
   },
-  {
-    "id": "go-basics-029",
-    "title": "select 多路选择",
-    "description": "用 select 从有值的 channel 接收",
-    "exercise_type": "fill",
-    "tech_stack": "go",
-    "weight": "hard",
+  "explanation": "`chan` 类型通信；`ch <- v` 发送，`v := <-ch` 接收；带缓冲容量 1 不阻塞发送。"
+ },
+ {
+  "id": "go-basics-028",
+  "title": "Channel 通信",
+  "description": "goroutine 间用 channel 传值",
+  "exercise_type": "fill",
+  "tech_stack": "go",
+  "weight": "medium",
+  "category": "channel",
+  "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tch := make(chan int)\n\tgo func() { ch <- 1 }()\n\tv := <-ch\n\tfmt.Println(v)\n}",
+  "expected": "1",
+  "points": [
+   {
+    "id": "ch",
+    "text": "make(chan int)",
+    "category": "channel",
+    "min_weight": "medium",
+    "weight_score": 1,
+    "hint": "创建无缓冲 channel",
+    "fill_type": "text"
+   },
+   {
+    "id": "auto_gofunc",
+    "text": "go func",
+    "category": "goroutine",
+    "min_weight": "beginner",
+    "weight_score": 0.7,
+    "hint": "用 go 关键字启动协程",
+    "fill_type": "text"
+   },
+   {
+    "id": "auto_makechan",
+    "text": "make(chan",
+    "category": "channel",
+    "min_weight": "easy",
+    "weight_score": 0.7,
+    "hint": "创建 channel",
+    "fill_type": "text"
+   },
+   {
+    "id": "auto_ch",
+    "text": "ch <- ",
+    "category": "channel",
+    "min_weight": "medium",
+    "weight_score": 0.7,
+    "hint": "向 channel 发送",
+    "fill_type": "text"
+   },
+   {
+    "id": "auto_ch_recv",
+    "text": "<-ch",
+    "category": "channel",
+    "min_weight": "medium",
+    "weight_score": 0.7,
+    "hint": "从 channel 接收",
+    "fill_type": "text"
+   }
+  ],
+  "hints": {
+   "level_1": "💡 创建无缓冲 channel",
+   "level_2": "📖 无缓冲发送会阻塞直到接收",
+   "level_3": "👀 `go func() { ch <- 1 }()`",
+   "level_4": "📝 正确答案：`make(chan int)`"
+  },
+  "explanation": "无缓冲 channel 发送和接收同步阻塞；用 goroutine 发、主程序收。"
+ },
+ {
+  "id": "go-basics-029",
+  "title": "select 多路选择",
+  "description": "用 select 从有值的 channel 接收",
+  "exercise_type": "fill",
+  "tech_stack": "go",
+  "weight": "hard",
+  "category": "select",
+  "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\ta := make(chan int, 1)\n\tb := make(chan int, 1)\n\tb <- 2\n\tselect {\n\tcase x := <-a:\n\t\tfmt.Println(\"from a\", x)\n\tcase x := <-b:\n\t\tfmt.Println(\"from b\", x)\n\t}\n}",
+  "expected": "from b 2",
+  "points": [
+   {
+    "id": "case",
+    "text": "case x := <-b:",
+    "category": "case",
+    "min_weight": "hard",
+    "weight_score": 1,
+    "hint": "接收 channel b 的分支",
+    "fill_type": "text"
+   },
+   {
+    "id": "auto_makechan",
+    "text": "make(chan",
+    "category": "channel",
+    "min_weight": "beginner",
+    "weight_score": 0.7,
+    "hint": "创建 channel",
+    "fill_type": "text"
+   },
+   {
+    "id": "auto_select",
+    "text": "select {",
     "category": "select",
-    "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\ta := make(chan int, 1)\n\tb := make(chan int, 1)\n\tb \u003c- 2\n\tselect {\n\tcase x := \u003c-a:\n\t\tfmt.Println(\"from a\", x)\n\tcase x := \u003c-b:\n\t\tfmt.Println(\"from b\", x)\n\t}\n}",
-    "expected": "from b 2",
-    "points": [
-      {
-        "id": "case",
-        "text": "case x := \u003c-b:",
-        "category": "case",
-        "min_weight": "hard",
-        "weight_score": 1,
-        "hint": "接收 channel b 的分支",
-        "fill_type": "text"
-      },
-      {
-        "id": "auto_makechan",
-        "text": "make(chan",
-        "category": "channel",
-        "min_weight": "beginner",
-        "weight_score": 0.7,
-        "hint": "创建 channel",
-        "fill_type": "text"
-      },
-      {
-        "id": "auto_select",
-        "text": "select {",
-        "category": "select",
-        "min_weight": "easy",
-        "weight_score": 0.7,
-        "hint": "多路复用选择",
-        "fill_type": "text"
-      }
-    ],
-    "hints": {
-      "level_1": "💡 select 的接收分支",
-      "level_2": "📖 `b` 有值则走该分支",
-      "level_3": "👀 `select { case x := \u003c-b: ... }`",
-      "level_4": "📝 正确答案：`case x := \u003c-b:`"
-    },
-    "explanation": "`select` 同时监听多个 channel，任一就绪即执行对应分支。"
+    "min_weight": "easy",
+    "weight_score": 0.7,
+    "hint": "多路复用选择",
+    "fill_type": "text"
+   }
+  ],
+  "hints": {
+   "level_1": "💡 select 的接收分支",
+   "level_2": "📖 `b` 有值则走该分支",
+   "level_3": "👀 `select { case x := <-b: ... }`",
+   "level_4": "📝 正确答案：`case x := <-b:`"
   },
-  {
-    "id": "go-basics-030",
-    "title": "遍历 channel",
-    "description": "用 range 累加 channel 直至关闭",
-    "exercise_type": "fill",
-    "tech_stack": "go",
-    "weight": "medium",
+  "explanation": "`select` 同时监听多个 channel，任一就绪即执行对应分支。"
+ },
+ {
+  "id": "go-basics-030",
+  "title": "遍历 channel",
+  "description": "用 range 累加 channel 直至关闭",
+  "exercise_type": "fill",
+  "tech_stack": "go",
+  "weight": "medium",
+  "category": "channel",
+  "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tch := make(chan int, 3)\n\tch <- 1\n\tch <- 2\n\tch <- 3\n\tclose(ch)\n\tsum := 0\n\tfor v := range ch {\n\t\tsum += v\n\t}\n\tfmt.Println(sum)\n}",
+  "expected": "6",
+  "points": [
+   {
+    "id": "close",
+    "text": "close(ch)",
+    "category": "statement",
+    "min_weight": "medium",
+    "weight_score": 1,
+    "hint": "关闭 channel 的函数",
+    "fill_type": "text"
+   },
+   {
+    "id": "auto_makechan",
+    "text": "make(chan",
     "category": "channel",
-    "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tch := make(chan int, 3)\n\tch \u003c- 1\n\tch \u003c- 2\n\tch \u003c- 3\n\tclose(ch)\n\tsum := 0\n\tfor v := range ch {\n\t\tsum += v\n\t}\n\tfmt.Println(sum)\n}",
-    "expected": "6",
-    "points": [
-      {
-        "id": "close",
-        "text": "close(ch)",
-        "category": "statement",
-        "min_weight": "medium",
-        "weight_score": 1,
-        "hint": "关闭 channel 的函数",
-        "fill_type": "text"
-      },
-      {
-        "id": "auto_makechan",
-        "text": "make(chan",
-        "category": "channel",
-        "min_weight": "beginner",
-        "weight_score": 0.7,
-        "hint": "创建 channel",
-        "fill_type": "text"
-      },
-      {
-        "id": "auto_ch",
-        "text": "ch \u003c- ",
-        "category": "channel",
-        "min_weight": "easy",
-        "weight_score": 0.7,
-        "hint": "向 channel 发送",
-        "fill_type": "text"
-      }
-    ],
-    "hints": {
-      "level_1": "💡 关闭 channel",
-      "level_2": "📖 `range ch` 在 channel 关闭后结束",
-      "level_3": "👀 `for v := range ch`",
-      "level_4": "📝 正确答案：`close(ch)`"
-    },
-    "explanation": "`close` 关闭 channel；`range ch` 遍历直到关闭。"
+    "min_weight": "beginner",
+    "weight_score": 0.7,
+    "hint": "创建 channel",
+    "fill_type": "text"
+   },
+   {
+    "id": "auto_ch",
+    "text": "ch <- ",
+    "category": "channel",
+    "min_weight": "easy",
+    "weight_score": 0.7,
+    "hint": "向 channel 发送",
+    "fill_type": "text"
+   }
+  ],
+  "hints": {
+   "level_1": "💡 关闭 channel",
+   "level_2": "📖 `range ch` 在 channel 关闭后结束",
+   "level_3": "👀 `for v := range ch`",
+   "level_4": "📝 正确答案：`close(ch)`"
   },
-  {
-    "id": "go-basics-031",
-    "title": "类型转换",
-    "description": "把 int 显式转为 float64",
-    "exercise_type": "fill",
-    "tech_stack": "go",
-    "weight": "easy",
+  "explanation": "`close` 关闭 channel；`range ch` 遍历直到关闭。"
+ },
+ {
+  "id": "go-basics-031",
+  "title": "类型转换",
+  "description": "把 int 显式转为 float64",
+  "exercise_type": "fill",
+  "tech_stack": "go",
+  "weight": "easy",
+  "category": "conversion",
+  "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tvar i int = 42\n\tvar f float64 = float64(i)\n\tfmt.Printf(\"%.1f\\n\", f)\n}",
+  "expected": "42.0",
+  "points": [
+   {
+    "id": "conv",
+    "text": "float64(i)",
     "category": "conversion",
-    "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tvar i int = 42\n\tvar f float64 = float64(i)\n\tfmt.Printf(\"%.1f\\n\", f)\n}",
-    "expected": "42.0",
-    "points": [
-      {
-        "id": "conv",
-        "text": "float64(i)",
-        "category": "conversion",
-        "min_weight": "beginner",
-        "weight_score": 1,
-        "hint": "int 到 float64 的转换",
-        "fill_type": "text"
-      }
-    ],
-    "hints": {
-      "level_1": "💡 数值类型转换",
-      "level_2": "📖 不同类型不能直接赋值",
-      "level_3": "👀 `var f float64 = float64(i)`",
-      "level_4": "📝 正确答案：`float64(i)`"
-    },
-    "explanation": "Go 是强类型，数值类型转换用 `T(value)` 显式写法。"
+    "min_weight": "beginner",
+    "weight_score": 1,
+    "hint": "int 到 float64 的转换",
+    "fill_type": "text"
+   }
+  ],
+  "hints": {
+   "level_1": "💡 数值类型转换",
+   "level_2": "📖 不同类型不能直接赋值",
+   "level_3": "👀 `var f float64 = float64(i)`",
+   "level_4": "📝 正确答案：`float64(i)`"
   },
-  {
-    "id": "go-basics-032",
-    "title": "fmt 格式动词",
-    "description": "用 %d %x %b 输出十进制/十六进制/二进制",
-    "exercise_type": "fill",
-    "tech_stack": "go",
-    "weight": "easy",
-    "category": "fmt",
-    "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tn := 255\n\tfmt.Printf(\"%d %x %b\\n\", n, n, n)\n}",
-    "expected": "255 ff 11111111",
-    "points": [
-      {
-        "id": "verb",
-        "text": "%d %x %b",
-        "category": "format",
-        "min_weight": "beginner",
-        "weight_score": 1,
-        "hint": "指定多个格式动词",
-        "fill_type": "text"
-      }
-    ],
-    "hints": {
-      "level_1": "💡 三种进制格式",
-      "level_2": "📖 `%d` 十进制 `%x` 十六进制 `%b` 二进制",
-      "level_3": "👀 `fmt.Printf(\"%d %x %b\\n\", n, n, n)`",
-      "level_4": "📝 正确答案：`%d %x %b`"
-    },
-    "explanation": "`%d` 十进制、`%x` 十六进制、`%b` 二进制；`Printf` 按格式输出。"
+  "explanation": "Go 是强类型，数值类型转换用 `T(value)` 显式写法。"
+ },
+ {
+  "id": "go-basics-032",
+  "title": "fmt 格式动词",
+  "description": "用 %d %x %b 输出十进制/十六进制/二进制",
+  "exercise_type": "fill",
+  "tech_stack": "go",
+  "weight": "easy",
+  "category": "fmt",
+  "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tn := 255\n\tfmt.Printf(\"%d %x %b\\n\", n, n, n)\n}",
+  "expected": "255 ff 11111111",
+  "points": [
+   {
+    "id": "verb",
+    "text": "%d %x %b",
+    "category": "format",
+    "min_weight": "beginner",
+    "weight_score": 1,
+    "hint": "指定多个格式动词",
+    "fill_type": "text"
+   }
+  ],
+  "hints": {
+   "level_1": "💡 三种进制格式",
+   "level_2": "📖 `%d` 十进制 `%x` 十六进制 `%b` 二进制",
+   "level_3": "👀 `fmt.Printf(\"%d %x %b\\n\", n, n, n)`",
+   "level_4": "📝 正确答案：`%d %x %b`"
   },
-  {
-    "id": "go-basics-033",
-    "title": "按 rune 计数",
-    "description": "区分字节数与字符数",
-    "exercise_type": "fill",
-    "tech_stack": "go",
-    "weight": "easy",
-    "category": "string",
-    "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\ts := \"你好Go\"\n\tfmt.Println(len(s), len([]rune(s)))\n}",
-    "expected": "8 4",
-    "points": [
-      {
-        "id": "rune",
-        "text": "[]rune(s)",
-        "category": "conversion",
-        "min_weight": "beginner",
-        "weight_score": 1,
-        "hint": "转成 rune 切片",
-        "fill_type": "text"
-      }
-    ],
-    "hints": {
-      "level_1": "💡 按字符计数",
-      "level_2": "📖 `len(s)` 是字节数，`[]rune(s)` 是字符数",
-      "level_3": "👀 `fmt.Println(len(s), len([]rune(s)))`",
-      "level_4": "📝 正确答案：`[]rune(s)`"
-    },
-    "explanation": "UTF-8 中汉字占 3 字节；`len` 返回字节数，`len([]rune(s))` 返回字符数。"
+  "explanation": "`%d` 十进制、`%x` 十六进制、`%b` 二进制；`Printf` 按格式输出。"
+ },
+ {
+  "id": "go-basics-033",
+  "title": "按 rune 计数",
+  "description": "区分字节数与字符数",
+  "exercise_type": "fill",
+  "tech_stack": "go",
+  "weight": "easy",
+  "category": "string",
+  "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\ts := \"你好Go\"\n\tfmt.Println(len(s), len([]rune(s)))\n}",
+  "expected": "8 4",
+  "points": [
+   {
+    "id": "rune",
+    "text": "[]rune(s)",
+    "category": "conversion",
+    "min_weight": "beginner",
+    "weight_score": 1,
+    "hint": "转成 rune 切片",
+    "fill_type": "text"
+   }
+  ],
+  "hints": {
+   "level_1": "💡 按字符计数",
+   "level_2": "📖 `len(s)` 是字节数，`[]rune(s)` 是字符数",
+   "level_3": "👀 `fmt.Println(len(s), len([]rune(s)))`",
+   "level_4": "📝 正确答案：`[]rune(s)`"
   },
-  {
-    "id": "go-basics-034",
-    "title": "strings 去除空白",
-    "description": "用 TrimSpace 去掉首尾空格",
-    "exercise_type": "fill",
-    "tech_stack": "go",
-    "weight": "easy",
-    "category": "strings",
-    "full_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"strings\"\n)\n\nfunc main() {\n\ts := \"  hello  \"\n\tfmt.Println(strings.TrimSpace(s))\n}",
-    "expected": "hello",
-    "points": [
-      {
-        "id": "fn",
-        "text": "strings.TrimSpace",
-        "category": "function",
-        "min_weight": "beginner",
-        "weight_score": 1,
-        "hint": "去除首尾空白的函数",
-        "fill_type": "text"
-      }
-    ],
-    "hints": {
-      "level_1": "💡 去除首尾空白",
-      "level_2": "📖 `strings.TrimSpace` 返回去空格字符串",
-      "level_3": "👀 `fmt.Println(strings.TrimSpace(s))`",
-      "level_4": "📝 正确答案：`strings.TrimSpace`"
-    },
-    "explanation": "`strings.TrimSpace` 去掉首尾空白字符。"
+  "explanation": "UTF-8 中汉字占 3 字节；`len` 返回字节数，`len([]rune(s))` 返回字符数。"
+ },
+ {
+  "id": "go-basics-034",
+  "title": "strings 去除空白",
+  "description": "用 TrimSpace 去掉首尾空格",
+  "exercise_type": "fill",
+  "tech_stack": "go",
+  "weight": "easy",
+  "category": "strings",
+  "full_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"strings\"\n)\n\nfunc main() {\n\ts := \"  hello  \"\n\tfmt.Println(strings.TrimSpace(s))\n}",
+  "expected": "hello",
+  "points": [
+   {
+    "id": "fn",
+    "text": "strings.TrimSpace",
+    "category": "function",
+    "min_weight": "beginner",
+    "weight_score": 1,
+    "hint": "去除首尾空白的函数",
+    "fill_type": "text"
+   }
+  ],
+  "hints": {
+   "level_1": "💡 去除首尾空白",
+   "level_2": "📖 `strings.TrimSpace` 返回去空格字符串",
+   "level_3": "👀 `fmt.Println(strings.TrimSpace(s))`",
+   "level_4": "📝 正确答案：`strings.TrimSpace`"
   },
-  {
-    "id": "go-basics-035",
-    "title": "strings 包含判断",
-    "description": "判断字符串是否含子串",
-    "exercise_type": "fill",
-    "tech_stack": "go",
-    "weight": "easy",
-    "category": "strings",
-    "full_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"strings\"\n)\n\nfunc main() {\n\tfmt.Println(strings.Contains(\"hello world\", \"world\"))\n}",
-    "expected": "true",
-    "points": [
-      {
-        "id": "fn",
-        "text": "strings.Contains",
-        "category": "function",
-        "min_weight": "beginner",
-        "weight_score": 1,
-        "hint": "判断子串包含的函数",
-        "fill_type": "text"
-      }
-    ],
-    "hints": {
-      "level_1": "💡 判断包含",
-      "level_2": "📖 `strings.Contains(s, sub)` 返回 bool",
-      "level_3": "👀 `fmt.Println(strings.Contains(\"hello world\", \"world\"))`",
-      "level_4": "📝 正确答案：`strings.Contains`"
-    },
-    "explanation": "`strings.Contains` 判断是否包含子串，返回布尔值。"
+  "explanation": "`strings.TrimSpace` 去掉首尾空白字符。"
+ },
+ {
+  "id": "go-basics-035",
+  "title": "strings 包含判断",
+  "description": "判断字符串是否含子串",
+  "exercise_type": "fill",
+  "tech_stack": "go",
+  "weight": "easy",
+  "category": "strings",
+  "full_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"strings\"\n)\n\nfunc main() {\n\tfmt.Println(strings.Contains(\"hello world\", \"world\"))\n}",
+  "expected": "true",
+  "points": [
+   {
+    "id": "fn",
+    "text": "strings.Contains",
+    "category": "function",
+    "min_weight": "beginner",
+    "weight_score": 1,
+    "hint": "判断子串包含的函数",
+    "fill_type": "text"
+   }
+  ],
+  "hints": {
+   "level_1": "💡 判断包含",
+   "level_2": "📖 `strings.Contains(s, sub)` 返回 bool",
+   "level_3": "👀 `fmt.Println(strings.Contains(\"hello world\", \"world\"))`",
+   "level_4": "📝 正确答案：`strings.Contains`"
   },
-  {
-    "id": "go-basics-036",
-    "title": "math 最大值",
-    "description": "用 math.Max 求最大值",
-    "exercise_type": "fill",
-    "tech_stack": "go",
-    "weight": "easy",
-    "category": "math",
-    "full_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"math\"\n)\n\nfunc main() {\n\tfmt.Println(math.Max(3, 7))\n}",
-    "expected": "7",
-    "points": [
-      {
-        "id": "fn",
-        "text": "math.Max",
-        "category": "function",
-        "min_weight": "beginner",
-        "weight_score": 1,
-        "hint": "浮点取最大值的函数",
-        "fill_type": "text"
-      }
-    ],
-    "hints": {
-      "level_1": "💡 取最大值",
-      "level_2": "📖 `math.Max` 返回较大者",
-      "level_3": "👀 `fmt.Println(math.Max(3, 7))`",
-      "level_4": "📝 正确答案：`math.Max`"
-    },
-    "explanation": "`math.Max` 对 float64 取最大值；int 无内置 max，可用泛型或比较。"
+  "explanation": "`strings.Contains` 判断是否包含子串，返回布尔值。"
+ },
+ {
+  "id": "go-basics-036",
+  "title": "math 最大值",
+  "description": "用 math.Max 求最大值",
+  "exercise_type": "fill",
+  "tech_stack": "go",
+  "weight": "easy",
+  "category": "math",
+  "full_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"math\"\n)\n\nfunc main() {\n\tfmt.Println(math.Max(3, 7))\n}",
+  "expected": "7",
+  "points": [
+   {
+    "id": "fn",
+    "text": "math.Max",
+    "category": "function",
+    "min_weight": "beginner",
+    "weight_score": 1,
+    "hint": "浮点取最大值的函数",
+    "fill_type": "text"
+   }
+  ],
+  "hints": {
+   "level_1": "💡 取最大值",
+   "level_2": "📖 `math.Max` 返回较大者",
+   "level_3": "👀 `fmt.Println(math.Max(3, 7))`",
+   "level_4": "📝 正确答案：`math.Max`"
   },
-  {
-    "id": "go-basics-037",
-    "title": "sort 排序",
-    "description": "对整数切片升序排序",
-    "exercise_type": "fill",
-    "tech_stack": "go",
-    "weight": "easy",
-    "category": "sort",
-    "full_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"sort\"\n)\n\nfunc main() {\n\tnums := []int{3, 1, 2}\n\tsort.Ints(nums)\n\tfmt.Println(nums)\n}",
-    "expected": "[1 2 3]",
-    "points": [
-      {
-        "id": "fn",
-        "text": "sort.Ints",
-        "category": "function",
-        "min_weight": "beginner",
-        "weight_score": 1,
-        "hint": "整数切片排序函数",
-        "fill_type": "text"
-      }
-    ],
-    "hints": {
-      "level_1": "💡 整数切片排序",
-      "level_2": "📖 `sort.Ints` 原地升序",
-      "level_3": "👀 `sort.Ints(nums)`",
-      "level_4": "📝 正确答案：`sort.Ints`"
-    },
-    "explanation": "`sort.Ints` 对 []int 原地升序排序。"
+  "explanation": "`math.Max` 对 float64 取最大值；int 无内置 max，可用泛型或比较。"
+ },
+ {
+  "id": "go-basics-037",
+  "title": "sort 排序",
+  "description": "对整数切片升序排序",
+  "exercise_type": "fill",
+  "tech_stack": "go",
+  "weight": "easy",
+  "category": "sort",
+  "full_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"sort\"\n)\n\nfunc main() {\n\tnums := []int{3, 1, 2}\n\tsort.Ints(nums)\n\tfmt.Println(nums)\n}",
+  "expected": "[1 2 3]",
+  "points": [
+   {
+    "id": "fn",
+    "text": "sort.Ints",
+    "category": "function",
+    "min_weight": "beginner",
+    "weight_score": 1,
+    "hint": "整数切片排序函数",
+    "fill_type": "text"
+   }
+  ],
+  "hints": {
+   "level_1": "💡 整数切片排序",
+   "level_2": "📖 `sort.Ints` 原地升序",
+   "level_3": "👀 `sort.Ints(nums)`",
+   "level_4": "📝 正确答案：`sort.Ints`"
   },
-  {
-    "id": "go-basics-038",
-    "title": "copy 复制切片",
-    "description": "用 copy 复制切片内容",
-    "exercise_type": "fill",
-    "tech_stack": "go",
-    "weight": "easy",
-    "category": "slice",
-    "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\ta := []int{1, 2, 3}\n\tb := make([]int, len(a))\n\tcopy(b, a)\n\tfmt.Println(b)\n}",
-    "expected": "[1 2 3]",
-    "points": [
-      {
-        "id": "fn",
-        "text": "copy",
-        "category": "function",
-        "min_weight": "beginner",
-        "weight_score": 1,
-        "hint": "复制切片的内置函数",
-        "fill_type": "text"
-      }
-    ],
-    "hints": {
-      "level_1": "💡 复制切片",
-      "level_2": "📖 `copy(dst, src)` 拷贝",
-      "level_3": "👀 `copy(b, a)`",
-      "level_4": "📝 正确答案：`copy`"
-    },
-    "explanation": "`copy` 把源切片内容拷到目标切片；目标需先分配长度。"
+  "explanation": "`sort.Ints` 对 []int 原地升序排序。"
+ },
+ {
+  "id": "go-basics-038",
+  "title": "copy 复制切片",
+  "description": "用 copy 复制切片内容",
+  "exercise_type": "fill",
+  "tech_stack": "go",
+  "weight": "easy",
+  "category": "slice",
+  "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\ta := []int{1, 2, 3}\n\tb := make([]int, len(a))\n\tcopy(b, a)\n\tfmt.Println(b)\n}",
+  "expected": "[1 2 3]",
+  "points": [
+   {
+    "id": "fn",
+    "text": "copy",
+    "category": "function",
+    "min_weight": "beginner",
+    "weight_score": 1,
+    "hint": "复制切片的内置函数",
+    "fill_type": "text"
+   }
+  ],
+  "hints": {
+   "level_1": "💡 复制切片",
+   "level_2": "📖 `copy(dst, src)` 拷贝",
+   "level_3": "👀 `copy(b, a)`",
+   "level_4": "📝 正确答案：`copy`"
   },
-  {
-    "id": "go-basics-039",
-    "title": "无限循环与 break",
-    "description": "用 for{} + break 跳出",
-    "exercise_type": "fill",
-    "tech_stack": "go",
-    "weight": "easy",
-    "category": "control_flow",
-    "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tn := 0\n\tfor {\n\t\tn++\n\t\tif n \u003e 3 {\n\t\t\tbreak\n\t\t}\n\t}\n\tfmt.Println(n)\n}",
-    "expected": "4",
-    "points": [
-      {
-        "id": "bk",
-        "text": "break",
-        "category": "keyword",
-        "min_weight": "beginner",
-        "weight_score": 1,
-        "hint": "跳出循环的关键字",
-        "fill_type": "text"
-      }
-    ],
-    "hints": {
-      "level_1": "💡 跳出循环",
-      "level_2": "📖 `for { }` 无限循环，`break` 跳出",
-      "level_3": "👀 `if n \u003e 3 { break }`",
-      "level_4": "📝 正确答案：`break`"
-    },
-    "explanation": "`for {}` 是无限循环，用 `break` 提前退出。"
+  "explanation": "`copy` 把源切片内容拷到目标切片；目标需先分配长度。"
+ },
+ {
+  "id": "go-basics-039",
+  "title": "无限循环与 break",
+  "description": "用 for{} + break 跳出",
+  "exercise_type": "fill",
+  "tech_stack": "go",
+  "weight": "easy",
+  "category": "control_flow",
+  "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tn := 0\n\tfor {\n\t\tn++\n\t\tif n > 3 {\n\t\t\tbreak\n\t\t}\n\t}\n\tfmt.Println(n)\n}",
+  "expected": "4",
+  "points": [
+   {
+    "id": "bk",
+    "text": "break",
+    "category": "keyword",
+    "min_weight": "beginner",
+    "weight_score": 1,
+    "hint": "跳出循环的关键字",
+    "fill_type": "text"
+   }
+  ],
+  "hints": {
+   "level_1": "💡 跳出循环",
+   "level_2": "📖 `for { }` 无限循环，`break` 跳出",
+   "level_3": "👀 `if n > 3 { break }`",
+   "level_4": "📝 正确答案：`break`"
   },
-  {
-    "id": "go-basics-040",
-    "title": "continue 跳过",
-    "description": "跳过偶数累加奇数",
-    "exercise_type": "fill",
-    "tech_stack": "go",
-    "weight": "easy",
-    "category": "control_flow",
-    "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tsum := 0\n\tfor i := 1; i \u003c= 5; i++ {\n\t\tif i%2 == 0 {\n\t\t\tcontinue\n\t\t}\n\t\tsum += i\n\t}\n\tfmt.Println(sum)\n}",
-    "expected": "9",
-    "points": [
-      {
-        "id": "ct",
-        "text": "continue",
-        "category": "keyword",
-        "min_weight": "beginner",
-        "weight_score": 1,
-        "hint": "跳过本次循环",
-        "fill_type": "text"
-      }
-    ],
-    "hints": {
-      "level_1": "💡 跳过本次循环",
-      "level_2": "📖 偶数时 `continue` 不参与累加",
-      "level_3": "👀 `if i%2 == 0 { continue }`",
-      "level_4": "📝 正确答案：`continue`"
-    },
-    "explanation": "`continue` 跳过当前迭代剩下的语句直接进入下一次。"
+  "explanation": "`for {}` 是无限循环，用 `break` 提前退出。"
+ },
+ {
+  "id": "go-basics-040",
+  "title": "continue 跳过",
+  "description": "跳过偶数累加奇数",
+  "exercise_type": "fill",
+  "tech_stack": "go",
+  "weight": "easy",
+  "category": "control_flow",
+  "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tsum := 0\n\tfor i := 1; i <= 5; i++ {\n\t\tif i%2 == 0 {\n\t\t\tcontinue\n\t\t}\n\t\tsum += i\n\t}\n\tfmt.Println(sum)\n}",
+  "expected": "9",
+  "points": [
+   {
+    "id": "ct",
+    "text": "continue",
+    "category": "keyword",
+    "min_weight": "beginner",
+    "weight_score": 1,
+    "hint": "跳过本次循环",
+    "fill_type": "text"
+   }
+  ],
+  "hints": {
+   "level_1": "💡 跳过本次循环",
+   "level_2": "📖 偶数时 `continue` 不参与累加",
+   "level_3": "👀 `if i%2 == 0 { continue }`",
+   "level_4": "📝 正确答案：`continue`"
   },
-  {
-    "id": "go-basics-041",
-    "title": "遍历 map 值",
-    "description": "累加 map 所有值",
-    "exercise_type": "fill",
-    "tech_stack": "go",
-    "weight": "easy",
-    "category": "map",
-    "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tm := map[string]int{\"a\": 1, \"b\": 2}\n\ttotal := 0\n\tfor _, v := range m {\n\t\ttotal += v\n\t}\n\tfmt.Println(total)\n}",
-    "expected": "3",
-    "points": [
-      {
-        "id": "range",
-        "text": "for _, v := range",
-        "category": "range",
-        "min_weight": "beginner",
-        "weight_score": 1,
-        "hint": "遍历 map 的语法",
-        "fill_type": "text"
-      }
-    ],
-    "hints": {
-      "level_1": "💡 遍历 map 值",
-      "level_2": "📖 `range m` 迭代键值",
-      "level_3": "👀 `for _, v := range m`",
-      "level_4": "📝 正确答案：`for _, v := range`"
-    },
-    "explanation": "`range` map 每次迭代返回 key, value；无序遍历的和是确定的。"
+  "explanation": "`continue` 跳过当前迭代剩下的语句直接进入下一次。"
+ },
+ {
+  "id": "go-basics-041",
+  "title": "遍历 map 值",
+  "description": "累加 map 所有值",
+  "exercise_type": "fill",
+  "tech_stack": "go",
+  "weight": "easy",
+  "category": "map",
+  "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tm := map[string]int{\"a\": 1, \"b\": 2}\n\ttotal := 0\n\tfor _, v := range m {\n\t\ttotal += v\n\t}\n\tfmt.Println(total)\n}",
+  "expected": "3",
+  "points": [
+   {
+    "id": "range",
+    "text": "for _, v := range",
+    "category": "range",
+    "min_weight": "beginner",
+    "weight_score": 1,
+    "hint": "遍历 map 的语法",
+    "fill_type": "text"
+   }
+  ],
+  "hints": {
+   "level_1": "💡 遍历 map 值",
+   "level_2": "📖 `range m` 迭代键值",
+   "level_3": "👀 `for _, v := range m`",
+   "level_4": "📝 正确答案：`for _, v := range`"
   },
-  {
-    "id": "go-basics-042",
-    "title": "iota 自增常量",
-    "description": "用 iota 生成连续常量",
-    "exercise_type": "fill",
-    "tech_stack": "go",
-    "weight": "medium",
-    "category": "constants",
-    "full_code": "package main\n\nimport \"fmt\"\n\nconst (\n\tA = iota\n\tB\n\tC\n)\n\nfunc main() {\n\tfmt.Println(A, B, C)\n}",
-    "expected": "0 1 2",
-    "points": [
-      {
-        "id": "iota",
-        "text": "iota",
-        "category": "keyword",
-        "min_weight": "beginner",
-        "weight_score": 1,
-        "hint": "自增常量生成器",
-        "fill_type": "text"
-      }
-    ],
-    "hints": {
-      "level_1": "💡 自增常量生成器",
-      "level_2": "📖 `iota` 在 const 块内从 0 自增",
-      "level_3": "👀 `A = iota; B; C`",
-      "level_4": "📝 正确答案：`iota`"
-    },
-    "explanation": "`iota` 是行的自增索引，常用于定义枚举常量。"
+  "explanation": "`range` map 每次迭代返回 key, value；无序遍历的和是确定的。"
+ },
+ {
+  "id": "go-basics-042",
+  "title": "iota 自增常量",
+  "description": "用 iota 生成连续常量",
+  "exercise_type": "fill",
+  "tech_stack": "go",
+  "weight": "medium",
+  "category": "constants",
+  "full_code": "package main\n\nimport \"fmt\"\n\nconst (\n\tA = iota\n\tB\n\tC\n)\n\nfunc main() {\n\tfmt.Println(A, B, C)\n}",
+  "expected": "0 1 2",
+  "points": [
+   {
+    "id": "iota",
+    "text": "iota",
+    "category": "keyword",
+    "min_weight": "beginner",
+    "weight_score": 1,
+    "hint": "自增常量生成器",
+    "fill_type": "text"
+   }
+  ],
+  "hints": {
+   "level_1": "💡 自增常量生成器",
+   "level_2": "📖 `iota` 在 const 块内从 0 自增",
+   "level_3": "👀 `A = iota; B; C`",
+   "level_4": "📝 正确答案：`iota`"
   },
-  {
-    "id": "go-basics-043",
-    "title": "switch 无表达式",
-    "description": "用无表达式的 switch 实现多条件",
-    "exercise_type": "fill",
-    "tech_stack": "go",
-    "weight": "easy",
-    "category": "switch",
-    "full_code": "package main\n\nimport \"fmt\"\n\nfunc classify(n int) string {\n\tswitch {\n\tcase n \u003c 0:\n\t\treturn \"negative\"\n\tcase n == 0:\n\t\treturn \"zero\"\n\tdefault:\n\t\treturn \"positive\"\n\t}\n}\n\nfunc main() {\n\tfmt.Println(classify(-5))\n}",
-    "expected": "negative",
-    "points": [
-      {
-        "id": "cond",
-        "text": "n \u003c 0",
-        "category": "condition",
-        "min_weight": "beginner",
-        "weight_score": 1,
-        "hint": "负数条件的表达式",
-        "fill_type": "text"
-      }
-    ],
-    "hints": {
-      "level_1": "💡 无表达式的 switch 条件",
-      "level_2": "📖 `switch {}` 各 case 是布尔表达式",
-      "level_3": "👀 `case n \u003c 0:`",
-      "level_4": "📝 正确答案：`n \u003c 0`"
-    },
-    "explanation": "`switch` 不带表达式时每个 case 写一个条件，等价 if-elseif。"
+  "explanation": "`iota` 是行的自增索引，常用于定义枚举常量。"
+ },
+ {
+  "id": "go-basics-043",
+  "title": "switch 无表达式",
+  "description": "用无表达式的 switch 实现多条件",
+  "exercise_type": "fill",
+  "tech_stack": "go",
+  "weight": "easy",
+  "category": "switch",
+  "full_code": "package main\n\nimport \"fmt\"\n\nfunc classify(n int) string {\n\tswitch {\n\tcase n < 0:\n\t\treturn \"negative\"\n\tcase n == 0:\n\t\treturn \"zero\"\n\tdefault:\n\t\treturn \"positive\"\n\t}\n}\n\nfunc main() {\n\tfmt.Println(classify(-5))\n}",
+  "expected": "negative",
+  "points": [
+   {
+    "id": "cond",
+    "text": "n < 0",
+    "category": "condition",
+    "min_weight": "beginner",
+    "weight_score": 1,
+    "hint": "负数条件的表达式",
+    "fill_type": "text"
+   }
+  ],
+  "hints": {
+   "level_1": "💡 无表达式的 switch 条件",
+   "level_2": "📖 `switch {}` 各 case 是布尔表达式",
+   "level_3": "👀 `case n < 0:`",
+   "level_4": "📝 正确答案：`n < 0`"
   },
-  {
-    "id": "go-basics-044",
-    "title": "类型别名",
-    "description": "定义基于 float64 的类型别名",
-    "exercise_type": "fill",
-    "tech_stack": "go",
-    "weight": "easy",
-    "category": "types",
-    "full_code": "package main\n\nimport \"fmt\"\n\ntype Celsius float64\n\nfunc main() {\n\ttemp := Celsius(36.6)\n\tfmt.Println(temp)\n}",
-    "expected": "36.6",
-    "points": [
-      {
-        "id": "alias",
-        "text": "type Celsius float64",
-        "category": "type",
-        "min_weight": "beginner",
-        "weight_score": 1,
-        "hint": "类型别名声明",
-        "fill_type": "text"
-      }
-    ],
-    "hints": {
-      "level_1": "💡 基于现有类型定义新类型",
-      "level_2": "📖 `Celsius(36.6)` 转换",
-      "level_3": "👀 `type Celsius float64`",
-      "level_4": "📝 正确答案：`type Celsius float64`"
-    },
-    "explanation": "`type 名称 底层类型` 定义命名类型，方便表达领域含义。"
+  "explanation": "`switch` 不带表达式时每个 case 写一个条件，等价 if-elseif。"
+ },
+ {
+  "id": "go-basics-044",
+  "title": "类型别名",
+  "description": "定义基于 float64 的类型别名",
+  "exercise_type": "fill",
+  "tech_stack": "go",
+  "weight": "easy",
+  "category": "types",
+  "full_code": "package main\n\nimport \"fmt\"\n\ntype Celsius float64\n\nfunc main() {\n\ttemp := Celsius(36.6)\n\tfmt.Println(temp)\n}",
+  "expected": "36.6",
+  "points": [
+   {
+    "id": "alias",
+    "text": "type Celsius float64",
+    "category": "type",
+    "min_weight": "beginner",
+    "weight_score": 1,
+    "hint": "类型别名声明",
+    "fill_type": "text"
+   }
+  ],
+  "hints": {
+   "level_1": "💡 基于现有类型定义新类型",
+   "level_2": "📖 `Celsius(36.6)` 转换",
+   "level_3": "👀 `type Celsius float64`",
+   "level_4": "📝 正确答案：`type Celsius float64`"
   },
-  {
-    "id": "go-basics-045",
-    "title": "泛型函数",
-    "description": "定义支持多数值类型的 Max 泛型函数",
-    "exercise_type": "fill",
-    "tech_stack": "go",
-    "weight": "hard",
+  "explanation": "`type 名称 底层类型` 定义命名类型，方便表达领域含义。"
+ },
+ {
+  "id": "go-basics-045",
+  "title": "泛型函数",
+  "description": "定义支持多数值类型的 Max 泛型函数",
+  "exercise_type": "fill",
+  "tech_stack": "go",
+  "weight": "hard",
+  "category": "generics",
+  "full_code": "package main\n\nimport \"fmt\"\n\nfunc Max[T int | float64](a, b T) T {\n\tif a > b {\n\t\treturn a\n\t}\n\treturn b\n}\n\nfunc main() {\n\tfmt.Println(Max(3, 7))\n\tfmt.Println(Max(2.5, 1.5))\n}",
+  "expected": "7\n2.5",
+  "points": [
+   {
+    "id": "constraint",
+    "text": "[T int | float64]",
     "category": "generics",
-    "full_code": "package main\n\nimport \"fmt\"\n\nfunc Max[T int | float64](a, b T) T {\n\tif a \u003e b {\n\t\treturn a\n\t}\n\treturn b\n}\n\nfunc main() {\n\tfmt.Println(Max(3, 7))\n\tfmt.Println(Max(2.5, 1.5))\n}",
-    "expected": "7\n2.5",
-    "points": [
-      {
-        "id": "constraint",
-        "text": "[T int | float64]",
-        "category": "generics",
-        "min_weight": "beginner",
-        "weight_score": 1,
-        "hint": "泛型约束",
-        "fill_type": "text"
-      }
-    ],
-    "hints": {
-      "level_1": "💡 泛型类型参数与约束",
-      "level_2": "📖 `T` 限定为 int 或 float64",
-      "level_3": "👀 `Max[T int | float64]`",
-      "level_4": "📝 正确答案：`[T int | float64]`"
-    },
-    "explanation": "Go 1.18+ 支持泛型，`[T 约束]` 声明类型参数，约束限定允许的类型。"
+    "min_weight": "beginner",
+    "weight_score": 1,
+    "hint": "泛型约束",
+    "fill_type": "text"
+   }
+  ],
+  "hints": {
+   "level_1": "💡 泛型类型参数与约束",
+   "level_2": "📖 `T` 限定为 int 或 float64",
+   "level_3": "👀 `Max[T int | float64]`",
+   "level_4": "📝 正确答案：`[T int | float64]`"
   },
-  {
-    "id": "go-basics-046",
-    "title": "闰年判断 Bug",
-    "description": "修复闰年判断只检查被 4 整除的 bug",
-    "exercise_type": "bugfix",
-    "tech_stack": "go",
-    "weight": "medium",
-    "category": "bugfix",
-    "full_code": "package main\n\nimport \"fmt\"\n\nfunc leap(y int) bool {\n\treturn y%4 == 0 \u0026\u0026 (y%100 != 0 || y%400 == 0)\n}\n\nfunc main() {\n\tfmt.Println(leap(2020))\n\tfmt.Println(leap(1900))\n}",
-    "buggy_code": "package main\n\nimport \"fmt\"\n\nfunc leap(y int) bool {\n\treturn y%4 == 0\n}\n\nfunc main() {\n\tfmt.Println(leap(2020))\n\tfmt.Println(leap(1900))\n}",
-    "expected": "true\nfalse",
-    "test_cases": [
-      {
-        "input": "",
-        "output": "true"
-      },
-      {
-        "input": "",
-        "output": "false"
-      }
-    ],
-    "points": [
-      {
-        "id": "cond",
-        "text": "return y%4 == 0",
-        "category": "condition",
-        "min_weight": "beginner",
-        "weight_score": 1,
-        "hint": "只判断整除 4 是错的，需排除整百年",
-        "fill_type": "text"
-      }
-    ],
-    "hints": {
-      "level_1": "💡 只看 e%4 漏判世纪年",
-      "level_2": "📖 1900 被 100 整除但非 400 倍数",
-      "level_3": "👀 加 `(y%100 != 0 || y%400 == 0)`",
-      "level_4": "📝 正确答案：`return y%4 == 0 \u0026\u0026 (y%100 != 0 || y%400 == 0)`"
-    },
-    "explanation": "闰年 = 被 4 整除且（不被 100 整除或 被 400 整除）；1900 不是闰年。"
+  "explanation": "Go 1.18+ 支持泛型，`[T 约束]` 声明类型参数，约束限定允许的类型。"
+ },
+ {
+  "id": "go-basics-046",
+  "title": "闰年判断 Bug",
+  "description": "修复闰年判断只检查被 4 整除的 bug",
+  "exercise_type": "bugfix",
+  "tech_stack": "go",
+  "weight": "medium",
+  "category": "bugfix",
+  "full_code": "package main\n\nimport \"fmt\"\n\nfunc leap(y int) bool {\n\treturn y%4 == 0 && (y%100 != 0 || y%400 == 0)\n}\n\nfunc main() {\n\tfmt.Println(leap(2020))\n\tfmt.Println(leap(1900))\n}",
+  "buggy_code": "package main\n\nimport \"fmt\"\n\nfunc leap(y int) bool {\n\treturn y%4 == 0\n}\n\nfunc main() {\n\tfmt.Println(leap(2020))\n\tfmt.Println(leap(1900))\n}",
+  "expected": "true\nfalse",
+  "test_cases": [
+   {
+    "input": "",
+    "output": "true"
+   },
+   {
+    "input": "",
+    "output": "false"
+   }
+  ],
+  "points": [
+   {
+    "id": "cond",
+    "text": "return y%4 == 0",
+    "category": "condition",
+    "min_weight": "beginner",
+    "weight_score": 1,
+    "hint": "只判断整除 4 是错的，需排除整百年",
+    "fill_type": "text"
+   }
+  ],
+  "hints": {
+   "level_1": "💡 只看 e%4 漏判世纪年",
+   "level_2": "📖 1900 被 100 整除但非 400 倍数",
+   "level_3": "👀 加 `(y%100 != 0 || y%400 == 0)`",
+   "level_4": "📝 正确答案：`return y%4 == 0 && (y%100 != 0 || y%400 == 0)`"
   },
-  {
-    "id": "go-basics-047",
-    "title": "平均值 Bug",
-    "description": "修复未除以元素个数的 bug",
-    "exercise_type": "bugfix",
-    "tech_stack": "go",
-    "weight": "easy",
-    "category": "bugfix",
-    "full_code": "package main\n\nimport \"fmt\"\n\nfunc avg(nums []int) int {\n\tsum := 0\n\tfor _, n := range nums {\n\t\tsum += n\n\t}\n\treturn sum / len(nums)\n}\n\nfunc main() {\n\tfmt.Println(avg([]int{1, 2, 3, 4}))\n\tfmt.Println(avg([]int{10, 20}))\n}",
-    "buggy_code": "package main\n\nimport \"fmt\"\n\nfunc avg(nums []int) int {\n\tsum := 0\n\tfor _, n := range nums {\n\t\tsum += n\n\t}\n\treturn sum\n}\n\nfunc main() {\n\tfmt.Println(avg([]int{1, 2, 3, 4}))\n\tfmt.Println(avg([]int{10, 20}))\n}",
-    "expected": "2\n15",
-    "test_cases": [
-      {
-        "input": "",
-        "output": "2"
-      },
-      {
-        "input": "",
-        "output": "15"
-      }
-    ],
-    "points": [
-      {
-        "id": "ret",
-        "text": "return sum",
-        "category": "statement",
-        "min_weight": "beginner",
-        "weight_score": 1,
-        "hint": "返回的是平均应除以个数",
-        "fill_type": "text"
-      }
-    ],
-    "hints": {
-      "level_1": "💡 返回了总和而非平均值",
-      "level_2": "📖 `len(nums)` 是元素个数",
-      "level_3": "👀 `return sum / len(nums)`",
-      "level_4": "📝 正确答案：`return sum / len(nums)`"
-    },
-    "explanation": "平均值 = 总和 / 元素个数，需除以 `len(nums)`。"
+  "explanation": "闰年 = 被 4 整除且（不被 100 整除或 被 400 整除）；1900 不是闰年。"
+ },
+ {
+  "id": "go-basics-047",
+  "title": "平均值 Bug",
+  "description": "修复未除以元素个数的 bug",
+  "exercise_type": "bugfix",
+  "tech_stack": "go",
+  "weight": "easy",
+  "category": "bugfix",
+  "full_code": "package main\n\nimport \"fmt\"\n\nfunc avg(nums []int) int {\n\tsum := 0\n\tfor _, n := range nums {\n\t\tsum += n\n\t}\n\treturn sum / len(nums)\n}\n\nfunc main() {\n\tfmt.Println(avg([]int{1, 2, 3, 4}))\n\tfmt.Println(avg([]int{10, 20}))\n}",
+  "buggy_code": "package main\n\nimport \"fmt\"\n\nfunc avg(nums []int) int {\n\tsum := 0\n\tfor _, n := range nums {\n\t\tsum += n\n\t}\n\treturn sum\n}\n\nfunc main() {\n\tfmt.Println(avg([]int{1, 2, 3, 4}))\n\tfmt.Println(avg([]int{10, 20}))\n}",
+  "expected": "2\n15",
+  "test_cases": [
+   {
+    "input": "",
+    "output": "2"
+   },
+   {
+    "input": "",
+    "output": "15"
+   }
+  ],
+  "points": [
+   {
+    "id": "ret",
+    "text": "return sum",
+    "category": "statement",
+    "min_weight": "beginner",
+    "weight_score": 1,
+    "hint": "返回的是平均应除以个数",
+    "fill_type": "text"
+   }
+  ],
+  "hints": {
+   "level_1": "💡 返回了总和而非平均值",
+   "level_2": "📖 `len(nums)` 是元素个数",
+   "level_3": "👀 `return sum / len(nums)`",
+   "level_4": "📝 正确答案：`return sum / len(nums)`"
   },
-  {
-    "id": "go-basics-048",
-    "title": "交换变量 Bug",
-    "description": "修复两变量未真正交换的 bug",
-    "exercise_type": "bugfix",
-    "tech_stack": "go",
-    "weight": "easy",
-    "category": "bugfix",
-    "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\ta, b := 1, 2\n\ta, b = b, a\n\tfmt.Println(a, b)\n}",
-    "buggy_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\ta, b := 1, 2\n\ta = b\n\tb = a\n\tfmt.Println(a, b)\n}",
-    "expected": "2 1",
-    "test_cases": [
-      {
-        "input": "",
-        "output": "2 1"
-      }
-    ],
-    "points": [
-      {
-        "id": "swap",
-        "text": "a = b",
-        "category": "statement",
-        "min_weight": "beginner",
-        "weight_score": 1,
-        "hint": "逐个赋值到不了交换的目的",
-        "fill_type": "text"
-      }
-    ],
-    "hints": {
-      "level_1": "💡 单步赋值会丢失一个值",
-      "level_2": "📖 先 a=b 后 b=a 会让 a、b 都是原 b",
-      "level_3": "👀 用 `a, b = b, a` 简洁交换",
-      "level_4": "📝 正确答案：`a, b = b, a`"
-    },
-    "explanation": "多变量同时赋值可直接交换；逐个赋值需要临时变量。"
+  "explanation": "平均值 = 总和 / 元素个数，需除以 `len(nums)`。"
+ },
+ {
+  "id": "go-basics-048",
+  "title": "交换变量 Bug",
+  "description": "修复两变量未真正交换的 bug",
+  "exercise_type": "bugfix",
+  "tech_stack": "go",
+  "weight": "easy",
+  "category": "bugfix",
+  "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\ta, b := 1, 2\n\ta, b = b, a\n\tfmt.Println(a, b)\n}",
+  "buggy_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\ta, b := 1, 2\n\ta = b\n\tb = a\n\tfmt.Println(a, b)\n}",
+  "expected": "2 1",
+  "test_cases": [
+   {
+    "input": "",
+    "output": "2 1"
+   }
+  ],
+  "points": [
+   {
+    "id": "swap",
+    "text": "a = b",
+    "category": "statement",
+    "min_weight": "beginner",
+    "weight_score": 1,
+    "hint": "逐个赋值到不了交换的目的",
+    "fill_type": "text"
+   }
+  ],
+  "hints": {
+   "level_1": "💡 单步赋值会丢失一个值",
+   "level_2": "📖 先 a=b 后 b=a 会让 a、b 都是原 b",
+   "level_3": "👀 用 `a, b = b, a` 简洁交换",
+   "level_4": "📝 正确答案：`a, b = b, a`"
   },
-  {
-    "id": "go-basics-049",
-    "title": "元音计数",
-    "description": "统计字符串中元音个数",
-    "exercise_type": "fill",
-    "tech_stack": "go",
-    "weight": "medium",
-    "category": "string_loop",
-    "full_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"strings\"\n)\n\nfunc main() {\n\ts := \"go is fun\"\n\tcount := 0\n\tfor _, r := range s {\n\t\tif strings.ContainsRune(\"aeiou\", r) {\n\t\t\tcount++\n\t\t}\n\t}\n\tfmt.Println(count)\n}",
-    "expected": "3",
-    "points": [
-      {
-        "id": "rune",
-        "text": "strings.ContainsRune",
-        "category": "function",
-        "min_weight": "beginner",
-        "weight_score": 1,
-        "hint": "判断 rune 是否在字符串中",
-        "fill_type": "text"
-      }
-    ],
-    "hints": {
-      "level_1": "💡 按字符判断包含",
-      "level_2": "📖 `strings.ContainsRune(s, r)` 判断是否含该字符",
-      "level_3": "👀 `if strings.ContainsRune(\"aeiou\", r)`",
-      "level_4": "📝 正确答案：`strings.ContainsRune`"
-    },
-    "explanation": "`range` 遍历字符串产生 rune；`ContainsRune` 判断是否在元音集合中。"
+  "explanation": "多变量同时赋值可直接交换；逐个赋值需要临时变量。"
+ },
+ {
+  "id": "go-basics-049",
+  "title": "元音计数",
+  "description": "统计字符串中元音个数",
+  "exercise_type": "fill",
+  "tech_stack": "go",
+  "weight": "medium",
+  "category": "string_loop",
+  "full_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"strings\"\n)\n\nfunc main() {\n\ts := \"go is fun\"\n\tcount := 0\n\tfor _, r := range s {\n\t\tif strings.ContainsRune(\"aeiou\", r) {\n\t\t\tcount++\n\t\t}\n\t}\n\tfmt.Println(count)\n}",
+  "expected": "3",
+  "points": [
+   {
+    "id": "rune",
+    "text": "strings.ContainsRune",
+    "category": "function",
+    "min_weight": "beginner",
+    "weight_score": 1,
+    "hint": "判断 rune 是否在字符串中",
+    "fill_type": "text"
+   }
+  ],
+  "hints": {
+   "level_1": "💡 按字符判断包含",
+   "level_2": "📖 `strings.ContainsRune(s, r)` 判断是否含该字符",
+   "level_3": "👀 `if strings.ContainsRune(\"aeiou\", r)`",
+   "level_4": "📝 正确答案：`strings.ContainsRune`"
   },
-  {
-    "id": "go-basics-050",
-    "title": "切分字符串",
-    "description": "用 strings.Split 切分并计数",
-    "exercise_type": "fill",
-    "tech_stack": "go",
-    "weight": "easy",
-    "category": "strings",
-    "full_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"strings\"\n)\n\nfunc main() {\n\tparts := strings.Split(\"a,b,c\", \",\")\n\tfmt.Println(len(parts))\n}",
-    "expected": "3",
-    "points": [
-      {
-        "id": "fn",
-        "text": "strings.Split",
-        "category": "function",
-        "min_weight": "beginner",
-        "weight_score": 1,
-        "hint": "按分隔符切分的函数",
-        "fill_type": "text"
-      }
-    ],
-    "hints": {
-      "level_1": "💡 按分隔符切分",
-      "level_2": "📖 `strings.Split(s, \",\")` 返回切片",
-      "level_3": "👀 `fmt.Println(len(parts))`",
-      "level_4": "📝 正确答案：`strings.Split`"
-    },
-    "explanation": "`strings.Split(s, sep)` 按分隔符切分字符串，返回切片。"
-  }
+  "explanation": "`range` 遍历字符串产生 rune；`ContainsRune` 判断是否在元音集合中。"
+ },
+ {
+  "id": "go-basics-050",
+  "title": "切分字符串",
+  "description": "用 strings.Split 切分并计数",
+  "exercise_type": "fill",
+  "tech_stack": "go",
+  "weight": "easy",
+  "category": "strings",
+  "full_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"strings\"\n)\n\nfunc main() {\n\tparts := strings.Split(\"a,b,c\", \",\")\n\tfmt.Println(len(parts))\n}",
+  "expected": "3",
+  "points": [
+   {
+    "id": "fn",
+    "text": "strings.Split",
+    "category": "function",
+    "min_weight": "beginner",
+    "weight_score": 1,
+    "hint": "按分隔符切分的函数",
+    "fill_type": "text"
+   }
+  ],
+  "hints": {
+   "level_1": "💡 按分隔符切分",
+   "level_2": "📖 `strings.Split(s, \",\")` 返回切片",
+   "level_3": "👀 `fmt.Println(len(parts))`",
+   "level_4": "📝 正确答案：`strings.Split`"
+  },
+  "explanation": "`strings.Split(s, sep)` 按分隔符切分字符串，返回切片。"
+ }
 ]

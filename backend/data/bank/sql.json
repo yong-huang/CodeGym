@@ -1,0 +1,2039 @@
+[
+  {
+    "id": "sql-basics-001",
+    "title": "查询所有列",
+    "description": "查询 employees 表的所有员工信息（表：employees 员工表）",
+    "exercise_type": "fill",
+    "tech_stack": "sql",
+    "weight": "beginner",
+    "category": "select_basic",
+    "subcategory": "基础",
+    "full_code": "SELECT * FROM employees;",
+    "expected": "",
+    "points": [
+      {
+        "id": "star",
+        "text": "*",
+        "category": "operator",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "表示所有列的通配符",
+        "fill_type": "text"
+      },
+      {
+        "id": "from",
+        "text": "FROM",
+        "category": "keyword",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "指定数据来源表的子句",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "from"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 查所有列用什么符号？数据从哪张表来？",
+      "level_2": "📖 `SELECT * FROM <表名>`",
+      "level_3": "👀 `SELECT * FROM employees`",
+      "level_4": "📝 正确答案：`*` 和 `FROM`"
+    },
+    "explanation": "`SELECT *` 返回表中所有列；`FROM` 指定要查询的表。"
+  },
+  {
+    "id": "sql-basics-002",
+    "title": "查询指定列",
+    "description": "只查员工的姓名和工资两列",
+    "exercise_type": "fill",
+    "tech_stack": "sql",
+    "weight": "beginner",
+    "category": "select_basic",
+    "subcategory": "基础",
+    "full_code": "SELECT name, salary FROM employees;",
+    "expected": "",
+    "points": [
+      {
+        "id": "cols",
+        "text": "name, salary",
+        "category": "expression",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "两个列名，用逗号分隔",
+        "fill_type": "text"
+      },
+      {
+        "id": "table",
+        "text": "employees",
+        "category": "identifier",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "员工表的表名",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 列名之间用什么分隔？",
+      "level_2": "📖 `SELECT 列1, 列2 FROM 表名`",
+      "level_3": "👀 `SELECT name, salary FROM employees`",
+      "level_4": "📝 正确答案：`name, salary` 和 `employees`"
+    },
+    "explanation": "查询部分列时在 SELECT 后列出列名，多个列用英文逗号分隔。"
+  },
+  {
+    "id": "sql-basics-003",
+    "title": "列别名 AS",
+    "description": "给 salary 列起别名 monthly_pay 输出",
+    "exercise_type": "fill",
+    "tech_stack": "sql",
+    "weight": "beginner",
+    "category": "select_basic",
+    "subcategory": "基础",
+    "full_code": "SELECT salary AS monthly_pay FROM employees;",
+    "expected": "",
+    "points": [
+      {
+        "id": "as_clause",
+        "text": "AS monthly_pay",
+        "category": "keyword",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "用 AS 关键字给列起别名",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "as monthly_pay"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 给列起别名用什么关键字？",
+      "level_2": "📖 `列名 AS 别名`",
+      "level_3": "👀 `salary AS monthly_pay`",
+      "level_4": "📝 正确答案：`AS monthly_pay`"
+    },
+    "explanation": "`AS` 为列定义别名，结果集的列标题会显示别名；AS 可省略但建议保留以增强可读性。"
+  },
+  {
+    "id": "sql-basics-004",
+    "title": "WHERE 等值过滤",
+    "description": "查询 3 号部门的所有员工",
+    "exercise_type": "fill",
+    "tech_stack": "sql",
+    "weight": "beginner",
+    "category": "condition",
+    "subcategory": "基础",
+    "full_code": "SELECT * FROM employees WHERE dept_id = 3;",
+    "expected": "",
+    "points": [
+      {
+        "id": "where_kw",
+        "text": "WHERE",
+        "category": "keyword",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "过滤行的子句关键字",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "where"
+        ]
+      },
+      {
+        "id": "cond",
+        "text": "dept_id = 3",
+        "category": "expression",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "条件：dept_id 等于 3",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 过滤行用哪个子句？",
+      "level_2": "📖 `WHERE 列 = 值`",
+      "level_3": "👀 `WHERE dept_id = 3`",
+      "level_4": "📝 正确答案：`WHERE` 与 `dept_id = 3`"
+    },
+    "explanation": "`WHERE` 子句对行进行过滤，只有满足条件的行才会出现在结果中；SQL 中等值判断用一个 `=`。"
+  },
+  {
+    "id": "sql-basics-005",
+    "title": "比较运算符",
+    "description": "查询单价大于 100 的商品（表：products 商品表）",
+    "exercise_type": "fill",
+    "tech_stack": "sql",
+    "weight": "beginner",
+    "category": "condition",
+    "subcategory": "基础",
+    "full_code": "SELECT * FROM products WHERE price > 100;",
+    "expected": "",
+    "points": [
+      {
+        "id": "col",
+        "text": "price",
+        "category": "identifier",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "商品单价列",
+        "fill_type": "text"
+      },
+      {
+        "id": "op",
+        "text": ">",
+        "category": "operator",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "大于运算符",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 “大于” 用什么符号？",
+      "level_2": "📖 `WHERE price > 100`",
+      "level_3": "👀 `WHERE price > 100`",
+      "level_4": "📝 正确答案：`>`"
+    },
+    "explanation": "比较运算符包括 `> >= < <= = <>`，返回 TRUE/FALSE 用于筛选行。"
+  },
+  {
+    "id": "sql-basics-006",
+    "title": "AND 组合条件",
+    "description": "查询单价大于 100 且有库存的商品",
+    "exercise_type": "fill",
+    "tech_stack": "sql",
+    "weight": "beginner",
+    "category": "condition",
+    "subcategory": "基础",
+    "full_code": "SELECT * FROM products WHERE price > 100 AND stock > 0;",
+    "expected": "",
+    "points": [
+      {
+        "id": "and_kw",
+        "text": "AND",
+        "category": "keyword",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "连接两个同时成立的条件",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "and"
+        ]
+      },
+      {
+        "id": "cond2",
+        "text": "stock > 0",
+        "category": "expression",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "库存大于 0 的条件",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 “并且” 用哪个逻辑运算符？",
+      "level_2": "📖 `条件1 AND 条件2`，两者都要满足",
+      "level_3": "👀 `price > 100 AND stock > 0`",
+      "level_4": "📝 正确答案：`AND` 与 `stock > 0`"
+    },
+    "explanation": "`AND` 要求两侧条件同时成立；与之相对 `OR` 是任一成立即可。"
+  },
+  {
+    "id": "sql-basics-007",
+    "title": "OR 与括号",
+    "description": "查询类别为'外设'或'显示器'的商品",
+    "exercise_type": "fill",
+    "tech_stack": "sql",
+    "weight": "easy",
+    "category": "condition",
+    "subcategory": "基础",
+    "full_code": "SELECT * FROM products WHERE category = '外设' OR category = '显示器';",
+    "expected": "",
+    "points": [
+      {
+        "id": "or_kw",
+        "text": "OR",
+        "category": "keyword",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "任一条件成立即返回",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "or"
+        ]
+      },
+      {
+        "id": "cond2",
+        "text": "category = '显示器'",
+        "category": "expression",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "第二个类别等于'显示器'的条件",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 “或者” 用哪个运算符？字符串值怎么写？",
+      "level_2": "📖 `列 = '值1' OR 列 = '值2'`，字符串用单引号",
+      "level_3": "👀 `category = '外设' OR category = '显示器'`",
+      "level_4": "📝 正确答案：`OR` 与 `category = '显示器'`"
+    },
+    "explanation": "`OR` 表示任一条件成立即可；SQL 中字符串字面量用单引号包裹。（此场景更简洁的写法是 `IN ('外设','显示器')`）"
+  },
+  {
+    "id": "sql-basics-008",
+    "title": "不等于过滤",
+    "description": "查询部门不是 5 的员工",
+    "exercise_type": "fill",
+    "tech_stack": "sql",
+    "weight": "beginner",
+    "category": "condition",
+    "subcategory": "基础",
+    "full_code": "SELECT * FROM employees WHERE dept_id <> 5;",
+    "expected": "",
+    "points": [
+      {
+        "id": "neq_op",
+        "text": "<>",
+        "category": "operator",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "不等于运算符，也常写作 !=",
+        "fill_type": "select",
+        "options": [
+          "<>",
+          "!=",
+          "=<"
+        ],
+        "acceptable_answers": [
+          "!="
+        ]
+      },
+      {
+        "id": "value",
+        "text": "5",
+        "category": "expression",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "要排除的部门编号",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 不等于有两种写法？",
+      "level_2": "📖 `<>` 或 `!=`",
+      "level_3": "👀 `dept_id <> 5`",
+      "level_4": "📝 正确答案：`<>`"
+    },
+    "explanation": "标准 SQL 用 `<>` 表示不等于，MySQL 等数据库也支持 `!=`，二者等价。"
+  },
+  {
+    "id": "sql-basics-009",
+    "title": "去重 DISTINCT",
+    "description": "查询员工表中出现过的部门编号（不重复）",
+    "exercise_type": "fill",
+    "tech_stack": "sql",
+    "weight": "beginner",
+    "category": "select_basic",
+    "subcategory": "基础",
+    "full_code": "SELECT DISTINCT dept_id FROM employees;",
+    "expected": "",
+    "points": [
+      {
+        "id": "distinct_kw",
+        "text": "DISTINCT",
+        "category": "keyword",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "去除重复行的关键字",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "distinct"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 去掉重复值用什么关键字？",
+      "level_2": "📖 `SELECT DISTINCT 列 FROM 表`",
+      "level_3": "👀 `SELECT DISTINCT dept_id FROM employees`",
+      "level_4": "📝 正确答案：`DISTINCT`"
+    },
+    "explanation": "`DISTINCT` 对结果集去重，放在 SELECT 之后、列名之前；作用于其后所有列的组合。"
+  },
+  {
+    "id": "sql-basics-010",
+    "title": "BETWEEN 范围",
+    "description": "查询工资在 5000 到 10000 之间（含边界）的员工",
+    "exercise_type": "fill",
+    "tech_stack": "sql",
+    "weight": "beginner",
+    "category": "condition",
+    "subcategory": "基础",
+    "full_code": "SELECT * FROM employees WHERE salary BETWEEN 5000 AND 10000;",
+    "expected": "",
+    "points": [
+      {
+        "id": "between_clause",
+        "text": "BETWEEN 5000 AND 10000",
+        "category": "expression",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "闭区间范围：5000 到 10000",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "between 5000 and 10000"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 表示“在某范围内”用什么？包含两端吗？",
+      "level_2": "📖 `BETWEEN 下界 AND 上界`，含边界",
+      "level_3": "👀 `salary BETWEEN 5000 AND 10000`",
+      "level_4": "📝 正确答案：`BETWEEN 5000 AND 10000`"
+    },
+    "explanation": "`BETWEEN a AND b` 等价于 `>= a AND <= b`，是一个闭区间。"
+  },
+  {
+    "id": "sql-basics-011",
+    "title": "IN 枚举匹配",
+    "description": "查询部门编号为 1、3 或 5 的员工",
+    "exercise_type": "fill",
+    "tech_stack": "sql",
+    "weight": "easy",
+    "category": "condition",
+    "subcategory": "基础",
+    "full_code": "SELECT * FROM employees WHERE dept_id IN (1, 3, 5);",
+    "expected": "",
+    "points": [
+      {
+        "id": "in_kw",
+        "text": "IN",
+        "category": "keyword",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "判断值是否在列表中",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "in"
+        ]
+      },
+      {
+        "id": "list",
+        "text": "(1, 3, 5)",
+        "category": "expression",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "候选值的括号列表",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 匹配多个可能值除了 OR 还能用什么？",
+      "level_2": "📖 `列 IN (值1, 值2, …)`",
+      "level_3": "👀 `dept_id IN (1, 3, 5)`",
+      "level_4": "📝 正确答案：`IN` 与 `(1, 3, 5)`"
+    },
+    "explanation": "`IN` 等价于多个 `=` 条件的 OR 简写，列表写在括号内用逗号分隔。"
+  },
+  {
+    "id": "sql-basics-012",
+    "title": "LIKE 前缀匹配",
+    "description": "查询姓'张'的员工姓名",
+    "exercise_type": "fill",
+    "tech_stack": "sql",
+    "weight": "easy",
+    "category": "condition",
+    "subcategory": "基础",
+    "full_code": "SELECT name FROM employees WHERE name LIKE '张%';",
+    "expected": "",
+    "points": [
+      {
+        "id": "like_kw",
+        "text": "LIKE",
+        "category": "keyword",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "模式匹配的关键字",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "like"
+        ]
+      },
+      {
+        "id": "pattern",
+        "text": "'张%'",
+        "category": "expression",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "% 匹配任意长度字符",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 模糊匹配用什么运算符？哪个符号代表任意多个字符？",
+      "level_2": "📖 `LIKE '前缀%'`，`%` 匹配任意个字符",
+      "level_3": "👀 `name LIKE '张%'`",
+      "level_4": "📝 正确答案：`LIKE` 与 `'张%'`"
+    },
+    "explanation": "`%` 通配任意长度（含 0 个）字符，`'张%'` 即以“张”开头的任意字符串。"
+  },
+  {
+    "id": "sql-basics-013",
+    "title": "LIKE 单字符通配",
+    "description": "查询姓名恰好为两个字且姓'张'的员工",
+    "exercise_type": "fill",
+    "tech_stack": "sql",
+    "weight": "medium",
+    "category": "condition",
+    "subcategory": "基础",
+    "full_code": "SELECT name FROM employees WHERE name LIKE '张_';",
+    "expected": "",
+    "points": [
+      {
+        "id": "pattern",
+        "text": "'张_'",
+        "category": "expression",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "_ 只匹配单个字符",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 只占一个字符位置的通配符是什么？",
+      "level_2": "📖 `_` 匹配任意单个字符",
+      "level_3": "👀 `'张_'`",
+      "level_4": "📝 正确答案：`'张_'`"
+    },
+    "explanation": "`_` 精确匹配一个字符：`'张_'` 匹配两字姓名，`'张__'` 匹配三字姓名。"
+  },
+  {
+    "id": "sql-basics-014",
+    "title": "IS NULL 判空",
+    "description": "查询没有直属上级（manager_id 为空）的员工",
+    "exercise_type": "fill",
+    "tech_stack": "sql",
+    "weight": "easy",
+    "category": "condition",
+    "subcategory": "基础",
+    "full_code": "SELECT * FROM employees WHERE manager_id IS NULL;",
+    "expected": "",
+    "points": [
+      {
+        "id": "is_null",
+        "text": "IS NULL",
+        "category": "expression",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "判空的固定写法",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "is null"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 能用 = NULL 吗？正确的判空写法是？",
+      "level_2": "📖 `列 IS NULL`，不能用 `=`",
+      "level_3": "👀 `manager_id IS NULL`",
+      "level_4": "📝 正确答案：`IS NULL`"
+    },
+    "explanation": "NULL 与任何值比较都返回 UNKNOWN，所以判空必须用 `IS NULL`，不能用 `= NULL`。"
+  },
+  {
+    "id": "sql-basics-015",
+    "title": "IS NOT NULL 非空",
+    "description": "查询已填写邮箱的员工（email 非空）",
+    "exercise_type": "fill",
+    "tech_stack": "sql",
+    "weight": "easy",
+    "category": "condition",
+    "subcategory": "基础",
+    "full_code": "SELECT name, email FROM employees WHERE email IS NOT NULL;",
+    "expected": "",
+    "points": [
+      {
+        "id": "is_not_null",
+        "text": "IS NOT NULL",
+        "category": "expression",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "非空判断的固定写法",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "is not null"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 非 NULL 的否定形式怎么写？",
+      "level_2": "📖 `列 IS NOT NULL`",
+      "level_3": "👀 `email IS NOT NULL`",
+      "level_4": "📝 正确答案：`IS NOT NULL`"
+    },
+    "explanation": "`IS NOT NULL` 筛选出该列有值的行，常用于清洗缺失数据。"
+  },
+  {
+    "id": "sql-basics-016",
+    "title": "NOT IN 排除",
+    "description": "查询不在部门 2 和 4 的员工",
+    "exercise_type": "fill",
+    "tech_stack": "sql",
+    "weight": "easy",
+    "category": "condition",
+    "subcategory": "基础",
+    "full_code": "SELECT * FROM employees WHERE dept_id NOT IN (2, 4);",
+    "expected": "",
+    "points": [
+      {
+        "id": "not_in",
+        "text": "NOT IN (2, 4)",
+        "category": "expression",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "IN 的否定形式",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "not in (2, 4)"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 “不在集合中”怎么写？",
+      "level_2": "📖 `列 NOT IN (…)`",
+      "level_3": "👀 `dept_id NOT IN (2, 4)`",
+      "level_4": "📝 正确答案：`NOT IN (2, 4)`"
+    },
+    "explanation": "`NOT IN` 排除列表中的值；注意若列表含 NULL 可能导致意外结果。"
+  },
+  {
+    "id": "sql-basics-017",
+    "title": "ORDER BY 升序",
+    "description": "按单价从低到高列出商品",
+    "exercise_type": "fill",
+    "tech_stack": "sql",
+    "weight": "easy",
+    "category": "sort_page",
+    "subcategory": "基础",
+    "full_code": "SELECT name, price FROM products ORDER BY price ASC;",
+    "expected": "",
+    "points": [
+      {
+        "id": "order_by",
+        "text": "ORDER BY price",
+        "category": "clause",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "排序子句 + 排序列",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "order by price"
+        ]
+      },
+      {
+        "id": "asc_kw",
+        "text": "ASC",
+        "category": "keyword",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "升序关键字（可省略）",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "asc"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 结果排序用什么子句？升序的关键字？",
+      "level_2": "📖 `ORDER BY 列 ASC`，ASC 可省略（默认升序）",
+      "level_3": "👀 `ORDER BY price ASC`",
+      "level_4": "📝 正确答案：`ORDER BY price` 与 `ASC`"
+    },
+    "explanation": "`ORDER BY` 对结果排序，`ASC` 升序（默认）、`DESC` 降序。"
+  },
+  {
+    "id": "sql-basics-018",
+    "title": "多列降序排序",
+    "description": "商品按价格降序排列，价格相同时按名称升序",
+    "exercise_type": "fill",
+    "tech_stack": "sql",
+    "weight": "easy",
+    "category": "sort_page",
+    "subcategory": "基础",
+    "full_code": "SELECT name, price FROM products ORDER BY price DESC, name ASC;",
+    "expected": "",
+    "points": [
+      {
+        "id": "desc_kw",
+        "text": "DESC",
+        "category": "keyword",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "降序关键字",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "desc"
+        ]
+      },
+      {
+        "id": "second_key",
+        "text": "name ASC",
+        "category": "expression",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "第二排序键：名称升序",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "name asc"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 降序关键字？多个排序键怎么写？",
+      "level_2": "📖 `ORDER BY 列1 DESC, 列2 ASC`，逗号分隔",
+      "level_3": "👀 `ORDER BY price DESC, name ASC`",
+      "level_4": "📝 正确答案：`DESC` 与 `name ASC`"
+    },
+    "explanation": "多列排序时先按第一列排，值相同再按第二列排，各列可分别指定升降序。"
+  },
+  {
+    "id": "sql-basics-019",
+    "title": "LIMIT 取前 N 条",
+    "description": "查询价格最高的 5 个商品",
+    "exercise_type": "fill",
+    "tech_stack": "sql",
+    "weight": "easy",
+    "category": "sort_page",
+    "subcategory": "基础",
+    "full_code": "SELECT name, price FROM products ORDER BY price DESC LIMIT 5;",
+    "expected": "",
+    "points": [
+      {
+        "id": "limit_n",
+        "text": "LIMIT 5",
+        "category": "clause",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "限制返回行数的关键字 + 数量",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "limit 5"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 只取前几行用什么？先排序再截取",
+      "level_2": "📖 `LIMIT 行数`",
+      "level_3": "👀 `LIMIT 5`",
+      "level_4": "📝 正确答案：`LIMIT 5`"
+    },
+    "explanation": "`LIMIT n` 限制最多返回 n 行；配合 ORDER BY DESC 即“Top N”查询。（SQL Server 使用 TOP，Oracle 使用 FETCH FIRST）"
+  },
+  {
+    "id": "sql-basics-020",
+    "title": "分页 LIMIT OFFSET",
+    "description": "按 id 升序取第 21~30 条商品（每页 10 条的第 3 页）",
+    "exercise_type": "fill",
+    "tech_stack": "sql",
+    "weight": "medium",
+    "category": "sort_page",
+    "subcategory": "基础",
+    "full_code": "SELECT * FROM products ORDER BY id LIMIT 10 OFFSET 20;",
+    "expected": "",
+    "points": [
+      {
+        "id": "limit_part",
+        "text": "LIMIT 10",
+        "category": "clause",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "每页条数",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "limit 10"
+        ]
+      },
+      {
+        "id": "offset_part",
+        "text": "OFFSET 20",
+        "category": "clause",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "跳过前面 20 条",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "offset 20"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 分页 = 每页条数 + 跳过多少条，跳过用什么关键字？",
+      "level_2": "📖 `LIMIT 每页条数 OFFSET 跳过条数`",
+      "level_3": "👀 `LIMIT 10 OFFSET 20`",
+      "level_4": "📝 正确答案：`LIMIT 10` 与 `OFFSET 20`"
+    },
+    "explanation": "第 3 页需跳过前 2 页共 20 条：`OFFSET (页码-1)*每页条数`。MySQL 也支持简写 `LIMIT 20, 10`。"
+  },
+  {
+    "id": "sql-basics-021",
+    "title": "COUNT 计数",
+    "description": "统计员工总人数",
+    "exercise_type": "fill",
+    "tech_stack": "sql",
+    "weight": "beginner",
+    "category": "aggregate",
+    "subcategory": "基础",
+    "full_code": "SELECT COUNT(*) FROM employees;",
+    "expected": "",
+    "points": [
+      {
+        "id": "count_fn",
+        "text": "COUNT(*)",
+        "category": "function",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "统计行数的聚合函数",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "count(*)"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 统计行数用什么函数？",
+      "level_2": "📖 `COUNT(*)` 统计所有行数",
+      "level_3": "👀 `COUNT(*)`",
+      "level_4": "📝 正确答案：`COUNT(*)`"
+    },
+    "explanation": "`COUNT(*)` 返回总行数；`COUNT(列)` 只统计该列非 NULL 的行数。"
+  },
+  {
+    "id": "sql-basics-022",
+    "title": "AVG 平均值",
+    "description": "计算全体员工的平均工资，结果列命名为 avg_salary",
+    "exercise_type": "fill",
+    "tech_stack": "sql",
+    "weight": "easy",
+    "category": "aggregate",
+    "subcategory": "基础",
+    "full_code": "SELECT AVG(salary) AS avg_salary FROM employees;",
+    "expected": "",
+    "points": [
+      {
+        "id": "avg_fn",
+        "text": "AVG(salary)",
+        "category": "function",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "求平均值的聚合函数",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "avg(salary)"
+        ]
+      },
+      {
+        "id": "alias",
+        "text": "AS avg_salary",
+        "category": "keyword",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "给结果列起别名 avg_salary",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "as avg_salary"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 求平均值的函数？别忘了给结果列起别名",
+      "level_2": "📖 `AVG(数值列)`",
+      "level_3": "👀 `AVG(salary) AS avg_salary`",
+      "level_4": "📝 正确答案：`AVG(salary)` 与 `AS avg_salary`"
+    },
+    "explanation": "`AVG` 自动忽略 NULL 行；类似地 `SUM` 求和、`MAX/MIN` 求最大最小。"
+  },
+  {
+    "id": "sql-basics-023",
+    "title": "MIN 与 MAX",
+    "description": "一次查出商品的最低价和最高价",
+    "exercise_type": "fill",
+    "tech_stack": "sql",
+    "weight": "easy",
+    "category": "aggregate",
+    "subcategory": "基础",
+    "full_code": "SELECT MIN(price), MAX(price) FROM products;",
+    "expected": "",
+    "points": [
+      {
+        "id": "min_fn",
+        "text": "MIN(price)",
+        "category": "function",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "求最小值",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "min(price)"
+        ]
+      },
+      {
+        "id": "max_fn",
+        "text": "MAX(price)",
+        "category": "function",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "求最大值",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "max(price)"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 最小/最大值函数分别是什么？",
+      "level_2": "📖 `MIN(列), MAX(列)`",
+      "level_3": "👀 `MIN(price), MAX(price)`",
+      "level_4": "📝 正确答案：`MIN(price)` 与 `MAX(price)`"
+    },
+    "explanation": "一条 SELECT 可以同时使用多个聚合函数，各自输出一列结果。"
+  },
+  {
+    "id": "sql-basics-024",
+    "title": "GROUP BY 分组",
+    "description": "统计每个部门的员工人数",
+    "exercise_type": "fill",
+    "tech_stack": "sql",
+    "weight": "easy",
+    "category": "group_having",
+    "subcategory": "基础",
+    "full_code": "SELECT dept_id, COUNT(*) AS cnt FROM employees GROUP BY dept_id;",
+    "expected": "",
+    "points": [
+      {
+        "id": "group_col",
+        "text": "dept_id, COUNT(*) AS cnt",
+        "category": "expression",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "分组列 + 计数聚合",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "dept_id, count(*) as cnt"
+        ]
+      },
+      {
+        "id": "group_by",
+        "text": "GROUP BY dept_id",
+        "category": "clause",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "按部门分组",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "group by dept_id"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 “每个 X” 类统计要先分组？",
+      "level_2": "📖 `SELECT 分组列, COUNT(*) … GROUP BY 分组列`",
+      "level_3": "👀 `SELECT dept_id, COUNT(*) AS cnt … GROUP BY dept_id`",
+      "level_4": "📝 正确答案：分组列为 `dept_id`，子句 `GROUP BY dept_id`"
+    },
+    "explanation": "`GROUP BY` 把行按列值分成若干组，聚合函数在每组内计算；SELECT 中的非聚合列必须出现在 GROUP BY 里。"
+  },
+  {
+    "id": "sql-basics-025",
+    "title": "分组聚合平均值",
+    "description": "统计每个类别的商品平均价格，别名 avg_price",
+    "exercise_type": "fill",
+    "tech_stack": "sql",
+    "weight": "easy",
+    "category": "group_having",
+    "subcategory": "基础",
+    "full_code": "SELECT category, AVG(price) AS avg_price FROM products GROUP BY category;",
+    "expected": "",
+    "points": [
+      {
+        "id": "agg",
+        "text": "AVG(price) AS avg_price",
+        "category": "expression",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "组内求平均并命名",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "avg(price) as avg_price"
+        ]
+      },
+      {
+        "id": "group_by",
+        "text": "GROUP BY category",
+        "category": "clause",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "按类别分组",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "group by category"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 按类别分组后对价格求平均",
+      "level_2": "📖 `AVG(price) AS avg_price … GROUP BY category`",
+      "level_3": "👀 `SELECT category, AVG(price) AS avg_price …`",
+      "level_4": "📝 正确答案：`AVG(price) AS avg_price` 与 `GROUP BY category`"
+    },
+    "explanation": "分组后每个类别输出一行，AVG 在组内计算；别名便于阅读与外层引用。"
+  },
+  {
+    "id": "sql-basics-026",
+    "title": "HAVING 组过滤",
+    "description": "查询员工人数超过 5 人的部门编号及人数",
+    "exercise_type": "fill",
+    "tech_stack": "sql",
+    "weight": "medium",
+    "category": "group_having",
+    "subcategory": "基础",
+    "full_code": "SELECT dept_id, COUNT(*) AS cnt FROM employees GROUP BY dept_id HAVING COUNT(*) > 5;",
+    "expected": "",
+    "points": [
+      {
+        "id": "having_clause",
+        "text": "HAVING COUNT(*) > 5",
+        "category": "clause",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "对分组结果过滤",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "having count(*) > 5"
+        ]
+      },
+      {
+        "id": "group_by",
+        "text": "GROUP BY dept_id",
+        "category": "clause",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "先按部门分组",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "group by dept_id"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 过滤“分组后的聚合结果”能用 WHERE 吗？",
+      "level_2": "📖 `GROUP BY … HAVING 聚合条件`",
+      "level_3": "👀 `GROUP BY dept_id HAVING COUNT(*) > 5`",
+      "level_4": "📝 正确答案：`HAVING COUNT(*) > 5`"
+    },
+    "explanation": "`WHERE` 在分组前过滤行，`HAVING` 在分组后过滤组——聚合条件必须写在 HAVING 中。"
+  },
+  {
+    "id": "sql-basics-027",
+    "title": "综合：WHERE+GROUP BY+HAVING",
+    "description": "查询有库存商品的平均价高于 500 的类别及其均价",
+    "exercise_type": "fill",
+    "tech_stack": "sql",
+    "weight": "hard",
+    "category": "group_having",
+    "subcategory": "基础",
+    "full_code": "SELECT category, AVG(price) AS avg_price\nFROM products\nWHERE stock > 0\nGROUP BY category\nHAVING AVG(price) > 500;",
+    "expected": "",
+    "points": [
+      {
+        "id": "where_filter",
+        "text": "WHERE stock > 0",
+        "category": "clause",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "先筛出有库存的行",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "where stock > 0"
+        ]
+      },
+      {
+        "id": "having_filter",
+        "text": "HAVING AVG(price) > 500",
+        "category": "clause",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "再筛出组均价大于 500 的组",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "having avg(price) > 500"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 行级过滤与组级过滤分别用什么子句？执行顺序是？",
+      "level_2": "📖 WHERE 过滤行 → GROUP BY 分组 → HAVING 过滤组",
+      "level_3": "👀 `WHERE stock > 0 … HAVING AVG(price) > 500`",
+      "level_4": "📝 正确答案：`WHERE stock > 0` 与 `HAVING AVG(price) > 500`"
+    },
+    "explanation": "完整流水线：WHERE（行）→ GROUP BY（分组）→ HAVING（组）→ SELECT 输出 → ORDER BY 排序。"
+  },
+  {
+    "id": "sql-basics-028",
+    "title": "COUNT(col) 与 NULL",
+    "description": "统计有直属上级（manager_id 非空）的员工人数",
+    "exercise_type": "fill",
+    "tech_stack": "sql",
+    "weight": "medium",
+    "category": "aggregate",
+    "subcategory": "基础",
+    "full_code": "SELECT COUNT(manager_id) FROM employees;",
+    "expected": "",
+    "points": [
+      {
+        "id": "count_col",
+        "text": "COUNT(manager_id)",
+        "category": "function",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "COUNT 列名时不计 NULL",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "count(manager_id)"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 COUNT(*) 和 COUNT(列) 的区别在哪？",
+      "level_2": "📖 `COUNT(列)` 忽略该列为 NULL 的行",
+      "level_3": "👀 `COUNT(manager_id)`",
+      "level_4": "📝 正确答案：`COUNT(manager_id)`"
+    },
+    "explanation": "`COUNT(*)` 数所有行；`COUNT(col)` 只数 col 非 NULL 的行——利用这一点可以统计某字段的有效值个数。"
+  },
+  {
+    "id": "sql-basics-029",
+    "title": "INNER JOIN 内连接",
+    "description": "查询每个员工的姓名及其部门名称（表：departments 部门表）",
+    "exercise_type": "fill",
+    "tech_stack": "sql",
+    "weight": "easy",
+    "category": "join",
+    "subcategory": "基础",
+    "full_code": "SELECT e.name, d.name AS dept_name\nFROM employees e\nINNER JOIN departments d ON e.dept_id = d.id;",
+    "expected": "",
+    "points": [
+      {
+        "id": "join_kw",
+        "text": "INNER JOIN departments d",
+        "category": "clause",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "内连接 departments 并起别名 d",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "JOIN departments d",
+          "inner join departments d",
+          "join departments d"
+        ]
+      },
+      {
+        "id": "on_cond",
+        "text": "ON e.dept_id = d.id",
+        "category": "clause",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "连接条件：员工表的部门ID = 部门表的主键",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "on e.dept_id = d.id"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 连接两张表用什么子句？连接条件放哪？",
+      "level_2": "📖 `INNER JOIN 表2 别名 ON 连接条件`",
+      "level_3": "👀 `INNER JOIN departments d ON e.dept_id = d.id`",
+      "level_4": "📝 正确答案：`INNER JOIN departments d` 与 `ON e.dept_id = d.id`"
+    },
+    "explanation": "`INNER JOIN` 返回两表中能按条件匹配上的行；表别名（e/d）简化书写，`JOIN` 是其简写形式。"
+  },
+  {
+    "id": "sql-basics-030",
+    "title": "JOIN + WHERE 过滤",
+    "description": "查询'研发部'的所有员工姓名",
+    "exercise_type": "fill",
+    "tech_stack": "sql",
+    "weight": "medium",
+    "category": "join",
+    "subcategory": "基础",
+    "full_code": "SELECT e.name\nFROM employees e\nJOIN departments d ON e.dept_id = d.id\nWHERE d.name = '研发部';",
+    "expected": "",
+    "points": [
+      {
+        "id": "on_cond",
+        "text": "ON e.dept_id = d.id",
+        "category": "clause",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "两表的关联条件",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "on e.dept_id = d.id"
+        ]
+      },
+      {
+        "id": "filter",
+        "text": "WHERE d.name = '研发部'",
+        "category": "clause",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "连接后再按部门名过滤",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "where d.name = '研发部'"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 先连接再过滤，过滤条件写在哪？",
+      "level_2": "📖 `JOIN … ON 关联条件` 后接 `WHERE 部门表.列 = 值`",
+      "level_3": "👀 `WHERE d.name = '研发部'`",
+      "level_4": "📝 正确答案：`ON e.dept_id = d.id` 与 `WHERE d.name = '研发部'`"
+    },
+    "explanation": "连接产生中间结果集后由 WHERE 过滤；也可把静态条件写入 ON，效果相同但语义不同。"
+  },
+  {
+    "id": "sql-basics-031",
+    "title": "LEFT JOIN 左连接",
+    "description": "查询所有员工及其部门名，没有部门的员工也要列出（部门名为 NULL）",
+    "exercise_type": "fill",
+    "tech_stack": "sql",
+    "weight": "medium",
+    "category": "join",
+    "subcategory": "基础",
+    "full_code": "SELECT e.name, d.name AS dept_name\nFROM employees e\nLEFT JOIN departments d ON e.dept_id = d.id;",
+    "expected": "",
+    "points": [
+      {
+        "id": "left_join",
+        "text": "LEFT JOIN departments d",
+        "category": "clause",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "左连接保留左表全部行",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "LEFT OUTER JOIN departments d",
+          "left join departments d",
+          "left outer join departments d"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 要保留左表没有匹配的行，用哪种 JOIN？",
+      "level_2": "📖 `LEFT JOIN`（左外连接）",
+      "level_3": "👀 `LEFT JOIN departments d ON …`",
+      "level_4": "📝 正确答案：`LEFT JOIN departments d`"
+    },
+    "explanation": "`LEFT JOIN` 保留左表全部行，右表无匹配时补 NULL；`INNER JOIN` 则会丢弃未匹配的左表行。"
+  },
+  {
+    "id": "sql-basics-032",
+    "title": "反连接找孤儿行",
+    "description": "找出没有任何订单的客户（表：orders 订单表）",
+    "exercise_type": "fill",
+    "tech_stack": "sql",
+    "weight": "hard",
+    "category": "join",
+    "subcategory": "基础",
+    "full_code": "SELECT c.id, c.name\nFROM customers c\nLEFT JOIN orders o ON o.customer_id = c.id\nWHERE o.id IS NULL;",
+    "expected": "",
+    "points": [
+      {
+        "id": "left_join",
+        "text": "LEFT JOIN orders o",
+        "category": "clause",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "左连接订单表",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "LEFT OUTER JOIN orders o",
+          "left join orders o"
+        ]
+      },
+      {
+        "id": "null_check",
+        "text": "WHERE o.id IS NULL",
+        "category": "clause",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "右表主键为空 = 没有匹配",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "where o.id is null"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 LEFT JOIN 后没匹配上的行右表列是什么值？如何利用它筛选？",
+      "level_2": "📖 `LEFT JOIN … WHERE 右表.主键 IS NULL`",
+      "level_3": "👀 `WHERE o.id IS NULL`",
+      "level_4": "📝 正确答案：`LEFT JOIN orders o` 与 `WHERE o.id IS NULL`"
+    },
+    "explanation": "经典“反连接”套路：左连接后右表全为 NULL 的行即左表中“无对应记录”的行。"
+  },
+  {
+    "id": "sql-basics-033",
+    "title": "三表连接",
+    "description": "查询每笔订单的编号、客户姓名和商品名称",
+    "exercise_type": "fill",
+    "tech_stack": "sql",
+    "weight": "hard",
+    "category": "join",
+    "subcategory": "基础",
+    "full_code": "SELECT o.id, c.name AS customer_name, p.name AS product_name\nFROM orders o\nJOIN customers c ON o.customer_id = c.id\nJOIN products p ON o.product_id = p.id;",
+    "expected": "",
+    "points": [
+      {
+        "id": "join_c",
+        "text": "JOIN customers c ON o.customer_id = c.id",
+        "category": "clause",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "订单连客户表",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "join customers c on o.customer_id = c.id"
+        ]
+      },
+      {
+        "id": "join_p",
+        "text": "JOIN products p ON o.product_id = p.id",
+        "category": "clause",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "再连商品表",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "join products p on o.product_id = p.id"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 三张表需要几个 JOIN？每个 JOIN 都要有 ON",
+      "level_2": "📖 逐张表 `JOIN 表 ON 关联条件` 链式连接",
+      "level_3": "👀 `JOIN customers c ON … JOIN products p ON …`",
+      "level_4": "📝 正确答案：两条 JOIN 及各自的 ON 条件"
+    },
+    "explanation": "多表连接沿外键链逐级 JOIN，n 张表通常需要 n-1 个连接条件；注意用表别名区分同名列。"
+  },
+  {
+    "id": "sql-basics-034",
+    "title": "自连接",
+    "description": "查询每位员工姓名及其直属上级的姓名（上级也是 employees 表中的行）",
+    "exercise_type": "fill",
+    "tech_stack": "sql",
+    "weight": "hard",
+    "category": "join",
+    "subcategory": "基础",
+    "full_code": "SELECT e.name AS employee, m.name AS manager\nFROM employees e\nJOIN employees m ON e.manager_id = m.id;",
+    "expected": "",
+    "points": [
+      {
+        "id": "self_join",
+        "text": "JOIN employees m",
+        "category": "clause",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "同一张表再连一次，别名为 m",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "join employees m"
+        ]
+      },
+      {
+        "id": "on_cond",
+        "text": "ON e.manager_id = m.id",
+        "category": "clause",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "员工的上级ID = 上级行的ID",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "on e.manager_id = m.id"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 表和自己连接叫什么？如何区分两个角色？",
+      "level_2": "📖 自连接：同一表起两个别名当两张表用",
+      "level_3": "👀 `FROM employees e JOIN employees m ON e.manager_id = m.id`",
+      "level_4": "📝 正确答案：`JOIN employees m` 与 `ON e.manager_id = m.id`"
+    },
+    "explanation": "自连接通过别名把一张表虚拟成两张表；本例 e 是下属视角，m 是上级视角。"
+  },
+  {
+    "id": "sql-basics-035",
+    "title": "JOIN + GROUP BY 统计",
+    "description": "统计每个部门的员工人数，输出部门名和人数，按人数降序",
+    "exercise_type": "fill",
+    "tech_stack": "sql",
+    "weight": "hard",
+    "category": "join",
+    "subcategory": "基础",
+    "full_code": "SELECT d.name AS dept_name, COUNT(e.id) AS emp_count\nFROM departments d\nLEFT JOIN employees e ON e.dept_id = d.id\nGROUP BY d.name\nORDER BY emp_count DESC;",
+    "expected": "",
+    "points": [
+      {
+        "id": "group_by",
+        "text": "GROUP BY d.name",
+        "category": "clause",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "按部门名分组",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "group by d.name"
+        ]
+      },
+      {
+        "id": "order_by",
+        "text": "ORDER BY emp_count DESC",
+        "category": "clause",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "按人数降序输出",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "order by emp_count desc"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 分组统计后想按统计值排序，ORDER BY 能引用别名吗？",
+      "level_2": "📖 `GROUP BY 分组列 ORDER BY 别名 DESC`（多数数据库支持别名）",
+      "level_3": "👀 `GROUP BY d.name ORDER BY emp_count DESC`",
+      "level_4": "📝 正确答案：`GROUP BY d.name` 与 `ORDER BY emp_count DESC`"
+    },
+    "explanation": "用 LEFT JOIN 保证没有员工的部门也计入（人数 0）；ORDER BY 可引用 SELECT 中的别名（MySQL/PostgreSQL/SQLite 均支持）。"
+  },
+  {
+    "id": "sql-basics-036",
+    "title": "标量子查询",
+    "description": "查询工资高于全公司平均工资的员工",
+    "exercise_type": "fill",
+    "tech_stack": "sql",
+    "weight": "medium",
+    "category": "subquery",
+    "subcategory": "基础",
+    "full_code": "SELECT name, salary FROM employees\nWHERE salary > (SELECT AVG(salary) FROM employees);",
+    "expected": "",
+    "points": [
+      {
+        "id": "scalar_sub",
+        "text": "(SELECT AVG(salary) FROM employees)",
+        "category": "expression",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "先用子查询算出平均工资",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "(select avg(salary) from employees)"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 平均值未知时可以先算出来再比较",
+      "level_2": "📖 `WHERE salary > (SELECT AVG(salary) FROM 同表)`",
+      "level_3": "👀 `(SELECT AVG(salary) FROM employees)`",
+      "level_4": "📝 正确答案：`(SELECT AVG(salary) FROM employees)`"
+    },
+    "explanation": "标量子查询返回单个值，可直接参与比较；先执行子查询得到均值，再作为外层 WHERE 的比较对象。"
+  },
+  {
+    "id": "sql-basics-037",
+    "title": "IN 子查询",
+    "description": "查询有下单记录的客户（客户ID 出现在 orders 表中）",
+    "exercise_type": "fill",
+    "tech_stack": "sql",
+    "weight": "medium",
+    "category": "subquery",
+    "subcategory": "基础",
+    "full_code": "SELECT name FROM customers\nWHERE id IN (SELECT customer_id FROM orders);",
+    "expected": "",
+    "points": [
+      {
+        "id": "in_sub",
+        "text": "(SELECT customer_id FROM orders)",
+        "category": "expression",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "子查询返回订单表里出现过的客户ID集合",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "(select customer_id from orders)"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 IN 的括号里也可以放一条查询",
+      "level_2": "📖 `WHERE id IN (SELECT 列 FROM 另一表)`",
+      "level_3": "👀 `id IN (SELECT customer_id FROM orders)`",
+      "level_4": "📝 正确答案：`(SELECT customer_id FROM orders)`"
+    },
+    "explanation": "IN 子查询返回一列值集合，外层逐行判断是否命中；等价于 DISTINCT 后的 JOIN 语义。"
+  },
+  {
+    "id": "sql-basics-038",
+    "title": "EXISTS 存在性判断",
+    "description": "查询至少存在一笔订单的客户",
+    "exercise_type": "fill",
+    "tech_stack": "sql",
+    "weight": "medium",
+    "category": "subquery",
+    "subcategory": "基础",
+    "full_code": "SELECT c.name FROM customers c\nWHERE EXISTS (SELECT 1 FROM orders o WHERE o.customer_id = c.id);",
+    "expected": "",
+    "points": [
+      {
+        "id": "exists_kw",
+        "text": "EXISTS",
+        "category": "keyword",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "判断子查询是否有结果的运算符",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "exists"
+        ]
+      },
+      {
+        "id": "correlated",
+        "text": "o.customer_id = c.id",
+        "category": "expression",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "相关条件：子查询引用外层别名 c",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 EXISTS 子查询如何与外层当前行关联？",
+      "level_2": "📖 `WHERE EXISTS (SELECT 1 … WHERE 子表.外键 = 外层.主键)`",
+      "level_3": "👀 `EXISTS (SELECT 1 FROM orders o WHERE o.customer_id = c.id)`",
+      "level_4": "📝 正确答案：`EXISTS` 与 `o.customer_id = c.id`"
+    },
+    "explanation": "`EXISTS` 为真当且仅当子查询有结果行；这种引用外层列的子查询称相关子查询，习惯上 SELECT 1 即可。"
+  },
+  {
+    "id": "sql-basics-039",
+    "title": "UNION 合并结果",
+    "description": "合并员工姓名和客户姓名为一个名单（自动去重）",
+    "exercise_type": "fill",
+    "tech_stack": "sql",
+    "weight": "medium",
+    "category": "subquery",
+    "subcategory": "基础",
+    "full_code": "SELECT name FROM employees\nUNION\nSELECT name FROM customers;",
+    "expected": "",
+    "points": [
+      {
+        "id": "union_kw",
+        "text": "UNION",
+        "category": "keyword",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "合并两个查询结果并去重",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "union"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 纵向拼接两个结果集用什么？去重版本是哪个？",
+      "level_2": "📖 `查询1 UNION 查询2`（UNION ALL 不去重）",
+      "level_3": "👀 `SELECT name FROM employees UNION SELECT name FROM customers`",
+      "level_4": "📝 正确答案：`UNION`"
+    },
+    "explanation": "`UNION` 合并结果并去重，`UNION ALL` 保留重复行、性能更好；两个 SELECT 的列数与类型须兼容。"
+  },
+  {
+    "id": "sql-basics-040",
+    "title": "INSERT 插入整行",
+    "description": "向部门表插入一行：(4, '人事部')（departments: id, name）",
+    "exercise_type": "fill",
+    "tech_stack": "sql",
+    "weight": "beginner",
+    "category": "dml",
+    "subcategory": "基础",
+    "full_code": "INSERT INTO departments VALUES (4, '人事部');",
+    "expected": "",
+    "points": [
+      {
+        "id": "into_kw",
+        "text": "INTO",
+        "category": "keyword",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "INSERT 后接 INTO",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "into"
+        ]
+      },
+      {
+        "id": "values_kw",
+        "text": "VALUES (4, '人事部')",
+        "category": "clause",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "值列表关键字 + 各列的值",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "values (4, '人事部')"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 插入数据的语句结构？",
+      "level_2": "📖 `INSERT INTO 表 VALUES (值…)`，按建表列顺序给全部列赋值",
+      "level_3": "👀 `INSERT INTO departments VALUES (4, '人事部')`",
+      "level_4": "📝 正确答案：`INTO` 与 `VALUES (4, '人事部')`"
+    },
+    "explanation": "省略列清单时 VALUES 必须按表结构顺序提供所有列的值；推荐总是显式写出列清单。"
+  },
+  {
+    "id": "sql-basics-041",
+    "title": "INSERT 指定列",
+    "description": "向商品表插入一个新商品：名为'键盘'，价格 199，库存 50（其余列用默认值）",
+    "exercise_type": "fill",
+    "tech_stack": "sql",
+    "weight": "easy",
+    "category": "dml",
+    "subcategory": "基础",
+    "full_code": "INSERT INTO products (name, price, stock) VALUES ('键盘', 199, 50);",
+    "expected": "",
+    "points": [
+      {
+        "id": "col_list",
+        "text": "(name, price, stock)",
+        "category": "expression",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "显式的列清单",
+        "fill_type": "text"
+      },
+      {
+        "id": "values_kw",
+        "text": "VALUES ('键盘', 199, 50)",
+        "category": "clause",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "与列清单一一对应的值",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "values ('键盘', 199, 50)"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 只给部分列插值，列清单和值如何对应？",
+      "level_2": "📖 `INSERT INTO 表 (列…) VALUES (值…)`",
+      "level_3": "👀 `INSERT INTO products (name, price, stock) VALUES ('键盘', 199, 50)`",
+      "level_4": "📝 正确答案：列清单 `(name, price, stock)` 与值列表"
+    },
+    "explanation": "显式列清单让未提供的列取默认值或 NULL，顺序也不必与表结构一致，但值必须与列一一对应。"
+  },
+  {
+    "id": "sql-basics-042",
+    "title": "UPDATE 修改数据",
+    "description": "将'外设'类别商品的价格打九折",
+    "exercise_type": "fill",
+    "tech_stack": "sql",
+    "weight": "easy",
+    "category": "dml",
+    "subcategory": "基础",
+    "full_code": "UPDATE products SET price = price * 0.9 WHERE category = '外设';",
+    "expected": "",
+    "points": [
+      {
+        "id": "set_clause",
+        "text": "SET price = price * 0.9",
+        "category": "clause",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "SET 子句赋新值，可用原值计算",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "set price = price * 0.9"
+        ]
+      },
+      {
+        "id": "where_clause",
+        "text": "WHERE category = '外设'",
+        "category": "clause",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "限定要修改的行，谨防全表更新",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "where category = '外设'"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 UPDATE 后用什么子句赋新值？别忘了限定范围！",
+      "level_2": "📖 `UPDATE 表 SET 列 = 新值 WHERE 条件`",
+      "level_3": "👀 `SET price = price * 0.9 WHERE category = '外设'`",
+      "level_4": "📝 正确答案：`SET price = price * 0.9` 与 `WHERE category = '外设'`"
+    },
+    "explanation": "UPDATE 一定要带 WHERE（除非确实要改全表）；SET 中可引用列原值进行运算。"
+  },
+  {
+    "id": "sql-basics-043",
+    "title": "UPDATE 多列",
+    "description": "把 id=1 的商品价格改为 299、库存改为 30",
+    "exercise_type": "fill",
+    "tech_stack": "sql",
+    "weight": "easy",
+    "category": "dml",
+    "subcategory": "基础",
+    "full_code": "UPDATE products SET price = 299, stock = 30 WHERE id = 1;",
+    "expected": "",
+    "points": [
+      {
+        "id": "set_multi",
+        "text": "price = 299, stock = 30",
+        "category": "expression",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "多个赋值用逗号分隔",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 一次改多列怎么写？",
+      "level_2": "📖 `SET 列1=值1, 列2=值2`",
+      "level_3": "👀 `SET price = 299, stock = 30`",
+      "level_4": "📝 正确答案：`price = 299, stock = 30`"
+    },
+    "explanation": "SET 子句中多列赋值用逗号分隔；按主键更新是最安全的写法。"
+  },
+  {
+    "id": "sql-basics-044",
+    "title": "DELETE 删除数据",
+    "description": "删除所有状态为'cancelled'的订单",
+    "exercise_type": "fill",
+    "tech_stack": "sql",
+    "weight": "easy",
+    "category": "dml",
+    "subcategory": "基础",
+    "full_code": "DELETE FROM orders WHERE status = 'cancelled';",
+    "expected": "",
+    "points": [
+      {
+        "id": "delete_from",
+        "text": "DELETE FROM orders",
+        "category": "clause",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "删除语句的前半段",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "delete from orders"
+        ]
+      },
+      {
+        "id": "where_clause",
+        "text": "WHERE status = 'cancelled'",
+        "category": "clause",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "限定删除范围，谨防清空全表",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "where status = 'cancelled'"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 DELETE 后面接什么？如何避免删光整表？",
+      "level_2": "📖 `DELETE FROM 表 WHERE 条件`",
+      "level_3": "👀 `DELETE FROM orders WHERE status = 'cancelled'`",
+      "level_4": "📝 正确答案：`DELETE FROM orders` 与 `WHERE status = 'cancelled'`"
+    },
+    "explanation": "DELETE 按 WHERE 逐行删除；不带 WHERE 会清空全表（生产环境务必先 SELECT 验证条件）。"
+  },
+  {
+    "id": "sql-basics-045",
+    "title": "CREATE TABLE 建表",
+    "description": "创建标签表 tags：id 整数为主键，name 变长字符串最长 50 且非空",
+    "exercise_type": "fill",
+    "tech_stack": "sql",
+    "weight": "easy",
+    "category": "ddl",
+    "subcategory": "基础",
+    "full_code": "CREATE TABLE tags (\n    id INT PRIMARY KEY,\n    name VARCHAR(50) NOT NULL\n);",
+    "expected": "",
+    "points": [
+      {
+        "id": "primary_key",
+        "text": "PRIMARY KEY",
+        "category": "constraint",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "主键约束",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "primary key"
+        ]
+      },
+      {
+        "id": "not_null",
+        "text": "NOT NULL",
+        "category": "constraint",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "非空约束",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "not null"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 主键和非空约束分别怎么写？",
+      "level_2": "📖 `列 类型 PRIMARY KEY` / `列 类型 NOT NULL`",
+      "level_3": "👀 `id INT PRIMARY KEY` / `name VARCHAR(50) NOT NULL`",
+      "level_4": "📝 正确答案：`PRIMARY KEY` 与 `NOT NULL`"
+    },
+    "explanation": "`PRIMARY KEY` 保证唯一且非空（常配自增）；`VARCHAR(n)` 存变长字符串，上限 n 个字符。"
+  },
+  {
+    "id": "sql-basics-046",
+    "title": "默认值 DEFAULT",
+    "description": "创建日志表 logs：id 自增主键，action 默认 'view'",
+    "exercise_type": "fill",
+    "tech_stack": "sql",
+    "weight": "medium",
+    "category": "ddl",
+    "subcategory": "基础",
+    "full_code": "CREATE TABLE logs (\n    id INT PRIMARY KEY AUTO_INCREMENT,\n    action VARCHAR(20) DEFAULT 'view'\n);",
+    "expected": "",
+    "points": [
+      {
+        "id": "auto_inc",
+        "text": "AUTO_INCREMENT",
+        "category": "constraint",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "MySQL 自增关键字（PostgreSQL 用 GENERATED … AS IDENTITY）",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "auto_increment"
+        ]
+      },
+      {
+        "id": "default_kw",
+        "text": "DEFAULT 'view'",
+        "category": "constraint",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "未提供值时使用的默认值",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "default 'view'"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 自增主键和默认值分别用什么关键字？",
+      "level_2": "📖 MySQL：`AUTO_INCREMENT` / `DEFAULT 值`",
+      "level_3": "👀 `AUTO_INCREMENT` / `DEFAULT 'view'`",
+      "level_4": "📝 正确答案：`AUTO_INCREMENT` 与 `DEFAULT 'view'`"
+    },
+    "explanation": "`AUTO_INCREMENT` 让整数主键自动编号（MySQL 方言；PostgreSQL 用 `GENERATED ALWAYS AS IDENTITY`）；DEFAULT 为缺省赋值。"
+  },
+  {
+    "id": "sql-basics-047",
+    "title": "外键约束",
+    "description": "创建评论表 reviews：product_id 引用 products 表的 id",
+    "exercise_type": "fill",
+    "tech_stack": "sql",
+    "weight": "medium",
+    "category": "ddl",
+    "subcategory": "基础",
+    "full_code": "CREATE TABLE reviews (\n    id INT PRIMARY KEY,\n    product_id INT,\n    FOREIGN KEY (product_id) REFERENCES products(id)\n);",
+    "expected": "",
+    "points": [
+      {
+        "id": "fk_kw",
+        "text": "FOREIGN KEY (product_id)",
+        "category": "constraint",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "声明外键列",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "foreign key (product_id)"
+        ]
+      },
+      {
+        "id": "references_kw",
+        "text": "REFERENCES products(id)",
+        "category": "constraint",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "指向被引用表的主键",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "references products(id)"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 表级外键声明的完整语法？",
+      "level_2": "📖 `FOREIGN KEY (列) REFERENCES 目标表(目标列)`",
+      "level_3": "👀 `FOREIGN KEY (product_id) REFERENCES products(id)`",
+      "level_4": "📝 正确答案：`FOREIGN KEY (product_id)` 与 `REFERENCES products(id)`"
+    },
+    "explanation": "外键保证引用完整性：product_id 必须是 products.id 中存在的值（或 NULL），防止脏引用。"
+  },
+  {
+    "id": "sql-basics-048",
+    "title": "ALTER TABLE 加列",
+    "description": "给员工表新增一列 email（变长字符串，最长 100）",
+    "exercise_type": "fill",
+    "tech_stack": "sql",
+    "weight": "easy",
+    "category": "ddl",
+    "subcategory": "基础",
+    "full_code": "ALTER TABLE employees ADD COLUMN email VARCHAR(100);",
+    "expected": "",
+    "points": [
+      {
+        "id": "alter_table",
+        "text": "ALTER TABLE employees",
+        "category": "clause",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "修改表结构的语句开头",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "alter table employees"
+        ]
+      },
+      {
+        "id": "add_column",
+        "text": "ADD COLUMN email VARCHAR(100)",
+        "category": "clause",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "新增列子句",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "ADD email VARCHAR(100)",
+          "add column email varchar(100)",
+          "add email varchar(100)"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 修改已有表的结构用什么语句？加列的子句？",
+      "level_2": "📖 `ALTER TABLE 表 ADD COLUMN 列 类型`",
+      "level_3": "👀 `ALTER TABLE employees ADD COLUMN email VARCHAR(100)`",
+      "level_4": "📝 正确答案：`ALTER TABLE employees` 与 `ADD COLUMN email VARCHAR(100)`"
+    },
+    "explanation": "`ALTER TABLE` 用于调整表结构：加列（ADD）、改列（MODIFY/ALTER COLUMN）、删列（DROP COLUMN）等。"
+  },
+  {
+    "id": "sql-basics-049",
+    "title": "CREATE INDEX 建索引",
+    "description": "在 employees 表的 name 列上创建索引 idx_emp_name 加速查询",
+    "exercise_type": "fill",
+    "tech_stack": "sql",
+    "weight": "medium",
+    "category": "ddl",
+    "subcategory": "基础",
+    "full_code": "CREATE INDEX idx_emp_name ON employees (name);",
+    "expected": "",
+    "points": [
+      {
+        "id": "create_index",
+        "text": "CREATE INDEX idx_emp_name",
+        "category": "clause",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "建索引语句 + 索引名",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "create index idx_emp_name"
+        ]
+      },
+      {
+        "id": "on_target",
+        "text": "ON employees (name)",
+        "category": "clause",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "指明落在哪张表的哪一列",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "on employees (name)"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 创建索引用什么语句？索引建在哪列上？",
+      "level_2": "📖 `CREATE INDEX 索引名 ON 表 (列)`",
+      "level_3": "👀 `CREATE INDEX idx_emp_name ON employees (name)`",
+      "level_4": "📝 正确答案：`CREATE INDEX idx_emp_name` 与 `ON employees (name)`"
+    },
+    "explanation": "索引加速 WHERE/JOIN/ORDER BY 涉及列的检索，代价是占用空间并降低写入速度；唯一索引用 CREATE UNIQUE INDEX。"
+  },
+  {
+    "id": "sql-basics-050",
+    "title": "CREATE VIEW 视图",
+    "description": "创建视图 high_salary：工资大于 20000 的员工的全部信息",
+    "exercise_type": "fill",
+    "tech_stack": "sql",
+    "weight": "medium",
+    "category": "ddl",
+    "subcategory": "基础",
+    "full_code": "CREATE VIEW high_salary AS\nSELECT * FROM employees WHERE salary > 20000;",
+    "expected": "",
+    "points": [
+      {
+        "id": "view_as",
+        "text": "VIEW high_salary AS",
+        "category": "clause",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "视图名 + AS + 查询语句",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "view high_salary as"
+        ]
+      },
+      {
+        "id": "view_query",
+        "text": "SELECT * FROM employees WHERE salary > 20000",
+        "category": "expression",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "视图背后的查询",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "select * from employees where salary > 20000"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 视图是一段保存起来的查询，怎么创建？",
+      "level_2": "📖 `CREATE VIEW 视图名 AS SELECT …`",
+      "level_3": "👀 `CREATE VIEW high_salary AS SELECT … WHERE salary > 20000`",
+      "level_4": "📝 正确答案：`VIEW high_salary AS` 与其后的 SELECT 语句"
+    },
+    "explanation": "视图是存储的查询（虚表）：每次查询视图都会实时执行其 SELECT，可像普通表一样被查询，用于封装常用复杂查询。"
+  }
+]

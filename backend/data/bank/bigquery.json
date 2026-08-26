@@ -1,0 +1,1970 @@
+[
+  {
+    "id": "bq-basics-001",
+    "title": "查询全表",
+    "description": "查看 orders 表的全部列（数据背景：sales.orders 订单表，含 order_id/customer_id/product/amount/qty/status/created_at）",
+    "exercise_type": "fill",
+    "tech_stack": "bigquery",
+    "weight": "beginner",
+    "category": "bq_select",
+    "subcategory": "基础",
+    "full_code": "SELECT * FROM `sales.orders`;",
+    "expected": "",
+    "points": [
+      {
+        "id": "star",
+        "text": "*",
+        "category": "operator",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "全部列的通配符",
+        "fill_type": "text"
+      },
+      {
+        "id": "table_ref",
+        "text": "`sales.orders`",
+        "category": "bq_table",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "数据集.表 的限定写法（反引号包裹）",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 查所有列用什么？表名怎么限定到数据集？",
+      "level_2": "📖 `SELECT * FROM \\`数据集.表\\``",
+      "level_3": "👀 `SELECT * FROM \\`sales.orders\\``",
+      "level_4": "📝 正确答案：`*` 与 `` `sales.orders` ``"
+    },
+    "explanation": "BigQuery 引用表用「数据集.表」完整路径；表名含连字符时必须用反引号包裹。"
+  },
+  {
+    "id": "bq-basics-002",
+    "title": "查询指定列",
+    "description": "只看订单的客户编号和金额",
+    "exercise_type": "fill",
+    "tech_stack": "bigquery",
+    "weight": "beginner",
+    "category": "bq_select",
+    "subcategory": "基础",
+    "full_code": "SELECT customer_id, amount FROM `sales.orders`;",
+    "expected": "",
+    "points": [
+      {
+        "id": "cols",
+        "text": "customer_id, amount",
+        "category": "expression",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "两个列名，逗号分隔",
+        "fill_type": "text",
+        "acceptable_answers": []
+      }
+    ],
+    "hints": {
+      "level_1": "💡 部分列怎么取？",
+      "level_2": "📖 `SELECT 列1, 列2 FROM …`",
+      "level_3": "👀 `SELECT customer_id, amount`",
+      "level_4": "📝 正确答案：`customer_id, amount`"
+    },
+    "explanation": "需要哪列写哪列，多列用英文逗号分隔，减少读取量也更快。"
+  },
+  {
+    "id": "bq-basics-003",
+    "title": "WHERE 等值过滤",
+    "description": "查询状态为 shipped 的订单",
+    "exercise_type": "fill",
+    "tech_stack": "bigquery",
+    "weight": "beginner",
+    "category": "bq_where",
+    "subcategory": "基础",
+    "full_code": "SELECT * FROM `sales.orders` WHERE status = \"shipped\";",
+    "expected": "",
+    "points": [
+      {
+        "id": "where_kw",
+        "text": "WHERE",
+        "category": "keyword",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "行过滤子句",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "where"
+        ]
+      },
+      {
+        "id": "cond",
+        "text": "status = \"shipped\"",
+        "category": "expression",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "状态等于 shipped；字符串用双引号",
+        "fill_type": "text",
+        "acceptable_answers": []
+      }
+    ],
+    "hints": {
+      "level_1": "💡 过滤行用什么子句？字符串值用什么引号？",
+      "level_2": "📖 `WHERE 列 = 值`；BigQuery 字符串推荐双引号（单引号也可）",
+      "level_3": "👀 `WHERE status = \"shipped\"`",
+      "level_4": "📝 正确答案：`WHERE` 与 `status = \"shipped\"`"
+    },
+    "explanation": "WHERE 对行过滤，只返回满足条件的行；标准 SQL 等值判断用单个 `=`。"
+  },
+  {
+    "id": "bq-basics-004",
+    "title": "AND 组合条件",
+    "description": "查询金额大于 100 且已发货的订单",
+    "exercise_type": "fill",
+    "tech_stack": "bigquery",
+    "weight": "beginner",
+    "category": "bq_where",
+    "subcategory": "基础",
+    "full_code": "SELECT * FROM `sales.orders` WHERE amount > 100 AND status = \"shipped\";",
+    "expected": "",
+    "points": [
+      {
+        "id": "and_kw",
+        "text": "AND",
+        "category": "keyword",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "两个条件同时成立",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "and"
+        ]
+      },
+      {
+        "id": "second",
+        "text": "status = \"shipped\"",
+        "category": "expression",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "第二个条件",
+        "fill_type": "text",
+        "acceptable_answers": []
+      }
+    ],
+    "hints": {
+      "level_1": "💡 「并且」用什么连接两个条件？",
+      "level_2": "📖 `条件1 AND 条件2`，全部满足才返回",
+      "level_3": "👀 `amount > 100 AND status = \"shipped\"`",
+      "level_4": "📝 正确答案：`AND` 与 `status = \"shipped\"`"
+    },
+    "explanation": "AND 要求所有条件同时为真；OR 任一为真即可，注意括号控制优先级。"
+  },
+  {
+    "id": "bq-basics-005",
+    "title": "去重 DISTINCT",
+    "description": "列出订单中出现过的所有客户编号（不重复）",
+    "exercise_type": "fill",
+    "tech_stack": "bigquery",
+    "weight": "beginner",
+    "category": "bq_select",
+    "subcategory": "基础",
+    "full_code": "SELECT DISTINCT customer_id FROM `sales.orders`;",
+    "expected": "",
+    "points": [
+      {
+        "id": "distinct_kw",
+        "text": "DISTINCT",
+        "category": "keyword",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "去除重复值",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "distinct"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 去掉重复行用什么？",
+      "level_2": "📖 `SELECT DISTINCT 列`",
+      "level_3": "👀 `SELECT DISTINCT customer_id`",
+      "level_4": "📝 正确答案：`DISTINCT`"
+    },
+    "explanation": "DISTINCT 放在 SELECT 后、列前，对结果去重；作用于所有输出列的组合。"
+  },
+  {
+    "id": "bq-basics-006",
+    "title": "排序 ORDER BY",
+    "description": "按金额从高到低列出订单",
+    "exercise_type": "fill",
+    "tech_stack": "bigquery",
+    "weight": "easy",
+    "category": "bq_select",
+    "subcategory": "基础",
+    "full_code": "SELECT order_id, amount FROM `sales.orders` ORDER BY amount DESC;",
+    "expected": "",
+    "points": [
+      {
+        "id": "order_by",
+        "text": "ORDER BY amount",
+        "category": "clause",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "排序子句 + 排序列",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "order by amount"
+        ]
+      },
+      {
+        "id": "desc_kw",
+        "text": "DESC",
+        "category": "keyword",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "降序关键字（默认升序 ASC）",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "desc"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 排序用什么子句？降序关键字？",
+      "level_2": "📖 `ORDER BY 列 DESC`；不写默认 ASC",
+      "level_3": "👀 `ORDER BY amount DESC`",
+      "level_4": "📝 正确答案：`ORDER BY amount` 与 `DESC`"
+    },
+    "explanation": "ORDER BY 在结果集上排序；DESC 降序、ASC 升序（默认）。"
+  },
+  {
+    "id": "bq-basics-007",
+    "title": "限制行数 LIMIT",
+    "description": "查询最大的 10 笔订单",
+    "exercise_type": "fill",
+    "tech_stack": "bigquery",
+    "weight": "easy",
+    "category": "bq_select",
+    "subcategory": "基础",
+    "full_code": "SELECT * FROM `sales.orders` ORDER BY amount DESC LIMIT 10;",
+    "expected": "",
+    "points": [
+      {
+        "id": "limit_kw",
+        "text": "LIMIT 10",
+        "category": "clause",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "最多返回 10 行",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "limit 10"
+        ]
+      },
+      {
+        "id": "desc_kw",
+        "text": "DESC",
+        "category": "keyword",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "先降序排列取最大的",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "desc"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 只要前 N 行用什么？",
+      "level_2": "📖 `ORDER BY … DESC LIMIT n`",
+      "level_3": "👀 `ORDER BY amount DESC LIMIT 10`",
+      "level_4": "📝 正确答案：`LIMIT 10`"
+    },
+    "explanation": "先排序再 LIMIT 就是「Top N」；BigQuery 对 LIMIT 前必须要有确定排序，否则结果不保证。"
+  },
+  {
+    "id": "bq-basics-008",
+    "title": "表限定与列别名",
+    "description": "查询客户名字段，别名 customer_name",
+    "exercise_type": "fill",
+    "tech_stack": "bigquery",
+    "weight": "easy",
+    "category": "bq_select",
+    "subcategory": "基础",
+    "full_code": "SELECT name AS customer_name FROM `sales.customers`;",
+    "expected": "",
+    "points": [
+      {
+        "id": "alias",
+        "text": "AS customer_name",
+        "category": "keyword",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "给列起别名",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "as customer_name"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 给列起别名用什么关键字？",
+      "level_2": "📖 `列 AS 别名`",
+      "level_3": "👀 `name AS customer_name`",
+      "level_4": "📝 正确答案：`AS customer_name`"
+    },
+    "explanation": "AS 为列定义输出别名；多表连接时用别名区分同名列。"
+  },
+  {
+    "id": "bq-basics-009",
+    "title": "BETWEEN 范围",
+    "description": "查询金额在 50 到 200（含）之间的订单",
+    "exercise_type": "fill",
+    "tech_stack": "bigquery",
+    "weight": "easy",
+    "category": "bq_where",
+    "subcategory": "基础",
+    "full_code": "SELECT * FROM `sales.orders` WHERE amount BETWEEN 50 AND 200;",
+    "expected": "",
+    "points": [
+      {
+        "id": "between_clause",
+        "text": "BETWEEN 50 AND 200",
+        "category": "expression",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "闭区间范围",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "between 50 and 200"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 「在某范围内」怎么写？含边界吗？",
+      "level_2": "📖 `BETWEEN 下界 AND 上界`，含两端",
+      "level_3": "👀 `amount BETWEEN 50 AND 200`",
+      "level_4": "📝 正确答案：`BETWEEN 50 AND 200`"
+    },
+    "explanation": "BETWEEN 是闭区间，等价于 `>= 50 AND <= 200`。"
+  },
+  {
+    "id": "bq-basics-010",
+    "title": "IN 枚举匹配",
+    "description": "查询状态为 shipped 或 delivered 的订单",
+    "exercise_type": "fill",
+    "tech_stack": "bigquery",
+    "weight": "easy",
+    "category": "bq_where",
+    "subcategory": "基础",
+    "full_code": "SELECT * FROM `sales.orders` WHERE status IN (\"shipped\", \"delivered\");",
+    "expected": "",
+    "points": [
+      {
+        "id": "in_kw",
+        "text": "IN",
+        "category": "keyword",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "判断是否在列表内",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "in"
+        ]
+      },
+      {
+        "id": "list",
+        "text": "(\"shipped\", \"delivered\")",
+        "category": "expression",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "候选值列表",
+        "fill_type": "text",
+        "acceptable_answers": []
+      }
+    ],
+    "hints": {
+      "level_1": "💡 匹配多个值时除了多个 OR 还能用什么？",
+      "level_2": "📖 `列 IN (值1, 值2, …)`",
+      "level_3": "👀 `status IN (\"shipped\", \"delivered\")`",
+      "level_4": "📝 正确答案：`IN` 与 `(\"shipped\", \"delivered\")`"
+    },
+    "explanation": "IN 是多个等值 OR 的简写，更清晰也更好读。"
+  },
+  {
+    "id": "bq-basics-011",
+    "title": "LIKE 与 REGEXP_CONTAINS",
+    "description": "查询产品名以 \"Pro\" 开头的订单",
+    "exercise_type": "fill",
+    "tech_stack": "bigquery",
+    "weight": "medium",
+    "category": "bq_string",
+    "subcategory": "基础",
+    "full_code": "SELECT * FROM `sales.orders` WHERE REGEXP_CONTAINS(product, r\"^Pro\");",
+    "expected": "",
+    "points": [
+      {
+        "id": "regex_fn",
+        "text": "REGEXP_CONTAINS(product, r\"^Pro\")",
+        "category": "bq_string",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "正则匹配函数；r 前缀表示原始字符串",
+        "fill_type": "text"
+      },
+      {
+        "id": "anchor",
+        "text": "r\"^Pro\"",
+        "category": "bq_string",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "^ 锚定字符串开头",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "r\"^pro\""
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 BigQuery 正则匹配用什么函数？「开头」锚点是什么？",
+      "level_2": "📖 `REGEXP_CONTAINS(列, r\"模式\")`；`^` 匹配开头",
+      "level_3": "👀 `REGEXP_CONTAINS(product, r\"^Pro\")`",
+      "level_4": "📝 正确答案：`REGEXP_CONTAINS(product, r\"^Pro\")`"
+    },
+    "explanation": "BigQuery 正则用 `REGEXP_CONTAINS`；字符串字面量前缀 r 表示原始串（反斜杠不做转义）。"
+  },
+  {
+    "id": "bq-basics-012",
+    "title": "IS NULL 判空",
+    "description": "查询没有填写状态的订单",
+    "exercise_type": "fill",
+    "tech_stack": "bigquery",
+    "weight": "easy",
+    "category": "bq_where",
+    "subcategory": "基础",
+    "full_code": "SELECT * FROM `sales.orders` WHERE status IS NULL;",
+    "expected": "",
+    "points": [
+      {
+        "id": "is_null",
+        "text": "IS NULL",
+        "category": "expression",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "判空固定写法",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "is null"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 空值能用 = 判断吗？正确的写法是？",
+      "level_2": "📖 `列 IS NULL`，不能用 `= NULL`",
+      "level_3": "👀 `status IS NULL`",
+      "level_4": "📝 正确答案：`IS NULL`"
+    },
+    "explanation": "NULL 参与比较一律返回 NULL（假），所以判空必须用 IS NULL / IS NOT NULL。"
+  },
+  {
+    "id": "bq-basics-013",
+    "title": "COUNT 计数",
+    "description": "统计订单总数",
+    "exercise_type": "fill",
+    "tech_stack": "bigquery",
+    "weight": "beginner",
+    "category": "bq_aggregate",
+    "subcategory": "基础",
+    "full_code": "SELECT COUNT(*) FROM `sales.orders`;",
+    "expected": "",
+    "points": [
+      {
+        "id": "count_fn",
+        "text": "COUNT(*)",
+        "category": "function",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "统计行数的聚合函数",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "count(*)"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 统计行数用什么函数？",
+      "level_2": "📖 `COUNT(*)` 数全部行",
+      "level_3": "👀 `COUNT(*)`",
+      "level_4": "📝 正确答案：`COUNT(*)`"
+    },
+    "explanation": "COUNT(*) 统计行数；COUNT(列) 只统计该列非 NULL 的行。"
+  },
+  {
+    "id": "bq-basics-014",
+    "title": "SUM 与 AVG",
+    "description": "计算订单总金额与平均金额",
+    "exercise_type": "fill",
+    "tech_stack": "bigquery",
+    "weight": "easy",
+    "category": "bq_aggregate",
+    "subcategory": "基础",
+    "full_code": "SELECT SUM(amount) AS total, AVG(amount) AS avg_amount FROM `sales.orders`;",
+    "expected": "",
+    "points": [
+      {
+        "id": "sum_fn",
+        "text": "SUM(amount) AS total",
+        "category": "function",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "求和并命名 total",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "sum(amount) as total"
+        ]
+      },
+      {
+        "id": "avg_fn",
+        "text": "AVG(amount) AS avg_amount",
+        "category": "function",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "求平均并命名",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "avg(amount) as avg_amount"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 一次求总和和平均值，两个聚合怎么写？",
+      "level_2": "📖 `SUM(列)`, `AVG(列)` 逗号分隔，可分别别名",
+      "level_3": "👀 `SUM(amount) AS total, AVG(amount) AS avg_amount`",
+      "level_4": "📝 正确答案：`SUM(amount) AS total` 与 `AVG(amount) AS avg_amount`"
+    },
+    "explanation": "聚合函数忽略 NULL 行；一条 SELECT 可混用多个聚合。"
+  },
+  {
+    "id": "bq-basics-015",
+    "title": "MIN 与 MAX",
+    "description": "找出金额最小与最大的订单金额",
+    "exercise_type": "fill",
+    "tech_stack": "bigquery",
+    "weight": "easy",
+    "category": "bq_aggregate",
+    "subcategory": "基础",
+    "full_code": "SELECT MIN(amount), MAX(amount) FROM `sales.orders`;",
+    "expected": "",
+    "points": [
+      {
+        "id": "min_fn",
+        "text": "MIN(amount)",
+        "category": "function",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "最小值",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "min(amount)"
+        ]
+      },
+      {
+        "id": "max_fn",
+        "text": "MAX(amount)",
+        "category": "function",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "最大值",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "max(amount)"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 最大最小值函数？",
+      "level_2": "📖 `MIN(列)` / `MAX(列)`",
+      "level_3": "👀 `MIN(amount), MAX(amount)`",
+      "level_4": "📝 正确答案：`MIN(amount)` 与 `MAX(amount)`"
+    },
+    "explanation": "MIN/MAX 对数值、日期、字符串均适用。"
+  },
+  {
+    "id": "bq-basics-016",
+    "title": "COUNTIF 条件计数",
+    "description": "统计已发货订单的数量",
+    "exercise_type": "fill",
+    "tech_stack": "bigquery",
+    "weight": "medium",
+    "category": "bq_aggregate",
+    "subcategory": "基础",
+    "full_code": "SELECT COUNTIF(status = \"shipped\") AS shipped_cnt FROM `sales.orders`;",
+    "expected": "",
+    "points": [
+      {
+        "id": "countif_fn",
+        "text": "COUNTIF(status = \"shipped\")",
+        "category": "bq_aggregate",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "满足条件的行计数（BigQuery 专用）",
+        "fill_type": "text"
+      },
+      {
+        "id": "alias",
+        "text": "AS shipped_cnt",
+        "category": "keyword",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "结果列命名",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "as shipped_cnt"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 只数满足条件的行，BigQuery 提供了什么便捷函数？",
+      "level_2": "📖 `COUNTIF(条件)` 等价于 `SUM(CASE WHEN 条件 THEN 1 ELSE 0 END)`",
+      "level_3": "👀 `COUNTIF(status = \"shipped\")`",
+      "level_4": "📝 正确答案：`COUNTIF(status = \"shipped\")`"
+    },
+    "explanation": "COUNTIF 是 BigQuery 的便捷条件计数，比 CASE WHEN 写法更紧凑。"
+  },
+  {
+    "id": "bq-basics-017",
+    "title": "ROUND 取整",
+    "description": "计算平均金额并保留两位小数",
+    "exercise_type": "fill",
+    "tech_stack": "bigquery",
+    "weight": "easy",
+    "category": "bq_math",
+    "subcategory": "基础",
+    "full_code": "SELECT ROUND(AVG(amount), 2) AS avg_amount FROM `sales.orders`;",
+    "expected": "",
+    "points": [
+      {
+        "id": "round_fn",
+        "text": "ROUND(AVG(amount), 2)",
+        "category": "bq_math",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "对平均结果四舍五入到 2 位",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 结果保留几位小数用什么函数？",
+      "level_2": "📖 `ROUND(值, 位数)` 四舍五入",
+      "level_3": "👀 `ROUND(AVG(amount), 2)`",
+      "level_4": "📝 正确答案：`ROUND(AVG(amount), 2)`"
+    },
+    "explanation": "ROUND(x, n) 四舍五入到 n 位小数；CEIL/FLOOR 分别为向上/向下取整。"
+  },
+  {
+    "id": "bq-basics-018",
+    "title": "IF 条件表达式",
+    "description": "订单金额是否大额（>500 标为 big，否则 small）",
+    "exercise_type": "fill",
+    "tech_stack": "bigquery",
+    "weight": "easy",
+    "category": "bq_if_case",
+    "subcategory": "基础",
+    "full_code": "SELECT order_id, IF(amount > 500, \"big\", \"small\") AS bucket FROM `sales.orders`;",
+    "expected": "",
+    "points": [
+      {
+        "id": "if_expr",
+        "text": "IF(amount > 500, \"big\", \"small\")",
+        "category": "bq_if_case",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "条件成立取第二参，否则取第三参",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 单条件二分支用什么表达式？",
+      "level_2": "📖 `IF(条件, 真值, 假值)`",
+      "level_3": "👀 `IF(amount > 500, \"big\", \"small\")`",
+      "level_4": "📝 正确答案：`IF(amount > 500, \"big\", \"small\")`"
+    },
+    "explanation": "IF 是三参数函数：条件为真返回第 2 参、假返回第 3 参；多分支用 CASE WHEN。"
+  },
+  {
+    "id": "bq-basics-019",
+    "title": "GROUP BY 分组统计",
+    "description": "统计每个产品的销量",
+    "exercise_type": "fill",
+    "tech_stack": "bigquery",
+    "weight": "easy",
+    "category": "bq_groupby",
+    "subcategory": "基础",
+    "full_code": "SELECT product, SUM(qty) AS total_qty FROM `sales.orders` GROUP BY product;",
+    "expected": "",
+    "points": [
+      {
+        "id": "agg",
+        "text": "SUM(qty) AS total_qty",
+        "category": "function",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "组内求和",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "sum(qty) as total_qty"
+        ]
+      },
+      {
+        "id": "group_by",
+        "text": "GROUP BY product",
+        "category": "bq_groupby",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "按产品分组",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "group by product"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 「每个 X 统计 Y」的结构？",
+      "level_2": "📖 `SELECT X, 聚合(Y) … GROUP BY X`",
+      "level_3": "👀 `SUM(qty) AS total_qty … GROUP BY product`",
+      "level_4": "📝 正确答案：`SUM(qty) AS total_qty` 与 `GROUP BY product`"
+    },
+    "explanation": "GROUP BY 把行分组，聚合函数在组内计算；SELECT 中的非聚合列必须出现在 GROUP BY。"
+  },
+  {
+    "id": "bq-basics-020",
+    "title": "HAVING 组过滤",
+    "description": "统计每产品销量并筛出总销量大于 100 的",
+    "exercise_type": "fill",
+    "tech_stack": "bigquery",
+    "weight": "medium",
+    "category": "bq_groupby",
+    "subcategory": "基础",
+    "full_code": "SELECT product, SUM(qty) AS total_qty\nFROM `sales.orders`\nGROUP BY product\nHAVING SUM(qty) > 100;",
+    "expected": "",
+    "points": [
+      {
+        "id": "having_clause",
+        "text": "HAVING SUM(qty) > 100",
+        "category": "bq_groupby",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "对分组后的聚合结果过滤",
+        "fill_type": "text"
+      },
+      {
+        "id": "group_by",
+        "text": "GROUP BY product",
+        "category": "bq_groupby",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "先分组再过滤",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "group by product"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 聚合结果的条件过滤能用 WHERE 吗？",
+      "level_2": "📖 不能；`HAVING 聚合条件` 在分组后过滤组",
+      "level_3": "👀 `HAVING SUM(qty) > 100`",
+      "level_4": "📝 正确答案：`HAVING SUM(qty) > 100`"
+    },
+    "explanation": "WHERE 过滤行（分组前），HAVING 过滤组（分组后），聚合条件必须写 HAVING。"
+  },
+  {
+    "id": "bq-basics-021",
+    "title": "GROUP BY 多列",
+    "description": "按产品与状态两个维度统计金额",
+    "exercise_type": "fill",
+    "tech_stack": "bigquery",
+    "weight": "medium",
+    "category": "bq_groupby",
+    "subcategory": "基础",
+    "full_code": "SELECT product, status, SUM(amount) AS total FROM `sales.orders` GROUP BY product, status;",
+    "expected": "",
+    "points": [
+      {
+        "id": "two_cols",
+        "text": "product, status",
+        "category": "expression",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "两个分组列",
+        "fill_type": "text",
+        "acceptable_answers": []
+      },
+      {
+        "id": "group_by",
+        "text": "GROUP BY product, status",
+        "category": "bq_groupby",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "按两列的组合分组",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "group by product, status"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 按两个维度分组怎么写？",
+      "level_2": "📖 `GROUP BY 列1, 列2`",
+      "level_3": "👀 `GROUP BY product, status`",
+      "level_4": "📝 正确答案：`GROUP BY product, status`"
+    },
+    "explanation": "多列分组按列组合去重分组，粒度更细。"
+  },
+  {
+    "id": "bq-basics-022",
+    "title": "WITH CTE 子查询",
+    "description": "先算出每客户总金额，再筛出超过 1000 的",
+    "exercise_type": "fill",
+    "tech_stack": "bigquery",
+    "weight": "hard",
+    "category": "bq_cte",
+    "subcategory": "基础",
+    "full_code": "WITH customer_totals AS (\n  SELECT customer_id, SUM(amount) AS total\n  FROM `sales.orders`\n  GROUP BY customer_id\n)\nSELECT customer_id FROM customer_totals WHERE total > 1000;",
+    "expected": "",
+    "points": [
+      {
+        "id": "cte_head",
+        "text": "WITH customer_totals AS (",
+        "category": "bq_cte",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "CTE 定义：名字 + AS + 括号子查询",
+        "fill_type": "text"
+      },
+      {
+        "id": "cte_ref",
+        "text": "FROM customer_totals",
+        "category": "bq_cte",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "像普通表一样引用 CTE",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "from customer_totals"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 中间结果复用/先算后筛，用什么结构？",
+      "level_2": "📖 `WITH 名字 AS (子查询) SELECT … FROM 名字`",
+      "level_3": "👀 `WITH customer_totals AS (…)` 然后 `FROM customer_totals`",
+      "level_4": "📝 正确答案：`WITH customer_totals AS (` 与 `FROM customer_totals`"
+    },
+    "explanation": "CTE（WITH 子句）让查询分层可读：先把聚合存成虚拟表，再在其上继续查询。"
+  },
+  {
+    "id": "bq-basics-023",
+    "title": "聚合后排序取 Top",
+    "description": "按客户总金额降序取前 5 名客户",
+    "exercise_type": "fill",
+    "tech_stack": "bigquery",
+    "weight": "medium",
+    "category": "bq_groupby",
+    "subcategory": "基础",
+    "full_code": "SELECT customer_id, SUM(amount) AS total\nFROM `sales.orders`\nGROUP BY customer_id\nORDER BY total DESC\nLIMIT 5;",
+    "expected": "",
+    "points": [
+      {
+        "id": "order_agg",
+        "text": "ORDER BY total DESC",
+        "category": "clause",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "按聚合别名排序",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "order by total desc"
+        ]
+      },
+      {
+        "id": "limit",
+        "text": "LIMIT 5",
+        "category": "clause",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "取前 5",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "limit 5"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 分组统计后按统计值排序取 Top，ORDER BY 能引用别名吗？",
+      "level_2": "📖 能：`ORDER BY 别名 DESC`，再接 `LIMIT n`",
+      "level_3": "👀 `ORDER BY total DESC LIMIT 5`",
+      "level_4": "📝 正确答案：`ORDER BY total DESC` 与 `LIMIT 5`"
+    },
+    "explanation": "GROUP BY 后可引用 SELECT 中的聚合别名排序，配合 LIMIT 完成 Top-N 客户分析。"
+  },
+  {
+    "id": "bq-basics-024",
+    "title": "分组位置序号 GROUP BY 1",
+    "description": "用位置序号代替列名分组",
+    "exercise_type": "fill",
+    "tech_stack": "bigquery",
+    "weight": "medium",
+    "category": "bq_groupby",
+    "subcategory": "基础",
+    "full_code": "SELECT product, SUM(qty) AS total FROM `sales.orders` GROUP BY 1 ORDER BY total DESC;",
+    "expected": "",
+    "points": [
+      {
+        "id": "group_pos",
+        "text": "GROUP BY 1",
+        "category": "bq_groupby",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "按 SELECT 第 1 列（product）分组",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "group by 1"
+        ]
+      },
+      {
+        "id": "order_by",
+        "text": "ORDER BY total DESC",
+        "category": "clause",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "按销量降序",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "order by total desc"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 不想重复写列名，按位置分组怎么写？",
+      "level_2": "📖 `GROUP BY 1` = 按 SELECT 第 1 列分组",
+      "level_3": "👀 `GROUP BY 1`",
+      "level_4": "📝 正确答案：`GROUP BY 1`"
+    },
+    "explanation": "GROUP BY 接受位置序号（1=第 1 列），简化长列名查询；也可用 `GROUP BY ALL` 按全部非聚合列分组（BigQuery 新增）。"
+  },
+  {
+    "id": "bq-basics-025",
+    "title": "UNION ALL 合并",
+    "description": "合并 shipped 与 delivered 订单号（保留重复）",
+    "exercise_type": "fill",
+    "tech_stack": "bigquery",
+    "weight": "medium",
+    "category": "bq_union",
+    "subcategory": "基础",
+    "full_code": "SELECT order_id FROM `sales.orders` WHERE status = \"shipped\"\nUNION ALL\nSELECT order_id FROM `sales.orders` WHERE status = \"delivered\";",
+    "expected": "",
+    "points": [
+      {
+        "id": "union_kw",
+        "text": "UNION ALL",
+        "category": "bq_union",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "纵向合并两个查询结果（不去重）",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "union all"
+        ]
+      },
+      {
+        "id": "second_select",
+        "text": "SELECT order_id FROM `sales.orders` WHERE status = \"delivered\"",
+        "category": "bq_union",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "第二个查询",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "select order_id from `sales.orders` where status = \"delivered\""
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 纵向拼接两个查询结果用什么？不去重的版本是？",
+      "level_2": "📖 `UNION ALL` 保留全部行；`UNION DISTINCT` 去重（UNION 默认 DISTINCT）",
+      "level_3": "👀 `UNION ALL` 连接两个 SELECT",
+      "level_4": "📝 正确答案：`UNION ALL` 与第二个 SELECT 语句"
+    },
+    "explanation": "UNION 系列要求两边列数与类型兼容；ALL 不去重性能更好。"
+  },
+  {
+    "id": "bq-basics-026",
+    "title": "CONCAT 拼接",
+    "description": "把客户名和城市拼成一列输出",
+    "exercise_type": "fill",
+    "tech_stack": "bigquery",
+    "weight": "easy",
+    "category": "bq_string",
+    "subcategory": "基础",
+    "full_code": "SELECT CONCAT(name, \" - \", city) AS info FROM `sales.customers`;",
+    "expected": "",
+    "points": [
+      {
+        "id": "concat_fn",
+        "text": "CONCAT(name, \" - \", city)",
+        "category": "bq_string",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "多个字符串参数拼接",
+        "fill_type": "text"
+      },
+      {
+        "id": "alias",
+        "text": "AS info",
+        "category": "keyword",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "结果列命名",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "as info"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 字符串拼接用什么函数？",
+      "level_2": "📖 `CONCAT(串1, 串2, …)`",
+      "level_3": "👀 `CONCAT(name, \" - \", city)`",
+      "level_4": "📝 正确答案：`CONCAT(name, \" - \", city)`"
+    },
+    "explanation": "CONCAT 接收任意多个参数按序拼接；也可用 `||` 运算符（部分方言）。"
+  },
+  {
+    "id": "bq-basics-027",
+    "title": "SUBSTR 截取",
+    "description": "取订单号前 4 位作为批次",
+    "exercise_type": "fill",
+    "tech_stack": "bigquery",
+    "weight": "easy",
+    "category": "bq_string",
+    "subcategory": "基础",
+    "full_code": "SELECT order_id, SUBSTR(order_id, 1, 4) AS batch FROM `sales.orders`;",
+    "expected": "",
+    "points": [
+      {
+        "id": "substr_fn",
+        "text": "SUBSTR(order_id, 1, 4)",
+        "category": "bq_string",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "从第 1 位开始取 4 个字符",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 截取子串用什么函数？参数含义？",
+      "level_2": "📖 `SUBSTR(串, 起始位, 长度)`（1 起始）",
+      "level_3": "👀 `SUBSTR(order_id, 1, 4)`",
+      "level_4": "📝 正确答案：`SUBSTR(order_id, 1, 4)`"
+    },
+    "explanation": "BigQuery 下标从 1 开始；SUBSTR(串, 起始, 长度) 截取，只给起始则取到末尾。"
+  },
+  {
+    "id": "bq-basics-028",
+    "title": "UPPER 与 LENGTH",
+    "description": "把状态转大写并显示其长度",
+    "exercise_type": "fill",
+    "tech_stack": "bigquery",
+    "weight": "easy",
+    "category": "bq_string",
+    "subcategory": "基础",
+    "full_code": "SELECT UPPER(status) AS status_upper, LENGTH(status) AS len FROM `sales.orders`;",
+    "expected": "",
+    "points": [
+      {
+        "id": "upper_fn",
+        "text": "UPPER(status)",
+        "category": "bq_string",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "转大写",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "upper(status)"
+        ]
+      },
+      {
+        "id": "len_fn",
+        "text": "LENGTH(status) AS len",
+        "category": "bq_string",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "字符数",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "length(status) as len"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 转大写与求字符串长度分别是什么函数？",
+      "level_2": "📖 `UPPER(串)` / `LOWER(串)`；`LENGTH(串)`",
+      "level_3": "👀 `UPPER(status)` 与 `LENGTH(status)`",
+      "level_4": "📝 正确答案：`UPPER(status)` 与 `LENGTH(status) AS len`"
+    },
+    "explanation": "UPPER/LOWER 大小写转换；LENGTH 返回字符数（非字节数）。"
+  },
+  {
+    "id": "bq-basics-029",
+    "title": "ARRAY_AGG 聚合数组",
+    "description": "把每个客户的订单号聚合成数组",
+    "exercise_type": "fill",
+    "tech_stack": "bigquery",
+    "weight": "medium",
+    "category": "bq_array",
+    "subcategory": "基础",
+    "full_code": "SELECT customer_id, ARRAY_AGG(order_id ORDER BY order_id) AS orders FROM `sales.orders` GROUP BY customer_id;",
+    "expected": "",
+    "points": [
+      {
+        "id": "array_agg",
+        "text": "ARRAY_AGG(order_id ORDER BY order_id)",
+        "category": "bq_array",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "组内聚合成数组，可指定排序",
+        "fill_type": "text"
+      },
+      {
+        "id": "alias",
+        "text": "AS orders",
+        "category": "keyword",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "数组结果命名",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "as orders"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 把同组的多个值打包成一个数组用什么聚合？",
+      "level_2": "📖 `ARRAY_AGG(列)`；可加 `ORDER BY` 控制数组内顺序",
+      "level_3": "👀 `ARRAY_AGG(order_id ORDER BY order_id)`",
+      "level_4": "📝 正确答案：`ARRAY_AGG(order_id ORDER BY order_id)`"
+    },
+    "explanation": "ARRAY_AGG 在组内把值收集为 ARRAY；默认顺序不确定，建议显式 ORDER BY。"
+  },
+  {
+    "id": "bq-basics-030",
+    "title": "UNNEST 展开数组",
+    "description": "把数组字段展开成多行",
+    "exercise_type": "fill",
+    "tech_stack": "bigquery",
+    "weight": "hard",
+    "category": "bq_unnest",
+    "subcategory": "基础",
+    "full_code": "SELECT customer_id, tag\nFROM `sales.customers`, UNNEST(tags) AS tag;",
+    "expected": "",
+    "points": [
+      {
+        "id": "unnest_kw",
+        "text": "UNNEST(tags)",
+        "category": "bq_unnest",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "把数组展开为多行",
+        "fill_type": "text"
+      },
+      {
+        "id": "alias_tag",
+        "text": "AS tag",
+        "category": "keyword",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "给展开出的元素起别名",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "as tag"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 数组列怎么拆成一行一个元素？",
+      "level_2": "📖 `表, UNNEST(数组列) AS 元素名`（逗号=交叉连接）",
+      "level_3": "👀 `UNNEST(tags) AS tag`",
+      "level_4": "📝 正确答案：`UNNEST(tags)` 与 `AS tag`"
+    },
+    "explanation": "UNNEST 把 ARRAY 展开为行；与表之间用逗号即隐式 CROSS JOIN。"
+  },
+  {
+    "id": "bq-basics-031",
+    "title": "ARRAY_LENGTH 数组长度",
+    "description": "统计每个客户的标签数量",
+    "exercise_type": "fill",
+    "tech_stack": "bigquery",
+    "weight": "easy",
+    "category": "bq_array",
+    "subcategory": "基础",
+    "full_code": "SELECT customer_id, ARRAY_LENGTH(tags) AS tag_count FROM `sales.customers`;",
+    "expected": "",
+    "points": [
+      {
+        "id": "arr_len",
+        "text": "ARRAY_LENGTH(tags)",
+        "category": "bq_array",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "返回数组元素个数",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 数组长度用什么函数？",
+      "level_2": "📖 `ARRAY_LENGTH(数组)`",
+      "level_3": "👀 `ARRAY_LENGTH(tags)`",
+      "level_4": "📝 正确答案：`ARRAY_LENGTH(tags)`"
+    },
+    "explanation": "ARRAY_LENGTH 返回数组元素个数；空数组返回 0，NULL 数组返回 NULL。"
+  },
+  {
+    "id": "bq-basics-032",
+    "title": "EXTRACT 提取日期部分",
+    "description": "统计每年的订单数量",
+    "exercise_type": "fill",
+    "tech_stack": "bigquery",
+    "weight": "medium",
+    "category": "bq_date",
+    "subcategory": "基础",
+    "full_code": "SELECT EXTRACT(YEAR FROM created_at) AS year, COUNT(*) AS cnt\nFROM `sales.orders`\nGROUP BY year\nORDER BY year;",
+    "expected": "",
+    "points": [
+      {
+        "id": "extract",
+        "text": "EXTRACT(YEAR FROM created_at)",
+        "category": "bq_date",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "提取日期中的年份",
+        "fill_type": "text"
+      },
+      {
+        "id": "group_year",
+        "text": "GROUP BY year",
+        "category": "bq_groupby",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "按年份别名分组",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "group by year"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 从时间戳里取年份用什么函数？",
+      "level_2": "📖 `EXTRACT(PART FROM 时间列)`，PART 可 YEAR/MONTH/DAY/HOUR…",
+      "level_3": "👀 `EXTRACT(YEAR FROM created_at)`",
+      "level_4": "📝 正确答案：`EXTRACT(YEAR FROM created_at)`"
+    },
+    "explanation": "EXTRACT 支持 YEAR/MONTH/DAY/HOUR/MINUTE/SECOND/DAYOFWEEK 等部件。"
+  },
+  {
+    "id": "bq-basics-033",
+    "title": "DATE_DIFF 日期差",
+    "description": "计算每笔订单距离创建日期过了多少天",
+    "exercise_type": "fill",
+    "tech_stack": "bigquery",
+    "weight": "medium",
+    "category": "bq_date",
+    "subcategory": "基础",
+    "full_code": "SELECT order_id, DATE_DIFF(DATE(created_at), DATE(\"2026-01-01\"), DAY) AS days\nFROM `sales.orders`;",
+    "expected": "",
+    "points": [
+      {
+        "id": "date_diff",
+        "text": "DATE_DIFF(DATE(created_at), DATE(\"2026-01-01\"), DAY)",
+        "category": "bq_date",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "两个日期相差的天数",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 两个日期相差多少天用什么函数？参数顺序？",
+      "level_2": "📖 `DATE_DIFF(后日期, 前日期, DAY)`（结果 = 后 - 前）",
+      "level_3": "👀 `DATE_DIFF(DATE(created_at), DATE(\"2026-01-01\"), DAY)`",
+      "level_4": "📝 正确答案：`DATE_DIFF(DATE(created_at), DATE(\"2026-01-01\"), DAY)`"
+    },
+    "explanation": "DATE_DIFF(a, b, PART) 返回 a-b 在指定部件上的差；DATE() 把 TIMESTAMP 转成 DATE。"
+  },
+  {
+    "id": "bq-basics-034",
+    "title": "DATE_ADD 日期加法",
+    "description": "把每个订单的创建时间加 7 天得到截止时间",
+    "exercise_type": "fill",
+    "tech_stack": "bigquery",
+    "weight": "medium",
+    "category": "bq_date",
+    "subcategory": "基础",
+    "full_code": "SELECT order_id, DATE_ADD(DATE(created_at), INTERVAL 7 DAY) AS due_date FROM `sales.orders`;",
+    "expected": "",
+    "points": [
+      {
+        "id": "date_add",
+        "text": "DATE_ADD(DATE(created_at), INTERVAL 7 DAY)",
+        "category": "bq_date",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "日期加上间隔",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 日期加 N 天用什么？间隔怎么写？",
+      "level_2": "📖 `DATE_ADD(日期, INTERVAL n DAY)`",
+      "level_3": "👀 `DATE_ADD(DATE(created_at), INTERVAL 7 DAY)`",
+      "level_4": "📝 正确答案：`DATE_ADD(DATE(created_at), INTERVAL 7 DAY)`"
+    },
+    "explanation": "INTERVAL n DAY/MONTH/YEAR 表示间隔；DATE_SUB 反之减。"
+  },
+  {
+    "id": "bq-basics-035",
+    "title": "FORMAT_DATE 格式化",
+    "description": "把创建日期格式化为 YYYYMM 样式",
+    "exercise_type": "fill",
+    "tech_stack": "bigquery",
+    "weight": "easy",
+    "category": "bq_date",
+    "subcategory": "基础",
+    "full_code": "SELECT order_id, FORMAT_DATE(\"%Y%m\", DATE(created_at)) AS month_key FROM `sales.orders`;",
+    "expected": "",
+    "points": [
+      {
+        "id": "format_date",
+        "text": "FORMAT_DATE(\"%Y%m\", DATE(created_at))",
+        "category": "bq_date",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "按格式符输出日期字符串",
+        "fill_type": "text"
+      },
+      {
+        "id": "fmt_str",
+        "text": "\"%Y%m\"",
+        "category": "bq_date",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "%Y 四位数年，%m 两位数月",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "\"%y%m\""
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 日期按指定格式输出用什么函数？月分区键常用写法？",
+      "level_2": "📖 `FORMAT_DATE(\"格式\", 日期)`；月键 `\"%Y%m\"`",
+      "level_3": "👀 `FORMAT_DATE(\"%Y%m\", DATE(created_at))`",
+      "level_4": "📝 正确答案：`FORMAT_DATE(\"%Y%m\", DATE(created_at))`"
+    },
+    "explanation": "FORMAT_DATE 格式符：%Y 年、%m 月、%d 日、%H 时；生成月分区键 \"%Y%m\" 是常规操作。"
+  },
+  {
+    "id": "bq-basics-036",
+    "title": "CURRENT_DATE 与时间过滤",
+    "description": "查询创建于最近 30 天内的订单",
+    "exercise_type": "fill",
+    "tech_stack": "bigquery",
+    "weight": "medium",
+    "category": "bq_date",
+    "subcategory": "基础",
+    "full_code": "SELECT * FROM `sales.orders`\nWHERE DATE(created_at) >= DATE_SUB(CURRENT_DATE(), INTERVAL 30 DAY);",
+    "expected": "",
+    "points": [
+      {
+        "id": "current_date",
+        "text": "CURRENT_DATE()",
+        "category": "bq_date",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "今天的日期",
+        "fill_type": "text"
+      },
+      {
+        "id": "date_sub",
+        "text": "DATE_SUB(CURRENT_DATE(), INTERVAL 30 DAY)",
+        "category": "bq_date",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "30 天前的日期",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 「最近 30 天」的上界怎么表达？",
+      "level_2": "📖 `DATE_SUB(CURRENT_DATE(), INTERVAL 30 DAY)` 即今天往前 30 天",
+      "level_3": "👀 `DATE(created_at) >= DATE_SUB(CURRENT_DATE(), INTERVAL 30 DAY)`",
+      "level_4": "📝 正确答案：`CURRENT_DATE()` 与 `DATE_SUB(CURRENT_DATE(), INTERVAL 30 DAY)`"
+    },
+    "explanation": "CURRENT_DATE() 返回当天；对时间戳列先 DATE() 再与日期比较可避免时间部分干扰。"
+  },
+  {
+    "id": "bq-basics-037",
+    "title": "ROW_NUMBER 排名",
+    "description": "给每个客户的订单按金额降序编号",
+    "exercise_type": "fill",
+    "tech_stack": "bigquery",
+    "weight": "medium",
+    "category": "bq_window",
+    "subcategory": "基础",
+    "full_code": "SELECT order_id, customer_id, ROW_NUMBER() OVER (PARTITION BY customer_id ORDER BY amount DESC) AS rn\nFROM `sales.orders`;",
+    "expected": "",
+    "points": [
+      {
+        "id": "row_number",
+        "text": "ROW_NUMBER() OVER (PARTITION BY customer_id ORDER BY amount DESC)",
+        "category": "bq_window",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "窗口函数：组内按金额降序编号",
+        "fill_type": "text"
+      },
+      {
+        "id": "rn_alias",
+        "text": "AS rn",
+        "category": "keyword",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "编号列命名",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "as rn"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 组内编号用哪个窗口函数？OVER 里写什么？",
+      "level_2": "📖 `ROW_NUMBER() OVER (PARTITION BY 分组 ORDER BY 排序)`",
+      "level_3": "👀 `ROW_NUMBER() OVER (PARTITION BY customer_id ORDER BY amount DESC)`",
+      "level_4": "📝 正确答案：`ROW_NUMBER() OVER (PARTITION BY customer_id ORDER BY amount DESC)`"
+    },
+    "explanation": "窗口函数在组内逐行计算不折叠行；PARTITION BY 分组、ORDER BY 排序。"
+  },
+  {
+    "id": "bq-basics-038",
+    "title": "每组 Top-N",
+    "description": "查出每个客户金额最大的第一笔订单",
+    "exercise_type": "fill",
+    "tech_stack": "bigquery",
+    "weight": "hard",
+    "category": "bq_window",
+    "subcategory": "基础",
+    "full_code": "WITH ranked AS (\n  SELECT order_id, customer_id,\n    ROW_NUMBER() OVER (PARTITION BY customer_id ORDER BY amount DESC) AS rn\n  FROM `sales.orders`\n)\nSELECT order_id FROM ranked WHERE rn = 1;",
+    "expected": "",
+    "points": [
+      {
+        "id": "rn_cond",
+        "text": "WHERE rn = 1",
+        "category": "bq_window",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "筛出组内第一名",
+        "fill_type": "text"
+      },
+      {
+        "id": "from_cte",
+        "text": "FROM ranked",
+        "category": "bq_cte",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "从 CTE 中取数",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "from ranked"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 组内 Top-1 的通用套路？",
+      "level_2": "📖 CTE 里 ROW_NUMBER 编号，外层 `WHERE rn = 1` 过滤",
+      "level_3": "👀 `WITH ranked AS (…ROW_NUMBER… ) … WHERE rn = 1`",
+      "level_4": "📝 正确答案：`WHERE rn = 1` 与 `FROM ranked`"
+    },
+    "explanation": "「CTE 编号 + 外层过滤」是组内 Top-N 的经典写法；改 rn 条件可得任意 Top-N。"
+  },
+  {
+    "id": "bq-basics-039",
+    "title": "SUM OVER 滚动合计",
+    "description": "按时间顺序计算订单金额累计值",
+    "exercise_type": "fill",
+    "tech_stack": "bigquery",
+    "weight": "hard",
+    "category": "bq_window",
+    "subcategory": "基础",
+    "full_code": "SELECT order_id, amount,\n  SUM(amount) OVER (ORDER BY created_at) AS running_total\nFROM `sales.orders`\nORDER BY created_at;",
+    "expected": "",
+    "points": [
+      {
+        "id": "sum_over",
+        "text": "SUM(amount) OVER (ORDER BY created_at)",
+        "category": "bq_window",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "按顺序累计求和",
+        "fill_type": "text"
+      },
+      {
+        "id": "running_alias",
+        "text": "AS running_total",
+        "category": "keyword",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "累计列命名",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "as running_total"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 逐行累计求和（滚动合计）怎么写？",
+      "level_2": "📖 `SUM(列) OVER (ORDER BY 排序列)`",
+      "level_3": "👀 `SUM(amount) OVER (ORDER BY created_at)`",
+      "level_4": "📝 正确答案：`SUM(amount) OVER (ORDER BY created_at)`"
+    },
+    "explanation": "窗口内仅 ORDER BY 时默认累计到当前行（不含后续），形成 running total。"
+  },
+  {
+    "id": "bq-basics-040",
+    "title": "RANK 与并列排名",
+    "description": "按金额排名，金额相同名次并列",
+    "exercise_type": "fill",
+    "tech_stack": "bigquery",
+    "weight": "medium",
+    "category": "bq_window",
+    "subcategory": "基础",
+    "full_code": "SELECT order_id, amount, RANK() OVER (ORDER BY amount DESC) AS rk FROM `sales.orders`;",
+    "expected": "",
+    "points": [
+      {
+        "id": "rank_fn",
+        "text": "RANK() OVER (ORDER BY amount DESC)",
+        "category": "bq_window",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "并列时名次相同，后续名次跳过",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 并列名次相同的排名函数是？与 ROW_NUMBER 区别？",
+      "level_2": "📖 `RANK()` 并列同号且后面跳号；`DENSE_RANK()` 并列同号不跳号",
+      "level_3": "👀 `RANK() OVER (ORDER BY amount DESC)`",
+      "level_4": "📝 正确答案：`RANK() OVER (ORDER BY amount DESC)`"
+    },
+    "explanation": "RANK 与 ROW_NUMBER 不同：同值行共享名次（1,1,3）；DENSE_RANK 不跳号（1,1,2）。"
+  },
+  {
+    "id": "bq-basics-041",
+    "title": "CASE WHEN 多分支",
+    "description": "把订单金额分档：<100 low、<500 mid、否则 high",
+    "exercise_type": "fill",
+    "tech_stack": "bigquery",
+    "weight": "medium",
+    "category": "bq_if_case",
+    "subcategory": "基础",
+    "full_code": "SELECT order_id,\n  CASE\n    WHEN amount < 100 THEN \"low\"\n    WHEN amount < 500 THEN \"mid\"\n    ELSE \"high\"\n  END AS tier\nFROM `sales.orders`;",
+    "expected": "",
+    "points": [
+      {
+        "id": "case_kw",
+        "text": "CASE",
+        "category": "bq_if_case",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "CASE 表达式开头",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "case"
+        ]
+      },
+      {
+        "id": "first_when",
+        "text": "WHEN amount < 100 THEN \"low\"",
+        "category": "bq_if_case",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "第一个分支：条件 + 结果",
+        "fill_type": "text"
+      },
+      {
+        "id": "end_kw",
+        "text": "END AS tier",
+        "category": "bq_if_case",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "CASE 结束并命名",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "end as tier"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 多分支条件映射用什么？结构是？",
+      "level_2": "📖 `CASE WHEN 条件 THEN 值 … ELSE 兜底 END`",
+      "level_3": "👀 `CASE WHEN amount < 100 THEN \"low\" WHEN … END AS tier`",
+      "level_4": "📝 正确答案：`CASE`、`WHEN amount < 100 THEN \"low\"` 与 `END AS tier`"
+    },
+    "explanation": "CASE WHEN 从上到下匹配首个为真的分支，都没有则用 ELSE。"
+  },
+  {
+    "id": "bq-basics-042",
+    "title": "COALESCE 空值兜底",
+    "description": "状态为空时显示 unknown",
+    "exercise_type": "fill",
+    "tech_stack": "bigquery",
+    "weight": "easy",
+    "category": "bq_coalesce",
+    "subcategory": "基础",
+    "full_code": "SELECT order_id, COALESCE(status, \"unknown\") AS status_label FROM `sales.orders`;",
+    "expected": "",
+    "points": [
+      {
+        "id": "coalesce_fn",
+        "text": "COALESCE(status, \"unknown\")",
+        "category": "bq_coalesce",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "返回第一个非 NULL 值",
+        "fill_type": "text"
+      },
+      {
+        "id": "alias",
+        "text": "AS status_label",
+        "category": "keyword",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "结果列命名",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "as status_label"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 NULL 时给默认值用什么函数？",
+      "level_2": "📖 `COALESCE(列, 默认值)` 返回首个非 NULL",
+      "level_3": "👀 `COALESCE(status, \"unknown\")`",
+      "level_4": "📝 正确答案：`COALESCE(status, \"unknown\")`"
+    },
+    "explanation": "COALESCE 从左到右返回第一个非 NULL 值；也可 IFNULL(列, 默认) 两参版本。"
+  },
+  {
+    "id": "bq-basics-043",
+    "title": "SAFE_DIVIDE 安全除法",
+    "description": "计算订单均价：总金额/总数量，避免除零报错",
+    "exercise_type": "fill",
+    "tech_stack": "bigquery",
+    "weight": "medium",
+    "category": "bq_math",
+    "subcategory": "基础",
+    "full_code": "SELECT SAFE_DIVIDE(SUM(amount), SUM(qty)) AS unit_price FROM `sales.orders`;",
+    "expected": "",
+    "points": [
+      {
+        "id": "safe_divide",
+        "text": "SAFE_DIVIDE(SUM(amount), SUM(qty))",
+        "category": "bq_math",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "除数为 0 时返回 NULL 而不是报错",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 BigQuery 除零会报错，用哪个函数规避？",
+      "level_2": "📖 `SAFE_DIVIDE(分子, 分母)`：分母为 0 返回 NULL",
+      "level_3": "👀 `SAFE_DIVIDE(SUM(amount), SUM(qty))`",
+      "level_4": "📝 正确答案：`SAFE_DIVIDE(SUM(amount), SUM(qty))`"
+    },
+    "explanation": "SAFE_ 前缀系列（SAFE_DIVIDE/SAFE_CAST 等）把错误转为 NULL，适合不可控数据。"
+  },
+  {
+    "id": "bq-basics-044",
+    "title": "CAST 类型转换",
+    "description": "把金额转成字符串并在前面加 $",
+    "exercise_type": "fill",
+    "tech_stack": "bigquery",
+    "weight": "easy",
+    "category": "bq_math",
+    "subcategory": "基础",
+    "full_code": "SELECT CONCAT(\"$\", CAST(amount AS STRING)) AS display FROM `sales.orders`;",
+    "expected": "",
+    "points": [
+      {
+        "id": "cast_fn",
+        "text": "CAST(amount AS STRING)",
+        "category": "bq_math",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "显式类型转换",
+        "fill_type": "text"
+      },
+      {
+        "id": "concat_dollar",
+        "text": "CONCAT(\"$\", CAST(amount AS STRING))",
+        "category": "bq_string",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "拼接前缀",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 数字转字符串用什么语法？",
+      "level_2": "📖 `CAST(列 AS 类型)`",
+      "level_3": "👀 `CAST(amount AS STRING)`",
+      "level_4": "📝 正确答案：`CAST(amount AS STRING)`"
+    },
+    "explanation": "CAST 显式转换类型（INT64/FLOAT64/STRING/DATE…）；非安全转换可用 SAFE_CAST。"
+  },
+  {
+    "id": "bq-basics-045",
+    "title": "MOD 取余",
+    "description": "按订单号奇偶分流（mod 2）",
+    "exercise_type": "fill",
+    "tech_stack": "bigquery",
+    "weight": "easy",
+    "category": "bq_math",
+    "subcategory": "基础",
+    "full_code": "SELECT order_id, IF(MOD(order_id, 2) = 0, \"even\", \"odd\") AS parity FROM `sales.orders`;",
+    "expected": "",
+    "points": [
+      {
+        "id": "mod_fn",
+        "text": "MOD(order_id, 2)",
+        "category": "bq_math",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "取余：除以 2 的余数",
+        "fill_type": "text"
+      },
+      {
+        "id": "parity_if",
+        "text": "IF(MOD(order_id, 2) = 0, \"even\", \"odd\")",
+        "category": "bq_if_case",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "偶数/奇数二分支",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 取余用什么函数？奇偶判断怎么写？",
+      "level_2": "📖 `MOD(值, 除数)`；余 0 为偶",
+      "level_3": "👀 `MOD(order_id, 2)` 配合 IF 分流",
+      "level_4": "📝 正确答案：`MOD(order_id, 2)` 与 `IF(MOD(order_id, 2) = 0, \"even\", \"odd\")`"
+    },
+    "explanation": "MOD 常用于奇偶分流、哈希取桶、周期性分组（如按天取模轮转）。"
+  },
+  {
+    "id": "bq-basics-046",
+    "title": "JSON_VALUE 取字段",
+    "description": "从 JSON 字符串列中提取字段",
+    "exercise_type": "fill",
+    "tech_stack": "bigquery",
+    "weight": "medium",
+    "category": "bq_json",
+    "subcategory": "基础",
+    "full_code": "SELECT JSON_VALUE(attrs, \"$.channel\") AS channel FROM `sales.orders`;",
+    "expected": "",
+    "points": [
+      {
+        "id": "json_value",
+        "text": "JSON_VALUE(attrs, \"$.channel\")",
+        "category": "bq_json",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "从 JSON 字符串按路径取值",
+        "fill_type": "text"
+      },
+      {
+        "id": "path",
+        "text": "\"$.channel\"",
+        "category": "bq_json",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "JSONPath：$ 根，.字段",
+        "fill_type": "text",
+        "acceptable_answers": []
+      }
+    ],
+    "hints": {
+      "level_1": "💡 从 JSON 字符串取某个字段用什么函数？路径怎么写？",
+      "level_2": "📖 `JSON_VALUE(json, \"$.字段\")`",
+      "level_3": "👀 `JSON_VALUE(attrs, \"$.channel\")`",
+      "level_4": "📝 正确答案：`JSON_VALUE(attrs, \"$.channel\")`"
+    },
+    "explanation": "JSON_VALUE 返回标量字符串；JSON_QUERY 返回对象/数组片段；JSON_EXTRACT 已废弃。"
+  },
+  {
+    "id": "bq-basics-047",
+    "title": "分区表设计",
+    "description": "为按日期查询的订单表设计分区",
+    "exercise_type": "fill",
+    "tech_stack": "bigquery",
+    "weight": "hard",
+    "category": "bq_schema",
+    "subcategory": "基础",
+    "full_code": "CREATE TABLE IF NOT EXISTS `sales.orders_partitioned`\nPARTITION BY DATE(created_at)\nCLUSTER BY customer_id\nAS SELECT * FROM `sales.orders`;",
+    "expected": "",
+    "points": [
+      {
+        "id": "partition_by",
+        "text": "PARTITION BY DATE(created_at)",
+        "category": "bq_schema",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "按创建日期分区，查询可裁剪分区",
+        "fill_type": "text"
+      },
+      {
+        "id": "cluster_by",
+        "text": "CLUSTER BY customer_id",
+        "category": "bq_schema",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "区内按客户编号聚类，加速等值过滤",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 大表按时间查询频繁，如何建表优化？分区和聚簇分别怎么写？",
+      "level_2": "📖 `PARTITION BY 日期表达式` + `CLUSTER BY 过滤列`",
+      "level_3": "👀 `PARTITION BY DATE(created_at)` 与 `CLUSTER BY customer_id`",
+      "level_4": "📝 正确答案：`PARTITION BY DATE(created_at)` 与 `CLUSTER BY customer_id`"
+    },
+    "explanation": "分区按时间裁剪扫描量（成本随分区数降）；聚簇在分区内进一步组织数据，加速等值/范围过滤。"
+  },
+  {
+    "id": "bq-basics-048",
+    "title": "分区裁剪过滤",
+    "description": "在分区表上按分区键过滤以节约扫描",
+    "exercise_type": "fill",
+    "tech_stack": "bigquery",
+    "weight": "hard",
+    "category": "bq_schema",
+    "subcategory": "基础",
+    "full_code": "SELECT order_id\nFROM `sales.orders_partitioned`\nWHERE DATE(created_at) >= \"2026-01-01\"\n  AND DATE(created_at) < \"2026-02-01\";",
+    "expected": "",
+    "points": [
+      {
+        "id": "prune_filter",
+        "text": "DATE(created_at) >= \"2026-01-01\"\n  AND DATE(created_at) < \"2026-02-01\"",
+        "category": "bq_schema",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "对分区键加范围条件，只扫一个月的分区",
+        "fill_type": "text"
+      },
+      {
+        "id": "partition_col",
+        "text": "DATE(created_at)",
+        "category": "bq_schema",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "分区键要与建表表达式一致",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 怎么让查询只扫描一月的数据？",
+      "level_2": "📖 对分区键写过滤（尽量恒等表达式），查询计划自动裁剪分区",
+      "level_3": "👀 `WHERE DATE(created_at) >= … AND DATE(created_at) < …`",
+      "level_4": "📝 正确答案：分区键的范围过滤条件"
+    },
+    "explanation": "分区裁剪依赖对分区列的直接比较；把时间函数套在列上（如 ON created_at 加函数）可能失效。"
+  },
+  {
+    "id": "bq-basics-049",
+    "title": "SELECT * EXCEPT",
+    "description": "查询所有列但排除敏感列",
+    "exercise_type": "fill",
+    "tech_stack": "bigquery",
+    "weight": "medium",
+    "category": "bq_select",
+    "subcategory": "基础",
+    "full_code": "SELECT * EXCEPT (customer_id) FROM `sales.orders`;",
+    "expected": "",
+    "points": [
+      {
+        "id": "except_kw",
+        "text": "EXCEPT (customer_id)",
+        "category": "bq_select",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "排除指定列输出其余全部",
+        "fill_type": "text"
+      },
+      {
+        "id": "star_rest",
+        "text": "SELECT *",
+        "category": "bq_select",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "其余列全选",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "select *"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 只要一列不输出但其余全要，怎么写？",
+      "level_2": "📖 `SELECT * EXCEPT (列名)`",
+      "level_3": "👀 `SELECT * EXCEPT (customer_id)`",
+      "level_4": "📝 正确答案：`EXCEPT (customer_id)`"
+    },
+    "explanation": "SELECT * EXCEPT 免去逐一列名，多列用逗号分隔；还有 REPLACE 可替换列输出。"
+  },
+  {
+    "id": "bq-basics-050",
+    "title": "半结构化 JSON 类型",
+    "description": "将 JSON 列声明为 JSON 类型并取值",
+    "exercise_type": "fill",
+    "tech_stack": "bigquery",
+    "weight": "hard",
+    "category": "bq_json",
+    "subcategory": "基础",
+    "full_code": "SELECT order_id, attrs.channel AS channel\nFROM `sales.orders`\nWHERE attrs.channel = \"web\";",
+    "expected": "",
+    "points": [
+      {
+        "id": "json_nav",
+        "text": "attrs.channel",
+        "category": "bq_json",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "JSON 类型列用点号导航取字段",
+        "fill_type": "text"
+      },
+      {
+        "id": "json_filter",
+        "text": "attrs.channel = \"web\"",
+        "category": "bq_json",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "对 JSON 字段过滤",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 列类型是 JSON（非字符串）时如何取值与过滤？",
+      "level_2": "📖 JSON 类型可直接 `列.字段` 点号导航",
+      "level_3": "👀 `attrs.channel` 直接取值、参与 WHERE",
+      "level_4": "📝 正确答案：`attrs.channel`（点号导航）"
+    },
+    "explanation": "若列声明为 JSON 类型（推荐），直接 `列.字段` 导航；若存的是字符串才需要 JSON_VALUE。"
+  }
+]

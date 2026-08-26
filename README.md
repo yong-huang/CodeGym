@@ -11,6 +11,12 @@
 依据 `docs/design.md` 实现的 **Phase 1+2 可运行 MVP**：一个「填空-运行-验证」的代码训练闭环。
 学员选择训练动作 → 选择负重级别 → 随机留空生成训练变体 → 填写训练点 → 运行验证 → 即时评分（S/A/B/C/D）→ 记录薄弱部位与成长进度。
 
+## 界面预览
+
+| 首页看板（含题库目录树） | 训练页（填空 + 负重 + 辅助提示） | 判题结果（真实执行 + 评分卡） |
+|:---:|:---:|:---:|
+| ![首页](docs/screenshots/home.png) | ![训练页](docs/screenshots/training.png) | ![判题结果](docs/screenshots/result.png) |
+
 ## 功能总览
 
 - 📚 **训练计划**：浏览 / 按技术栈筛选训练动作（Python / Go / JavaScript / Kubernetes / …）
@@ -20,6 +26,7 @@
 - 🐹 **Go 题库**：50 道基础题（语法/函数/切片/map/结构体/接口/并发/泛型……），真实 `go run` 执行判题
 - ☸️ **Kubernetes 题库**：50 道基础题（kubectl 命令补全 + YAML 配置补全），支持别名答案（如 `-A` = `--all-namespaces`）
 - 🗄️ **SQL 题库**：50 道基础题（SELECT/WHERE 排序分页/聚合分组/多表 JOIN/子查询/DML/DDL 与约束……），围绕统一的示例库（员工/部门/商品/客户/订单）出题
+- 📊 **BigQuery 题库**：50 道基础题（查询/聚合分组/CTE/UNION/字符串/数组与 UNNEST/日期/窗口函数/CASE·COALESCE/JSON/分区聚类优化……），围绕 sales 数据集出题
 - ⭐ **收藏**：给需要加强的题目点 ★ 收藏，训练页与首页可随时取消，支持「只看收藏」筛选，有空多练练
 - 🎯 **负重分级**：🌱入门 → 🌿简单 → 🌳中等 → 🔥困难 → 💎专家，随机留空数量随级别变化（设计 §5）
 - 🧑‍💻 **四种题型**：填空补全、命令补全、配置补全、Bug 修复（设计 §4）
@@ -59,7 +66,7 @@ CODEGYM_ADMIN_TOKEN=$(openssl rand -hex 16) docker compose up -d --build
 
 ```bash
 cd backend
-go run ./cmd/server -addr :8090        # 首次启动自动建库并 seed data/bank 下的全部内置题库（555 题）
+go run ./cmd/server -addr :8090        # 首次启动自动建库并 seed data/bank 下的全部内置题库（605 题）
 ```
 
 可选参数：`-db data/codegym.db` 指定数据库文件；`PYTHON_BIN` 指定 Python 解释器；

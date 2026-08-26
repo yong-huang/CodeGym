@@ -2,6 +2,12 @@
 
 > 练出来的，才是自己的。
 
+![CI](https://github.com/hyhit/CodeGym/actions/workflows/ci.yml/badge.svg)
+![Go](https://img.shields.io/badge/Go-1.26-00ADD8?logo=go&logoColor=white)
+![React](https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=white)
+![License](https://img.shields.io/badge/License-MIT-blue)
+![Data License](https://img.shields.io/badge/Data-CC%20BY--SA%204.0-lightgrey)
+
 依据 `docs/design.md` 实现的 **Phase 1+2 可运行 MVP**：一个「填空-运行-验证」的代码训练闭环。
 学员选择训练动作 → 选择负重级别 → 随机留空生成训练变体 → 填写训练点 → 运行验证 → 即时评分（S/A/B/C/D）→ 记录薄弱部位与成长进度。
 
@@ -9,6 +15,7 @@
 
 - 📚 **训练计划**：浏览 / 按技术栈筛选训练动作（Python / Go / JavaScript / Kubernetes / …）
 - 🐍 **Python 题库**：50 道基础题（语法/f-string/流程/列表推导/函数/递归/异常/类……），真实 `python3` 执行判题
+- ⚡ **Python 协程题库**：20 道专项题（async/await/create_task/gather/超时与异常/异步迭代器/Queue/Semaphore……），真实 `asyncio` 执行判题
 - 🐹 **Go 题库**：50 道基础题（语法/函数/切片/map/结构体/接口/并发/泛型……），真实 `go run` 执行判题
 - ☸️ **Kubernetes 题库**：50 道基础题（kubectl 命令补全 + YAML 配置补全），支持别名答案（如 `-A` = `--all-namespaces`）
 - 🗄️ **SQL 题库**：50 道基础题（SELECT/WHERE 排序分页/聚合分组/多表 JOIN/子查询/DML/DDL 与约束……），围绕统一的示例库（员工/部门/商品/客户/订单）出题
@@ -37,16 +44,27 @@
 
 ## 快速开始
 
-### 1. 启动后端
+### 方式一：Docker Compose（推荐）
+
+```bash
+docker compose up -d --build          # 前端 http://localhost:8088
+# 生产环境务必设置教练端令牌：
+CODEGYM_ADMIN_TOKEN=$(openssl rand -hex 16) docker compose up -d --build
+```
+
+### 方式二：本地开发
+
+#### 1. 启动后端
 
 ```bash
 cd backend
-go run ./cmd/server -addr :8090        # 首次启动自动建库并 seed data/bank 下的全部内置题库（500+ 题）
+go run ./cmd/server -addr :8090        # 首次启动自动建库并 seed data/bank 下的全部内置题库（535 题）
 ```
 
-可选：`-db data/codegym.db` 指定数据库文件；`PYTHON_BIN` 指定 Python 解释器。
+可选参数：`-db data/codegym.db` 指定数据库文件；`PYTHON_BIN` 指定 Python 解释器；
+`-admin-token <token>`（或环境变量 `CODEGYM_ADMIN_TOKEN`）为教练端接口启用鉴权。
 
-### 2. 启动前端
+#### 2. 启动前端
 
 ```bash
 cd frontend
@@ -55,6 +73,20 @@ npm run dev                             # http://localhost:5190 （/api 已代�
 ```
 
 打开 http://localhost:5190 即可开始训练。
+
+## ⚠️ 安全提示
+
+CodeGym 的定位是**个人/内网训练工具**，默认配置**未启用任何鉴权与沙箱隔离**：
+
+- 教练端接口（创建/删除题目、导入导出、AI 出题）可被任意调用；
+- 训练代码会在服务器本地以子进程真实执行（Python 直接运行、Go 经 `go run` 编译执行）。
+
+**请勿将未加防护的实例暴露到公网。** 对外部署时：
+
+1. 用 `-admin-token` / `CODEGYM_ADMIN_TOKEN` 启用教练端令牌（前端「教练端」页可保存令牌）；
+2. 置于带认证的反向代理之后，限制来源 IP；
+3. 如需强隔离，把后端放进容器并限制 CPU/内存/网络（K8s 沙箱在后续路线中）。
+
 
 ### 3. 运行测试
 
@@ -85,12 +117,14 @@ python3 scripts/e2e_live.py
 | `GET` | `/api/v1/progress` | 学员成长进度 + 最近作答 |
 | `GET` | `/api/v1/weak-points` | 薄弱部位列表 |
 | `GET` | `/api/v1/environments` | 可用执行环境 |
-| `POST` | `/api/v1/admin/exercises` | 创建训练动作（教练） |
-| `PUT` | `/api/v1/admin/exercises/:id` | 更新训练动作 |
-| `DELETE` | `/api/v1/admin/exercises/:id` | 删除训练动作 |
-| `GET` | `/api/v1/admin/export` | 导出整个题库（JSON） |
-| `POST` | `/api/v1/admin/import` | 批量导入训练动作 |
-| `GET` | `/api/v1/admin/stats` | 平台统计 |
+| `POST` | `/api/v1/admin/exercises` | 创建训练动作（教练，需令牌） |
+| `PUT` | `/api/v1/admin/exercises/:id` | 更新训练动作（教练，需令牌） |
+| `DELETE` | `/api/v1/admin/exercises/:id` | 删除训练动作（教练，需令牌） |
+| `GET` | `/api/v1/admin/export` | 导出整个题库（JSON，教练，需令牌） |
+| `POST` | `/api/v1/admin/import` | 批量导入训练动作（教练，需令牌） |
+| `GET` | `/api/v1/admin/stats` | 平台统计（教练，需令牌） |
+
+> 教练端接口在启用 `-admin-token` 后需要携带 `X-Admin-Token: <token>` 或 `Authorization: Bearer <token>`；未启用时开放（仅限本地开发）。
 
 ## 目录结构
 
@@ -119,3 +153,12 @@ CodeGym/
 - Phase 4：用户认证、权限、训练报告
 - Phase 5：JSON/YAML 批量导入导出、AI 出题（Ollama）、数据仪表盘
 - Phase 6：生产部署（Dockerfile、监控、安全加固）
+
+## 贡献
+
+欢迎提 Issue 与 PR！出题、修 Bug、加技术栈都可以，见 [CONTRIBUTING.md](CONTRIBUTING.md)。
+
+## 许可证
+
+- 代码：[MIT](LICENSE)
+- 题库内容（`backend/data/bank/*.json`）：[CC BY-SA 4.0](LICENSE-DATA)

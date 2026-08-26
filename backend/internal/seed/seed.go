@@ -244,6 +244,7 @@ type CategoryPair struct {
 func CategoryPlan() []CategoryPair {
 	return []CategoryPair{
 		{Tech: "python", Sub: "基础"},
+		{Tech: "python", Sub: "协程"},
 		{Tech: "python", Sub: "FastAPI"},
 		{Tech: "python", Sub: "高级"},
 		{Tech: "python", Sub: "实战"},

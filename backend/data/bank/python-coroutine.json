@@ -1,0 +1,792 @@
+[
+  {
+    "id": "py-coroutine-001",
+    "title": "第一个协程",
+    "description": "定义协程函数并用事件循环运行它",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "beginner",
+    "category": "coroutine",
+    "subcategory": "协程",
+    "full_code": "import asyncio\n\nasync def hello():\n    return \"Hello, coroutine\"\n\nprint(asyncio.run(hello()))",
+    "expected": "Hello, coroutine",
+    "points": [
+      {
+        "id": "async_def",
+        "text": "async def",
+        "category": "coroutine",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "定义协程函数的关键字组合",
+        "fill_type": "text",
+        "acceptable_answers": []
+      },
+      {
+        "id": "run_call",
+        "text": "asyncio.run(hello())",
+        "category": "event_loop",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "启动事件循环并运行入口协程",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 用什么关键字定义协程函数？怎么启动它？",
+      "level_2": "📖 `async def` 定义协程；`asyncio.run(协程())` 运行到完成",
+      "level_3": "👀 `async def hello(): …` 与 `asyncio.run(hello())`",
+      "level_4": "📝 正确答案：`async def` 与 `asyncio.run(hello())`"
+    },
+    "explanation": "`async def` 把函数变成协程函数；协程必须交给事件循环（如 `asyncio.run`）驱动才会真正执行。"
+  },
+  {
+    "id": "py-coroutine-002",
+    "title": "await 取回结果",
+    "description": "在协程中等待另一个协程并取得返回值",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "beginner",
+    "category": "await_kw",
+    "subcategory": "协程",
+    "full_code": "import asyncio\n\nasync def add(a, b):\n    return a + b\n\nasync def main():\n    result = await add(2, 3)\n    print(result)\n\nasyncio.run(main())",
+    "expected": "5",
+    "points": [
+      {
+        "id": "await_expr",
+        "text": "await add(2, 3)",
+        "category": "await_kw",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "等待协程完成并把返回值取回来",
+        "fill_type": "text"
+      },
+      {
+        "id": "assign",
+        "text": "result = ",
+        "category": "syntax",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "把等待到的结果存进变量",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 如何在 main 里拿到 add 的返回值？",
+      "level_2": "📖 `变量 = await 协程()` 会挂起直到完成并返回值",
+      "level_3": "👀 `result = await add(2, 3)`",
+      "level_4": "📝 正确答案：`result = await add(2, 3)`"
+    },
+    "explanation": "`await` 只能出现在协程函数内：它挂起当前协程，等右侧可等待对象完成后取回结果。"
+  },
+  {
+    "id": "py-coroutine-003",
+    "title": "调用协程函数得到的是什么",
+    "description": "不加 await 直接调用协程函数，观察得到的对象类型",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "coroutine",
+    "subcategory": "协程",
+    "full_code": "import asyncio\n\nasync def work():\n    return \"done\"\n\ncoro = work()\nprint(type(coro).__name__)\ncoro.close()",
+    "expected": "coroutine",
+    "points": [
+      {
+        "id": "call_no_await",
+        "text": "work()",
+        "category": "coroutine",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "直接像普通函数一样调用（不会执行内部代码）",
+        "fill_type": "text"
+      },
+      {
+        "id": "type_of",
+        "text": "type(coro).__name__",
+        "category": "expression",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "打印对象的类型名",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 调用 async 函数会立刻执行吗？得到的是什么类型的对象？",
+      "level_2": "📖 调用协程函数只创建「协程对象」，代码并未运行",
+      "level_3": "👀 `coro = work()` 得到 coroutine 对象",
+      "level_4": "📝 正确答案：打印 `coroutine`（协程对象需 await/run 才执行）"
+    },
+    "explanation": "调用协程函数返回协程对象（类型名 `coroutine`），此时函数体尚未执行——这是新手最常见的困惑点；用 `coro.close()` 关闭未运行的协程避免告警。"
+  },
+  {
+    "id": "py-coroutine-004",
+    "title": "程序入口结构",
+    "description": "标准 asyncio 程序的三段式结构",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "beginner",
+    "category": "event_loop",
+    "subcategory": "协程",
+    "full_code": "import asyncio\n\nasync def main():\n    print(\"running in event loop\")\n\nasyncio.run(main())",
+    "expected": "running in event loop",
+    "points": [
+      {
+        "id": "import",
+        "text": "import asyncio",
+        "category": "module",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "引入 asyncio 标准库模块",
+        "fill_type": "text"
+      },
+      {
+        "id": "entry",
+        "text": "asyncio.run(main())",
+        "category": "event_loop",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "以 main 为入口启动事件循环",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 asyncio 程序的固定开场和启动方式？",
+      "level_2": "📖 `import asyncio` → `async def main()` → `asyncio.run(main())`",
+      "level_3": "👀 `asyncio.run(main())`",
+      "level_4": "📝 正确答案：`import asyncio` 与 `asyncio.run(main())`"
+    },
+    "explanation": "每个 asyncio 程序都有唯一入口：`asyncio.run(coro)` 新建事件循环、运行协程至结束再关闭循环；一个进程内不要嵌套多次 run。"
+  },
+  {
+    "id": "py-coroutine-005",
+    "title": "返回值接力",
+    "description": "把上一个协程的结果作为下一个协程的参数",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "await_kw",
+    "subcategory": "协程",
+    "full_code": "import asyncio\n\nasync def double(n):\n    return n * 2\n\nasync def main():\n    a = await double(10)\n    b = await double(a)\n    print(b)\n\nasyncio.run(main())",
+    "expected": "40",
+    "points": [
+      {
+        "id": "first_call",
+        "text": "double(10)",
+        "category": "function",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "第一次翻倍：对 10 调用 double",
+        "fill_type": "text"
+      },
+      {
+        "id": "second_call",
+        "text": "double(a)",
+        "category": "function",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "把上一步结果 a 再翻倍",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 先算 a 再算 b，b 依赖 a 的值",
+      "level_2": "📖 `a = await double(10)` 得 20，再 `b = await double(a)` 得 40",
+      "level_3": "👀 `double(10)` → `double(a)`",
+      "level_4": "📝 正确答案：`double(10)` 与 `double(a)`"
+    },
+    "explanation": "await 表达式的值就是协程的 return 值，可以像普通值一样继续参与计算与传参。"
+  },
+  {
+    "id": "py-coroutine-006",
+    "title": "协程中调用普通函数",
+    "description": "协程体内可以直接调用同步函数",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "beginner",
+    "category": "function",
+    "subcategory": "协程",
+    "full_code": "import asyncio\n\ndef square(n):\n    return n * n\n\nasync def main():\n    print(square(6))\n\nasyncio.run(main())",
+    "expected": "36",
+    "points": [
+      {
+        "id": "sync_call",
+        "text": "square(6)",
+        "category": "function",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "普通函数直接调用即可，无需 await",
+        "fill_type": "text"
+      },
+      {
+        "id": "coro_main",
+        "text": "async def main()",
+        "category": "coroutine",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "入口协程函数的定义",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 普通同步函数需要 await 吗？",
+      "level_2": "📖 同步函数直接调用立即返回；只有可等待对象才需要 await",
+      "level_3": "👀 `print(square(6))`",
+      "level_4": "📝 正确答案：`square(6)`（同步调用）"
+    },
+    "explanation": "协程体内可自由混用同步代码；耗时 CPU 计算若直接写在协程里仍会阻塞整个事件循环。"
+  },
+  {
+    "id": "py-coroutine-007",
+    "title": "顺序执行两个协程",
+    "description": "依次 await 时后一个要等前一个完全结束",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "await_kw",
+    "subcategory": "协程",
+    "full_code": "import asyncio\n\nasync def step(name):\n    print(f\"{name}-start\")\n    await asyncio.sleep(0.05)\n    print(f\"{name}-end\")\n\nasync def main():\n    await step(\"A\")\n    await step(\"B\")\n\nasyncio.run(main())",
+    "expected": "A-start A-end B-start B-end",
+    "points": [
+      {
+        "id": "step_a",
+        "text": "await step(\"A\")",
+        "category": "await_kw",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "先完整执行 A",
+        "fill_type": "text"
+      },
+      {
+        "id": "step_b",
+        "text": "await step(\"B\")",
+        "category": "await_kw",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "A 结束后再执行 B",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 逐个 await 时，B 会和 A 重叠吗？",
+      "level_2": "📖 连续 await 是串行的：A 完全结束后才开始 B",
+      "level_3": "👀 输出顺序为 A-start、A-end、B-start、B-end",
+      "level_4": "📝 正确答案：`await step(\"A\")` 与 `await step(\"B\")`"
+    },
+    "explanation": "连续 await = 顺序执行：第二步必须等第一步完成，没有并发发生。想要并发请看 create_task / gather。"
+  },
+  {
+    "id": "py-coroutine-008",
+    "title": "create_task 创建任务",
+    "description": "把协程包装成 Task 并发调度",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "task",
+    "subcategory": "协程",
+    "full_code": "import asyncio\n\nasync def work():\n    return \"task-done\"\n\nasync def main():\n    task = asyncio.create_task(work())\n    print(\"created\")\n    result = await task\n    print(result)\n\nasyncio.run(main())",
+    "expected": "created task-done",
+    "points": [
+      {
+        "id": "make_task",
+        "text": "asyncio.create_task(work())",
+        "category": "task",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "把协程包装成 Task 加入事件循环调度",
+        "fill_type": "text"
+      },
+      {
+        "id": "await_task",
+        "text": "await task",
+        "category": "task",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "等待任务完成并取回结果",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 怎么让 work() 与后续代码并发跑？之后如何拿结果？",
+      "level_2": "📖 `asyncio.create_task(协程)` 立即调度；`await task` 收割结果",
+      "level_3": "👀 `task = asyncio.create_task(work())` … `await task`",
+      "level_4": "📝 正确答案：`asyncio.create_task(work())` 与 `await task`"
+    },
+    "explanation": "`create_task` 让协程在事件循环中尽快开始执行（不等 await）；随后 `await task` 只是等待其完成。"
+  },
+  {
+    "id": "py-coroutine-009",
+    "title": "任务创建即运行",
+    "description": "create_task 之后、await 之前协程已开始执行",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "task",
+    "subcategory": "协程",
+    "full_code": "import asyncio\n\nasync def work():\n    print(\"working\")\n    return 7\n\nasync def main():\n    task = asyncio.create_task(work())\n    result = await task\n    print(result)\n\nasyncio.run(main())",
+    "expected": "working 7",
+    "points": [
+      {
+        "id": "make_task",
+        "text": "asyncio.create_task(work())",
+        "category": "task",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "创建即调度，无需等到 await 才开始",
+        "fill_type": "text"
+      },
+      {
+        "id": "get_result",
+        "text": "result = await task",
+        "category": "task",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "收割任务结果",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 \"working\" 会在 await 之前打印还是之后？",
+      "level_2": "📖 create_task 已把协程排入队列，事件循环一有空档就执行它",
+      "level_3": "👀 输出顺序：working、7",
+      "level_4": "📝 正确答案：`asyncio.create_task(work())` 与 `result = await task`"
+    },
+    "explanation": "Task 的调度时机是「创建后尽早」：main 第一次挂起（这里是 await task）时循环就去跑 work 了。"
+  },
+  {
+    "id": "py-coroutine-010",
+    "title": "gather 并发收集",
+    "description": "用 gather 同时运行多个协程并收集全部结果",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "gather",
+    "subcategory": "协程",
+    "full_code": "import asyncio\n\nasync def calc(n):\n    return n * 10\n\nasync def main():\n    results = await asyncio.gather(calc(1), calc(2), calc(3))\n    print(results)\n\nasyncio.run(main())",
+    "expected": "[10, 20, 30]",
+    "points": [
+      {
+        "id": "gather_args",
+        "text": "asyncio.gather(calc(1), calc(2), calc(3))",
+        "category": "gather",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "把三个协程一起交给 gather 并发执行",
+        "fill_type": "text"
+      },
+      {
+        "id": "await_gather",
+        "text": "results = await ",
+        "category": "await_kw",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "等待全部完成后得到结果列表",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 一次性并发多个协程用什么？结果是什么形态？",
+      "level_2": "📖 `await asyncio.gather(c1, c2, c3)` 返回按传入顺序排列的结果列表",
+      "level_3": "👀 `await asyncio.gather(calc(1), calc(2), calc(3))` → `[10, 20, 30]`",
+      "level_4": "📝 正确答案：`results = await asyncio.gather(calc(1), calc(2), calc(3))`"
+    },
+    "explanation": "gather 把多个可等待对象并发运行，返回值是「按传入顺序」组成的结果列表——与完成先后无关。"
+  },
+  {
+    "id": "py-coroutine-011",
+    "title": "并发交错的证据",
+    "description": "两个不同耗时的任务并发时输出如何交错",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "hard",
+    "category": "gather",
+    "subcategory": "协程",
+    "full_code": "import asyncio\n\nasync def worker(name, delay):\n    print(f\"{name}: start\")\n    await asyncio.sleep(delay)\n    print(f\"{name}: end\")\n\nasync def main():\n    await asyncio.gather(\n        worker(\"slow\", 0.15),\n        worker(\"fast\", 0.05),\n    )\n\nasyncio.run(main())",
+    "expected": "slow: start fast: start fast: end slow: end",
+    "points": [
+      {
+        "id": "slow_arg",
+        "text": "worker(\"slow\", 0.15)",
+        "category": "gather",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "慢任务：睡 0.15 秒",
+        "fill_type": "text"
+      },
+      {
+        "id": "fast_arg",
+        "text": "worker(\"fast\", 0.05)",
+        "category": "gather",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "快任务：睡 0.05 秒，会更早醒来",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 gather 里两个任务都先打印 start；谁先打印 end？",
+      "level_2": "📖 睡得短的先醒：fast 的 end 出现在 slow 的 end 之前",
+      "level_3": "👀 输出顺序：slow: start、fast: start、fast: end、slow: end",
+      "level_4": "📝 正确答案：`worker(\"slow\", 0.15)` 与 `worker(\"fast\", 0.05)`"
+    },
+    "explanation": "单线程的事件循环靠挂起/恢复实现并发：两个任务都在 sleep 时互相让路，先到时的先继续——这就是异步交错的直观体现。"
+  },
+  {
+    "id": "py-coroutine-012",
+    "title": "sleep 让出控制权",
+    "description": "asyncio.sleep 挂起期间其他任务得以运行",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "async_sleep",
+    "subcategory": "协程",
+    "full_code": "import asyncio\n\nasync def ticker():\n    print(\"tick\")\n\nasync def main():\n    task = asyncio.create_task(ticker())\n    await asyncio.sleep(0.1)\n    print(\"after sleep\")\n\nasyncio.run(main())",
+    "expected": "tick after sleep",
+    "points": [
+      {
+        "id": "schedule",
+        "text": "asyncio.create_task(ticker())",
+        "category": "task",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "先把 ticker 排入事件循环",
+        "fill_type": "text"
+      },
+      {
+        "id": "sleep_call",
+        "text": "await asyncio.sleep(0.1)",
+        "category": "async_sleep",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "异步睡 0.1 秒——期间 ticker 得以运行",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 main 睡觉的时候谁去跑了 ticker？",
+      "level_2": "📖 await sleep 挂起 main，事件循环转而去执行就绪的任务",
+      "level_3": "👀 输出顺序：tick、after sleep",
+      "level_4": "📝 正确答案：`asyncio.create_task(ticker())` 与 `await asyncio.sleep(0.1)`"
+    },
+    "explanation": "`time.sleep` 会冻结整个线程，而 `asyncio.sleep` 只挂起当前协程并把控制权交还事件循环——这正是单线程并发的核心机制。"
+  },
+  {
+    "id": "py-coroutine-013",
+    "title": "协程超时控制",
+    "description": "用 wait_for 给慢协程设 deadline",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "hard",
+    "category": "wait_for",
+    "subcategory": "协程",
+    "full_code": "import asyncio\n\nasync def slow():\n    await asyncio.sleep(5)\n    return \"finished\"\n\nasync def main():\n    try:\n        await asyncio.wait_for(slow(), timeout=0.2)\n    except asyncio.TimeoutError:\n        print(\"timeout!\")\n\nasyncio.run(main())",
+    "expected": "timeout!",
+    "points": [
+      {
+        "id": "wait_for",
+        "text": "await asyncio.wait_for(slow(), timeout=0.2)",
+        "category": "wait_for",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "给 slow 设 0.2 秒的超时上限",
+        "fill_type": "text"
+      },
+      {
+        "id": "except_clause",
+        "text": "except asyncio.TimeoutError:",
+        "category": "exception",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "捕获超时专用异常",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 slow 要 5 秒才完成，怎样在 0.2 秒处掐断？超时会抛什么？",
+      "level_2": "📖 `asyncio.wait_for(协程, timeout=秒)` 超时抛 `asyncio.TimeoutError`",
+      "level_3": "👀 `await asyncio.wait_for(slow(), timeout=0.2)` + except 分支",
+      "level_4": "📝 正确答案：`await asyncio.wait_for(slow(), timeout=0.2)` 与 `except asyncio.TimeoutError:`"
+    },
+    "explanation": "wait_for 超时后会取消内部任务并抛出 TimeoutError；务必 try/except 处理，否则异常向上传播导致程序报错退出。"
+  },
+  {
+    "id": "py-coroutine-014",
+    "title": "协程中的异常",
+    "description": "await 的协程抛异常会传播到调用方",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "exception",
+    "subcategory": "协程",
+    "full_code": "import asyncio\n\nasync def risky():\n    raise ValueError(\"boom\")\n\nasync def main():\n    try:\n        await risky()\n    except ValueError as e:\n        print(f\"caught: {e}\")\n\nasyncio.run(main())",
+    "expected": "caught: boom",
+    "points": [
+      {
+        "id": "raise_stmt",
+        "text": "raise ValueError(\"boom\")",
+        "category": "exception",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "在协程里主动抛出异常",
+        "fill_type": "text"
+      },
+      {
+        "id": "catch",
+        "text": "except ValueError as e:",
+        "category": "exception",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "在调用方捕获该异常",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 协程里 raise 的异常，调用方 await 时会发生什么？",
+      "level_2": "📖 异常沿 await 链传播，普通 try/except 即可接住",
+      "level_3": "👀 `raise ValueError(\"boom\")` + `except ValueError as e`",
+      "level_4": "📝 正确答案：`raise ValueError(\"boom\")` 与 `except ValueError as e:`"
+    },
+    "explanation": "await 相当于同步调用：被等待协程抛出的异常会在 await 处原样抛出，用常规 try/except 处理即可。"
+  },
+  {
+    "id": "py-coroutine-015",
+    "title": "gather 结果保序",
+    "description": "完成顺序与结果顺序无关",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "gather",
+    "subcategory": "协程",
+    "full_code": "import asyncio\n\nasync def job(n, delay):\n    await asyncio.sleep(delay)\n    return n\n\nasync def main():\n    results = await asyncio.gather(job(1, 0.1), job(2, 0.02))\n    print(results)\n\nasyncio.run(main())",
+    "expected": "[1, 2]",
+    "points": [
+      {
+        "id": "jobs",
+        "text": "job(1, 0.1), job(2, 0.02)",
+        "category": "gather",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "任务 1 慢、任务 2 快",
+        "fill_type": "text"
+      },
+      {
+        "id": "await_line",
+        "text": "results = await asyncio.gather(",
+        "category": "gather",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "并发运行并等待全部完成",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 job(2) 先完成，但结果列表的下标 0 是谁？",
+      "level_2": "📖 gather 严格按传入顺序组装结果，与完成时间无关",
+      "level_3": "👀 输出 `[1, 2]` 而非 `[2, 1]`",
+      "level_4": "📝 正确答案：`job(1, 0.1), job(2, 0.02)`（结果保持 `[1, 2]`）"
+    },
+    "explanation": "gather 的返回列表始终与参数顺序一一对应：需要「结果与任务对应关系」时用它比手动管理 Task 更省心。"
+  },
+  {
+    "id": "py-coroutine-016",
+    "title": "异步生成器",
+    "description": "async yield 与 async for 配合使用",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "hard",
+    "category": "async_iter",
+    "subcategory": "协程",
+    "full_code": "import asyncio\n\nasync def numbers():\n    for i in range(3):\n        await asyncio.sleep(0.01)\n        yield i\n\nasync def main():\n    total = 0\n    async for n in numbers():\n        total += n\n    print(total)\n\nasyncio.run(main())",
+    "expected": "3",
+    "points": [
+      {
+        "id": "yield_stmt",
+        "text": "yield i",
+        "category": "async_iter",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "异步生成器逐个产出值",
+        "fill_type": "text"
+      },
+      {
+        "id": "async_for",
+        "text": "async for n in numbers():",
+        "category": "async_iter",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "驱动异步生成器的专用 for 形式",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 含 yield 的 async 函数叫什么？用什么语法遍历它？",
+      "level_2": "📖 异步生成器：`async def + yield`；遍历要用 `async for`",
+      "level_3": "👀 `yield i` 与 `async for n in numbers():`",
+      "level_4": "📝 正确答案：`yield i` 与 `async for n in numbers():`"
+    },
+    "explanation": "`async def` 中出现 `yield` 即为异步生成器：每次 yield 都可挂起；消费端必须用 `async for`（或 `__anext__`）驱动，普通 for 会报 TypeError。"
+  },
+  {
+    "id": "py-coroutine-017",
+    "title": "asyncio.Queue 生产者消费者",
+    "description": "put/get 在协程间安全传递数据",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "hard",
+    "category": "async_queue",
+    "subcategory": "协程",
+    "full_code": "import asyncio\n\nasync def producer(q):\n    for i in range(3):\n        await q.put(i)\n    await q.put(None)\n\nasync def consumer(q):\n    total = 0\n    while True:\n        item = await q.get()\n        if item is None:\n            break\n        total += item\n    return total\n\nasync def main():\n    q = asyncio.Queue()\n    done = await asyncio.gather(producer(q), consumer(q))\n    print(done[1])\n\nasyncio.run(main())",
+    "expected": "3",
+    "points": [
+      {
+        "id": "sentinel",
+        "text": "if item is None:",
+        "category": "async_queue",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "遇到哨兵值 None 就停止消费",
+        "fill_type": "text"
+      },
+      {
+        "id": "pick_result",
+        "text": "done[1]",
+        "category": "expression",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "gather 结果中下标 1 是 consumer 的返回值",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 消费者怎么知道该停了？producer 的结果在列表哪个位置？",
+      "level_2": "📖 约定哨兵 None 结束消费；gather 按传入顺序返回结果",
+      "level_3": "👀 `if item is None: break` 与 `done[1]`",
+      "level_4": "📝 正确答案：`if item is None:` 与 `done[1]`"
+    },
+    "explanation": "asyncio.Queue 的 put/get 都是可等待的（队列满/空时挂起），是协程间最常用的数据通道；用哨兵值通知消费者收工。"
+  },
+  {
+    "id": "py-coroutine-018",
+    "title": "Semaphore 并发限流",
+    "description": "限制同时运行的协程数量",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "hard",
+    "category": "semaphore",
+    "subcategory": "协程",
+    "full_code": "import asyncio\n\nactive = 0\npeak = 0\n\nasync def use(sem):\n    global active, peak\n    async with sem:\n        active += 1\n        peak = max(peak, active)\n        await asyncio.sleep(0.02)\n        active -= 1\n\nasync def main():\n    sem = asyncio.Semaphore(2)\n    await asyncio.gather(*(use(sem) for _ in range(5)))\n    print(peak)\n\nasyncio.run(main())",
+    "expected": "2",
+    "points": [
+      {
+        "id": "acquire",
+        "text": "async with sem:",
+        "category": "semaphore",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "进入临界区前获取信号量，离开自动释放",
+        "fill_type": "text"
+      },
+      {
+        "id": "limit_n",
+        "text": "asyncio.Semaphore(2)",
+        "category": "semaphore",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "最多允许 2 个协程同时进入",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 5 个任务抢一个额度为多少的信号量？峰值并发是多少？",
+      "level_2": "📖 `async with sem` 获取/释放信号量；Semaphore(2) 限制并发为 2",
+      "level_3": "👀 `sem = asyncio.Semaphore(2)` 与 `async with sem:`",
+      "level_4": "📝 正确答案：`async with sem:` 与 `asyncio.Semaphore(2)`"
+    },
+    "explanation": "Semaphore(n) 维护内部计数：进入 -1、离开 +1，配额用尽则挂起等待——爬虫/IO 限流的标配；`async with` 保证即使异常也会释放。"
+  },
+  {
+    "id": "py-coroutine-019",
+    "title": "await 链式透传",
+    "description": "协程一层层 await 下游并把结果加工上传",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "await_kw",
+    "subcategory": "协程",
+    "full_code": "import asyncio\n\nasync def inner():\n    return \"core\"\n\nasync def middle():\n    value = await inner()\n    return f\"[{value}]\"\n\nasync def outer():\n    wrapped = await middle()\n    return wrapped + \"!\"\n\nasync def main():\n    print(await outer())\n\nasyncio.run(main())",
+    "expected": "[core]!",
+    "points": [
+      {
+        "id": "l1",
+        "text": "await inner()",
+        "category": "await_kw",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "middle 等待最内层协程",
+        "fill_type": "text"
+      },
+      {
+        "id": "l2",
+        "text": "await middle()",
+        "category": "await_kw",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "outer 等待中间层协程",
+        "fill_type": "text"
+      },
+      {
+        "id": "l3",
+        "text": "await outer()",
+        "category": "await_kw",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "main 等待最外层协程",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 三层协程各自等待谁？结果如何层层包装？",
+      "level_2": "📖 inner 返回 core → middle 包成 [core] → outer 加 ! → main 打印",
+      "level_3": "👀 `await inner()` → `await middle()` → `await outer()`",
+      "level_4": "📝 正确答案：三处 await 调用"
+    },
+    "explanation": "await 可以层层嵌套形成调用链：每层挂起的是整条链，最终由 asyncio.run 驱动最外层协程完成全程。"
+  },
+  {
+    "id": "py-coroutine-020",
+    "title": "综合：并发请求汇总",
+    "description": "gather 并发模拟请求，再把结果合并成字典",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "hard",
+    "category": "gather",
+    "subcategory": "协程",
+    "full_code": "import asyncio\n\nasync def fetch(key, n, delay):\n    await asyncio.sleep(delay)\n    return {key: n}\n\nasync def main():\n    results = await asyncio.gather(\n        fetch(\"a\", 1, 0.03),\n        fetch(\"b\", 2, 0.01),\n        fetch(\"c\", 3, 0.02),\n    )\n    data = {}\n    for r in results:\n        data.update(r)\n    print(data)\n\nasyncio.run(main())",
+    "expected": "{'a': 1, 'b': 2, 'c': 3}",
+    "points": [
+      {
+        "id": "req_a",
+        "text": "fetch(\"a\", 1, 0.03)",
+        "category": "gather",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "第一个请求：键 a、值 1",
+        "fill_type": "text"
+      },
+      {
+        "id": "merge",
+        "text": "data.update(r)",
+        "category": "dict",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "把每个结果字典合并进 data",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 三个请求并发发出后，如何把各自的 {key: n} 合并？",
+      "level_2": "📖 gather 按序返回结果列表，遍历 update 进同一个字典",
+      "level_3": "👀 `data.update(r)` 合并每个分片",
+      "level_4": "📝 正确答案：`fetch(\"a\", 1, 0.03)` 与 `data.update(r)`"
+    },
+    "explanation": "典型异步批处理模式：gather 并发发起全部请求 → 按序拿到结果列表 → 归并成最终结构；注意 b 最先完成但结果仍在第二位。"
+  }
+]

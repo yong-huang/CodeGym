@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { api } from '../api/client';
+import { api, adminToken } from '../api/client';
 import type { Environment, ExerciseDetail, ExerciseListItem } from '../types';
 
 const EMPTY_EXERCISE: ExerciseDetail = {
@@ -30,6 +30,8 @@ export default function AdminPage() {
   const [envName, setEnvName] = useState('');
   const [envType, setEnvType] = useState('local');
   const [envDetail, setEnvDetail] = useState('');
+  // admin token（后端启用 -admin-token 时必填）
+  const [tokenInput, setTokenInput] = useState(adminToken.get());
 
   const refresh = () => {
     api.listExercises().then(setExercises).catch(() => undefined);
@@ -150,6 +152,31 @@ export default function AdminPage() {
 
   return (
     <div className="page">
+      <section className="panel">
+        <div className="panel-title">🔐 管理令牌</div>
+        <p className="panel-hint">
+          后端以 `-admin-token`（或环境变量 CODEGYM_ADMIN_TOKEN）启动时，教练端接口需要令牌。
+          本地未启用鉴权时可留空。
+        </p>
+        <div className="env-add">
+          <input
+            type="password"
+            placeholder="X-Admin-Token（仅存本浏览器）"
+            value={tokenInput}
+            onChange={(e) => setTokenInput(e.target.value)}
+          />
+          <button
+            className="primary-btn"
+            onClick={() => {
+              adminToken.set(tokenInput);
+              toast(tokenInput ? '✅ 令牌已保存，后续教练端请求将自动携带' : '🗑️ 已清除令牌');
+            }}
+          >
+            保存
+          </button>
+        </div>
+      </section>
+
       {Object.keys(stats).length > 0 && (
         <section className="dashboard">
           <div className="panel">

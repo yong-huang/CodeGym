@@ -1,0 +1,25 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    environment:
+      # 教练端接口鉴权令牌：生产环境务必设置！
+      # 生成方式: openssl rand -hex 16
+      - CODEGYM_ADMIN_TOKEN=${CODEGYM_ADMIN_TOKEN:-}
+    volumes:
+      - codegym-data:/app/data
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    ports:
+      - '8088:80'
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  codegym-data:

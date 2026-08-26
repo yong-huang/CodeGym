@@ -5,11 +5,27 @@ backend/vendor/
 # build output
 frontend/dist/
 backend/bin/
+frontend/tsconfig.tsbuildinfo
+*.tsbuildinfo
 
 # runtime data
 backend/data/*
-!backend/data/library/
 !backend/data/bank/
 
 # logs
 *.log
+nohup.out
+
+# os / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# python
+__pycache__/
+*.pyc
+
+# env & secrets
+.env
+.env.*

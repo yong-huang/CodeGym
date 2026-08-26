@@ -372,8 +372,8 @@ func TestE2E_ExerciseListAndVariant(t *testing.T) {
 		PointCount   int    `json:"point_count"`
 	}
 	doJSON(t, "GET", base+"/exercises", nil, &list)
-	if len(list) != 515 {
-		t.Fatalf("expected 515 exercises (465 + 50 SQL), got %d", len(list))
+	if len(list) != 535 {
+		t.Fatalf("expected 535 exercises (515 + 20 协程), got %d", len(list))
 	}
 	var ids []string
 	for _, ex := range list {
@@ -392,8 +392,8 @@ func TestE2E_ExerciseListAndVariant(t *testing.T) {
 	// 2. filter by tech stack
 	var pyList []map[string]any
 	doJSON(t, "GET", base+"/exercises?tech_stack=python", nil, &pyList)
-	if len(pyList) != 84 {
-		t.Errorf("expected 84 python exercises (54 基础 + 30 FastAPI), got %d", len(pyList))
+	if len(pyList) != 104 {
+		t.Errorf("expected 104 python exercises (54 基础 + 30 FastAPI + 20 协程), got %d", len(pyList))
 	}
 
 // 3. variant masking + weight bounds
@@ -1087,8 +1087,8 @@ func TestE2E_ExportImport(t *testing.T) {
 	if err := json.NewDecoder(resp.Body).Decode(&exported); err != nil {
 		t.Fatal(err)
 	}
-	if len(exported) != 515 {
-		t.Fatalf("export count = %d, want 515", len(exported))
+	if len(exported) != 535 {
+		t.Fatalf("export count = %d, want 535", len(exported))
 	}
 
 	// import: delete one exercise, then restore it from the exported blob
@@ -1252,4 +1252,53 @@ func containsIDs(list []struct{ ID string `json:"id"` }, needle string) bool {
 		}
 	}
 	return false
+}
+
+// TestE2E_AdminTokenAuth guards the coach-side API: with an admin token
+// configured, every /api/v1/admin/* call must present X-Admin-Token (or
+// `Authorization: Bearer`), while student endpoints stay open.
+func TestE2E_AdminTokenAuth(t *testing.T) {
+	dir := t.TempDir()
+	st, err := store.Open(filepath.Join(dir, "auth.db"))
+	if err != nil {
+		t.Fatalf("open store: %v", err)
+	}
+	defer st.Close()
+	srv := api.New(st, engine.New("python3"))
+	srv.SetAdminToken("secret-token")
+	ts := httptest.NewServer(srv.Handler())
+	defer ts.Close()
+
+	status := func(path string, hdr map[string]string) int {
+		req, _ := http.NewRequest(http.MethodGet, ts.URL+path, nil)
+		for k, v := range hdr {
+			req.Header.Set(k, v)
+		}
+		resp, err := http.DefaultClient.Do(req)
+		if err != nil {
+			t.Fatal(err)
+		}
+		defer resp.Body.Close()
+		_, _ = io.Copy(io.Discard, resp.Body)
+		return resp.StatusCode
+	}
+
+	if code := status("/api/v1/admin/stats", nil); code != http.StatusUnauthorized {
+		t.Errorf("no token => %d, want 401", code)
+	}
+	if code := status("/api/v1/admin/stats", map[string]string{"X-Admin-Token": "wrong"}); code != http.StatusUnauthorized {
+		t.Errorf("wrong token => %d, want 401", code)
+	}
+	if code := status("/api/v1/admin/export", nil); code != http.StatusUnauthorized {
+		t.Errorf("export without token => %d, want 401", code)
+	}
+	if code := status("/api/v1/admin/stats", map[string]string{"X-Admin-Token": "secret-token"}); code != http.StatusOK {
+		t.Errorf("X-Admin-Token => %d, want 200", code)
+	}
+	if code := status("/api/v1/admin/stats", map[string]string{"Authorization": "Bearer secret-token"}); code != http.StatusOK {
+		t.Errorf("Bearer token => %d, want 200", code)
+	}
+	if code := status("/api/v1/environments", nil); code != http.StatusOK {
+		t.Errorf("student endpoint with token configured => %d, want 200", code)
+	}
 }

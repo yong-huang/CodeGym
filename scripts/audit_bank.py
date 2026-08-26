@@ -3,7 +3,7 @@
 import json, glob, os, re, subprocess, sys, tempfile, shutil
 from collections import Counter, defaultdict
 
-ROOT = '/Users/hyhit/Desktop/workspace/projects/CodeGym/backend'
+ROOT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'backend'))
 BANK = os.path.join(ROOT, 'data/bank')
 VALID_TYPES = {'fill', 'command', 'config', 'bugfix'}
 WEIGHTS = {'beginner', 'easy', 'medium', 'hard', 'expert'}

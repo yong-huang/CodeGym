@@ -18,6 +18,7 @@ func main() {
 	dbPath := flag.String("db", "data/codegym.db", "sqlite database path")
 	pyBin := flag.String("python", firstNonEmpty(os.Getenv("PYTHON_BIN"), "python3"), "python interpreter")
 	bankDir := flag.String("bank", "data/bank", "题库 JSON 目录（唯一数据源，可用 $CODEGYM_BANK_DIR 或留空自动定位）")
+	adminToken := flag.String("admin-token", os.Getenv("CODEGYM_ADMIN_TOKEN"), "教练端接口令牌（启用后所有 /api/v1/admin/* 需携带 X-Admin-Token 或 Bearer；为空不鉴权，仅建议本地开发使用）")
 	flag.Parse()
 
 	st, err := store.Open(*dbPath)
@@ -38,8 +39,9 @@ func main() {
 
 	eng := engine.New(*pyBin)
 	server := api.New(st, eng)
+	server.SetAdminToken(*adminToken)
 
-	log.Printf("CodeGym API listening on %s (db=%s)", *addr, *dbPath)
+	log.Printf("CodeGym API listening on %s (db=%s, admin-auth=%v)", *addr, *dbPath, *adminToken != "")
 	if err := http.ListenAndServe(*addr, server.Handler()); err != nil {
 		log.Fatal(err)
 	}

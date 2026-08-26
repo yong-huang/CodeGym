@@ -14,9 +14,11 @@ const GRADE_META: Record<string, { label: string; cls: string }> = {
 
 export default function ScoreCard({ result }: ScoreCardProps) {
   const meta = GRADE_META[result.grade] ?? GRADE_META.D;
-  const passRate = result.fill_results.length
+  const fillResults = result.fill_results ?? [];
+  const logs = result.logs ?? [];
+  const passRate = fillResults.length
     ? Math.round(
-        (result.fill_results.filter((r) => r.is_correct).length / result.fill_results.length) * 100,
+        (fillResults.filter((r) => r.is_correct).length / fillResults.length) * 100,
       )
     : 0;
 
@@ -37,9 +39,9 @@ export default function ScoreCard({ result }: ScoreCardProps) {
         </div>
       </div>
 
-      {result.logs.length > 0 && (
+      {logs.length > 0 && (
         <div className="score-logs">
-          {result.logs.map((log, i) => (
+          {logs.map((log, i) => (
             <div key={i} className="log-line">
               {log}
             </div>
@@ -58,7 +60,7 @@ export default function ScoreCard({ result }: ScoreCardProps) {
         )}
       </div>
 
-      {result.fill_results.length > 0 && (
+      {fillResults.length > 0 && (
         <div className="score-detail">
           <div className="panel-title">📊 详细评分</div>
           <table className="fill-table">
@@ -72,7 +74,7 @@ export default function ScoreCard({ result }: ScoreCardProps) {
               </tr>
             </thead>
             <tbody>
-              {result.fill_results.map((r) => (
+              {fillResults.map((r) => (
                 <tr key={r.id}>
                   <td>{r.point_id}</td>
                   <td>

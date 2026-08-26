@@ -24,11 +24,22 @@ export interface LLMSettings {
   online: boolean;
 }
 
+export const ADMIN_TOKEN_KEY = 'cg_admin_token';
+
+export const adminToken = {
+  get: () => localStorage.getItem(ADMIN_TOKEN_KEY) ?? '',
+  set: (t: string) => (t ? localStorage.setItem(ADMIN_TOKEN_KEY, t.trim()) : localStorage.removeItem(ADMIN_TOKEN_KEY)),
+};
+
 async function request<T>(url: string, init?: RequestInit): Promise<T> {
-  const res = await fetch(`${BASE}${url}`, {
-    headers: { 'Content-Type': 'application/json', ...(init?.headers ?? {}) },
-    ...init,
-  });
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+    ...((init?.headers as Record<string, string>) ?? {}),
+  };
+  if (url.startsWith('/admin') && adminToken.get()) {
+    headers['X-Admin-Token'] = adminToken.get();
+  }
+  const res = await fetch(`${BASE}${url}`, { ...init, headers });
   if (!res.ok) {
     const body = await res.json().catch(() => ({}));
     throw new Error((body as { error?: string }).error ?? `HTTP ${res.status}`);

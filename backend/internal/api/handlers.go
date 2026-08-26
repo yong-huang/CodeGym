@@ -1,6 +1,7 @@
 package api
 
 import (
+	"crypto/subtle"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -21,10 +22,11 @@ import (
 
 // Server wires the store and engine into HTTP handlers.
 type Server struct {
-	store  *store.Store
-	engine *engine.Engine
-	llm    *llm.Client
-	now    func() time.Time
+	store      *store.Store
+	engine     *engine.Engine
+	llm        *llm.Client
+	adminToken string // 为空表示不启用教练端鉴权（本地开发默认）
+	now        func() time.Time
 }
 
 // New creates an API server. LLM settings come from the DB when present,
@@ -34,6 +36,10 @@ func New(st *store.Store, eng *engine.Engine) *Server {
 	md, _ := st.GetSetting("llm.model")
 	return &Server{store: st, engine: eng, llm: llm.New(ep, md), now: time.Now}
 }
+
+// SetAdminToken enables bearer-token auth for every /api/v1/admin route.
+// Passing an empty string disables the guard (local development default).
+func (s *Server) SetAdminToken(token string) { s.adminToken = token }
 
 // Handler returns the root http.Handler with all routes registered.
 func (s *Server) Handler() http.Handler {
@@ -48,27 +54,51 @@ func (s *Server) Handler() http.Handler {
 	mux.HandleFunc("POST /api/v1/favorites", s.toggleFavorite)
 	mux.HandleFunc("GET /api/v1/environments", s.listEnvironments)
 
-	mux.HandleFunc("POST /api/v1/admin/exercises", s.createExercise)
-	mux.HandleFunc("PUT /api/v1/admin/exercises/{id}", s.updateExercise)
-	mux.HandleFunc("DELETE /api/v1/admin/exercises/{id}", s.deleteExercise)
-	mux.HandleFunc("POST /api/v1/admin/import", s.importExercises)
-	mux.HandleFunc("GET /api/v1/admin/export", s.exportExercises)
-	mux.HandleFunc("GET /api/v1/admin/categories", s.listCategories)
-	mux.HandleFunc("POST /api/v1/admin/categories", s.createCategory)
-	mux.HandleFunc("PUT /api/v1/admin/categories", s.renameCategory)
-	mux.HandleFunc("DELETE /api/v1/admin/categories", s.deleteCategory)
-	mux.HandleFunc("POST /api/v1/admin/ai-generate", s.aiGenerate)
-	mux.HandleFunc("GET /api/v1/admin/llm-settings", s.getLLMSettings)
-	mux.HandleFunc("PUT /api/v1/admin/llm-settings", s.setLLMSettings)
-	mux.HandleFunc("POST /api/v1/admin/llm-settings/test", s.testLLMSettings)
-	mux.HandleFunc("GET /api/v1/admin/environments", s.adminListEnvironments)
-	mux.HandleFunc("POST /api/v1/admin/environments", s.adminCreateEnvironment)
-	mux.HandleFunc("PUT /api/v1/admin/environments/{id}", s.adminUpdateEnvironment)
-	mux.HandleFunc("DELETE /api/v1/admin/environments/{id}", s.adminDeleteEnvironment)
-	mux.HandleFunc("POST /api/v1/admin/environments/{id}/test", s.adminTestEnvironment)
-	mux.HandleFunc("GET /api/v1/admin/stats", s.adminStats)
+	mux.HandleFunc("POST /api/v1/admin/exercises", s.adminOnly(s.createExercise))
+	mux.HandleFunc("PUT /api/v1/admin/exercises/{id}", s.adminOnly(s.updateExercise))
+	mux.HandleFunc("DELETE /api/v1/admin/exercises/{id}", s.adminOnly(s.deleteExercise))
+	mux.HandleFunc("POST /api/v1/admin/import", s.adminOnly(s.importExercises))
+	mux.HandleFunc("GET /api/v1/admin/export", s.adminOnly(s.exportExercises))
+	mux.HandleFunc("GET /api/v1/admin/categories", s.adminOnly(s.listCategories))
+	mux.HandleFunc("POST /api/v1/admin/categories", s.adminOnly(s.createCategory))
+	mux.HandleFunc("PUT /api/v1/admin/categories", s.adminOnly(s.renameCategory))
+	mux.HandleFunc("DELETE /api/v1/admin/categories", s.adminOnly(s.deleteCategory))
+	mux.HandleFunc("POST /api/v1/admin/ai-generate", s.adminOnly(s.aiGenerate))
+	mux.HandleFunc("GET /api/v1/admin/llm-settings", s.adminOnly(s.getLLMSettings))
+	mux.HandleFunc("PUT /api/v1/admin/llm-settings", s.adminOnly(s.setLLMSettings))
+	mux.HandleFunc("POST /api/v1/admin/llm-settings/test", s.adminOnly(s.testLLMSettings))
+	mux.HandleFunc("GET /api/v1/admin/environments", s.adminOnly(s.adminListEnvironments))
+	mux.HandleFunc("POST /api/v1/admin/environments", s.adminOnly(s.adminCreateEnvironment))
+	mux.HandleFunc("PUT /api/v1/admin/environments/{id}", s.adminOnly(s.adminUpdateEnvironment))
+	mux.HandleFunc("DELETE /api/v1/admin/environments/{id}", s.adminOnly(s.adminDeleteEnvironment))
+	mux.HandleFunc("POST /api/v1/admin/environments/{id}/test", s.adminOnly(s.adminTestEnvironment))
+	mux.HandleFunc("GET /api/v1/admin/stats", s.adminOnly(s.adminStats))
 
 	return s.withCommon(mux)
+}
+
+// adminOnly guards coach-side endpoints with the configured admin token.
+// With no token set (local dev default) requests pass through unchanged;
+// otherwise a valid X-Admin-Token header or `Authorization: Bearer <token>`
+// is required (constant-time comparison).
+func (s *Server) adminOnly(next http.HandlerFunc) http.HandlerFunc {
+	if s.adminToken == "" {
+		return next
+	}
+	want := []byte(s.adminToken)
+	return func(w http.ResponseWriter, r *http.Request) {
+		got := r.Header.Get("X-Admin-Token")
+		if got == "" {
+			if auth := r.Header.Get("Authorization"); strings.HasPrefix(auth, "Bearer ") {
+				got = strings.TrimPrefix(auth, "Bearer ")
+			}
+		}
+		if subtle.ConstantTimeCompare([]byte(got), want) != 1 {
+			writeErr(w, http.StatusUnauthorized, "需要管理令牌：请求头携带 X-Admin-Token 或 Authorization: Bearer <token>")
+			return
+		}
+		next(w, r)
+	}
 }
 
 func (s *Server) withCommon(next http.Handler) http.Handler {
@@ -230,6 +260,16 @@ func buildVariantResponse(ex model.Exercise, level string, points []model.FillPo
 			HintLevel4: "📝 正确答案：" + p.OriginalText,
 		})
 	}
+	// Bug 修复题是整段改代码：训练点提示没有"空里的内容"可言，
+	// 改用每题精心编写的题目级四级辅助（引导定位与修复 bug）。
+	if ex.ExerciseType == model.ExerciseTypeBugfix && ex.SpotterHints != (model.SpotterHints{}) {
+		for i := range resp.FillPoints {
+			resp.FillPoints[i].HintLevel1 = ex.SpotterHints.Level1
+			resp.FillPoints[i].HintLevel2 = ex.SpotterHints.Level2
+			resp.FillPoints[i].HintLevel3 = ex.SpotterHints.Level3
+			resp.FillPoints[i].HintLevel4 = ex.SpotterHints.Level4
+		}
+	}
 	return resp
 }
 
@@ -303,6 +343,7 @@ func (s *Server) execute(w http.ResponseWriter, r *http.Request) {
 	result := model.ExecuteResult{
 		ExpectedOutput: ex.ExpectedOutput,
 		Logs:           []string{},
+		FillResults:    []model.FillResult{},
 	}
 
 	// bugfix type: direct code editing
@@ -893,11 +934,12 @@ var categoryHint2Map = map[string]string{
 	"waitgroup":      "📖 `WaitGroup` 三件套：`Add` 计入、`Done` 减计、`Wait` 等待归零",
 	"mutex":          "📖 修改共享变量前要 `Lock()`，结束后 `Unlock()`",
 	"rwmutex":        "📖 读多写少用 `RWMutex`：读加 `RLock()`，写加 `Lock()`",
-	"once":           "📖 `sync.Once` 保证初始化只执行一次，即使并发调用",
+	"map_write":      "📖 并发写 map 必须放在 `Lock()`/`Unlock()` 之间：`m[key] = value`",
+	"critical_section": "📖 该行位于临界区内：写清受锁保护的对共享变量的实际操作",	"once":           "📖 `sync.Once` 保证初始化只执行一次，即使并发调用",
 	"atomic":         "📖 `sync/atomic` 提供无锁原子操作（Add/Load/Store/CAS）",
 	"cond":           "📖 条件不满足时 `Wait()` 释放锁等待，条件满足后 `Broadcast()` 唤醒",
 	"pool":           "📖 `sync.Pool` 缓存复用对象：`Get` 取、`Put` 还，降低分配压力",
-	"channel":        "📖 用 `ch <- v` 发送、`<-ch` 接收；带缓冲容量可避免阻塞",
+	"channel":        "📖 用 `ch <- v` 发送、`<-ch` 接收；`v, ok := <-ch` 的 ok 为 false 表示通道已关闭",
 	"channel_direction": "📖 `chan<-` 只写、`<-chan` 只读，用于约束函数对通道的使用",
 	"channel_pattern": "📖 常见的通道模式：生成器/WorkerPool/流水线，用通道在协程间传数据",
 	"select":         "📖 `select` 同时监听多个通道，任一就绪即执行对应分支",
@@ -906,6 +948,17 @@ var categoryHint2Map = map[string]string{
 	"ticker":         "📖 `time.Ticker` 周期向 `.C` 发送时间，做限流/心跳/定时任务",
 	"case":           "📖 分支值要与被判断对象类型一致，注意匹配的写法",
 	"default":        "📖 默认值/兜底：switch 无匹配分支或函数参数未传时用的默认",
+	// Python 协程
+	"coroutine":   "📖 `async def` 定义协程函数：调用只得到协程对象，须由事件循环驱动执行",
+	"event_loop":  "📖 `asyncio.run(入口协程)` 创建事件循环、运行至完成再关闭；进程内不要嵌套调用",
+	"await_kw":    "📖 `await 可等待对象`：挂起当前协程，等其完成后取回返回值",
+	"task":        "📖 `asyncio.create_task(协程)` 把协程包装成 Task 尽快调度，`await task` 收割结果",
+	"gather":      "📖 `await asyncio.gather(c1, c2…)` 并发运行多个协程，按传入顺序返回结果列表",
+	"async_sleep": "📖 `asyncio.sleep` 只挂起当前协程并把控制权交还事件循环，不阻塞线程",
+	"wait_for":    "📖 `asyncio.wait_for(协程, timeout=秒)` 超时取消并抛出 `asyncio.TimeoutError`",
+	"async_iter":  "📖 异步生成器（`async def + yield`）要用 `async for` 驱动，每次 yield 处可挂起",
+	"async_queue": "📖 asyncio.Queue 的 put/get 都可等待：队列满/空时挂起，是协程间安全的数据通道",
+	"semaphore":   "📖 `async with Semaphore(n)` 限制同时进入的协程数量，配额用尽则挂起等待",
 	// Go / Python 语法
 	"syntax":        "📖 先确认语句的正确语法（关键字、括号、缩进/换行）",
 	"variables":     "📖 变量声明与赋值：注意类型与命名",

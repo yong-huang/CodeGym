@@ -59,7 +59,7 @@ CODEGYM_ADMIN_TOKEN=$(openssl rand -hex 16) docker compose up -d --build
 
 ```bash
 cd backend
-go run ./cmd/server -addr :8090        # 首次启动自动建库并 seed data/bank 下的全部内置题库（535 题）
+go run ./cmd/server -addr :8090        # 首次启动自动建库并 seed data/bank 下的全部内置题库（555 题）
 ```
 
 可选参数：`-db data/codegym.db` 指定数据库文件；`PYTHON_BIN` 指定 Python 解释器；

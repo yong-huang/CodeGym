@@ -45,7 +45,8 @@
       "level_3": "👀 条件表达式应该是 `x % 2 == 0` 这样的形式",
       "level_4": "📝 正确答案：`x % 2 == 0`"
     },
-    "explanation": "列表推导式 `[expr for item in iterable if condition]`。`x**2` 计算平方，`x % 2 == 0` 筛选偶数，两者都满足时保留并平方。"
+    "explanation": "列表推导式 `[expr for item in iterable if condition]`。`x**2` 计算平方，`x % 2 == 0` 筛选偶数，两者都满足时保留并平方。",
+    "subcategory": "基础"
   },
   {
     "id": "py-palindrome-002",
@@ -55,7 +56,7 @@
     "tech_stack": "python",
     "weight": "medium",
     "category": "function",
-    "full_code": "def is_palindrome(s: str) -\u003e bool:\n    return s == s[::-1]\n\nprint(is_palindrome('racecar'))\nprint(is_palindrome('hello'))",
+    "full_code": "def is_palindrome(s: str) -> bool:\n    return s == s[::-1]\n\nprint(is_palindrome('racecar'))\nprint(is_palindrome('hello'))",
     "expected": "True\nFalse",
     "points": [
       {
@@ -69,7 +70,7 @@
       },
       {
         "id": "return_type",
-        "text": "-\u003e bool",
+        "text": "-> bool",
         "category": "type_annotation",
         "min_weight": "easy",
         "weight_score": 0.3,
@@ -101,7 +102,8 @@
       "level_3": "👀 `return s == s[::-1]`",
       "level_4": "📝 正确答案：`return s == s[::-1]`"
     },
-    "explanation": "切片 `s[::-1]` 返回反转后的字符串。`s == s[::-1]` 在正反相同（回文）时返回 True。"
+    "explanation": "切片 `s[::-1]` 返回反转后的字符串。`s == s[::-1]` 在正反相同（回文）时返回 True。",
+    "subcategory": "基础"
   },
   {
     "id": "py-factorial-bug-003",
@@ -144,7 +146,8 @@
       "level_3": "👀 循环应从 1 开始到 n 结束",
       "level_4": "📝 正确答案：`for i in range(1, n + 1):`"
     },
-    "explanation": "off-by-one：range(n) 从 0 开始，第一次迭代 `result *= 0` 使结果恒为 0。改为 `range(1, n + 1)` 即可。"
+    "explanation": "off-by-one：range(n) 从 0 开始，第一次迭代 `result *= 0` 使结果恒为 0。改为 `range(1, n + 1)` 即可。",
+    "subcategory": "基础"
   },
   {
     "id": "py-fizzbuzz-004",
@@ -200,7 +203,8 @@
       "level_3": "👀 依次判断 15、3、5 的倍数",
       "level_4": "📝 正确答案：`n % 15 == 0` / `n % 3 == 0` / `n % 5 == 0` / `str(n)`"
     },
-    "explanation": "先判断是否同时是 3 和 5 的倍数（15 的倍数），再分别判断 3 和 5，最后返回原数字的字符串形式。"
+    "explanation": "先判断是否同时是 3 和 5 的倍数（15 的倍数），再分别判断 3 和 5，最后返回原数字的字符串形式。",
+    "subcategory": "基础"
   },
   {
     "id": "kubectl-getpods-005",
@@ -238,7 +242,8 @@
       "level_3": "👀 `kubectl get pods -A`",
       "level_4": "📝 正确答案：`-A`（等价 `--all-namespaces`）"
     },
-    "explanation": "`-A` 是 `--all-namespaces` 的短参数，列出所有命名空间中的 Pod。"
+    "explanation": "`-A` 是 `--all-namespaces` 的短参数，列出所有命名空间中的 Pod。",
+    "subcategory": "基础"
   },
   {
     "id": "k8s-nginx-pod-006",
@@ -285,7 +290,8 @@
       "level_3": "👀 `image: nginx:1.25` / `containerPort: 80`",
       "level_4": "📝 正确答案：`nginx:1.25` 与 `80`"
     },
-    "explanation": "Pod 资源要求镜像名称（含标签）与容器端口，`nginx:1.25` 对应官方镜像，Nginx 默认监听 80。"
+    "explanation": "Pod 资源要求镜像名称（含标签）与容器端口，`nginx:1.25` 对应官方镜像，Nginx 默认监听 80。",
+    "subcategory": "基础"
   },
   {
     "id": "js-even-squares-007",
@@ -295,7 +301,7 @@
     "tech_stack": "javascript",
     "weight": "medium",
     "category": "array_methods",
-    "full_code": "const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];\nconst result = numbers.filter(x =\u003e x % 2 === 0).map(x =\u003e x ** 2);\nconsole.log(JSON.stringify(result));",
+    "full_code": "const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];\nconst result = numbers.filter(x => x % 2 === 0).map(x => x ** 2);\nconsole.log(JSON.stringify(result));",
     "expected": "[4,16,36,64,100]",
     "points": [
       {
@@ -320,10 +326,11 @@
     "hints": {
       "level_1": "💡 filter 筛选，map 变换",
       "level_2": "📖 偶数条件 `x % 2 === 0`，平方 `x ** 2`",
-      "level_3": "👀 `.filter(x =\u003e x % 2 === 0).map(x =\u003e x ** 2)`",
+      "level_3": "👀 `.filter(x => x % 2 === 0).map(x => x ** 2)`",
       "level_4": "📝 正确答案：`x % 2 === 0` 与 `x ** 2`"
     },
-    "explanation": "`filter` 保留满足条件的元素，`map` 对每个元素做变换，链式调用即可完成筛选并平方。"
+    "explanation": "`filter` 保留满足条件的元素，`map` 对每个元素做变换，链式调用即可完成筛选并平方。",
+    "subcategory": "基础"
   },
   {
     "id": "go-even-squares-101",
@@ -370,7 +377,8 @@
       "level_3": "👀 `n%2 == 0` → `result = append(result, n*n)`",
       "level_4": "📝 正确答案：`n%2 == 0` / `n*n` / `append`"
     },
-    "explanation": "`n%2 == 0` 判断偶数，`n*n` 计算平方，`append` 向切片追加元素。"
+    "explanation": "`n%2 == 0` 判断偶数，`n*n` 计算平方，`append` 向切片追加元素。",
+    "subcategory": "基础"
   },
   {
     "id": "go-palindrome-102",
@@ -380,7 +388,7 @@
     "tech_stack": "go",
     "weight": "medium",
     "category": "string",
-    "full_code": "package main\n\nimport \"fmt\"\n\nfunc isPalindrome(s string) bool {\n\trunes := []rune(s)\n\tfor i := 0; i \u003c len(runes); i++ {\n\t\tif runes[i] != runes[len(runes)-1-i] {\n\t\t\treturn false\n\t\t}\n\t}\n\treturn true\n}\n\nfunc main() {\n\tfmt.Println(isPalindrome(\"racecar\"))\n\tfmt.Println(isPalindrome(\"hello\"))\n}",
+    "full_code": "package main\n\nimport \"fmt\"\n\nfunc isPalindrome(s string) bool {\n\trunes := []rune(s)\n\tfor i := 0; i < len(runes); i++ {\n\t\tif runes[i] != runes[len(runes)-1-i] {\n\t\t\treturn false\n\t\t}\n\t}\n\treturn true\n}\n\nfunc main() {\n\tfmt.Println(isPalindrome(\"racecar\"))\n\tfmt.Println(isPalindrome(\"hello\"))\n}",
     "expected": "true\nfalse",
     "points": [
       {
@@ -426,7 +434,8 @@
       "level_3": "👀 `if runes[i] != runes[len(runes)-1-i] { return false }`",
       "level_4": "📝 正确答案：`runes[i] != runes[len(runes)-1-i]`"
     },
-    "explanation": "双指针式循环：`runes[i]` 是首部字符，`runes[len(runes)-1-i]` 是对称尾部字符，任何一对不等即非回文。"
+    "explanation": "双指针式循环：`runes[i]` 是首部字符，`runes[len(runes)-1-i]` 是对称尾部字符，任何一对不等即非回文。",
+    "subcategory": "基础"
   },
   {
     "id": "go-factorial-bug-103",
@@ -436,10 +445,10 @@
     "tech_stack": "go",
     "weight": "hard",
     "category": "bugfix",
-    "full_code": "package main\n\nimport \"fmt\"\n\nfunc factorial(n int) int {\n\tresult := 1\n\tfor i := 1; i \u003c= n; i++ {\n\t\tresult *= i\n\t}\n\treturn result\n}\n\nfunc main() {\n\tfmt.Println(factorial(5))\n\tfmt.Println(factorial(3))\n}",
-    "buggy_code": "package main\n\nimport \"fmt\"\n\nfunc factorial(n int) int {\n\tresult := 1\n\tfor i := 0; i \u003c= n; i++ {\n\t\tresult *= i\n\t}\n\treturn result\n}\n\nfunc main() {\n\tfmt.Println(factorial(5))\n\tfmt.Println(factorial(3))\n}",
+    "full_code": "package main\n\nimport \"fmt\"\n\nfunc factorial(n int) int {\n\tresult := 1\n\tfor i := 1; i <= n; i++ {\n\t\tresult *= i\n\t}\n\treturn result\n}\n\nfunc main() {\n\tfmt.Println(factorial(5))\n\tfmt.Println(factorial(3))\n}",
+    "buggy_code": "package main\n\nimport \"fmt\"\n\nfunc factorial(n int) int {\n\tresult := 1\n\tfor i := 0; i <= n; i++ {\n\t\tresult *= i\n\t}\n\treturn result\n}\n\nfunc main() {\n\tfmt.Println(factorial(5))\n\tfmt.Println(factorial(3))\n}",
     "bug_description": "n=5 时输出 0，预期 120：循环从 i:=0 开始，第一次 result 乘以 0 后恒为 0",
-    "bug_location": "for i := 0; i \u003c= n; i++",
+    "bug_location": "for i := 0; i <= n; i++",
     "expected": "120\n6",
     "test_cases": [
       {
@@ -454,7 +463,7 @@
     "points": [
       {
         "id": "loop",
-        "text": "for i := 0; i \u003c= n; i++",
+        "text": "for i := 0; i <= n; i++",
         "category": "loop",
         "min_weight": "beginner",
         "weight_score": 1,
@@ -465,10 +474,11 @@
     "hints": {
       "level_1": "💡 循环起始值可能是问题所在",
       "level_2": "📖 i 从 0 开始，第一次 result *= 0 直接把结果清零",
-      "level_3": "👀 改为 `for i := 1; i \u003c= n; i++`",
-      "level_4": "📝 正确答案：`for i := 1; i \u003c= n; i++`"
+      "level_3": "👀 改为 `for i := 1; i <= n; i++`",
+      "level_4": "📝 正确答案：`for i := 1; i <= n; i++`"
     },
-    "explanation": "Go 的 for 循环三条语句用分号分隔；`i := 0` 使第一次迭代 result 乘 0，结果恒为 0，应改为 `i := 1; i \u003c= n; i++`。"
+    "explanation": "Go 的 for 循环三条语句用分号分隔；`i := 0` 使第一次迭代 result 乘 0，结果恒为 0，应改为 `i := 1; i <= n; i++`。",
+    "subcategory": "基础"
   },
   {
     "id": "go-fizzbuzz-104",
@@ -524,7 +534,8 @@
       "level_3": "👀 `if n%15 == 0` / `if n%3 == 0` / `if n%5 == 0`",
       "level_4": "📝 正确答案：`n%15==0` / `n%3==0` / `n%5==0` / `fmt.Sprint(n)`"
     },
-    "explanation": "先判 15 的倍数（同时满足 3 和 5），再分别判 3、5，最后返回字符串化的数字，注意 Go 里 int 不能直接与 string 拼接。"
+    "explanation": "先判 15 的倍数（同时满足 3 和 5），再分别判 3、5，最后返回字符串化的数字，注意 Go 里 int 不能直接与 string 拼接。",
+    "subcategory": "基础"
   },
   {
     "id": "go-fib-105",
@@ -534,12 +545,12 @@
     "tech_stack": "go",
     "weight": "medium",
     "category": "recursion",
-    "full_code": "package main\n\nimport \"fmt\"\n\nfunc fib(n int) int {\n\tif n \u003c 2 {\n\t\treturn n\n\t}\n\treturn fib(n-1) + fib(n-2)\n}\n\nfunc main() {\n\tfmt.Println(fib(10))\n}",
+    "full_code": "package main\n\nimport \"fmt\"\n\nfunc fib(n int) int {\n\tif n < 2 {\n\t\treturn n\n\t}\n\treturn fib(n-1) + fib(n-2)\n}\n\nfunc main() {\n\tfmt.Println(fib(10))\n}",
     "expected": "55",
     "points": [
       {
         "id": "base",
-        "text": "n \u003c 2",
+        "text": "n < 2",
         "category": "condition",
         "min_weight": "beginner",
         "weight_score": 0.6,
@@ -567,11 +578,12 @@
     ],
     "hints": {
       "level_1": "💡 递归 = 终止条件 + 递推式",
-      "level_2": "📖 `n\u003c2` 返回 n；否则 `fib(n-1)+fib(n-2)`",
-      "level_3": "👀 `if n \u003c 2 { return n }` 否则 `return fib(n-1) + fib(n-2)`",
-      "level_4": "📝 正确答案：`n \u003c 2` / `fib(n-1) + fib(n-2)` / `10`"
+      "level_2": "📖 `n<2` 返回 n；否则 `fib(n-1)+fib(n-2)`",
+      "level_3": "👀 `if n < 2 { return n }` 否则 `return fib(n-1) + fib(n-2)`",
+      "level_4": "📝 正确答案：`n < 2` / `fib(n-1) + fib(n-2)` / `10`"
     },
-    "explanation": "Fib(0)=0、Fib(1)=1，其余为前两项之和；`fib(10)=55`。"
+    "explanation": "Fib(0)=0、Fib(1)=1，其余为前两项之和；`fib(10)=55`。",
+    "subcategory": "基础"
   },
   {
     "id": "go-concurrent-106",
@@ -581,7 +593,7 @@
     "tech_stack": "go",
     "weight": "hard",
     "category": "concurrency",
-    "full_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"sync\"\n)\n\nfunc main() {\n\tvar wg sync.WaitGroup\n\tvar mu sync.Mutex\n\tsum := 0\n\tfor i := 1; i \u003c= 100; i++ {\n\t\twg.Add(1)\n\t\tgo func(n int) {\n\t\t\tdefer wg.Done()\n\t\t\tmu.Lock()\n\t\t\tdefer mu.Unlock()\n\t\t\tsum += n\n\t\t}(i)\n\t}\n\twg.Wait()\n\tfmt.Println(sum)\n}",
+    "full_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"sync\"\n)\n\nfunc main() {\n\tvar wg sync.WaitGroup\n\tvar mu sync.Mutex\n\tsum := 0\n\tfor i := 1; i <= 100; i++ {\n\t\twg.Add(1)\n\t\tgo func(n int) {\n\t\t\tdefer wg.Done()\n\t\t\tmu.Lock()\n\t\t\tdefer mu.Unlock()\n\t\t\tsum += n\n\t\t}(i)\n\t}\n\twg.Wait()\n\tfmt.Println(sum)\n}",
     "expected": "5050",
     "points": [
       {
@@ -627,7 +639,8 @@
       "level_3": "👀 `go func(n int){ defer wg.Done(); mu.Lock(); ... }(i)`",
       "level_4": "📝 正确答案：`wg.Add(1)` / `defer wg.Done()` / `mu.Lock()` / `go func`"
     },
-    "explanation": "`go` 关键字启动 goroutine；`WaitGroup` 等待所有 goroutine 完成；`Mutex` 保证并发写 sum 互斥。1..100 求和为 5050。"
+    "explanation": "`go` 关键字启动 goroutine；`WaitGroup` 等待所有 goroutine 完成；`Mutex` 保证并发写 sum 互斥。1..100 求和为 5050。",
+    "subcategory": "基础"
   },
   {
     "id": "go-wordcount-107",
@@ -674,7 +687,8 @@
       "level_3": "👀 `words := strings.Fields(text)` 然后 `counts[w]++`",
       "level_4": "📝 正确答案：`strings.Fields` / `counts[w]++` / `counts[\"python\"]`"
     },
-    "explanation": "`strings.Fields` 把字符串按空格切成切片；`map[string]int` 统计词频。"
+    "explanation": "`strings.Fields` 把字符串按空格切成切片；`map[string]int` 统计词频。",
+    "subcategory": "基础"
   },
   {
     "id": "go-map-missing-108",
@@ -712,6 +726,7 @@
       "level_3": "👀 `score, ok := scores[\"carol\"]; if !ok { fmt.Println(\"not found\") }`",
       "level_4": "📝 正确答案：`score, ok := scores[\"carol\"]` 并判断 `if !ok`"
     },
-    "explanation": "Go 中读取 map 缺失键返回零值且 ok=false；必须检查 ok 才能真正区分「值存在但为 0」与「键不存在」。"
+    "explanation": "Go 中读取 map 缺失键返回零值且 ok=false；必须检查 ok 才能真正区分「值存在但为 0」与「键不存在」。",
+    "subcategory": "基础"
   }
 ]

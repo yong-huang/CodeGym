@@ -32,7 +32,7 @@ func compile(t *testing.T, src string) {
 // TestGoBasicsCompile verifies every runnable Go exercise (fill + bugfix, plus
 // their buggy variants) actually compiles, so the bank is guaranteed valid.
 func TestGoBasicsCompile(t *testing.T) {
-	exs, err := GoBasics()
+	exs, err := buildBank("", "go")
 	if err != nil {
 		t.Fatalf("build GoBasics: %v", err)
 	}
@@ -75,7 +75,7 @@ func runGoResult(t *testing.T, src string) string {
 // TestGoConcurrencyRun executes every Go concurrency fill/bugfix full code
 // and verifies the printed (deterministic) output matches the expected value.
 func TestGoConcurrencyRun(t *testing.T) {
-	exs, err := GoConcurrency()
+	exs, err := buildBank("", "go-concurrency")
 	if err != nil {
 		t.Fatalf("build GoConcurrency: %v", err)
 	}

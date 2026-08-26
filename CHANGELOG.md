@@ -7,6 +7,7 @@
 ### Added
 - SQL 基础题库（50 题）：SELECT/WHERE/排序分页/聚合分组/JOIN/子查询/DML/DDL，统一示例库出题
 - Python 协程专项题库（20 题）：async/await/create_task/gather/超时异常/异步迭代器/Queue/Semaphore
+- Python 多线程专项题库（20 题）：Thread/join/Lock·RLock/Semaphore/Event/Barrier/threading.local/queue.Queue/Timer/线程池
 - 教练端接口令牌鉴权：`-admin-token` 或 `CODEGYM_ADMIN_TOKEN` 启用后所有 `/api/v1/admin/*` 需携带令牌
 - Docker 部署：`Dockerfile.backend` / `Dockerfile.frontend` / `docker-compose.yml`
 - GitHub Actions CI：后端 -race 测试、前端测试与构建、题库审计

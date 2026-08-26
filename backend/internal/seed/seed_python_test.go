@@ -32,9 +32,9 @@ func norm(s string) string {
 // the printed output matches the expected value, so the whole bank is valid
 // and the seeding is correct.
 func TestPythonBasicsRun(t *testing.T) {
-	exs, err := PythonBasics()
+	exs, err := buildBank("", "python")
 	if err != nil {
-		t.Fatalf("build PythonBasics: %v", err)
+		t.Fatalf("build python bank: %v", err)
 	}
 	if len(exs) != 50 {
 		t.Fatalf("expected 50 Python basic questions, got %d", len(exs))

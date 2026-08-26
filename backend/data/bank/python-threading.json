@@ -1,0 +1,810 @@
+[
+  {
+    "id": "py-thread-001",
+    "title": "第一个线程",
+    "description": "创建线程并在其中执行函数",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "beginner",
+    "category": "thread",
+    "subcategory": "多线程",
+    "full_code": "import threading\n\ndef say_hi():\n    print(\"hi from thread\")\n\nt = threading.Thread(target=say_hi)\nt.start()\nt.join()",
+    "expected": "hi from thread",
+    "points": [
+      {
+        "id": "target_kw",
+        "text": "target=say_hi",
+        "category": "thread",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "指定线程要执行的函数（不要加括号调用）",
+        "fill_type": "text"
+      },
+      {
+        "id": "join_call",
+        "text": "t.join()",
+        "category": "thread_join",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "等待线程结束后主线程再继续",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 怎么告诉线程要执行哪个函数？怎么等它结束？",
+      "level_2": "📖 `Thread(target=函数名)` 创建；`start()` 启动；`join()` 等待结束",
+      "level_3": "👀 `threading.Thread(target=say_hi)` … `t.join()`",
+      "level_4": "📝 正确答案：`target=say_hi` 与 `t.join()`"
+    },
+    "explanation": "`target=` 传函数本身而非调用结果；`start()` 才真正开线程（直接调 `run()` 只是普通函数调用）；`join()` 让主线程等它收工。"
+  },
+  {
+    "id": "py-thread-002",
+    "title": "给线程传参",
+    "description": "用 args 元组向线程入口函数传递参数",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "beginner",
+    "category": "thread_args",
+    "subcategory": "多线程",
+    "full_code": "import threading\n\ndef greet(name):\n    print(f\"hello, {name}\")\n\nt = threading.Thread(target=greet, args=(\"Alice\",))\nt.start()\nt.join()",
+    "expected": "hello, Alice",
+    "points": [
+      {
+        "id": "arg_tuple",
+        "text": "args=(\"Alice\",)",
+        "category": "thread_args",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "参数打包成元组传入",
+        "fill_type": "text"
+      },
+      {
+        "id": "target_fn",
+        "text": "target=greet",
+        "category": "thread",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "入口函数名",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 greet 需要 name 参数，怎么传给线程？",
+      "level_2": "📖 `args=(值,)` 元组按位置传参；单个元素也要逗号",
+      "level_3": "👀 `args=(\"Alice\",)`",
+      "level_4": "📝 正确答案：`args=(\"Alice\",)`"
+    },
+    "explanation": "`args` 必须是元组：单参数写成 `(\"Alice\",)`（尾逗号）；多个参数按位置对应；关键字参数可用 `kwargs={}`。"
+  },
+  {
+    "id": "py-thread-003",
+    "title": "join 的作用",
+    "description": "没有 join 时主线程不会自动等待——补上它保证收尾顺序",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "beginner",
+    "category": "thread_join",
+    "subcategory": "多线程",
+    "full_code": "import threading\n\ndef work():\n    print(\"working\")\n\nt = threading.Thread(target=work)\nt.start()\nt.join()\nprint(\"done\")",
+    "expected": "working done",
+    "points": [
+      {
+        "id": "start_call",
+        "text": "t.start()",
+        "category": "thread",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "启动线程",
+        "fill_type": "text"
+      },
+      {
+        "id": "join_call",
+        "text": "t.join()",
+        "category": "thread_join",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "等线程结束，再打印 done",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 如何保证 \"done\" 一定在线程打印之后输出？",
+      "level_2": "📖 `start()` 之后调 `join()`：主线程在此阻塞至线程结束",
+      "level_3": "👀 `t.start()` → `t.join()` → `print(\"done\")`",
+      "level_4": "📝 正确答案：`t.start()` 与 `t.join()`"
+    },
+    "explanation": "不 join 时主线程可能先行退出，线程输出被截断甚至丢失；join 是最基础的顺序保障手段。"
+  },
+  {
+    "id": "py-thread-004",
+    "title": "两线程依次执行",
+    "description": "分别 start+join 实现确定的先后顺序",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "thread_join",
+    "subcategory": "多线程",
+    "full_code": "import threading\n\ndef job(name):\n    print(name)\n\na = threading.Thread(target=job, args=(\"A\",))\nb = threading.Thread(target=job, args=(\"B\",))\na.start()\na.join()\nb.start()\nb.join()",
+    "expected": "A B",
+    "points": [
+      {
+        "id": "b_start",
+        "text": "b.start()",
+        "category": "thread",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "A 完全结束后才启动 B",
+        "fill_type": "text"
+      },
+      {
+        "id": "a_join",
+        "text": "a.join()",
+        "category": "thread_join",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "等 a 结束，阻断后续代码",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 同时 start 两个线程输出顺序还确定吗？怎样让它确定？",
+      "level_2": "📖 start+join 成对串联：上一线程 join 完再 start 下一线程",
+      "level_3": "👀 `a.start()` `a.join()` 然后 `b.start()` `b.join()`",
+      "level_4": "📝 正确答案：`b.start()` 与 `a.join()`"
+    },
+    "explanation": "并发启动（两个 start 连着写）输出顺序不确定；「start→join」串行化是用线程也能得到确定流程的基本手法。"
+  },
+  {
+    "id": "py-thread-005",
+    "title": "线程状态与属性",
+    "description": "查看 daemon 标记、命名规则与 is_alive 状态",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "beginner",
+    "category": "thread_state",
+    "subcategory": "多线程",
+    "full_code": "import threading\n\ndef noop():\n    pass\n\nt = threading.Thread(target=noop)\nprint(t.daemon)\nprint(t.name.startswith(\"Thread\"))\nt.start()\nt.join()\nprint(t.is_alive())",
+    "expected": "False True False",
+    "points": [
+      {
+        "id": "daemon_flag",
+        "text": "t.daemon",
+        "category": "thread_state",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "是否为守护线程的布尔标记",
+        "fill_type": "text"
+      },
+      {
+        "id": "alive_check",
+        "text": "t.is_alive()",
+        "category": "thread_state",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "查询线程是否仍在运行",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 新建线程默认是守护线程吗？join 之后还活着吗？",
+      "level_2": "📖 默认 daemon=False、名字以 Thread 开头；join 后 is_alive() 为 False",
+      "level_3": "👀 `t.daemon` → False；join 后 `t.is_alive()` → False",
+      "level_4": "📝 正确答案：`t.daemon` 与 `t.is_alive()`"
+    },
+    "explanation": "daemon=True 的线程会在主进程退出时被强制终止（不阻塞退出），适合后台心跳类任务；普通线程必须 join 否则解释器等它结束。"
+  },
+  {
+    "id": "py-thread-006",
+    "title": "共享列表追加",
+    "description": "两个线程向同一个 list 追加元素",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "shared_state",
+    "subcategory": "多线程",
+    "full_code": "import threading\n\nresults = []\n\ndef add_items():\n    for i in range(100):\n        results.append(i)\n\nthreads = [threading.Thread(target=add_items) for _ in range(2)]\nfor t in threads:\n    t.start()\nfor t in threads:\n    t.join()\nprint(len(results))",
+    "expected": "200",
+    "points": [
+      {
+        "id": "first_start",
+        "text": "t.start()",
+        "category": "thread",
+        "min_weight": "beginner",
+        "weight_score": 0.7,
+        "hint": "循环里逐个启动线程",
+        "fill_type": "text"
+      },
+      {
+        "id": "count_len",
+        "text": "len(results)",
+        "category": "expression",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "join 后统计共享列表长度",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 两个线程各追加 100 次，join 后列表多长？",
+      "level_2": "📖 list.append 在 CPython 中由 GIL 保证原子，不会丢元素",
+      "level_3": "👀 全部 join 后 `len(results)` == 200",
+      "level_4": "📝 正确答案：`len(results)` 输出 200"
+    },
+    "explanation": "CPython 中 list.append/dict 写入等单一内置操作因 GIL 是原子的，可直接跨线程使用；但「读-改-写」复合操作（如 x += 1）不是原子的，必须加锁。"
+  },
+  {
+    "id": "py-thread-007",
+    "title": "Lock 保护计数器",
+    "description": "10 个线程各累加 100 次，用锁保证结果正确",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "lock_py",
+    "subcategory": "多线程",
+    "full_code": "import threading\n\ncounter = 0\nlock = threading.Lock()\n\ndef bump():\n    global counter\n    for _ in range(100):\n        with lock:\n            counter += 1\n\nthreads = [threading.Thread(target=bump) for _ in range(10)]\nfor t in threads:\n    t.start()\nfor t in threads:\n    t.join()\nprint(counter)",
+    "expected": "1000",
+    "points": [
+      {
+        "id": "make_lock",
+        "text": "threading.Lock()",
+        "category": "lock_py",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "创建互斥锁",
+        "fill_type": "text"
+      },
+      {
+        "id": "with_lock",
+        "text": "with lock:",
+        "category": "lock_py",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "以上下文管理器形式进入临界区，离开自动释放",
+        "fill_type": "text"
+      },
+      {
+        "id": "global_decl",
+        "text": "global counter",
+        "category": "syntax",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "声明使用模块级变量",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 counter += 1 是「读-改-写」三步，如何防止丢更新？",
+      "level_2": "📖 `with lock:` 把自增包进临界区，任一时刻仅一个线程在内",
+      "level_3": "👀 `threading.Lock()` + `with lock: counter += 1`",
+      "level_4": "📝 正确答案：`threading.Lock()`、`with lock:` 与 `global counter`"
+    },
+    "explanation": "去掉锁后 10×100 的自增几乎必然小于 1000（丢失更新）；这正是「复合操作非原子」的经典反例，加锁后结果恒为 1000。"
+  },
+  {
+    "id": "py-thread-008",
+    "title": "分片并行求和",
+    "description": "四个线程各自求一段区间的和，主线程汇总",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "shared_state",
+    "subcategory": "多线程",
+    "full_code": "import threading\n\ntotal_parts = 4\npart_sums = [0] * total_parts\n\ndef sum_range(idx):\n    start = idx * 250\n    end = start + 250\n    s = 0\n    for n in range(start, end):\n        s += n\n    part_sums[idx] = s\n\nthreads = []\nfor i in range(total_parts):\n    t = threading.Thread(target=sum_range, args=(i,))\n    threads.append(t)\n    t.start()\nfor t in threads:\n    t.join()\nprint(sum(part_sums))",
+    "expected": "499500",
+    "points": [
+      {
+        "id": "pass_idx",
+        "text": "args=(i,)",
+        "category": "thread_args",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "把分片编号传给线程",
+        "fill_type": "text"
+      },
+      {
+        "id": "merge_sum",
+        "text": "sum(part_sums)",
+        "category": "expression",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "join 后合并四段结果",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 每个线程只算自己的区间、写入自己的槽位，为什么这样就没有竞争？",
+      "level_2": "📖 各线程写 part_sums 的不同下标，互不干扰；join 后统一汇总",
+      "level_3": "👀 `args=(i,)` 传入分片号；`sum(part_sums)` 合并",
+      "level_4": "📝 正确答案：`args=(i,)` 与 `sum(part_sums)`"
+    },
+    "explanation": "「分区计算 + 汇总」是无锁并行的经典模式：只要共享结构上各写各的位置（或用返回值收集），就天然无竞争、结果确定。"
+  },
+  {
+    "id": "py-thread-009",
+    "title": "threading.local 线程本地存储",
+    "description": "每个线程拥有自己的属性空间",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "thread_local",
+    "subcategory": "多线程",
+    "full_code": "import threading\n\nctx = threading.local()\ncollected = []\n\ndef work(tag):\n    ctx.owner = tag\n    collected.append(ctx.owner)\n\nthreads = []\nfor tag in (\"a\", \"b\"):\n    t = threading.Thread(target=work, args=(tag,))\n    threads.append(t)\n    t.start()\nfor t in threads:\n    t.join()\nprint(\"\".join(sorted(collected)))",
+    "expected": "ab",
+    "points": [
+      {
+        "id": "local_obj",
+        "text": "threading.local()",
+        "category": "thread_local",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "创建线程本地存储对象",
+        "fill_type": "text"
+      },
+      {
+        "id": "set_attr",
+        "text": "ctx.owner = tag",
+        "category": "thread_local",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "在当前线程的隔离空间里写入自己的标记",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 不同线程访问同一个 ctx.owner 会互相覆盖吗？",
+      "level_2": "📖 threading.local 的属性按线程隔离：每个线程看到的是自己的副本",
+      "level_3": "👀 `ctx = threading.local()` → `ctx.owner = tag`",
+      "level_4": "📝 正确答案：`threading.local()` 与 `ctx.owner = tag`"
+    },
+    "explanation": "local 对象常用来存放「请求作用域」数据（如数据库连接、用户身份）；sorted() 在此只为消除两线程完成顺序的不确定性，内容本身互不污染。"
+  },
+  {
+    "id": "py-thread-010",
+    "title": "acquire/release 显式加锁",
+    "description": "不用 with，手动成对调用锁方法",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "lock_py",
+    "subcategory": "多线程",
+    "full_code": "import threading\n\nlock = threading.Lock()\nlog = []\n\ndef enter(name):\n    lock.acquire()\n    try:\n        log.append(name)\n    finally:\n        lock.release()\n\npairs = [(\"x\",), (\"y\",)]\nthreads = [threading.Thread(target=enter, args=p) for p in pairs]\nfor t in threads:\n    t.start()\nfor t in threads:\n    t.join()\nprint(\"\".join(sorted(log)))",
+    "expected": "xy",
+    "points": [
+      {
+        "id": "acquire_call",
+        "text": "lock.acquire()",
+        "category": "lock_py",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "手动获取锁，拿不到就阻塞",
+        "fill_type": "text"
+      },
+      {
+        "id": "release_call",
+        "text": "lock.release()",
+        "category": "lock_py",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "finally 中释放锁，异常也不泄漏",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 手动加解锁时如何保证异常路径也释放？",
+      "level_2": "📖 acquire 后把临界区放进 try/finally，release 写在 finally",
+      "level_3": "👀 `lock.acquire()` … finally: `lock.release()`",
+      "level_4": "📝 正确答案：`lock.acquire()` 与 `lock.release()`"
+    },
+    "explanation": "优先用 `with lock:`（等效于自动 finally 释放）；显式写法常见于「先取锁再决定做什么」的复杂流程。忘记 release 会造成其余线程永久阻塞。"
+  },
+  {
+    "id": "py-thread-011",
+    "title": "Semaphore 信号量",
+    "description": "配额限制并发进入数，但不阻止任何任务最终完成",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "semaphore_py",
+    "subcategory": "多线程",
+    "full_code": "import threading\n\nsem = threading.Semaphore(2)\nfinished = []\n\ndef task(i):\n    with sem:\n        finished.append(i)\n\nthreads = [threading.Thread(target=task, args=(i,)) for i in range(5)]\nfor t in threads:\n    t.start()\nfor t in threads:\n    t.join()\nprint(len(finished))",
+    "expected": "5",
+    "points": [
+      {
+        "id": "make_sem",
+        "text": "threading.Semaphore(2)",
+        "category": "semaphore_py",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "创建最多允许 2 个线程同时进入的信号量",
+        "fill_type": "text"
+      },
+      {
+        "id": "record_done",
+        "text": "finished.append(i)",
+        "category": "shared_state",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "进入临界区后记录完成的任务",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 5 个任务抢 2 个许可，会有任务永远轮不到吗？",
+      "level_2": "📖 许可被释放后归还，等待者依序获得——人人都能完成，只是同时最多 2 个",
+      "level_3": "👀 join 全部结束后 `len(finished)` == 5",
+      "level_4": "📝 正确答案：`threading.Semaphore(2)` 与 `finished.append(i)`"
+    },
+    "explanation": "Semaphore(n) 维护内部计数：进入 -1、离开 +1，为 0 时后来的阻塞等待；典型用途是限制并发连接/请求量。"
+  },
+  {
+    "id": "py-thread-012",
+    "title": "Event 事件广播",
+    "description": "一个线程等待信号，另一个线程发出信号",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "event_py",
+    "subcategory": "多线程",
+    "full_code": "import threading\n\nready = threading.Event()\noutbox = []\n\ndef waiter():\n    ready.wait()\n    outbox.append(\"fired\")\n\nt = threading.Thread(target=waiter)\nt.start()\nready.set()\nt.join()\nprint(outbox[0])",
+    "expected": "fired",
+    "points": [
+      {
+        "id": "wait_evt",
+        "text": "ready.wait()",
+        "category": "event_py",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "阻塞等待事件被置位",
+        "fill_type": "text"
+      },
+      {
+        "id": "set_evt",
+        "text": "ready.set()",
+        "category": "event_py",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "置位事件，唤醒所有等待者",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 waiter 如何知道「可以继续了」？谁来唤醒它？",
+      "level_2": "📖 `Event.wait()` 阻塞到别的线程调用 `set()`",
+      "level_3": "👀 `ready.wait()` ↔ `ready.set()`",
+      "level_4": "📝 正确答案：`ready.wait()` 与 `ready.set()`"
+    },
+    "explanation": "Event 是最简单的线程间通知机制：set 后所有 wait 立即返回（且此后 wait 不再阻塞）；需要反向通知时可用 clear() 复位。"
+  },
+  {
+    "id": "py-thread-013",
+    "title": "Barrier 集合点",
+    "description": "三个线程到齐后触发一次性回调",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "hard",
+    "category": "barrier",
+    "subcategory": "多线程",
+    "full_code": "import threading\n\nnotes = []\nbarrier = threading.Barrier(3, action=lambda: notes.append(\"all arrived\"))\n\ndef worker():\n    barrier.wait()\n\nthreads = [threading.Thread(target=worker) for _ in range(3)]\nfor t in threads:\n    t.start()\nfor t in threads:\n    t.join()\nprint(notes[0])",
+    "expected": "all arrived",
+    "points": [
+      {
+        "id": "make_barrier",
+        "text": "action=lambda: notes.append(\"all arrived\")",
+        "category": "barrier",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "全员到齐时执行的一次性回调",
+        "fill_type": "text"
+      },
+      {
+        "id": "arrive",
+        "text": "barrier.wait()",
+        "category": "barrier",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "到达集合点，等其余线程",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 如何表达「三方都准备好后再一起开始」？到齐瞬间想做事怎么办？",
+      "level_2": "📖 Barrier(parties, action=…)：第 n 个线程到达时先执行 action 再集体放行",
+      "level_3": "👀 `Barrier(3, action=…)` + `barrier.wait()`",
+      "level_4": "📝 正确答案：`action=lambda: notes.append(\"all arrived\")` 与 `barrier.wait()`"
+    },
+    "explanation": "Barrier 适合「分阶段并行」：每阶段末尾集合、同步进入下一阶段；action 由最后到达的线程执行，恰好只跑一次。"
+  },
+  {
+    "id": "py-thread-014",
+    "title": "RLock 可重入锁",
+    "description": "同一线程内嵌套获取同一把锁而不死锁",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "hard",
+    "category": "rlock",
+    "subcategory": "多线程",
+    "full_code": "import threading\n\ngate = threading.RLock()\ndepth_log = []\n\ndef nested():\n    with gate:\n        with gate:\n            depth_log.append(\"inner-ok\")\n\nt = threading.Thread(target=nested)\nt.start()\nt.join()\nprint(depth_log[0])",
+    "expected": "inner-ok",
+    "points": [
+      {
+        "id": "make_rlock",
+        "text": "threading.RLock()",
+        "category": "rlock",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "可重入锁：持有者可再次获取",
+        "fill_type": "text"
+      },
+      {
+        "id": "inner_with",
+        "text": "with gate:",
+        "category": "rlock",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "同一线程内的第二次获取",
+        "fill_type": "text",
+        "occurrence": 1
+      }
+    ],
+    "hints": {
+      "level_1": "💡 普通 Lock 在同一线程里二次 acquire 会发生什么？RLock 为什么不会？",
+      "level_2": "📖 Lock 无归属权，二次 acquire 自死锁；RLock 记录持有线程与次数",
+      "level_3": "👀 外层 `with gate:` 里再 `with gate:`",
+      "level_4": "📝 正确答案：`threading.RLock()` 与内层第二次 `with gate:`"
+    },
+    "explanation": "RLock 内部维护「持有者 + 计数」：每次 acquire 计数 +1、release -1，归零才真正放行；适合「持锁函数调用另一个也要拿锁的函数」的场景。"
+  },
+  {
+    "id": "py-thread-015",
+    "title": "Queue 任务分发",
+    "description": "主线程投递任务，工作线程取出处理，哨兵值收尾",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "queue_py",
+    "subcategory": "多线程",
+    "full_code": "import threading\nimport queue\n\ntasks = queue.Queue()\ndone = []\n\ndef worker():\n    while True:\n        item = tasks.get()\n        if item is None:\n            break\n        done.append(item * 2)\n        tasks.task_done()\n\nfor i in (1, 2, 3):\n    tasks.put(i)\ntasks.put(None)\n\nt = threading.Thread(target=worker)\nt.start()\nt.join()\nprint(done)",
+    "expected": "[2, 4, 6]",
+    "points": [
+      {
+        "id": "fetch_item",
+        "text": "tasks.get()",
+        "category": "queue_py",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "从队列取出一个任务（空队列时阻塞）",
+        "fill_type": "text"
+      },
+      {
+        "id": "sentinel",
+        "text": "tasks.put(None)",
+        "category": "queue_sentinel",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "投递哨兵 None 通知工作线程收工",
+        "fill_type": "text"
+      },
+      {
+        "id": "double_it",
+        "text": "item * 2",
+        "category": "expression",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "对任务值做处理",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 工作线程怎么知道该退出了？任务从哪来？",
+      "level_2": "📖 `q.get()` 阻塞取任务；约定哨兵 None 表示结束",
+      "level_3": "👀 `tasks.get()` 取任务；`tasks.put(None)` 收尾",
+      "level_4": "📝 正确答案：`tasks.get()`、`tasks.put(None)` 与 `item * 2`"
+    },
+    "explanation": "queue.Queue 自带锁，put/get 天然线程安全；单消费者 + FIFO 使 done 顺序与投递顺序一致，输出确定。"
+  },
+  {
+    "id": "py-thread-016",
+    "title": "task_done 与 q.join",
+    "description": "主线程等待队列中的所有任务都被处理完",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "task_done_queue",
+    "subcategory": "多线程",
+    "full_code": "import threading\nimport queue\n\nq = queue.Queue()\nhandled = []\n\ndef consume():\n    while True:\n        item = q.get()\n        handled.append(item)\n        q.task_done()\n\nc = threading.Thread(target=consume, daemon=True)\nc.start()\nfor i in range(3):\n    q.put(i)\nq.join()\nprint(handled)",
+    "expected": "[0, 1, 2]",
+    "points": [
+      {
+        "id": "mark_done",
+        "text": "q.task_done()",
+        "category": "task_done_queue",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "告知队列：这一项处理完了",
+        "fill_type": "text"
+      },
+      {
+        "id": "wait_drain",
+        "text": "q.join()",
+        "category": "task_done_queue",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "阻塞直到未完成计数归零",
+        "fill_type": "text"
+      },
+      {
+        "id": "daemon_flag2",
+        "text": "daemon=True",
+        "category": "thread_state",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "守护线程：主程序结束时不必等它（它正阻塞在 get）",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 主线程如何知道「三条都处理完了」而不是只看队列为空？",
+      "level_2": "📖 消费端每项 `task_done()`；主线程 `q.join()` 等未决计数归零",
+      "level_3": "👀 `q.task_done()` ↔ `q.join()`",
+      "level_4": "📝 正确答案：`q.task_done()`、`q.join()` 与 `daemon=True`"
+    },
+    "explanation": "「队列为空 ≠ 处理完成」：get 取走但还在处理时队列已空。task_done/join 这对组合跟踪的是「未决任务数」，语义才是真正的全部完工。"
+  },
+  {
+    "id": "py-thread-017",
+    "title": "FIFO 保序传输",
+    "description": "队列先进先出：跨线程传递也不会乱序",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "queue_py",
+    "subcategory": "多线程",
+    "full_code": "import threading\nimport queue\n\nletters = queue.Queue()\nreceived = []\n\ndef consume():\n    while True:\n        item = letters.get()\n        if item is None:\n            break\n        received.append(item)\n\nc = threading.Thread(target=consume)\nc.start()\nfor ch in \"abc\":\n    letters.put(ch)\nletters.put(None)\nc.join()\nprint(\"\".join(received))",
+    "expected": "abc",
+    "points": [
+      {
+        "id": "enqueue",
+        "text": "letters.put(ch)",
+        "category": "queue_py",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "按顺序把字符放入队列",
+        "fill_type": "text"
+      },
+      {
+        "id": "sentinel_check",
+        "text": "if item is None:",
+        "category": "queue_sentinel",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "哨兵判断：收到 None 就退出循环",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 消费者取到的顺序和生产顺序一致吗？",
+      "level_2": "📖 Queue 严格 FIFO：单消费者按投递顺序收到 abc",
+      "level_3": "👀 `letters.put(ch)` 依次投递 → received == abc",
+      "level_4": "📝 正确答案：`letters.put(ch)` 与 `if item is None:`"
+    },
+    "explanation": "FIFO + 单消费者 = 严格保序；多消费者场景下「谁处理哪条」不确定，但每条消息仍恰好被处理一次。"
+  },
+  {
+    "id": "py-thread-018",
+    "title": "Timer 定时线程",
+    "description": "延迟 50ms 后在工作线程中执行一次",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "timer_thread",
+    "subcategory": "多线程",
+    "full_code": "import threading\n\nfired = []\n\ndef ring():\n    fired.append(\"ring\")\n\ntimer = threading.Timer(0.05, ring)\ntimer.start()\ntimer.join()\nprint(fired[0])",
+    "expected": "ring",
+    "points": [
+      {
+        "id": "make_timer",
+        "text": "threading.Timer(0.05, ring)",
+        "category": "timer_thread",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "创建延迟 0.05 秒执行的定时器线程",
+        "fill_type": "text"
+      },
+      {
+        "id": "wait_ring",
+        "text": "timer.join()",
+        "category": "thread_join",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "等定时器线程跑完再打印",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 「过一会儿再做某事」用什么？它本质是什么？",
+      "level_2": "📖 `Timer(秒, 函数)`：Thread 子类，到点在线程里执行一次",
+      "level_3": "👀 `threading.Timer(0.05, ring)` → start → join",
+      "level_4": "📝 正确答案：`threading.Timer(0.05, ring)`"
+    },
+    "explanation": "Timer(间隔, 函数, args=…) 到点执行一次；cancel() 可在到点前取消；重复定时需在回调里重新构造（或改用调度器库）。"
+  },
+  {
+    "id": "py-thread-019",
+    "title": "线程池 map",
+    "description": "ThreadPoolExecutor 并发执行并按提交顺序取回结果",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "executor_thread",
+    "subcategory": "多线程",
+    "full_code": "from concurrent.futures import ThreadPoolExecutor\n\ndef double(n):\n    return n * 2\n\nwith ThreadPoolExecutor(max_workers=3) as ex:\n    results = list(ex.map(double, [1, 2, 3]))\nprint(results)",
+    "expected": "[2, 4, 6]",
+    "points": [
+      {
+        "id": "pool_map",
+        "text": "ex.map(double, [1, 2, 3])",
+        "category": "executor_thread",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "把函数应用到序列，池内并发执行",
+        "fill_type": "text"
+      },
+      {
+        "id": "pool_size",
+        "text": "max_workers=3",
+        "category": "executor_thread",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "线程池大小",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 想像 gather 一样「提交一批、按序收回」，线程世界用什么？",
+      "level_2": "📖 `executor.map(函数, 序列)` 并发执行，结果迭代器按输入顺序产出",
+      "level_3": "👀 `list(ex.map(double, [1, 2, 3]))` → [2, 4, 6]",
+      "level_4": "📝 正确答案：`ex.map(double, [1, 2, 3])` 与 `max_workers=3`"
+    },
+    "explanation": "ThreadPoolExecutor 免去手工 create/join；`with` 块结束时自动等待全部完成（shutdown(wait=True)）；map 的结果顺序与输入一致，哪怕完成时间不同。"
+  },
+  {
+    "id": "py-thread-020",
+    "title": "submit 与 Future 汇总",
+    "description": "提交多个任务拿到 Future，逐个取回结果求和",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "hard",
+    "category": "executor_thread",
+    "subcategory": "多线程",
+    "full_code": "from concurrent.futures import ThreadPoolExecutor\n\ndef load(n):\n    return n * 10\n\nwith ThreadPoolExecutor(max_workers=2) as ex:\n    futures = [ex.submit(load, i) for i in range(4)]\n    total = sum(f.result() for f in futures)\nprint(total)",
+    "expected": "60",
+    "points": [
+      {
+        "id": "submit_call",
+        "text": "ex.submit(load, i)",
+        "category": "executor_thread",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "提交任务立即返回 Future，不等执行完",
+        "fill_type": "text"
+      },
+      {
+        "id": "get_result",
+        "text": "f.result()",
+        "category": "executor_thread",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "阻塞取得该任务的返回值",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 submit 返回的是什么？何时能拿到里面的值？",
+      "level_2": "📖 submit 返回 Future；`.result()` 阻塞至该任务完成并给出返回值",
+      "level_3": "👀 `ex.submit(load, i)` → `f.result()` 求和",
+      "level_4": "📝 正确答案：`ex.submit(load, i)` 与 `f.result()`"
+    },
+    "explanation": "submit+Future 是细粒度控制的首选：可以先全部提交、再按任意顺序收割；result() 还支持 timeout 参数与异常透传。"
+  }
+]

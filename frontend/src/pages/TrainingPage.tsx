@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { api } from '../api/client';
-import CodeEditor, { extractAnswers, toPlaceholderText } from '../components/CodeEditor';
+import CodeEditor, { toPlaceholderText } from '../components/CodeEditor';
 import HintPanel from '../components/HintPanel';
 import ScoreCard from '../components/ScoreCard';
 import WeightSelector, { WEIGHTS } from '../components/WeightSelector';
@@ -64,9 +64,10 @@ export default function TrainingPage({ id }: { id: string }) {
 
   const onCodeChange = (next: string) => {
     setCode(next);
-    if (variant && variant.exercise_type !== 'bugfix' && variant.fill_points?.length) {
-      setAnswers(extractAnswers(variant.marked_code, next, variant.fill_points.map((p) => p.id)).answers);
-    }
+  };
+
+  const onAnswersChange = (ans: Record<string, string>) => {
+    setAnswers(ans);
   };
 
   const onHint = (pointId: string, levelNo: number) => {
@@ -160,13 +161,14 @@ export default function TrainingPage({ id }: { id: string }) {
           fillPoints={variant.exercise_type === 'bugfix' ? [] : (variant.fill_points ?? [])}
           value={code}
           onChange={onCodeChange}
+          onAnswers={onAnswersChange}
           readOnly={!!result}
         />
       </section>
 
       <section className="panel">
         <div className="panel-title">💡 辅助保护（点击逐级解锁，使用会扣分）</div>
-        <HintPanel fillPoints={variant.fill_points ?? []} onHintUsed={onHint} readOnly={!!result} />
+        <HintPanel key={variant.variant_id} fillPoints={variant.fill_points ?? []} onHintUsed={onHint} readOnly={!!result} />
       </section>
 
       <section className="panel actions">

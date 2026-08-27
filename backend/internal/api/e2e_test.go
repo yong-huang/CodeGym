@@ -372,8 +372,8 @@ func TestE2E_ExerciseListAndVariant(t *testing.T) {
 		PointCount   int    `json:"point_count"`
 	}
 	doJSON(t, "GET", base+"/exercises", nil, &list)
-	if len(list) != 605 {
-		t.Fatalf("expected 605 exercises (555 + 50 BigQuery), got %d", len(list))
+	if len(list) != 856 {
+		t.Fatalf("expected 856 exercises (676 + 180 AWS), got %d", len(list))
 	}
 	var ids []string
 	for _, ex := range list {
@@ -1087,8 +1087,8 @@ func TestE2E_ExportImport(t *testing.T) {
 	if err := json.NewDecoder(resp.Body).Decode(&exported); err != nil {
 		t.Fatal(err)
 	}
-	if len(exported) != 605 {
-		t.Fatalf("export count = %d, want 605", len(exported))
+	if len(exported) != 856 {
+		t.Fatalf("export count = %d, want 856", len(exported))
 	}
 
 	// import: delete one exercise, then restore it from the exported blob

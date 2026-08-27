@@ -1,0 +1,2179 @@
+[
+  {
+    "id": "devops-terra-001",
+    "title": "初始化工作目录",
+    "description": "下载 provider 插件并初始化后台",
+    "exercise_type": "command",
+    "tech_stack": "devops",
+    "weight": "beginner",
+    "category": "terra_cli",
+    "subcategory": "terraform",
+    "full_code": "terraform init",
+    "expected": "",
+    "points": [
+      {
+        "id": "verb",
+        "text": "init",
+        "category": "terra_cli",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "初始化命令动词",
+        "fill_type": "text",
+        "acceptable_answers": []
+      }
+    ],
+    "hints": {
+      "level_1": "💡 新目录第一步执行什么？",
+      "level_2": "📖 `terraform init` 安装 provider 并初始化 state 后端",
+      "level_3": "👀 `terraform init`",
+      "level_4": "📝 正确答案：`init`"
+    },
+    "explanation": "init 是任何新工作目录的第一步：下载 provider、初始化状态后端；已初始化项目重跑可补新插件。"
+  },
+  {
+    "id": "devops-terra-002",
+    "title": "生成执行计划",
+    "description": "预演变更而不真正落地（干运行）",
+    "exercise_type": "command",
+    "tech_stack": "devops",
+    "weight": "beginner",
+    "category": "terra_cli",
+    "subcategory": "terraform",
+    "full_code": "terraform plan",
+    "expected": "",
+    "points": [
+      {
+        "id": "verb",
+        "text": "plan",
+        "category": "terra_cli",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "干运行命令",
+        "fill_type": "text",
+        "acceptable_answers": []
+      }
+    ],
+    "hints": {
+      "level_1": "💡 不改资源、只看会做什么变更用什么命令？",
+      "level_2": "📖 `terraform plan` 对比 state 与配置，输出变更清单",
+      "level_3": "👀 `terraform plan`",
+      "level_4": "📝 正确答案：`plan`"
+    },
+    "explanation": "plan 对比「当前状态」与「目标配置」，展示将创建的资源与变更，不实际修改任何东西。"
+  },
+  {
+    "id": "devops-terra-003",
+    "title": "应用变更",
+    "description": "执行计划中的变更，创建/修改资源",
+    "exercise_type": "command",
+    "tech_stack": "devops",
+    "weight": "beginner",
+    "category": "terra_cli",
+    "subcategory": "terraform",
+    "full_code": "terraform apply",
+    "expected": "",
+    "points": [
+      {
+        "id": "verb",
+        "text": "apply",
+        "category": "terra_cli",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "落地变更命令",
+        "fill_type": "text",
+        "acceptable_answers": []
+      }
+    ],
+    "hints": {
+      "level_1": "💡 真正创建资源用什么命令？",
+      "level_2": "📖 `terraform apply` 执行计划并更新 state",
+      "level_3": "👀 `terraform apply`",
+      "level_4": "📝 正确答案：`apply`"
+    },
+    "explanation": "apply 把计划落到真实环境并写回 state；生产环境建议先 plan 审阅再 apply。"
+  },
+  {
+    "id": "devops-terra-004",
+    "title": "销毁资源",
+    "description": "清理托管的所有资源",
+    "exercise_type": "command",
+    "tech_stack": "devops",
+    "weight": "easy",
+    "category": "terra_cli",
+    "subcategory": "terraform",
+    "full_code": "terraform destroy",
+    "expected": "",
+    "points": [
+      {
+        "id": "verb",
+        "text": "destroy",
+        "category": "terra_cli",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "删除资源命令",
+        "fill_type": "text",
+        "acceptable_answers": []
+      }
+    ],
+    "hints": {
+      "level_1": "💡 清理全部托管资源用什么命令？",
+      "level_2": "📖 `terraform destroy` 删除 state 中记录的全部资源",
+      "level_3": "👀 `terraform destroy`",
+      "level_4": "📝 正确答案：`destroy`"
+    },
+    "explanation": "destroy 是 apply 的反向操作，删除所有托管资源并清空 state；确认交互默认需要输入 yes。"
+  },
+  {
+    "id": "devops-terra-005",
+    "title": "校验配置语法",
+    "description": "不连远端，本地校验 HCL 是否合法",
+    "exercise_type": "command",
+    "tech_stack": "devops",
+    "weight": "easy",
+    "category": "terra_cli",
+    "subcategory": "terraform",
+    "full_code": "terraform validate",
+    "expected": "",
+    "points": [
+      {
+        "id": "verb",
+        "text": "validate",
+        "category": "terra_cli",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "语法校验命令",
+        "fill_type": "text",
+        "acceptable_answers": []
+      }
+    ],
+    "hints": {
+      "level_1": "💡 只检查语法是否合法用什么命令？",
+      "level_2": "📖 `terraform validate` 本地校验配置语法与内部一致性",
+      "level_3": "👀 `terraform validate`",
+      "level_4": "📝 正确答案：`validate`"
+    },
+    "explanation": "validate 无需初始化即可做基本语法检查；能尽早发现拼写与引用错误。"
+  },
+  {
+    "id": "devops-terra-006",
+    "title": "格式化代码",
+    "description": "自动排版 HCL 文件",
+    "exercise_type": "command",
+    "tech_stack": "devops",
+    "weight": "beginner",
+    "category": "terra_cli",
+    "subcategory": "terraform",
+    "full_code": "terraform fmt",
+    "expected": "",
+    "points": [
+      {
+        "id": "verb",
+        "text": "fmt",
+        "category": "terra_cli",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "自动格式化命令",
+        "fill_type": "text",
+        "acceptable_answers": []
+      }
+    ],
+    "hints": {
+      "level_1": "💡 自动对齐缩进/格式用什么命令？",
+      "level_2": "📖 `terraform fmt` 统一 HCL 排版",
+      "level_3": "👀 `terraform fmt`",
+      "level_4": "📝 正确答案：`fmt`"
+    },
+    "explanation": "fmt 按官方风格自动重排 .tf 文件，统一团队代码格式；配合 pre-commit 在 CI 里自动检查。"
+  },
+  {
+    "id": "devops-terra-007",
+    "title": "查看资源详情",
+    "description": "展示配置或 state 中资源的属性",
+    "exercise_type": "command",
+    "tech_stack": "devops",
+    "weight": "easy",
+    "category": "terra_cli",
+    "subcategory": "terraform",
+    "full_code": "terraform show",
+    "expected": "",
+    "points": [
+      {
+        "id": "verb",
+        "text": "show",
+        "category": "terra_cli",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "查看资源命令",
+        "fill_type": "text",
+        "acceptable_answers": []
+      }
+    ],
+    "hints": {
+      "level_1": "💡 查看已管理资源的状态详情用什么命令？",
+      "level_2": "📖 `terraform show` 输出 state 中资源属性",
+      "level_3": "👀 `terraform show`",
+      "level_4": "📝 正确答案：`show`"
+    },
+    "explanation": "show 以可读格式输出 state 中资源的实际属性，便于排查与调试。"
+  },
+  {
+    "id": "devops-terra-008",
+    "title": "工作区切换",
+    "description": "多环境隔离用 workspace 切换",
+    "exercise_type": "command",
+    "tech_stack": "devops",
+    "weight": "medium",
+    "category": "terra_cli",
+    "subcategory": "terraform",
+    "full_code": "terraform workspace select prod",
+    "expected": "",
+    "points": [
+      {
+        "id": "ws_cmd",
+        "text": "workspace select",
+        "category": "terra_cli",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "工作区命令 + 切换动词",
+        "fill_type": "text",
+        "acceptable_answers": []
+      },
+      {
+        "id": "ws_name",
+        "text": "prod",
+        "category": "terra_cli",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "目标工作区名",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 多个环境共用一套配置，怎么隔离状态？",
+      "level_2": "📖 `terraform workspace select 名字`；new 创建、list 查看",
+      "level_3": "👀 `terraform workspace select prod`",
+      "level_4": "📝 正确答案：`workspace select`"
+    },
+    "explanation": "workspace 让同一配置拥有相互隔离的 state，常用于 dev/prod 环境切换。"
+  },
+  {
+    "id": "devops-terra-009",
+    "title": "管理状态",
+    "description": "列出 state 中的资源地址",
+    "exercise_type": "command",
+    "tech_stack": "devops",
+    "weight": "medium",
+    "category": "terra_cli",
+    "subcategory": "terraform",
+    "full_code": "terraform state list",
+    "expected": "",
+    "points": [
+      {
+        "id": "state_cmd",
+        "text": "state list",
+        "category": "terra_state",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "state 子命令 + 列表动作",
+        "fill_type": "text",
+        "acceptable_answers": []
+      }
+    ],
+    "hints": {
+      "level_1": "💡 查看 state 里有哪些托管资源用什么命令？",
+      "level_2": "📖 `terraform state list` 列出资源地址",
+      "level_3": "👀 `terraform state list`",
+      "level_4": "📝 正确答案：`state list`"
+    },
+    "explanation": "state list 输出所有资源地址（如 aws_instance.web），是引用与排障的基础。"
+  },
+  {
+    "id": "devops-terra-010",
+    "title": "导入已有资源",
+    "description": "把外部已存在的资源纳入 Terraform 管理",
+    "exercise_type": "command",
+    "tech_stack": "devops",
+    "weight": "hard",
+    "category": "terra_import",
+    "subcategory": "terraform",
+    "full_code": "terraform import aws_instance.web i-0abcd1234efgh5678",
+    "expected": "",
+    "points": [
+      {
+        "id": "imp_verb",
+        "text": "import",
+        "category": "terra_import",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "导入命令动词",
+        "fill_type": "text",
+        "acceptable_answers": []
+      },
+      {
+        "id": "res_addr",
+        "text": "aws_instance.web",
+        "category": "terra_import",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "目标资源地址",
+        "fill_type": "text",
+        "acceptable_answers": []
+      }
+    ],
+    "hints": {
+      "level_1": "💡 手工创建的资源想纳入 IaC 管理，怎么办？",
+      "level_2": "📖 `terraform import 资源地址 外部ID` 写入 state（需先写对应配置）",
+      "level_3": "👀 `terraform import aws_instance.web i-…`",
+      "level_4": "📝 正确答案：`import` 与 `aws_instance.web`"
+    },
+    "explanation": "import 把已存在的资源登记进 state，此后由 Terraform 管理；注意仍须在配置里写好对应 resource 块。"
+  },
+  {
+    "id": "devops-terra-011",
+    "title": "resource 资源块",
+    "description": "定义要托管的云资源（HCL 基础）",
+    "exercise_type": "config",
+    "tech_stack": "devops",
+    "weight": "beginner",
+    "category": "terra_resource",
+    "subcategory": "terraform",
+    "full_code": "resource \"aws_instance\" \"web\" {\n  ami           = \"ami-0c55b159cbfafe1f0\"\n  instance_type = \"t2.micro\"\n}",
+    "expected": "",
+    "points": [
+      {
+        "id": "res_block",
+        "text": "resource \"aws_instance\" \"web\"",
+        "category": "terra_resource",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "类型 + 名称构成资源块头",
+        "fill_type": "text"
+      },
+      {
+        "id": "attr",
+        "text": "instance_type = \"t2.micro\"",
+        "category": "terra_resource",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "资源属性赋值",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 定义资源的关键字是什么？块头怎么组成？",
+      "level_2": "📖 `resource \"类型\" \"名称\" { … }`，块内是属性 = 值",
+      "level_3": "👀 `resource \"aws_instance\" \"web\" { … }`",
+      "level_4": "📝 正确答案：`resource \"aws_instance\" \"web\"`"
+    },
+    "explanation": "resource 是 IaC 的核心块；「类型.名称」构成唯一资源地址，供他处引用。"
+  },
+  {
+    "id": "devops-terra-012",
+    "title": "provider 提供方",
+    "description": "声明云厂商与区域",
+    "exercise_type": "config",
+    "tech_stack": "devops",
+    "weight": "beginner",
+    "category": "terra_provider",
+    "subcategory": "terraform",
+    "full_code": "provider \"aws\" {\n  region = \"us-east-1\"\n}",
+    "expected": "",
+    "points": [
+      {
+        "id": "prov_block",
+        "text": "provider \"aws\"",
+        "category": "terra_provider",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "云厂商块",
+        "fill_type": "text"
+      },
+      {
+        "id": "region_attr",
+        "text": "region = \"us-east-1\"",
+        "category": "terra_provider",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "区域属性",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 声明对接哪家云、哪个区域用什么块？",
+      "level_2": "📖 `provider \"名称\" { region = … }`",
+      "level_3": "👀 `provider \"aws\" { region = \"us-east-1\" }`",
+      "level_4": "📝 正确答案：`provider \"aws\"`"
+    },
+    "explanation": "provider 决定资源如何对接 API；region 等配置项可按 provider 文档填写。"
+  },
+  {
+    "id": "devops-terra-013",
+    "title": "variable 输入变量",
+    "description": "定义可复用的输入参数",
+    "exercise_type": "config",
+    "tech_stack": "devops",
+    "weight": "easy",
+    "category": "terra_variable",
+    "subcategory": "terraform",
+    "full_code": "variable \"region\" {\n  default     = \"us-east-1\"\n  description = \"部署区域\"\n}",
+    "expected": "",
+    "points": [
+      {
+        "id": "var_block",
+        "text": "variable \"region\"",
+        "category": "terra_variable",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "变量声明块",
+        "fill_type": "text"
+      },
+      {
+        "id": "default_attr",
+        "text": "default     = \"us-east-1\"",
+        "category": "terra_variable",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "默认值",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 声明输入变量用什么块？默认值写哪？",
+      "level_2": "📖 `variable \"名\" { default = … description = … }`",
+      "level_3": "👀 `variable \"region\" { default = \"us-east-1\" }`",
+      "level_4": "📝 正确答案：`variable \"region\"`"
+    },
+    "explanation": "variable 让配置参数化，运行时可用 -var / tfvars 覆盖默认值。"
+  },
+  {
+    "id": "devops-terra-014",
+    "title": "output 输出值",
+    "description": "暴露资源属性供外部使用",
+    "exercise_type": "config",
+    "tech_stack": "devops",
+    "weight": "easy",
+    "category": "terra_output",
+    "subcategory": "terraform",
+    "full_code": "output \"instance_ip\" {\n  value = aws_instance.web.public_ip\n}",
+    "expected": "",
+    "points": [
+      {
+        "id": "out_block",
+        "text": "output \"instance_ip\"",
+        "category": "terra_output",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "输出块",
+        "fill_type": "text"
+      },
+      {
+        "id": "out_value",
+        "text": "value = aws_instance.web.public_ip",
+        "category": "terra_output",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "引用资源属性",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 想把某个资源属性输出给使用者（或模块调用方）用什么？",
+      "level_2": "📖 `output \"名\" { value = 资源.属性 }`",
+      "level_3": "👀 `output \"instance_ip\" { value = aws_instance.web.public_ip }`",
+      "level_4": "📝 正确答案：`output \"instance_ip\"`"
+    },
+    "explanation": "output 在 apply 后打印并写入 state；跨模块取值必须经 output 暴露。"
+  },
+  {
+    "id": "devops-terra-015",
+    "title": "locals 局部值",
+    "description": "定义仅本配置内可复用的中间值",
+    "exercise_type": "config",
+    "tech_stack": "devops",
+    "weight": "medium",
+    "category": "terra_local",
+    "subcategory": "terraform",
+    "full_code": "locals {\n  common_tags = {\n    env  = \"prod\"\n    team = \"platform\"\n  }\n}",
+    "expected": "",
+    "points": [
+      {
+        "id": "locals_block",
+        "text": "locals {",
+        "category": "terra_local",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "局部值块",
+        "fill_type": "text"
+      },
+      {
+        "id": "tag_key",
+        "text": "env  = \"prod\"",
+        "category": "terra_local",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "局部值条目",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 只想在本配置内复用一段值（如公共标签）用什么？",
+      "level_2": "📖 `locals { 名字 = 值 }`，用 `local.名字` 引用",
+      "level_3": "👀 `locals { common_tags = { … } }`",
+      "level_4": "📝 正确答案：`locals {`"
+    },
+    "explanation": "locals 定义仅在当前配置使用的中间计算值，避免重复硬编码；引用用 `local.名字`。"
+  },
+  {
+    "id": "devops-terra-016",
+    "title": "data 数据源",
+    "description": "读取外部已有数据供配置引用",
+    "exercise_type": "config",
+    "tech_stack": "devops",
+    "weight": "medium",
+    "category": "terra_data",
+    "subcategory": "terraform",
+    "full_code": "data \"aws_ami\" \"ubuntu\" {\n  most_recent = true\n}",
+    "expected": "",
+    "points": [
+      {
+        "id": "data_block",
+        "text": "data \"aws_ami\" \"ubuntu\"",
+        "category": "terra_data",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "数据源块",
+        "fill_type": "text"
+      },
+      {
+        "id": "most_recent",
+        "text": "most_recent = true",
+        "category": "terra_data",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "取最新镜像",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 想读取已有资源（如最新 AMI）而非创建它，用什么块？",
+      "level_2": "📖 `data \"类型\" \"名称\" { … }`，用 `data.类型.名称.属性` 引用",
+      "level_3": "👀 `data \"aws_ami\" \"ubuntu\" { most_recent = true }`",
+      "level_4": "📝 正确答案：`data \"aws_ami\" \"ubuntu\"`"
+    },
+    "explanation": "data 源只读不管理，把外部数据读进配置（镜像 ID、现有 VPC 等），减少硬编码。"
+  },
+  {
+    "id": "devops-terra-017",
+    "title": "module 模块",
+    "description": "引用别人或本地的模块",
+    "exercise_type": "config",
+    "tech_stack": "devops",
+    "weight": "medium",
+    "category": "terra_module",
+    "subcategory": "terraform",
+    "full_code": "module \"vpc\" {\n  source  = \"terraform-aws-modules/vpc/aws\"\n  version = \"5.0.0\"\n}",
+    "expected": "",
+    "points": [
+      {
+        "id": "mod_block",
+        "text": "module \"vpc\"",
+        "category": "terra_module",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "模块引用块",
+        "fill_type": "text"
+      },
+      {
+        "id": "mod_source",
+        "text": "source  = \"terraform-aws-modules/vpc/aws\"",
+        "category": "terra_module",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "模块来源（注册表/仓库/本地路径）",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 复用现成模块用什么块？从哪里来？",
+      "level_2": "📖 `module \"名\" { source = 地址 version = … }`",
+      "level_3": "👀 `module \"vpc\" { source = \"terraform-aws-modules/vpc/aws\" }`",
+      "level_4": "📝 正确答案：`module \"vpc\"`"
+    },
+    "explanation": "module 把封装好的资源集合按参数复用；source 可为注册表、Git 或本地目录。"
+  },
+  {
+    "id": "devops-terra-018",
+    "title": "依赖声明 depends_on",
+    "description": "显式指定资源间依赖顺序",
+    "exercise_type": "config",
+    "tech_stack": "devops",
+    "weight": "medium",
+    "category": "terra_resource",
+    "subcategory": "terraform",
+    "full_code": "resource \"aws_instance\" \"web\" {\n  ami         = \"ami-0c55b159cbfafe1f0\"\n  depends_on  = [aws_s3_bucket.logs]\n}",
+    "expected": "",
+    "points": [
+      {
+        "id": "depends",
+        "text": "depends_on  = [aws_s3_bucket.logs]",
+        "category": "terra_depends",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "显式依赖列表",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 资源间没有直接引用但需要先建谁时，怎么写依赖？",
+      "level_2": "📖 `depends_on = [资源地址]` 显式声明",
+      "level_3": "👀 `depends_on  = [aws_s3_bucket.logs]`",
+      "level_4": "📝 正确答案：`depends_on  = [aws_s3_bucket.logs]`"
+    },
+    "explanation": "引用属性可隐式建立依赖；无引用的先后需求（如日志桶先建）需用 depends_on 显式声明。"
+  },
+  {
+    "id": "devops-terra-019",
+    "title": "count 数量循环",
+    "description": "按数量批量创建相同资源",
+    "exercise_type": "config",
+    "tech_stack": "devops",
+    "weight": "medium",
+    "category": "terra_meta",
+    "subcategory": "terraform",
+    "full_code": "resource \"aws_instance\" \"web\" {\n  count = 3\n  ami   = \"ami-0c55b159cbfafe1f0\"\n}",
+    "expected": "",
+    "points": [
+      {
+        "id": "count_attr",
+        "text": "count = 3",
+        "category": "terra_meta",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "批量数量",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 想创建 3 台同样配置的机器，怎么写？",
+      "level_2": "📖 `count = N` 复制 N 份，用 `count.index` 区分",
+      "level_3": "👀 `count = 3`",
+      "level_4": "📝 正确答案：`count = 3`"
+    },
+    "explanation": "count 按数量复制资源块；每份可用 count.index 做差异化。注意 count 基于索引，删除中间项会移位重建。"
+  },
+  {
+    "id": "devops-terra-020",
+    "title": "for_each 遍历创建",
+    "description": "按 map/set 遍历创建资源",
+    "exercise_type": "config",
+    "tech_stack": "devops",
+    "weight": "hard",
+    "category": "terra_meta",
+    "subcategory": "terraform",
+    "full_code": "resource \"aws_iam_user\" \"users\" {\n  for_each = toset([\"alice\", \"bob\"])\n  name     = each.key\n}",
+    "expected": "",
+    "points": [
+      {
+        "id": "for_each_attr",
+        "text": "for_each = toset([\"alice\", \"bob\"])",
+        "category": "terra_meta",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "遍历的集合",
+        "fill_type": "text"
+      },
+      {
+        "id": "each_key",
+        "text": "each.key",
+        "category": "terra_meta",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "当前元素键",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 按一组名字逐个建资源，count 不合适时用什么？",
+      "level_2": "📖 `for_each = 集合/map`，用 `each.key` / `each.value`",
+      "level_3": "👀 `for_each = toset([…])` + `each.key`",
+      "level_4": "📝 正确答案：`for_each = toset([\"alice\", \"bob\"])`"
+    },
+    "explanation": "for_each 基于 map/set 遍历，元素增删只影响对应实例，比 count 更适合不同内容的资源。"
+  },
+  {
+    "id": "devops-terra-021",
+    "title": "生命周期保护",
+    "description": "防止关键资源被误删",
+    "exercise_type": "config",
+    "tech_stack": "devops",
+    "weight": "hard",
+    "category": "terra_meta",
+    "subcategory": "terraform",
+    "full_code": "resource \"aws_instance\" \"db\" {\n  lifecycle {\n    prevent_destroy = true\n  }\n}",
+    "expected": "",
+    "points": [
+      {
+        "id": "lifecycle_block",
+        "text": "lifecycle {",
+        "category": "terra_meta",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "生命周期块",
+        "fill_type": "text"
+      },
+      {
+        "id": "prevent",
+        "text": "prevent_destroy = true",
+        "category": "terra_meta",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "禁止销毁",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 给数据库这种关键资源加「不可删」保护怎么写？",
+      "level_2": "📖 `lifecycle { prevent_destroy = true }`",
+      "level_3": "👀 `lifecycle { prevent_destroy = true }`",
+      "level_4": "📝 正确答案：`prevent_destroy = true`"
+    },
+    "explanation": "prevent_destroy 让 destroy/apply 尝试删除该资源时报错，为有状态资源提供安全护栏。"
+  },
+  {
+    "id": "devops-terra-022",
+    "title": "远程状态后端",
+    "description": "把 state 存到远端共享",
+    "exercise_type": "config",
+    "tech_stack": "devops",
+    "weight": "hard",
+    "category": "terra_backend",
+    "subcategory": "terraform",
+    "full_code": "terraform {\n  backend \"s3\" {\n    bucket = \"my-tf-state\"\n    key    = \"prod/network/terraform.tfstate\"\n  }\n}",
+    "expected": "",
+    "points": [
+      {
+        "id": "backend_block",
+        "text": "backend \"s3\"",
+        "category": "terra_backend",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "后端类型（s3/azurerm/gcs…）",
+        "fill_type": "text"
+      },
+      {
+        "id": "bucket",
+        "text": "bucket = \"my-tf-state\"",
+        "category": "terra_backend",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "存放桶",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 团队协作时 state 不能只在本地，怎么共享？",
+      "level_2": "📖 `terraform { backend \"s3\" { bucket = … key = … } }`，配合远端锁",
+      "level_3": "👀 `backend \"s3\"` + `bucket = \"my-tf-state\"`",
+      "level_4": "📝 正确答案：`backend \"s3\"`"
+    },
+    "explanation": "remote backend 把 state 存到共享存储（S3 等）并加锁，多人协作互不覆盖；init 时配置生效。"
+  },
+  {
+    "id": "devops-terra-023",
+    "title": "本地执行 provisioner",
+    "description": "资源创建后在本机执行命令",
+    "exercise_type": "config",
+    "tech_stack": "devops",
+    "weight": "medium",
+    "category": "terra_provisioner",
+    "subcategory": "terraform",
+    "full_code": "resource \"null_resource\" \"setup\" {\n  provisioner \"local-exec\" {\n    command = \"echo hello\"\n  }\n}",
+    "expected": "",
+    "points": [
+      {
+        "id": "provisioner",
+        "text": "provisioner \"local-exec\"",
+        "category": "terra_provisioner",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "本地执行器",
+        "fill_type": "text"
+      },
+      {
+        "id": "provisioner_cmd",
+        "text": "command = \"echo hello\"",
+        "category": "terra_provisioner",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "要执行的命令",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 创建资源后想顺带在本机跑条命令，用什么？",
+      "level_2": "📖 `provisioner \"local-exec\" { command = … }`；remote-exec 则在目标机上执行",
+      "level_3": "👀 `provisioner \"local-exec\" { command = \"echo hello\" }`",
+      "level_4": "📝 正确答案：`provisioner \"local-exec\"`"
+    },
+    "explanation": "provisioner 在 apply 过程中执行脚本（local-exec 本机/remote-exec 目标机）；只在创建时运行，非幂等，尽量少用。"
+  },
+  {
+    "id": "devops-terra-024",
+    "title": "变量文件 var-file",
+    "description": "用 tfvars 文件注入变量",
+    "exercise_type": "command",
+    "tech_stack": "devops",
+    "weight": "easy",
+    "category": "terra_varfile",
+    "subcategory": "terraform",
+    "full_code": "terraform apply -var-file=prod.tfvars",
+    "expected": "",
+    "points": [
+      {
+        "id": "flag",
+        "text": "-var-file=prod.tfvars",
+        "category": "terra_varfile",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "指定变量文件参数",
+        "fill_type": "text",
+        "acceptable_answers": []
+      }
+    ],
+    "hints": {
+      "level_1": "💡 环境参数写在 tfvars 文件里，应用时怎么带上？",
+      "level_2": "📖 `-var-file=文件名.tfvars`；auto 结尾会自动加载",
+      "level_3": "👀 `terraform apply -var-file=prod.tfvars`",
+      "level_4": "📝 正确答案：`-var-file=prod.tfvars`"
+    },
+    "explanation": "tfvars 文件集中管理变量值；命名 `*.auto.tfvars` 会自动加载，无需显式指定。"
+  },
+  {
+    "id": "devops-terra-025",
+    "title": "变量引用 var.",
+    "description": "在配置中引用输入变量",
+    "exercise_type": "config",
+    "tech_stack": "devops",
+    "weight": "easy",
+    "category": "terra_variable",
+    "subcategory": "terraform",
+    "full_code": "resource \"aws_instance\" \"web\" {\n  ami           = var.ami_id\n  instance_type = var.instance_type\n}",
+    "expected": "",
+    "points": [
+      {
+        "id": "ref_ami",
+        "text": "var.ami_id",
+        "category": "terra_variable",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "变量引用语法",
+        "fill_type": "text",
+        "acceptable_answers": []
+      },
+      {
+        "id": "ref_type",
+        "text": "var.instance_type",
+        "category": "terra_variable",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "另一个变量引用",
+        "fill_type": "text",
+        "acceptable_answers": []
+      }
+    ],
+    "hints": {
+      "level_1": "💡 引用已声明的输入变量用什么前缀？",
+      "level_2": "📖 `var.变量名`；引用输出 `output.名.value`、资源属性 `类型.名.属性`",
+      "level_3": "👀 `var.ami_id`",
+      "level_4": "📝 正确答案：`var.ami_id`"
+    },
+    "explanation": "`var.` 是输入变量引用前缀；插值场景可写在 `${var.x}` 内。"
+  },
+  {
+    "id": "devops-terra-026",
+    "title": "属性引用",
+    "description": "通过资源地址引用其他资源的属性",
+    "exercise_type": "config",
+    "tech_stack": "devops",
+    "weight": "easy",
+    "category": "terra_resource",
+    "subcategory": "terraform",
+    "full_code": "resource \"aws_eip\" \"web\" {\n  instance = aws_instance.web.id\n}",
+    "expected": "",
+    "points": [
+      {
+        "id": "prop_ref",
+        "text": "aws_instance.web.id",
+        "category": "terra_resource",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "类型.名称.属性",
+        "fill_type": "text",
+        "acceptable_answers": []
+      }
+    ],
+    "hints": {
+      "level_1": "💡 把某资源的属性喂给另一个资源，引用格式？",
+      "level_2": "📖 `类型.名称.属性`（如 aws_instance.web.id）",
+      "level_3": "👀 `aws_instance.web.id`",
+      "level_4": "📝 正确答案：`aws_instance.web.id`"
+    },
+    "explanation": "跨资源引用既传值又自动建立依赖顺序；引用语法统一为「类型.名称.属性」。"
+  },
+  {
+    "id": "devops-terra-027",
+    "title": "内置函数 join",
+    "description": "把列表拼成字符串",
+    "exercise_type": "config",
+    "tech_stack": "devops",
+    "weight": "medium",
+    "category": "terra_func",
+    "subcategory": "terraform",
+    "full_code": "locals {\n  subnet_ids = join(\",\", aws_subnet.private[*].id)\n}",
+    "expected": "",
+    "points": [
+      {
+        "id": "join_call",
+        "text": "join(\",\", aws_subnet.private[*].id)",
+        "category": "terra_func",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "join 分隔符 + 列表",
+        "fill_type": "text"
+      },
+      {
+        "id": "splat",
+        "text": "aws_subnet.private[*].id",
+        "category": "terra_func",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "[*] 取全部实例的属性成列表",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 把多个子网 ID 拼成逗号分隔串，用哪个函数？",
+      "level_2": "📖 `join(分隔符, 列表)`；`[*]` 是 splat 展开",
+      "level_3": "👀 `join(\",\", aws_subnet.private[*].id)`",
+      "level_4": "📝 正确答案：`join(\",\", aws_subnet.private[*].id)`"
+    },
+    "explanation": "join 拼串；splat 表达式 `列表[*].属性` 取集合中每个实例的某个属性。"
+  },
+  {
+    "id": "devops-terra-028",
+    "title": "敏感变量",
+    "description": "隐藏变量值避免泄露到日志",
+    "exercise_type": "config",
+    "tech_stack": "devops",
+    "weight": "medium",
+    "category": "terra_variable",
+    "subcategory": "terraform",
+    "full_code": "variable \"db_password\" {\n  type      = string\n  sensitive = true\n}",
+    "expected": "",
+    "points": [
+      {
+        "id": "sensitive",
+        "text": "sensitive = true",
+        "category": "terra_variable",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "标记敏感",
+        "fill_type": "text"
+      },
+      {
+        "id": "type_attr",
+        "text": "type      = string",
+        "category": "terra_variable",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "变量类型",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 密码类变量不想出现在 plan/日志里，怎么声明？",
+      "level_2": "📖 `sensitive = true` 让 Terraform 打码显示",
+      "level_3": "👀 `variable \"db_password\" { type = string, sensitive = true }`",
+      "level_4": "📝 正确答案：`sensitive = true`"
+    },
+    "explanation": "sensitive 标记让 plan/输出中该值显示为 (sensitive value)；state 中仍以明文存储，生产建议配合加密后端。"
+  },
+  {
+    "id": "devops-terra-029",
+    "title": "版本约束",
+    "description": "锁定 Terraform 版本范围",
+    "exercise_type": "config",
+    "tech_stack": "devops",
+    "weight": "easy",
+    "category": "terra_provider",
+    "subcategory": "terraform",
+    "full_code": "terraform {\n  required_version = \">= 1.5.0\"\n}",
+    "expected": "",
+    "points": [
+      {
+        "id": "req_ver",
+        "text": "required_version = \">= 1.5.0\"",
+        "category": "terra_provider",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "版本范围约束",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 限定 CLI 最低版本以避免语法兼容问题，怎么写？",
+      "level_2": "📖 `terraform { required_version = \"约束\" }`",
+      "level_3": "👀 `required_version = \">= 1.5.0\"`",
+      "level_4": "📝 正确答案：`required_version = \">= 1.5.0\"`"
+    },
+    "explanation": "required_version 声明兼容的 CLI 版本范围；provider 块内也可用 required_providers 锁 provider 版本。"
+  },
+  {
+    "id": "devops-terra-030",
+    "title": "list 类型变量",
+    "description": "声明列表类型输入变量",
+    "exercise_type": "config",
+    "tech_stack": "devops",
+    "weight": "easy",
+    "category": "terra_variable",
+    "subcategory": "terraform",
+    "full_code": "variable \"azs\" {\n  type    = list(string)\n  default = [\"us-east-1a\", \"us-east-1b\"]\n}",
+    "expected": "",
+    "points": [
+      {
+        "id": "list_type",
+        "text": "type    = list(string)",
+        "category": "terra_variable",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "列表类型声明",
+        "fill_type": "text"
+      },
+      {
+        "id": "list_default",
+        "text": "default = [\"us-east-1a\", \"us-east-1b\"]",
+        "category": "terra_variable",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "列表默认值",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 声明一个字符串数组变量，类型怎么写？",
+      "level_2": "📖 `type = list(string)`，默认值用 `[ ]`",
+      "level_3": "👀 `type    = list(string)` + `default = [\"…\"]`",
+      "level_4": "📝 正确答案：`type    = list(string)`"
+    },
+    "explanation": "Terraform 内置类型：string/number/bool/list(…)/map(…)/object({…})/set(…)。"
+  },
+  {
+    "id": "devops-ansible-001",
+    "title": "ad-hoc ping",
+    "description": "不发 playbook，单条命令探测主机连通性",
+    "exercise_type": "command",
+    "tech_stack": "devops",
+    "weight": "beginner",
+    "category": "ans_cli",
+    "subcategory": "ansible",
+    "full_code": "ansible all -m ping",
+    "expected": "",
+    "points": [
+      {
+        "id": "hosts",
+        "text": "all",
+        "category": "ans_cli",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "目标主机/组（all=全部）",
+        "fill_type": "text",
+        "acceptable_answers": []
+      },
+      {
+        "id": "module",
+        "text": "-m ping",
+        "category": "ans_cli",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "模块参数：-m 指定模块",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 快速测试主机连通性，用 ad-hoc 怎么写？",
+      "level_2": "📖 `ansible 目标 -m ping`",
+      "level_3": "👀 `ansible all -m ping`",
+      "level_4": "📝 正确答案：`all` 与 `-m ping`"
+    },
+    "explanation": "ad-hoc 用 `ansible` 命令直接跑单个模块；`-m` 指定模块，`all` 指清单中全部主机。"
+  },
+  {
+    "id": "devops-ansible-002",
+    "title": "ad-hoc 带参数",
+    "description": "执行命令模块并传参",
+    "exercise_type": "command",
+    "tech_stack": "devops",
+    "weight": "easy",
+    "category": "ans_cli",
+    "subcategory": "ansible",
+    "full_code": "ansible webservers -m command -a \"uptime\"",
+    "expected": "",
+    "points": [
+      {
+        "id": "mod_cmd",
+        "text": "-m command",
+        "category": "ans_cli",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "command 模块",
+        "fill_type": "text"
+      },
+      {
+        "id": "args",
+        "text": "-a \"uptime\"",
+        "category": "ans_cli",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "-a 传模块参数",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 ad-hoc 想执行 shell 命令并传参，怎么写？",
+      "level_2": "📖 `-m command -a \"命令\"`",
+      "level_3": "👀 `ansible webservers -m command -a \"uptime\"`",
+      "level_4": "📝 正确答案：`-m command` 与 `-a \"uptime\"`"
+    },
+    "explanation": "`-a` 是模块参数：command 模块的「命令字符串」；shell/raw 模块可做更多 shell 语义。"
+  },
+  {
+    "id": "devops-ansible-003",
+    "title": "运行 playbook",
+    "description": "执行 YAML 剧本",
+    "exercise_type": "command",
+    "tech_stack": "devops",
+    "weight": "beginner",
+    "category": "ans_cli",
+    "subcategory": "ansible",
+    "full_code": "ansible-playbook site.yml",
+    "expected": "",
+    "points": [
+      {
+        "id": "bin",
+        "text": "ansible-playbook",
+        "category": "ans_cli",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "playbook 命令",
+        "fill_type": "text",
+        "acceptable_answers": []
+      },
+      {
+        "id": "file",
+        "text": "site.yml",
+        "category": "ans_cli",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "剧本文件名",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 跑一个写好的 YAML 剧本用什么命令？",
+      "level_2": "📖 `ansible-playbook 文件.yml`",
+      "level_3": "👀 `ansible-playbook site.yml`",
+      "level_4": "📝 正确答案：`ansible-playbook`"
+    },
+    "explanation": "ansible-playbook 按 YAML 中定义的 play/task 依序在多主机上执行，是日常主力命令。"
+  },
+  {
+    "id": "devops-ansible-004",
+    "title": "语法检查",
+    "description": "只校验 playbook 语法不执行",
+    "exercise_type": "command",
+    "tech_stack": "devops",
+    "weight": "easy",
+    "category": "ans_cli",
+    "subcategory": "ansible",
+    "full_code": "ansible-playbook site.yml --syntax-check",
+    "expected": "",
+    "points": [
+      {
+        "id": "flag",
+        "text": "--syntax-check",
+        "category": "ans_cli",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "语法检查参数",
+        "fill_type": "text",
+        "acceptable_answers": []
+      }
+    ],
+    "hints": {
+      "level_1": "💡 只检查 YAML 语法而不真跑，加什么参数？",
+      "level_2": "📖 `--syntax-check` 快速校验",
+      "level_3": "👀 `ansible-playbook site.yml --syntax-check`",
+      "level_4": "📝 正确答案：`--syntax-check`"
+    },
+    "explanation": "--syntax-check 只做解析与字段校验，不连主机，适合 CI 里快速反馈。"
+  },
+  {
+    "id": "devops-ansible-005",
+    "title": "演练模式 dry-run",
+    "description": "预测变更但不真正执行",
+    "exercise_type": "command",
+    "tech_stack": "devops",
+    "weight": "easy",
+    "category": "ans_cli",
+    "subcategory": "ansible",
+    "full_code": "ansible-playbook site.yml --check",
+    "expected": "",
+    "points": [
+      {
+        "id": "flag",
+        "text": "--check",
+        "category": "ans_cli",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "试运行参数",
+        "fill_type": "text",
+        "acceptable_answers": []
+      }
+    ],
+    "hints": {
+      "level_1": "💡 想看任务会做什么而不落地，用什么参数？",
+      "level_2": "📖 `--check` 干跑（模块只报告不修改）",
+      "level_3": "👀 `ansible-playbook site.yml --check`",
+      "level_4": "📝 正确答案：`--check`"
+    },
+    "explanation": "--check 模式中模块返回「预测变更」而不真正修改；多数模块支持，个别不支持会标注 skipped。"
+  },
+  {
+    "id": "devops-ansible-006",
+    "title": "vault 加密",
+    "description": "加密敏感文件",
+    "exercise_type": "command",
+    "tech_stack": "devops",
+    "weight": "medium",
+    "category": "ans_cli",
+    "subcategory": "ansible",
+    "full_code": "ansible-vault encrypt secrets.yml",
+    "expected": "",
+    "points": [
+      {
+        "id": "verb",
+        "text": "encrypt",
+        "category": "ans_cli",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "加密动作",
+        "fill_type": "text",
+        "acceptable_answers": []
+      },
+      {
+        "id": "target",
+        "text": "secrets.yml",
+        "category": "ans_cli",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "要加密的文件",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 密码/密钥等敏感文件怎么加密入库？",
+      "level_2": "📖 `ansible-vault encrypt 文件`；view/edit/decrypt 管理",
+      "level_3": "👀 `ansible-vault encrypt secrets.yml`",
+      "level_4": "📝 正确答案：`encrypt`"
+    },
+    "explanation": "ansible-vault 用口令加密文件内容；playbook 引用时需提供 vault 口令（--ask-vault-pass 或 vault 文件）。"
+  },
+  {
+    "id": "devops-ansible-007",
+    "title": "查看清单结构",
+    "description": "输出 inventory 完整结构",
+    "exercise_type": "command",
+    "tech_stack": "devops",
+    "weight": "medium",
+    "category": "ans_cli",
+    "subcategory": "ansible",
+    "full_code": "ansible-inventory --list",
+    "expected": "",
+    "points": [
+      {
+        "id": "flag",
+        "text": "--list",
+        "category": "ans_cli",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "输出全部主机信息",
+        "fill_type": "text",
+        "acceptable_answers": []
+      }
+    ],
+    "hints": {
+      "level_1": "💡 想 dump 出清单里所有主机与变量，用什么命令？",
+      "level_2": "📖 `ansible-inventory --list`",
+      "level_3": "👀 `ansible-inventory --list`",
+      "level_4": "📝 正确答案：`--list`"
+    },
+    "explanation": "ansible-inventory 把解析后的清单以 JSON/YAML 输出，排查主机归属与变量注入很有用。"
+  },
+  {
+    "id": "devops-ansible-008",
+    "title": "inventory 分组",
+    "description": "在清单里给主机分组",
+    "exercise_type": "config",
+    "tech_stack": "devops",
+    "weight": "beginner",
+    "category": "ans_inventory",
+    "subcategory": "ansible",
+    "full_code": "[webservers]\nweb1.example.com\nweb2.example.com",
+    "expected": "",
+    "points": [
+      {
+        "id": "group_head",
+        "text": "[webservers]",
+        "category": "ans_inventory",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "组头：中括号组名",
+        "fill_type": "text",
+        "acceptable_answers": []
+      },
+      {
+        "id": "member",
+        "text": "web2.example.com",
+        "category": "ans_inventory",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "组内主机",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 把主机按角色分组，清单格式怎么写？",
+      "level_2": "📖 `[组名]` 下一行一个主机",
+      "level_3": "👀 `[webservers]` + 主机列表",
+      "level_4": "📝 正确答案：`[webservers]`"
+    },
+    "explanation": "INI 清单用 `[组名]` 分组；主机可出现在多组；分组可用 `[组:children]` 嵌套组。"
+  },
+  {
+    "id": "devops-ansible-009",
+    "title": "组变量",
+    "description": "为整组主机定义变量",
+    "exercise_type": "config",
+    "tech_stack": "devops",
+    "weight": "easy",
+    "category": "ans_inventory",
+    "subcategory": "ansible",
+    "full_code": "[webservers:vars]\nansible_user=ubuntu",
+    "expected": "",
+    "points": [
+      {
+        "id": "vars_head",
+        "text": "[webservers:vars]",
+        "category": "ans_inventory",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "组变量段",
+        "fill_type": "text"
+      },
+      {
+        "id": "var_line",
+        "text": "ansible_user=ubuntu",
+        "category": "ans_inventory",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "变量赋值",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 给一组主机统一设连接用户，清单里怎么写？",
+      "level_2": "📖 `[组名:vars]` 下写 `变量=值`",
+      "level_3": "👀 `[webservers:vars]` + `ansible_user=ubuntu`",
+      "level_4": "📝 正确答案：`[webservers:vars]`"
+    },
+    "explanation": "`[组:vars]` 段定义该组共享变量；[all:vars] 对全部主机生效。"
+  },
+  {
+    "id": "devops-ansible-010",
+    "title": "play 结构",
+    "description": "定义 play 的作用对象与任务",
+    "exercise_type": "config",
+    "tech_stack": "devops",
+    "weight": "beginner",
+    "category": "ans_play",
+    "subcategory": "ansible",
+    "full_code": "- hosts: webservers\n  tasks:\n    - name: ensure nginx installed\n      apt:\n        name: nginx\n        state: present",
+    "expected": "",
+    "points": [
+      {
+        "id": "hosts_k",
+        "text": "hosts: webservers",
+        "category": "ans_play",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "作用主机",
+        "fill_type": "text",
+        "acceptable_answers": []
+      },
+      {
+        "id": "task_name",
+        "text": "name: ensure nginx installed",
+        "category": "ans_play",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "任务名（可见性 & 报错定位）",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 play 至少要有什么？任务怎么写？",
+      "level_2": "📖 `hosts:` 定目标 + `tasks:` 下列任务（每任务 name + 模块）",
+      "level_3": "👀 `hosts: webservers` + `tasks:`",
+      "level_4": "📝 正确答案：`hosts: webservers`"
+    },
+    "explanation": "play 顶层字段：hosts（目标）、tasks（任务列表）、可带 vars/handlers 等；一个 playbook 可有多个 play。"
+  },
+  {
+    "id": "devops-ansible-011",
+    "title": "提权 become",
+    "description": "以 root 权限执行任务",
+    "exercise_type": "config",
+    "tech_stack": "devops",
+    "weight": "easy",
+    "category": "ans_privilege",
+    "subcategory": "ansible",
+    "full_code": "- hosts: all\n  become: true\n  tasks:\n    - name: install git\n      apt:\n        name: git",
+    "expected": "",
+    "points": [
+      {
+        "id": "become_k",
+        "text": "become: true",
+        "category": "ans_privilege",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "提权开关",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 安装软件需要 root，play 里怎么写提权？",
+      "level_2": "📖 `become: true`（默认 sudo；可 become_user 指定用户）",
+      "level_3": "👀 `become: true`",
+      "level_4": "📝 正确答案：`become: true`"
+    },
+    "explanation": "become 使任务以更高权限执行（sudo/su）；可在 play/task 级分别指定，最小化提权范围。"
+  },
+  {
+    "id": "devops-ansible-012",
+    "title": "vars 变量与模板插值",
+    "description": "在 play 中定义变量并在消息里引用",
+    "exercise_type": "config",
+    "tech_stack": "devops",
+    "weight": "easy",
+    "category": "ans_variable",
+    "subcategory": "ansible",
+    "full_code": "- hosts: all\n  vars:\n    app_port: 8080\n  tasks:\n    - debug:\n        msg: \"port is {{ app_port }}\"",
+    "expected": "",
+    "points": [
+      {
+        "id": "var_def",
+        "text": "app_port: 8080",
+        "category": "ans_variable",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "变量定义",
+        "fill_type": "text"
+      },
+      {
+        "id": "jinja",
+        "text": "{{ app_port }}",
+        "category": "ans_variable",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "Jinja2 插值语法",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 变量在哪定义、字符串里怎么引用？",
+      "level_2": "📖 `vars:` 段定义；`{{ 变量 }}` Jinja2 插值",
+      "level_3": "👀 `app_port: 8080` 与 `\"{{ app_port }}\"`",
+      "level_4": "📝 正确答案：`app_port: 8080` 与 `{{ app_port }}`"
+    },
+    "explanation": "变量作用域从高到低：extra-vars > inventory > play vars > role defaults；插值统一用 `{{ }}`。"
+  },
+  {
+    "id": "devops-ansible-013",
+    "title": "register 注册结果",
+    "description": "捕获任务输出供后续使用",
+    "exercise_type": "config",
+    "tech_stack": "devops",
+    "weight": "medium",
+    "category": "ans_variable",
+    "subcategory": "ansible",
+    "full_code": "- hosts: all\n  tasks:\n    - command: uptime\n      register: result\n    - debug:\n        var: result.stdout",
+    "expected": "",
+    "points": [
+      {
+        "id": "reg_k",
+        "text": "register: result",
+        "category": "ans_variable",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "把任务结果存进变量",
+        "fill_type": "text"
+      },
+      {
+        "id": "var_stdout",
+        "text": "var: result.stdout",
+        "category": "ans_variable",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "取结果字段",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 想拿上一个任务的输出继续用，怎么写？",
+      "level_2": "📖 任务加 `register: 变量`；用 `变量.stdout`/`变量.rc` 等访问",
+      "level_3": "👀 `register: result` + `result.stdout`",
+      "level_4": "📝 正确答案：`register: result`"
+    },
+    "explanation": "register 把任务返回对象存入变量（stdout/stderr/rc/changed 等），是条件判断与状态组装的基础。"
+  },
+  {
+    "id": "devops-ansible-014",
+    "title": "when 条件",
+    "description": "按条件决定是否执行任务",
+    "exercise_type": "config",
+    "tech_stack": "devops",
+    "weight": "easy",
+    "category": "ans_condition",
+    "subcategory": "ansible",
+    "full_code": "- hosts: all\n  tasks:\n    - name: stop on ubuntu\n      service:\n        name: nginx\n        state: stopped\n      when: ansible_os_family == \"Debian\"",
+    "expected": "",
+    "points": [
+      {
+        "id": "when_k",
+        "text": "when: ansible_os_family == \"Debian\"",
+        "category": "ans_condition",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "条件表达式",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 只在特定系统上执行任务，怎么写条件？",
+      "level_2": "📖 `when: 表达式`（可用事实变量/注册结果）",
+      "level_3": "👀 `when: ansible_os_family == \"Debian\"`",
+      "level_4": "📝 正确答案：`when: ansible_os_family == \"Debian\"`"
+    },
+    "explanation": "when 接受 Jinja2 布尔表达式，可组合 `and/or/not`；常用事实（facts）或注册变量判断。"
+  },
+  {
+    "id": "devops-ansible-015",
+    "title": "loop 循环",
+    "description": "对列表逐个执行任务",
+    "exercise_type": "config",
+    "tech_stack": "devops",
+    "weight": "medium",
+    "category": "ans_loop",
+    "subcategory": "ansible",
+    "full_code": "- hosts: all\n  tasks:\n    - name: create users\n      user:\n        name: \"{{ item }}\"\n      loop:\n        - alice\n        - bob",
+    "expected": "",
+    "points": [
+      {
+        "id": "item_ref",
+        "text": "\"{{ item }}\"",
+        "category": "ans_loop",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "当前循环项",
+        "fill_type": "text"
+      },
+      {
+        "id": "loop_k",
+        "text": "loop:",
+        "category": "ans_loop",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "循环关键字",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 对一组名字逐个执行任务，怎么写循环？",
+      "level_2": "📖 任务加 `loop:` 列表，块内用 `{{ item }}`",
+      "level_3": "👀 `loop:` + `\"{{ item }}\"`",
+      "level_4": "📝 正确答案：`loop:` 与 `{{ item }}`"
+    },
+    "explanation": "loop 遍历列表/字典；每轮把当前元素注入 `item`。旧式 with_items 等价但 loop 更通用。"
+  },
+  {
+    "id": "devops-ansible-016",
+    "title": "notify 触发 handler",
+    "description": "任务变更时通知处理器",
+    "exercise_type": "config",
+    "tech_stack": "devops",
+    "weight": "medium",
+    "category": "ans_handler",
+    "subcategory": "ansible",
+    "full_code": "- hosts: webservers\n  tasks:\n    - name: update nginx conf\n      template:\n        src: nginx.conf.j2\n        dest: /etc/nginx/nginx.conf\n      notify: reload nginx\n  handlers:\n    - name: reload nginx\n      service:\n        name: nginx\n        state: reloaded",
+    "expected": "",
+    "points": [
+      {
+        "id": "notify_k",
+        "text": "notify: reload nginx",
+        "category": "ans_handler",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "变更时触发",
+        "fill_type": "text"
+      },
+      {
+        "id": "hand_state",
+        "text": "state: reloaded",
+        "category": "ans_handler",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "重载动作",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 配置文件一变就重载服务，任务与处理器怎么联动？",
+      "level_2": "📖 任务 `notify: 处理器名`；`handlers:` 段定义，only 变更时执行",
+      "level_3": "👀 `notify: reload nginx` + handlers 段 `state: reloaded`",
+      "level_4": "📝 正确答案：`notify: reload nginx`"
+    },
+    "explanation": "handler 默认只在被 notify 且任务实际变更时运行，且每轮 play 末尾只跑一次——天然幂等的「变更后动作」。"
+  },
+  {
+    "id": "devops-ansible-017",
+    "title": "template 模板",
+    "description": "用 Jinja2 模板渲染配置文件",
+    "exercise_type": "config",
+    "tech_stack": "devops",
+    "weight": "medium",
+    "category": "ans_template",
+    "subcategory": "ansible",
+    "full_code": "- hosts: all\n  tasks:\n    - name: render app config\n      template:\n        src: app.conf.j2\n        dest: /etc/app/app.conf",
+    "expected": "",
+    "points": [
+      {
+        "id": "src_tpl",
+        "text": "src: app.conf.j2",
+        "category": "ans_template",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "模板源文件",
+        "fill_type": "text"
+      },
+      {
+        "id": "dest_tpl",
+        "text": "dest: /etc/app/app.conf",
+        "category": "ans_template",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "渲染目标路径",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 配置里带变量、想按主机渲染，用什么模块？",
+      "level_2": "📖 `template:` 模块，src 是 .j2 模板、dest 是目标文件",
+      "level_3": "👀 `src: app.conf.j2` + `dest: …`",
+      "level_4": "📝 正确答案：`src: app.conf.j2`"
+    },
+    "explanation": "template 渲染 Jinja2 模板到目标路径；常与 notify 联动在变更后重启服务。"
+  },
+  {
+    "id": "devops-ansible-018",
+    "title": "copy 模块",
+    "description": "复制本地文件到远程",
+    "exercise_type": "config",
+    "tech_stack": "devops",
+    "weight": "easy",
+    "category": "ans_module",
+    "subcategory": "ansible",
+    "full_code": "- hosts: all\n  tasks:\n    - name: copy config\n      copy:\n        src: files/sshd_config\n        dest: /etc/ssh/sshd_config\n        mode: \"0600\"",
+    "expected": "",
+    "points": [
+      {
+        "id": "src_copy",
+        "text": "src: files/sshd_config",
+        "category": "ans_module",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "本地源文件",
+        "fill_type": "text"
+      },
+      {
+        "id": "mode_copy",
+        "text": "mode: \"0600\"",
+        "category": "ans_module",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "权限",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 把本地文件部署到主机并设权限，用什么模块？",
+      "level_2": "📖 `copy:` 模块 src/dest/mode；content 可内联内容",
+      "level_3": "👀 `src: files/sshd_config` + `mode: \"0600\"`",
+      "level_4": "📝 正确答案：`src: files/sshd_config`"
+    },
+    "explanation": "copy 传文件并保证目标权限/内容一致（幂等）；需要渲染变量时改用 template。"
+  },
+  {
+    "id": "devops-ansible-019",
+    "title": "service 模块",
+    "description": "管理服务启停与开机自启",
+    "exercise_type": "config",
+    "tech_stack": "devops",
+    "weight": "easy",
+    "category": "ans_module",
+    "subcategory": "ansible",
+    "full_code": "- hosts: all\n  tasks:\n    - name: start nginx\n      service:\n        name: nginx\n        state: started\n        enabled: yes",
+    "expected": "",
+    "points": [
+      {
+        "id": "state_svc",
+        "text": "state: started",
+        "category": "ans_module",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "服务状态",
+        "fill_type": "text"
+      },
+      {
+        "id": "enabled_svc",
+        "text": "enabled: yes",
+        "category": "ans_module",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "开机自启",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 启动服务并设为开机自启，用什么模块？",
+      "level_2": "📖 `service:` 模块 name/state/enabled；state 有 started/stopped/restarted/reloaded",
+      "level_3": "👀 `state: started` + `enabled: yes`",
+      "level_4": "📝 正确答案：`state: started` 与 `enabled: yes`"
+    },
+    "explanation": "service 在 systemd/sysv 上统一管理服务；enabled 控制开机自启，都是声明式幂等。"
+  },
+  {
+    "id": "devops-ansible-020",
+    "title": "apt 模块",
+    "description": "管理 Debian/Ubuntu 软件包",
+    "exercise_type": "config",
+    "tech_stack": "devops",
+    "weight": "easy",
+    "category": "ans_module",
+    "subcategory": "ansible",
+    "full_code": "- hosts: all\n  tasks:\n    - name: install packages\n      apt:\n        name:\n          - git\n          - curl\n        state: present",
+    "expected": "",
+    "points": [
+      {
+        "id": "pkg_list",
+        "text": "name:\n          - git",
+        "category": "ans_module",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "包列表",
+        "fill_type": "text"
+      },
+      {
+        "id": "pkg_state",
+        "text": "state: present",
+        "category": "ans_module",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "期望状态 present/latest/absent",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 一次安装多个包，Debian 系用什么模块？",
+      "level_2": "📖 `apt:` 模块 name 列表 + state: present；RedHat 系用 yum/dnf",
+      "level_3": "👀 `apt:` + `state: present`",
+      "level_4": "📝 正确答案：`state: present`"
+    },
+    "explanation": "apt 模块按声明状态管理包（present 装、absent 卸、latest 升级）；模块幂等，未变化不改系统。"
+  },
+  {
+    "id": "devops-ansible-021",
+    "title": "file 模块",
+    "description": "管理文件/目录属性",
+    "exercise_type": "config",
+    "tech_stack": "devops",
+    "weight": "easy",
+    "category": "ans_module",
+    "subcategory": "ansible",
+    "full_code": "- hosts: all\n  tasks:\n    - name: ensure dir\n      file:\n        path: /var/www\n        state: directory\n        mode: \"0755\"",
+    "expected": "",
+    "points": [
+      {
+        "id": "path_file",
+        "text": "path: /var/www",
+        "category": "ans_module",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "目标路径",
+        "fill_type": "text"
+      },
+      {
+        "id": "state_dir",
+        "text": "state: directory",
+        "category": "ans_module",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "目录态",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 确保某目录存在并设权限，用什么模块？",
+      "level_2": "📖 `file:` 模块 path/state（directory/file/link/absent）/mode",
+      "level_3": "👀 `path: /var/www` + `state: directory`",
+      "level_4": "📝 正确答案：`state: directory`"
+    },
+    "explanation": "file 是文件系统的声明式接口：建目录、建文件、软链、删路径、改权限都由它承担。"
+  },
+  {
+    "id": "devops-ansible-022",
+    "title": "facts 与 gather_facts",
+    "description": "自动采集主机信息",
+    "exercise_type": "config",
+    "tech_stack": "devops",
+    "weight": "easy",
+    "category": "ans_facts",
+    "subcategory": "ansible",
+    "full_code": "- hosts: all\n  gather_facts: yes\n  tasks:\n    - debug:\n        msg: \"{{ ansible_hostname }}\"",
+    "expected": "",
+    "points": [
+      {
+        "id": "gather",
+        "text": "gather_facts: yes",
+        "category": "ans_facts",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "采集开关",
+        "fill_type": "text"
+      },
+      {
+        "id": "fact_ref",
+        "text": "{{ ansible_hostname }}",
+        "category": "ans_facts",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "主机名事实变量",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 想直接拿到主机名/系统信息，先要采集什么？",
+      "level_2": "📖 `gather_facts: yes` 自动采集（默认开启）；用 `ansible_*` 事实变量",
+      "level_3": "👀 `gather_facts: yes` + `{{ ansible_hostname }}`",
+      "level_4": "📝 正确答案：`gather_facts: yes`"
+    },
+    "explanation": "gather_facts 在 play 开头采集主机事实（主机名/内存/网卡/系统版本等，`ansible_` 前缀）；不需要时可关掉提速。"
+  },
+  {
+    "id": "devops-ansible-023",
+    "title": "roles 角色",
+    "description": "按职责拆分 playbook 目录",
+    "exercise_type": "config",
+    "tech_stack": "devops",
+    "weight": "medium",
+    "category": "ans_role",
+    "subcategory": "ansible",
+    "full_code": "- hosts: webservers\n  roles:\n    - common\n    - nginx",
+    "expected": "",
+    "points": [
+      {
+        "id": "roles_k",
+        "text": "roles:",
+        "category": "ans_role",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "角色列表",
+        "fill_type": "text"
+      },
+      {
+        "id": "role_item",
+        "text": "- nginx",
+        "category": "ans_role",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "角色名",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 把通用逻辑抽成可复用角色，play 里怎么引用？",
+      "level_2": "📖 `roles:` 下列角色名；可用 `ansible-galaxy` 安装",
+      "level_3": "👀 `roles:` + `- nginx`",
+      "level_4": "📝 正确答案：`roles:` 与 `- nginx`"
+    },
+    "explanation": "角色目录结构：tasks/main.yml、handlers、templates、vars、defaults 等；引用顺序即执行顺序。"
+  },
+  {
+    "id": "devops-ansible-024",
+    "title": "tags 标签",
+    "description": "给任务打标签以便选择性执行",
+    "exercise_type": "config",
+    "tech_stack": "devops",
+    "weight": "medium",
+    "category": "ans_tags",
+    "subcategory": "ansible",
+    "full_code": "- hosts: all\n  tasks:\n    - name: install nginx\n      apt:\n        name: nginx\n      tags:\n        - nginx\n        - web",
+    "expected": "",
+    "points": [
+      {
+        "id": "tags_k",
+        "text": "tags:",
+        "category": "ans_tags",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "标签关键字",
+        "fill_type": "text"
+      },
+      {
+        "id": "tag_item",
+        "text": "- web",
+        "category": "ans_tags",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "标签",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 只想跑安装 nginx 这一步，怎么给任务标记？",
+      "level_2": "📖 任务加 `tags:` 列表；运行加 `--tags nginx` 过滤",
+      "level_3": "👀 `tags:` + `- web`",
+      "level_4": "📝 正确答案：`tags:` 与 `- web`"
+    },
+    "explanation": "tags 支持 `--tags/--skip-tags` 选择执行子集，加快迭代；常用 always 让必跑任务不受过滤。"
+  },
+  {
+    "id": "devops-ansible-025",
+    "title": "模块化幂等",
+    "description": "用声明式模块保证可重复执行",
+    "exercise_type": "config",
+    "tech_stack": "devops",
+    "weight": "medium",
+    "category": "ans_idempotency",
+    "subcategory": "ansible",
+    "full_code": "- hosts: all\n  tasks:\n    - name: ensure nginx running\n      service:\n        name: nginx\n        state: started",
+    "expected": "",
+    "points": [
+      {
+        "id": "idem_module",
+        "text": "service:",
+        "category": "ans_idempotency",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "声明式模块（而非 shell）",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 为什么运维上要优先用模块而不是 shell 命令？",
+      "level_2": "📖 模块是声明式（描述目标态），重复执行结果一致即「幂等」",
+      "level_3": "👀 用 `service:` 等模块而非 `shell: systemctl start`",
+      "level_4": "📝 正确答案：`service:` 声明式模块"
+    },
+    "explanation": "幂等 = 多次执行结果一致、只在偏离时变更；shell 命令每次都跑、不可预测。这是 Ansible 的核心心智。"
+  },
+  {
+    "id": "devops-ansible-026",
+    "title": "remote_user 连接用户",
+    "description": "指定远程登录用户",
+    "exercise_type": "config",
+    "tech_stack": "devops",
+    "weight": "easy",
+    "category": "ans_privilege",
+    "subcategory": "ansible",
+    "full_code": "- hosts: all\n  remote_user: deploy\n  become: true",
+    "expected": "",
+    "points": [
+      {
+        "id": "remote_user",
+        "text": "remote_user: deploy",
+        "category": "ans_privilege",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "SSH 登录用户",
+        "fill_type": "text",
+        "acceptable_answers": []
+      }
+    ],
+    "hints": {
+      "level_1": "💡 用 deploy 用户登录再提权，怎么写？",
+      "level_2": "📖 `remote_user: 用户` 指定登录身份，配合 `become: true` 提权",
+      "level_3": "👀 `remote_user: deploy` + `become: true`",
+      "level_4": "📝 正确答案：`remote_user: deploy`"
+    },
+    "explanation": "remote_user 是 SSH 连接身份；与 become 解耦，便于「弱账号登录、按需提权」的安全实践。"
+  },
+  {
+    "id": "devops-ansible-027",
+    "title": "本地执行",
+    "description": "在控制机（本机）上执行任务",
+    "exercise_type": "config",
+    "tech_stack": "devops",
+    "weight": "medium",
+    "category": "ans_privilege",
+    "subcategory": "ansible",
+    "full_code": "- hosts: localhost\n  connection: local\n  tasks:\n    - debug:\n        msg: \"run locally\"",
+    "expected": "",
+    "points": [
+      {
+        "id": "conn_local",
+        "text": "connection: local",
+        "category": "ans_privilege",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "本地连接方式",
+        "fill_type": "text"
+      },
+      {
+        "id": "hosts_local",
+        "text": "hosts: localhost",
+        "category": "ans_play",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "本机目标",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 想在控制机上直接执行（不发 SSH），怎么写？",
+      "level_2": "📖 `hosts: localhost` + `connection: local`",
+      "level_3": "👀 `connection: local`",
+      "level_4": "📝 正确答案：`connection: local`"
+    },
+    "explanation": "connection: local 让 play 在控制机本地执行，常用于编排、生成文件、触发其他系统。"
+  },
+  {
+    "id": "devops-ansible-028",
+    "title": "采集主机事实",
+    "description": "用 setup 模块收集所有事实",
+    "exercise_type": "command",
+    "tech_stack": "devops",
+    "weight": "medium",
+    "category": "ans_facts",
+    "subcategory": "ansible",
+    "full_code": "ansible all -m setup",
+    "expected": "",
+    "points": [
+      {
+        "id": "setup_m",
+        "text": "-m setup",
+        "category": "ans_facts",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "事实采集模块",
+        "fill_type": "text",
+        "acceptable_answers": []
+      }
+    ],
+    "hints": {
+      "level_1": "💡 ad-hoc 查看某主机的全部事实变量，怎么写？",
+      "level_2": "📖 `ansible 目标 -m setup` 输出完整 facts",
+      "level_3": "👀 `ansible all -m setup`",
+      "level_4": "📝 正确答案：`-m setup`"
+    },
+    "explanation": "setup 模块在 ad-hoc 下直接 dump 事实（与 gather_facts 同一数据源），调试变量名很有用。"
+  },
+  {
+    "id": "devops-ansible-029",
+    "title": "galaxy 初始化角色",
+    "description": "生成角色骨架目录",
+    "exercise_type": "command",
+    "tech_stack": "devops",
+    "weight": "easy",
+    "category": "ans_cli",
+    "subcategory": "ansible",
+    "full_code": "ansible-galaxy init my_role",
+    "expected": "",
+    "points": [
+      {
+        "id": "init_k",
+        "text": "init",
+        "category": "ans_cli",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "初始化动作",
+        "fill_type": "text",
+        "acceptable_answers": []
+      },
+      {
+        "id": "role_name",
+        "text": "my_role",
+        "category": "ans_cli",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "角色名",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 快速生成一个角色的标准目录结构，用什么命令？",
+      "level_2": "📖 `ansible-galaxy init 角色名` 生成 tasks/handlers/templates 等骨架",
+      "level_3": "👀 `ansible-galaxy init my_role`",
+      "level_4": "📝 正确答案：`init`"
+    },
+    "explanation": "galaxy 既能 init 角色骨架，也能从银河仓库安装社区角色（`ansible-galaxy install`）。"
+  },
+  {
+    "id": "devops-ansible-030",
+    "title": "vars_files 变量文件",
+    "description": "从外部文件加载变量",
+    "exercise_type": "config",
+    "tech_stack": "devops",
+    "weight": "medium",
+    "category": "ans_variable",
+    "subcategory": "ansible",
+    "full_code": "- hosts: all\n  vars_files:\n    - vars/common.yml\n  tasks:\n    - debug:\n        msg: \"app: {{ app_name }}\"",
+    "expected": "",
+    "points": [
+      {
+        "id": "vars_files_k",
+        "text": "vars_files:",
+        "category": "ans_variable",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "加载变量文件",
+        "fill_type": "text"
+      },
+      {
+        "id": "vf_item",
+        "text": "- vars/common.yml",
+        "category": "ans_variable",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "文件路径",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 变量太多想放独立文件，play 里怎么加载？",
+      "level_2": "📖 `vars_files:` 下列 YAML 文件路径",
+      "level_3": "👀 `vars_files:` + `- vars/common.yml`",
+      "level_4": "📝 正确答案：`vars_files:`"
+    },
+    "explanation": "vars_files 把外部 YAML 的键值并入变量空间，适合分环境管理配置；加密文件可配合 vault。"
+  }
+]

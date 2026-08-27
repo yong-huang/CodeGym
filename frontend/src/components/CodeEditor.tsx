@@ -1,4 +1,4 @@
-import { useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import type { VariantFillPoint } from '../types';
 
 interface CodeEditorProps {
@@ -9,6 +9,8 @@ interface CodeEditorProps {
   value: string;
   onChange: (value: string) => void;
   readOnly?: boolean;
+  /** Reports per-fill answers extracted from the maintained ranges. */
+  onAnswers?: (answers: Record<string, string>) => void;
 }
 
 interface Segment {
@@ -188,6 +190,67 @@ export function extractAnswers(
   return { answers, ranges };
 }
 
+/**
+ * 在旧文本与旧填空区间的基础上，按一次文本编辑（插入/删除/替换）增量调整区间。
+ * 相比从零用代码段锚定重推，这能正确处理「相邻填空之间只有空白分隔、
+ * 且答案本身含空白」的情况（如 `-m command` 与 `-a "uptime"`）。
+ *
+ * caret 是编辑后输入框的光标位置（编辑区终点）：用它钉住后缀起点，
+ * 避免「在填空末尾敲一个与后续分隔符相同的字符（如空格）」时，
+ * 公共前缀把刚敲的字符误当成原有文本、导致填空区间不增长。
+ */
+export function updateRanges(
+  oldValue: string,
+  newValue: string,
+  oldRanges: FillRange[],
+  caret?: number,
+): FillRange[] {
+  const oldLen = oldValue.length;
+  const newLen = newValue.length;
+
+  if (typeof caret === 'number' && caret >= 0 && caret <= newLen) {
+    // 后缀：光标之后内容不变，从尾部匹配，且不越过光标
+    let s = 0;
+    const maxS = Math.min(newLen - caret, oldLen);
+    while (s < maxS && oldValue[oldLen - 1 - s] === newValue[newLen - 1 - s]) s++;
+    // 前缀：不得侵入后缀区，也不得越过光标
+    const maxP = Math.min(oldLen - s, newLen - s, caret);
+    let p = 0;
+    while (p < maxP && oldValue[p] === newValue[p]) p++;
+    return applyEdit(p, oldLen - s, p, caret, oldRanges);
+  }
+
+  // 无光标信息：退化为公共前缀 + 公共后缀（初始/异常路径）
+  let p = 0;
+  const maxP0 = Math.min(oldLen, newLen);
+  while (p < maxP0 && oldValue[p] === newValue[p]) p++;
+  let s = 0;
+  const maxS0 = Math.min(oldLen - p, newLen - p);
+  while (s < maxS0 && oldValue[oldLen - 1 - s] === newValue[newLen - 1 - s]) s++;
+  return applyEdit(p, oldLen - s, p, newLen - s, oldRanges);
+}
+
+function applyEdit(
+  oldStart: number,
+  oldEnd: number,
+  newStart: number,
+  newEnd: number,
+  oldRanges: FillRange[],
+): FillRange[] {
+  const delta = newEnd - newStart - (oldEnd - oldStart);
+  return oldRanges.map((r) => {
+    if (r.end < oldStart) return r; // 编辑完全在该填空之前
+    if (r.start >= oldEnd) {
+      return { id: r.id, start: r.start + delta, end: r.end + delta }; // 完全在编辑之后，平移
+    }
+    // 与编辑段相交：伸缩受影响的边界
+    let start = r.start >= oldStart ? newStart : r.start;
+    let end = r.end >= oldEnd ? r.end + delta : newEnd;
+    if (start > end) end = start;
+    return { id: r.id, start, end };
+  });
+}
+
 // --- rendering -----------------------------------------------------------
 
 const INLINE_STYLE: React.CSSProperties = {
@@ -264,14 +327,43 @@ export default function CodeEditor({
   value,
   onChange,
   readOnly,
+  onAnswers,
 }: CodeEditorProps) {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const fillIds = useMemo(() => fillPoints.map((p) => p.id), [fillPoints]);
 
-  const ranges = useMemo(
-    () => (markedCode ? extractAnswers(markedCode, value, fillIds).ranges : []),
-    [markedCode, value, fillIds],
-  );
+  // 记录最近一次编辑后的光标位置，供增量区间调整消除「敲空格/重复字符」歧义
+  const caretRef = useRef<number | undefined>(undefined);
+
+  // 填空区间采用增量跟踪：初始定位（占位符无内部空白，恒正确）之后，每次编辑
+  // 按 diff + 光标位置精确伸缩受影响的填空，而不是从零重新推导——避免「空格分隔的
+  // 相邻填空 + 答案含空格」时（如 `-m command` 与 `-a "uptime"`）边界歧义导致
+  // 答案被截断。
+  const rangeStateRef = useRef<{ marked: string; value: string; ranges: FillRange[] } | null>(null);
+
+  const ranges = useMemo(() => {
+    if (!markedCode) return [];
+    const prev = rangeStateRef.current;
+    if (prev && prev.marked === markedCode && prev.value === value) {
+      return prev.ranges;
+    }
+    if (prev && prev.marked === markedCode) {
+      const next = updateRanges(prev.value, value, prev.ranges, caretRef.current);
+      rangeStateRef.current = { marked: markedCode, value, ranges: next };
+      return next;
+    }
+    const fresh = extractAnswers(markedCode, value, fillIds).ranges;
+    rangeStateRef.current = { marked: markedCode, value, ranges: fresh };
+    return fresh;
+  }, [markedCode, value, fillIds]);
+
+  // 把按增量区间切出的答案回报给父组件（判题提交用），初始占位符也会回报。
+  useEffect(() => {
+    if (!onAnswers) return;
+    const answers: Record<string, string> = {};
+    for (const r of ranges) answers[r.id] = value.slice(r.start, r.end);
+    onAnswers(answers);
+  }, [ranges, value, onAnswers]);
 
   const lines = useMemo(() => value.split('\n').length, [value]);
   const highlight = useMemo(() => buildHighlight(value, ranges), [value, ranges]);
@@ -332,7 +424,10 @@ export default function CodeEditor({
           value={value}
           readOnly={readOnly}
           aria-label="代码编辑区"
-          onChange={(e) => onChange(e.target.value)}
+          onChange={(e) => {
+            caretRef.current = e.target.selectionStart ?? undefined;
+            onChange(e.target.value);
+          }}
           onFocus={selectPlaceholderAtCaret}
           onMouseUp={selectPlaceholderAtCaret}
           onClick={selectPlaceholderAtCaret}

@@ -26,7 +26,9 @@
 - 🐹 **Go 题库**：50 道基础题（语法/函数/切片/map/结构体/接口/并发/泛型……），真实 `go run` 执行判题
 - ☸️ **Kubernetes 题库**：50 道基础题（kubectl 命令补全 + YAML 配置补全），支持别名答案（如 `-A` = `--all-namespaces`）
 - 🗄️ **SQL 题库**：50 道基础题（SELECT/WHERE 排序分页/聚合分组/多表 JOIN/子查询/DML/DDL 与约束……），围绕统一的示例库（员工/部门/商品/客户/订单）出题
-- 📊 **BigQuery 题库**：50 道基础题（查询/聚合分组/CTE/UNION/字符串/数组与 UNNEST/日期/窗口函数/CASE·COALESCE/JSON/分区聚类优化……），围绕 sales 数据集出题
+- 📊 **BigQuery 题库**：61 道题，拆两个子库——「SQL 基础」（35 题：通用 SQL 语法）与「BigQuery 特有」（26 题：数组·STRUCT·UNNEST/JSON/窗口·QUALIFY/分区聚类/通配表/INFORMATION_SCHEMA/脚本变量/采样/时间旅行等 BQ 专属），围绕 sales 数据集出题
+- 🚀 **DevOps 题库**：60 道题，拆两个子库——「terraform」（30 题：CLI 命令 + HCL 资源/变量/模块/状态/后端/循环·生命周期）与「ansible」（30 题：ad-hoc/playbook/清单/vars·facts/条件·循环/handler·template/常用模块/roles·tags/幂等性）
+- ☁️ **AWS 题库**：180 道题，六个子库各 30 题——ec2（实例/镜像/EBS/安全组/弹性 IP）、iam（用户·组·角色/策略 JSON/信任与边界/临时凭证）、eks（集群/节点组/Fargate/OIDC·kubectl）、s3（桶/对象/存储级别/生命周期/加密/桶策略）、vpc（子网/路由/IGW·NAT/对等·端点/流日志）、rds（建库/快照恢复/只读副本/Multi-AZ/Aurora/参数组）
 - ⭐ **收藏**：给需要加强的题目点 ★ 收藏，训练页与首页可随时取消，支持「只看收藏」筛选，有空多练练
 - 🎯 **负重分级**：🌱入门 → 🌿简单 → 🌳中等 → 🔥困难 → 💎专家，随机留空数量随级别变化（设计 §5）
 - 🧑‍💻 **四种题型**：填空补全、命令补全、配置补全、Bug 修复（设计 §4）
@@ -66,7 +68,7 @@ CODEGYM_ADMIN_TOKEN=$(openssl rand -hex 16) docker compose up -d --build
 
 ```bash
 cd backend
-go run ./cmd/server -addr :8090        # 首次启动自动建库并 seed data/bank 下的全部内置题库（605 题）
+go run ./cmd/server -addr :8090        # 首次启动自动建库并 seed data/bank 下的全部内置题库（856 题）
 ```
 
 可选参数：`-db data/codegym.db` 指定数据库文件；`PYTHON_BIN` 指定 Python 解释器；

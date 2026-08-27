@@ -7,7 +7,7 @@
     "tech_stack": "bigquery",
     "weight": "beginner",
     "category": "bq_select",
-    "subcategory": "基础",
+    "subcategory": "SQL 基础",
     "full_code": "SELECT * FROM `sales.orders`;",
     "expected": "",
     "points": [
@@ -46,7 +46,7 @@
     "tech_stack": "bigquery",
     "weight": "beginner",
     "category": "bq_select",
-    "subcategory": "基础",
+    "subcategory": "SQL 基础",
     "full_code": "SELECT customer_id, amount FROM `sales.orders`;",
     "expected": "",
     "points": [
@@ -77,7 +77,7 @@
     "tech_stack": "bigquery",
     "weight": "beginner",
     "category": "bq_where",
-    "subcategory": "基础",
+    "subcategory": "SQL 基础",
     "full_code": "SELECT * FROM `sales.orders` WHERE status = \"shipped\";",
     "expected": "",
     "points": [
@@ -120,7 +120,7 @@
     "tech_stack": "bigquery",
     "weight": "beginner",
     "category": "bq_where",
-    "subcategory": "基础",
+    "subcategory": "SQL 基础",
     "full_code": "SELECT * FROM `sales.orders` WHERE amount > 100 AND status = \"shipped\";",
     "expected": "",
     "points": [
@@ -163,7 +163,7 @@
     "tech_stack": "bigquery",
     "weight": "beginner",
     "category": "bq_select",
-    "subcategory": "基础",
+    "subcategory": "SQL 基础",
     "full_code": "SELECT DISTINCT customer_id FROM `sales.orders`;",
     "expected": "",
     "points": [
@@ -196,7 +196,7 @@
     "tech_stack": "bigquery",
     "weight": "easy",
     "category": "bq_select",
-    "subcategory": "基础",
+    "subcategory": "SQL 基础",
     "full_code": "SELECT order_id, amount FROM `sales.orders` ORDER BY amount DESC;",
     "expected": "",
     "points": [
@@ -241,7 +241,7 @@
     "tech_stack": "bigquery",
     "weight": "easy",
     "category": "bq_select",
-    "subcategory": "基础",
+    "subcategory": "SQL 基础",
     "full_code": "SELECT * FROM `sales.orders` ORDER BY amount DESC LIMIT 10;",
     "expected": "",
     "points": [
@@ -286,7 +286,7 @@
     "tech_stack": "bigquery",
     "weight": "easy",
     "category": "bq_select",
-    "subcategory": "基础",
+    "subcategory": "SQL 基础",
     "full_code": "SELECT name AS customer_name FROM `sales.customers`;",
     "expected": "",
     "points": [
@@ -319,7 +319,7 @@
     "tech_stack": "bigquery",
     "weight": "easy",
     "category": "bq_where",
-    "subcategory": "基础",
+    "subcategory": "SQL 基础",
     "full_code": "SELECT * FROM `sales.orders` WHERE amount BETWEEN 50 AND 200;",
     "expected": "",
     "points": [
@@ -352,7 +352,7 @@
     "tech_stack": "bigquery",
     "weight": "easy",
     "category": "bq_where",
-    "subcategory": "基础",
+    "subcategory": "SQL 基础",
     "full_code": "SELECT * FROM `sales.orders` WHERE status IN (\"shipped\", \"delivered\");",
     "expected": "",
     "points": [
@@ -388,48 +388,6 @@
     "explanation": "IN 是多个等值 OR 的简写，更清晰也更好读。"
   },
   {
-    "id": "bq-basics-011",
-    "title": "LIKE 与 REGEXP_CONTAINS",
-    "description": "查询产品名以 \"Pro\" 开头的订单",
-    "exercise_type": "fill",
-    "tech_stack": "bigquery",
-    "weight": "medium",
-    "category": "bq_string",
-    "subcategory": "基础",
-    "full_code": "SELECT * FROM `sales.orders` WHERE REGEXP_CONTAINS(product, r\"^Pro\");",
-    "expected": "",
-    "points": [
-      {
-        "id": "regex_fn",
-        "text": "REGEXP_CONTAINS(product, r\"^Pro\")",
-        "category": "bq_string",
-        "min_weight": "medium",
-        "weight_score": 1,
-        "hint": "正则匹配函数；r 前缀表示原始字符串",
-        "fill_type": "text"
-      },
-      {
-        "id": "anchor",
-        "text": "r\"^Pro\"",
-        "category": "bq_string",
-        "min_weight": "easy",
-        "weight_score": 1,
-        "hint": "^ 锚定字符串开头",
-        "fill_type": "text",
-        "acceptable_answers": [
-          "r\"^pro\""
-        ]
-      }
-    ],
-    "hints": {
-      "level_1": "💡 BigQuery 正则匹配用什么函数？「开头」锚点是什么？",
-      "level_2": "📖 `REGEXP_CONTAINS(列, r\"模式\")`；`^` 匹配开头",
-      "level_3": "👀 `REGEXP_CONTAINS(product, r\"^Pro\")`",
-      "level_4": "📝 正确答案：`REGEXP_CONTAINS(product, r\"^Pro\")`"
-    },
-    "explanation": "BigQuery 正则用 `REGEXP_CONTAINS`；字符串字面量前缀 r 表示原始串（反斜杠不做转义）。"
-  },
-  {
     "id": "bq-basics-012",
     "title": "IS NULL 判空",
     "description": "查询没有填写状态的订单",
@@ -437,7 +395,7 @@
     "tech_stack": "bigquery",
     "weight": "easy",
     "category": "bq_where",
-    "subcategory": "基础",
+    "subcategory": "SQL 基础",
     "full_code": "SELECT * FROM `sales.orders` WHERE status IS NULL;",
     "expected": "",
     "points": [
@@ -470,7 +428,7 @@
     "tech_stack": "bigquery",
     "weight": "beginner",
     "category": "bq_aggregate",
-    "subcategory": "基础",
+    "subcategory": "SQL 基础",
     "full_code": "SELECT COUNT(*) FROM `sales.orders`;",
     "expected": "",
     "points": [
@@ -503,7 +461,7 @@
     "tech_stack": "bigquery",
     "weight": "easy",
     "category": "bq_aggregate",
-    "subcategory": "基础",
+    "subcategory": "SQL 基础",
     "full_code": "SELECT SUM(amount) AS total, AVG(amount) AS avg_amount FROM `sales.orders`;",
     "expected": "",
     "points": [
@@ -548,7 +506,7 @@
     "tech_stack": "bigquery",
     "weight": "easy",
     "category": "bq_aggregate",
-    "subcategory": "基础",
+    "subcategory": "SQL 基础",
     "full_code": "SELECT MIN(amount), MAX(amount) FROM `sales.orders`;",
     "expected": "",
     "points": [
@@ -586,48 +544,6 @@
     "explanation": "MIN/MAX 对数值、日期、字符串均适用。"
   },
   {
-    "id": "bq-basics-016",
-    "title": "COUNTIF 条件计数",
-    "description": "统计已发货订单的数量",
-    "exercise_type": "fill",
-    "tech_stack": "bigquery",
-    "weight": "medium",
-    "category": "bq_aggregate",
-    "subcategory": "基础",
-    "full_code": "SELECT COUNTIF(status = \"shipped\") AS shipped_cnt FROM `sales.orders`;",
-    "expected": "",
-    "points": [
-      {
-        "id": "countif_fn",
-        "text": "COUNTIF(status = \"shipped\")",
-        "category": "bq_aggregate",
-        "min_weight": "medium",
-        "weight_score": 1,
-        "hint": "满足条件的行计数（BigQuery 专用）",
-        "fill_type": "text"
-      },
-      {
-        "id": "alias",
-        "text": "AS shipped_cnt",
-        "category": "keyword",
-        "min_weight": "beginner",
-        "weight_score": 1,
-        "hint": "结果列命名",
-        "fill_type": "text",
-        "acceptable_answers": [
-          "as shipped_cnt"
-        ]
-      }
-    ],
-    "hints": {
-      "level_1": "💡 只数满足条件的行，BigQuery 提供了什么便捷函数？",
-      "level_2": "📖 `COUNTIF(条件)` 等价于 `SUM(CASE WHEN 条件 THEN 1 ELSE 0 END)`",
-      "level_3": "👀 `COUNTIF(status = \"shipped\")`",
-      "level_4": "📝 正确答案：`COUNTIF(status = \"shipped\")`"
-    },
-    "explanation": "COUNTIF 是 BigQuery 的便捷条件计数，比 CASE WHEN 写法更紧凑。"
-  },
-  {
     "id": "bq-basics-017",
     "title": "ROUND 取整",
     "description": "计算平均金额并保留两位小数",
@@ -635,7 +551,7 @@
     "tech_stack": "bigquery",
     "weight": "easy",
     "category": "bq_math",
-    "subcategory": "基础",
+    "subcategory": "SQL 基础",
     "full_code": "SELECT ROUND(AVG(amount), 2) AS avg_amount FROM `sales.orders`;",
     "expected": "",
     "points": [
@@ -665,7 +581,7 @@
     "tech_stack": "bigquery",
     "weight": "easy",
     "category": "bq_if_case",
-    "subcategory": "基础",
+    "subcategory": "SQL 基础",
     "full_code": "SELECT order_id, IF(amount > 500, \"big\", \"small\") AS bucket FROM `sales.orders`;",
     "expected": "",
     "points": [
@@ -695,7 +611,7 @@
     "tech_stack": "bigquery",
     "weight": "easy",
     "category": "bq_groupby",
-    "subcategory": "基础",
+    "subcategory": "SQL 基础",
     "full_code": "SELECT product, SUM(qty) AS total_qty FROM `sales.orders` GROUP BY product;",
     "expected": "",
     "points": [
@@ -740,7 +656,7 @@
     "tech_stack": "bigquery",
     "weight": "medium",
     "category": "bq_groupby",
-    "subcategory": "基础",
+    "subcategory": "SQL 基础",
     "full_code": "SELECT product, SUM(qty) AS total_qty\nFROM `sales.orders`\nGROUP BY product\nHAVING SUM(qty) > 100;",
     "expected": "",
     "points": [
@@ -782,7 +698,7 @@
     "tech_stack": "bigquery",
     "weight": "medium",
     "category": "bq_groupby",
-    "subcategory": "基础",
+    "subcategory": "SQL 基础",
     "full_code": "SELECT product, status, SUM(amount) AS total FROM `sales.orders` GROUP BY product, status;",
     "expected": "",
     "points": [
@@ -825,7 +741,7 @@
     "tech_stack": "bigquery",
     "weight": "hard",
     "category": "bq_cte",
-    "subcategory": "基础",
+    "subcategory": "SQL 基础",
     "full_code": "WITH customer_totals AS (\n  SELECT customer_id, SUM(amount) AS total\n  FROM `sales.orders`\n  GROUP BY customer_id\n)\nSELECT customer_id FROM customer_totals WHERE total > 1000;",
     "expected": "",
     "points": [
@@ -867,7 +783,7 @@
     "tech_stack": "bigquery",
     "weight": "medium",
     "category": "bq_groupby",
-    "subcategory": "基础",
+    "subcategory": "SQL 基础",
     "full_code": "SELECT customer_id, SUM(amount) AS total\nFROM `sales.orders`\nGROUP BY customer_id\nORDER BY total DESC\nLIMIT 5;",
     "expected": "",
     "points": [
@@ -912,7 +828,7 @@
     "tech_stack": "bigquery",
     "weight": "medium",
     "category": "bq_groupby",
-    "subcategory": "基础",
+    "subcategory": "SQL 基础",
     "full_code": "SELECT product, SUM(qty) AS total FROM `sales.orders` GROUP BY 1 ORDER BY total DESC;",
     "expected": "",
     "points": [
@@ -957,7 +873,7 @@
     "tech_stack": "bigquery",
     "weight": "medium",
     "category": "bq_union",
-    "subcategory": "基础",
+    "subcategory": "SQL 基础",
     "full_code": "SELECT order_id FROM `sales.orders` WHERE status = \"shipped\"\nUNION ALL\nSELECT order_id FROM `sales.orders` WHERE status = \"delivered\";",
     "expected": "",
     "points": [
@@ -1002,7 +918,7 @@
     "tech_stack": "bigquery",
     "weight": "easy",
     "category": "bq_string",
-    "subcategory": "基础",
+    "subcategory": "SQL 基础",
     "full_code": "SELECT CONCAT(name, \" - \", city) AS info FROM `sales.customers`;",
     "expected": "",
     "points": [
@@ -1044,7 +960,7 @@
     "tech_stack": "bigquery",
     "weight": "easy",
     "category": "bq_string",
-    "subcategory": "基础",
+    "subcategory": "SQL 基础",
     "full_code": "SELECT order_id, SUBSTR(order_id, 1, 4) AS batch FROM `sales.orders`;",
     "expected": "",
     "points": [
@@ -1074,7 +990,7 @@
     "tech_stack": "bigquery",
     "weight": "easy",
     "category": "bq_string",
-    "subcategory": "基础",
+    "subcategory": "SQL 基础",
     "full_code": "SELECT UPPER(status) AS status_upper, LENGTH(status) AS len FROM `sales.orders`;",
     "expected": "",
     "points": [
@@ -1112,120 +1028,6 @@
     "explanation": "UPPER/LOWER 大小写转换；LENGTH 返回字符数（非字节数）。"
   },
   {
-    "id": "bq-basics-029",
-    "title": "ARRAY_AGG 聚合数组",
-    "description": "把每个客户的订单号聚合成数组",
-    "exercise_type": "fill",
-    "tech_stack": "bigquery",
-    "weight": "medium",
-    "category": "bq_array",
-    "subcategory": "基础",
-    "full_code": "SELECT customer_id, ARRAY_AGG(order_id ORDER BY order_id) AS orders FROM `sales.orders` GROUP BY customer_id;",
-    "expected": "",
-    "points": [
-      {
-        "id": "array_agg",
-        "text": "ARRAY_AGG(order_id ORDER BY order_id)",
-        "category": "bq_array",
-        "min_weight": "medium",
-        "weight_score": 1,
-        "hint": "组内聚合成数组，可指定排序",
-        "fill_type": "text"
-      },
-      {
-        "id": "alias",
-        "text": "AS orders",
-        "category": "keyword",
-        "min_weight": "beginner",
-        "weight_score": 1,
-        "hint": "数组结果命名",
-        "fill_type": "text",
-        "acceptable_answers": [
-          "as orders"
-        ]
-      }
-    ],
-    "hints": {
-      "level_1": "💡 把同组的多个值打包成一个数组用什么聚合？",
-      "level_2": "📖 `ARRAY_AGG(列)`；可加 `ORDER BY` 控制数组内顺序",
-      "level_3": "👀 `ARRAY_AGG(order_id ORDER BY order_id)`",
-      "level_4": "📝 正确答案：`ARRAY_AGG(order_id ORDER BY order_id)`"
-    },
-    "explanation": "ARRAY_AGG 在组内把值收集为 ARRAY；默认顺序不确定，建议显式 ORDER BY。"
-  },
-  {
-    "id": "bq-basics-030",
-    "title": "UNNEST 展开数组",
-    "description": "把数组字段展开成多行",
-    "exercise_type": "fill",
-    "tech_stack": "bigquery",
-    "weight": "hard",
-    "category": "bq_unnest",
-    "subcategory": "基础",
-    "full_code": "SELECT customer_id, tag\nFROM `sales.customers`, UNNEST(tags) AS tag;",
-    "expected": "",
-    "points": [
-      {
-        "id": "unnest_kw",
-        "text": "UNNEST(tags)",
-        "category": "bq_unnest",
-        "min_weight": "medium",
-        "weight_score": 1,
-        "hint": "把数组展开为多行",
-        "fill_type": "text"
-      },
-      {
-        "id": "alias_tag",
-        "text": "AS tag",
-        "category": "keyword",
-        "min_weight": "easy",
-        "weight_score": 1,
-        "hint": "给展开出的元素起别名",
-        "fill_type": "text",
-        "acceptable_answers": [
-          "as tag"
-        ]
-      }
-    ],
-    "hints": {
-      "level_1": "💡 数组列怎么拆成一行一个元素？",
-      "level_2": "📖 `表, UNNEST(数组列) AS 元素名`（逗号=交叉连接）",
-      "level_3": "👀 `UNNEST(tags) AS tag`",
-      "level_4": "📝 正确答案：`UNNEST(tags)` 与 `AS tag`"
-    },
-    "explanation": "UNNEST 把 ARRAY 展开为行；与表之间用逗号即隐式 CROSS JOIN。"
-  },
-  {
-    "id": "bq-basics-031",
-    "title": "ARRAY_LENGTH 数组长度",
-    "description": "统计每个客户的标签数量",
-    "exercise_type": "fill",
-    "tech_stack": "bigquery",
-    "weight": "easy",
-    "category": "bq_array",
-    "subcategory": "基础",
-    "full_code": "SELECT customer_id, ARRAY_LENGTH(tags) AS tag_count FROM `sales.customers`;",
-    "expected": "",
-    "points": [
-      {
-        "id": "arr_len",
-        "text": "ARRAY_LENGTH(tags)",
-        "category": "bq_array",
-        "min_weight": "easy",
-        "weight_score": 1,
-        "hint": "返回数组元素个数",
-        "fill_type": "text"
-      }
-    ],
-    "hints": {
-      "level_1": "💡 数组长度用什么函数？",
-      "level_2": "📖 `ARRAY_LENGTH(数组)`",
-      "level_3": "👀 `ARRAY_LENGTH(tags)`",
-      "level_4": "📝 正确答案：`ARRAY_LENGTH(tags)`"
-    },
-    "explanation": "ARRAY_LENGTH 返回数组元素个数；空数组返回 0，NULL 数组返回 NULL。"
-  },
-  {
     "id": "bq-basics-032",
     "title": "EXTRACT 提取日期部分",
     "description": "统计每年的订单数量",
@@ -1233,7 +1035,7 @@
     "tech_stack": "bigquery",
     "weight": "medium",
     "category": "bq_date",
-    "subcategory": "基础",
+    "subcategory": "SQL 基础",
     "full_code": "SELECT EXTRACT(YEAR FROM created_at) AS year, COUNT(*) AS cnt\nFROM `sales.orders`\nGROUP BY year\nORDER BY year;",
     "expected": "",
     "points": [
@@ -1275,7 +1077,7 @@
     "tech_stack": "bigquery",
     "weight": "medium",
     "category": "bq_date",
-    "subcategory": "基础",
+    "subcategory": "SQL 基础",
     "full_code": "SELECT order_id, DATE_DIFF(DATE(created_at), DATE(\"2026-01-01\"), DAY) AS days\nFROM `sales.orders`;",
     "expected": "",
     "points": [
@@ -1305,7 +1107,7 @@
     "tech_stack": "bigquery",
     "weight": "medium",
     "category": "bq_date",
-    "subcategory": "基础",
+    "subcategory": "SQL 基础",
     "full_code": "SELECT order_id, DATE_ADD(DATE(created_at), INTERVAL 7 DAY) AS due_date FROM `sales.orders`;",
     "expected": "",
     "points": [
@@ -1335,7 +1137,7 @@
     "tech_stack": "bigquery",
     "weight": "easy",
     "category": "bq_date",
-    "subcategory": "基础",
+    "subcategory": "SQL 基础",
     "full_code": "SELECT order_id, FORMAT_DATE(\"%Y%m\", DATE(created_at)) AS month_key FROM `sales.orders`;",
     "expected": "",
     "points": [
@@ -1377,7 +1179,7 @@
     "tech_stack": "bigquery",
     "weight": "medium",
     "category": "bq_date",
-    "subcategory": "基础",
+    "subcategory": "SQL 基础",
     "full_code": "SELECT * FROM `sales.orders`\nWHERE DATE(created_at) >= DATE_SUB(CURRENT_DATE(), INTERVAL 30 DAY);",
     "expected": "",
     "points": [
@@ -1409,162 +1211,6 @@
     "explanation": "CURRENT_DATE() 返回当天；对时间戳列先 DATE() 再与日期比较可避免时间部分干扰。"
   },
   {
-    "id": "bq-basics-037",
-    "title": "ROW_NUMBER 排名",
-    "description": "给每个客户的订单按金额降序编号",
-    "exercise_type": "fill",
-    "tech_stack": "bigquery",
-    "weight": "medium",
-    "category": "bq_window",
-    "subcategory": "基础",
-    "full_code": "SELECT order_id, customer_id, ROW_NUMBER() OVER (PARTITION BY customer_id ORDER BY amount DESC) AS rn\nFROM `sales.orders`;",
-    "expected": "",
-    "points": [
-      {
-        "id": "row_number",
-        "text": "ROW_NUMBER() OVER (PARTITION BY customer_id ORDER BY amount DESC)",
-        "category": "bq_window",
-        "min_weight": "medium",
-        "weight_score": 1,
-        "hint": "窗口函数：组内按金额降序编号",
-        "fill_type": "text"
-      },
-      {
-        "id": "rn_alias",
-        "text": "AS rn",
-        "category": "keyword",
-        "min_weight": "beginner",
-        "weight_score": 1,
-        "hint": "编号列命名",
-        "fill_type": "text",
-        "acceptable_answers": [
-          "as rn"
-        ]
-      }
-    ],
-    "hints": {
-      "level_1": "💡 组内编号用哪个窗口函数？OVER 里写什么？",
-      "level_2": "📖 `ROW_NUMBER() OVER (PARTITION BY 分组 ORDER BY 排序)`",
-      "level_3": "👀 `ROW_NUMBER() OVER (PARTITION BY customer_id ORDER BY amount DESC)`",
-      "level_4": "📝 正确答案：`ROW_NUMBER() OVER (PARTITION BY customer_id ORDER BY amount DESC)`"
-    },
-    "explanation": "窗口函数在组内逐行计算不折叠行；PARTITION BY 分组、ORDER BY 排序。"
-  },
-  {
-    "id": "bq-basics-038",
-    "title": "每组 Top-N",
-    "description": "查出每个客户金额最大的第一笔订单",
-    "exercise_type": "fill",
-    "tech_stack": "bigquery",
-    "weight": "hard",
-    "category": "bq_window",
-    "subcategory": "基础",
-    "full_code": "WITH ranked AS (\n  SELECT order_id, customer_id,\n    ROW_NUMBER() OVER (PARTITION BY customer_id ORDER BY amount DESC) AS rn\n  FROM `sales.orders`\n)\nSELECT order_id FROM ranked WHERE rn = 1;",
-    "expected": "",
-    "points": [
-      {
-        "id": "rn_cond",
-        "text": "WHERE rn = 1",
-        "category": "bq_window",
-        "min_weight": "medium",
-        "weight_score": 1,
-        "hint": "筛出组内第一名",
-        "fill_type": "text"
-      },
-      {
-        "id": "from_cte",
-        "text": "FROM ranked",
-        "category": "bq_cte",
-        "min_weight": "easy",
-        "weight_score": 1,
-        "hint": "从 CTE 中取数",
-        "fill_type": "text",
-        "acceptable_answers": [
-          "from ranked"
-        ]
-      }
-    ],
-    "hints": {
-      "level_1": "💡 组内 Top-1 的通用套路？",
-      "level_2": "📖 CTE 里 ROW_NUMBER 编号，外层 `WHERE rn = 1` 过滤",
-      "level_3": "👀 `WITH ranked AS (…ROW_NUMBER… ) … WHERE rn = 1`",
-      "level_4": "📝 正确答案：`WHERE rn = 1` 与 `FROM ranked`"
-    },
-    "explanation": "「CTE 编号 + 外层过滤」是组内 Top-N 的经典写法；改 rn 条件可得任意 Top-N。"
-  },
-  {
-    "id": "bq-basics-039",
-    "title": "SUM OVER 滚动合计",
-    "description": "按时间顺序计算订单金额累计值",
-    "exercise_type": "fill",
-    "tech_stack": "bigquery",
-    "weight": "hard",
-    "category": "bq_window",
-    "subcategory": "基础",
-    "full_code": "SELECT order_id, amount,\n  SUM(amount) OVER (ORDER BY created_at) AS running_total\nFROM `sales.orders`\nORDER BY created_at;",
-    "expected": "",
-    "points": [
-      {
-        "id": "sum_over",
-        "text": "SUM(amount) OVER (ORDER BY created_at)",
-        "category": "bq_window",
-        "min_weight": "hard",
-        "weight_score": 1,
-        "hint": "按顺序累计求和",
-        "fill_type": "text"
-      },
-      {
-        "id": "running_alias",
-        "text": "AS running_total",
-        "category": "keyword",
-        "min_weight": "beginner",
-        "weight_score": 1,
-        "hint": "累计列命名",
-        "fill_type": "text",
-        "acceptable_answers": [
-          "as running_total"
-        ]
-      }
-    ],
-    "hints": {
-      "level_1": "💡 逐行累计求和（滚动合计）怎么写？",
-      "level_2": "📖 `SUM(列) OVER (ORDER BY 排序列)`",
-      "level_3": "👀 `SUM(amount) OVER (ORDER BY created_at)`",
-      "level_4": "📝 正确答案：`SUM(amount) OVER (ORDER BY created_at)`"
-    },
-    "explanation": "窗口内仅 ORDER BY 时默认累计到当前行（不含后续），形成 running total。"
-  },
-  {
-    "id": "bq-basics-040",
-    "title": "RANK 与并列排名",
-    "description": "按金额排名，金额相同名次并列",
-    "exercise_type": "fill",
-    "tech_stack": "bigquery",
-    "weight": "medium",
-    "category": "bq_window",
-    "subcategory": "基础",
-    "full_code": "SELECT order_id, amount, RANK() OVER (ORDER BY amount DESC) AS rk FROM `sales.orders`;",
-    "expected": "",
-    "points": [
-      {
-        "id": "rank_fn",
-        "text": "RANK() OVER (ORDER BY amount DESC)",
-        "category": "bq_window",
-        "min_weight": "medium",
-        "weight_score": 1,
-        "hint": "并列时名次相同，后续名次跳过",
-        "fill_type": "text"
-      }
-    ],
-    "hints": {
-      "level_1": "💡 并列名次相同的排名函数是？与 ROW_NUMBER 区别？",
-      "level_2": "📖 `RANK()` 并列同号且后面跳号；`DENSE_RANK()` 并列同号不跳号",
-      "level_3": "👀 `RANK() OVER (ORDER BY amount DESC)`",
-      "level_4": "📝 正确答案：`RANK() OVER (ORDER BY amount DESC)`"
-    },
-    "explanation": "RANK 与 ROW_NUMBER 不同：同值行共享名次（1,1,3）；DENSE_RANK 不跳号（1,1,2）。"
-  },
-  {
     "id": "bq-basics-041",
     "title": "CASE WHEN 多分支",
     "description": "把订单金额分档：<100 low、<500 mid、否则 high",
@@ -1572,7 +1218,7 @@
     "tech_stack": "bigquery",
     "weight": "medium",
     "category": "bq_if_case",
-    "subcategory": "基础",
+    "subcategory": "SQL 基础",
     "full_code": "SELECT order_id,\n  CASE\n    WHEN amount < 100 THEN \"low\"\n    WHEN amount < 500 THEN \"mid\"\n    ELSE \"high\"\n  END AS tier\nFROM `sales.orders`;",
     "expected": "",
     "points": [
@@ -1626,7 +1272,7 @@
     "tech_stack": "bigquery",
     "weight": "easy",
     "category": "bq_coalesce",
-    "subcategory": "基础",
+    "subcategory": "SQL 基础",
     "full_code": "SELECT order_id, COALESCE(status, \"unknown\") AS status_label FROM `sales.orders`;",
     "expected": "",
     "points": [
@@ -1661,36 +1307,6 @@
     "explanation": "COALESCE 从左到右返回第一个非 NULL 值；也可 IFNULL(列, 默认) 两参版本。"
   },
   {
-    "id": "bq-basics-043",
-    "title": "SAFE_DIVIDE 安全除法",
-    "description": "计算订单均价：总金额/总数量，避免除零报错",
-    "exercise_type": "fill",
-    "tech_stack": "bigquery",
-    "weight": "medium",
-    "category": "bq_math",
-    "subcategory": "基础",
-    "full_code": "SELECT SAFE_DIVIDE(SUM(amount), SUM(qty)) AS unit_price FROM `sales.orders`;",
-    "expected": "",
-    "points": [
-      {
-        "id": "safe_divide",
-        "text": "SAFE_DIVIDE(SUM(amount), SUM(qty))",
-        "category": "bq_math",
-        "min_weight": "medium",
-        "weight_score": 1,
-        "hint": "除数为 0 时返回 NULL 而不是报错",
-        "fill_type": "text"
-      }
-    ],
-    "hints": {
-      "level_1": "💡 BigQuery 除零会报错，用哪个函数规避？",
-      "level_2": "📖 `SAFE_DIVIDE(分子, 分母)`：分母为 0 返回 NULL",
-      "level_3": "👀 `SAFE_DIVIDE(SUM(amount), SUM(qty))`",
-      "level_4": "📝 正确答案：`SAFE_DIVIDE(SUM(amount), SUM(qty))`"
-    },
-    "explanation": "SAFE_ 前缀系列（SAFE_DIVIDE/SAFE_CAST 等）把错误转为 NULL，适合不可控数据。"
-  },
-  {
     "id": "bq-basics-044",
     "title": "CAST 类型转换",
     "description": "把金额转成字符串并在前面加 $",
@@ -1698,7 +1314,7 @@
     "tech_stack": "bigquery",
     "weight": "easy",
     "category": "bq_math",
-    "subcategory": "基础",
+    "subcategory": "SQL 基础",
     "full_code": "SELECT CONCAT(\"$\", CAST(amount AS STRING)) AS display FROM `sales.orders`;",
     "expected": "",
     "points": [
@@ -1737,7 +1353,7 @@
     "tech_stack": "bigquery",
     "weight": "easy",
     "category": "bq_math",
-    "subcategory": "基础",
+    "subcategory": "SQL 基础",
     "full_code": "SELECT order_id, IF(MOD(order_id, 2) = 0, \"even\", \"odd\") AS parity FROM `sales.orders`;",
     "expected": "",
     "points": [
@@ -1767,204 +1383,5 @@
       "level_4": "📝 正确答案：`MOD(order_id, 2)` 与 `IF(MOD(order_id, 2) = 0, \"even\", \"odd\")`"
     },
     "explanation": "MOD 常用于奇偶分流、哈希取桶、周期性分组（如按天取模轮转）。"
-  },
-  {
-    "id": "bq-basics-046",
-    "title": "JSON_VALUE 取字段",
-    "description": "从 JSON 字符串列中提取字段",
-    "exercise_type": "fill",
-    "tech_stack": "bigquery",
-    "weight": "medium",
-    "category": "bq_json",
-    "subcategory": "基础",
-    "full_code": "SELECT JSON_VALUE(attrs, \"$.channel\") AS channel FROM `sales.orders`;",
-    "expected": "",
-    "points": [
-      {
-        "id": "json_value",
-        "text": "JSON_VALUE(attrs, \"$.channel\")",
-        "category": "bq_json",
-        "min_weight": "medium",
-        "weight_score": 1,
-        "hint": "从 JSON 字符串按路径取值",
-        "fill_type": "text"
-      },
-      {
-        "id": "path",
-        "text": "\"$.channel\"",
-        "category": "bq_json",
-        "min_weight": "easy",
-        "weight_score": 1,
-        "hint": "JSONPath：$ 根，.字段",
-        "fill_type": "text",
-        "acceptable_answers": []
-      }
-    ],
-    "hints": {
-      "level_1": "💡 从 JSON 字符串取某个字段用什么函数？路径怎么写？",
-      "level_2": "📖 `JSON_VALUE(json, \"$.字段\")`",
-      "level_3": "👀 `JSON_VALUE(attrs, \"$.channel\")`",
-      "level_4": "📝 正确答案：`JSON_VALUE(attrs, \"$.channel\")`"
-    },
-    "explanation": "JSON_VALUE 返回标量字符串；JSON_QUERY 返回对象/数组片段；JSON_EXTRACT 已废弃。"
-  },
-  {
-    "id": "bq-basics-047",
-    "title": "分区表设计",
-    "description": "为按日期查询的订单表设计分区",
-    "exercise_type": "fill",
-    "tech_stack": "bigquery",
-    "weight": "hard",
-    "category": "bq_schema",
-    "subcategory": "基础",
-    "full_code": "CREATE TABLE IF NOT EXISTS `sales.orders_partitioned`\nPARTITION BY DATE(created_at)\nCLUSTER BY customer_id\nAS SELECT * FROM `sales.orders`;",
-    "expected": "",
-    "points": [
-      {
-        "id": "partition_by",
-        "text": "PARTITION BY DATE(created_at)",
-        "category": "bq_schema",
-        "min_weight": "hard",
-        "weight_score": 1,
-        "hint": "按创建日期分区，查询可裁剪分区",
-        "fill_type": "text"
-      },
-      {
-        "id": "cluster_by",
-        "text": "CLUSTER BY customer_id",
-        "category": "bq_schema",
-        "min_weight": "hard",
-        "weight_score": 1,
-        "hint": "区内按客户编号聚类，加速等值过滤",
-        "fill_type": "text"
-      }
-    ],
-    "hints": {
-      "level_1": "💡 大表按时间查询频繁，如何建表优化？分区和聚簇分别怎么写？",
-      "level_2": "📖 `PARTITION BY 日期表达式` + `CLUSTER BY 过滤列`",
-      "level_3": "👀 `PARTITION BY DATE(created_at)` 与 `CLUSTER BY customer_id`",
-      "level_4": "📝 正确答案：`PARTITION BY DATE(created_at)` 与 `CLUSTER BY customer_id`"
-    },
-    "explanation": "分区按时间裁剪扫描量（成本随分区数降）；聚簇在分区内进一步组织数据，加速等值/范围过滤。"
-  },
-  {
-    "id": "bq-basics-048",
-    "title": "分区裁剪过滤",
-    "description": "在分区表上按分区键过滤以节约扫描",
-    "exercise_type": "fill",
-    "tech_stack": "bigquery",
-    "weight": "hard",
-    "category": "bq_schema",
-    "subcategory": "基础",
-    "full_code": "SELECT order_id\nFROM `sales.orders_partitioned`\nWHERE DATE(created_at) >= \"2026-01-01\"\n  AND DATE(created_at) < \"2026-02-01\";",
-    "expected": "",
-    "points": [
-      {
-        "id": "prune_filter",
-        "text": "DATE(created_at) >= \"2026-01-01\"\n  AND DATE(created_at) < \"2026-02-01\"",
-        "category": "bq_schema",
-        "min_weight": "hard",
-        "weight_score": 1,
-        "hint": "对分区键加范围条件，只扫一个月的分区",
-        "fill_type": "text"
-      },
-      {
-        "id": "partition_col",
-        "text": "DATE(created_at)",
-        "category": "bq_schema",
-        "min_weight": "medium",
-        "weight_score": 1,
-        "hint": "分区键要与建表表达式一致",
-        "fill_type": "text"
-      }
-    ],
-    "hints": {
-      "level_1": "💡 怎么让查询只扫描一月的数据？",
-      "level_2": "📖 对分区键写过滤（尽量恒等表达式），查询计划自动裁剪分区",
-      "level_3": "👀 `WHERE DATE(created_at) >= … AND DATE(created_at) < …`",
-      "level_4": "📝 正确答案：分区键的范围过滤条件"
-    },
-    "explanation": "分区裁剪依赖对分区列的直接比较；把时间函数套在列上（如 ON created_at 加函数）可能失效。"
-  },
-  {
-    "id": "bq-basics-049",
-    "title": "SELECT * EXCEPT",
-    "description": "查询所有列但排除敏感列",
-    "exercise_type": "fill",
-    "tech_stack": "bigquery",
-    "weight": "medium",
-    "category": "bq_select",
-    "subcategory": "基础",
-    "full_code": "SELECT * EXCEPT (customer_id) FROM `sales.orders`;",
-    "expected": "",
-    "points": [
-      {
-        "id": "except_kw",
-        "text": "EXCEPT (customer_id)",
-        "category": "bq_select",
-        "min_weight": "medium",
-        "weight_score": 1,
-        "hint": "排除指定列输出其余全部",
-        "fill_type": "text"
-      },
-      {
-        "id": "star_rest",
-        "text": "SELECT *",
-        "category": "bq_select",
-        "min_weight": "beginner",
-        "weight_score": 1,
-        "hint": "其余列全选",
-        "fill_type": "text",
-        "acceptable_answers": [
-          "select *"
-        ]
-      }
-    ],
-    "hints": {
-      "level_1": "💡 只要一列不输出但其余全要，怎么写？",
-      "level_2": "📖 `SELECT * EXCEPT (列名)`",
-      "level_3": "👀 `SELECT * EXCEPT (customer_id)`",
-      "level_4": "📝 正确答案：`EXCEPT (customer_id)`"
-    },
-    "explanation": "SELECT * EXCEPT 免去逐一列名，多列用逗号分隔；还有 REPLACE 可替换列输出。"
-  },
-  {
-    "id": "bq-basics-050",
-    "title": "半结构化 JSON 类型",
-    "description": "将 JSON 列声明为 JSON 类型并取值",
-    "exercise_type": "fill",
-    "tech_stack": "bigquery",
-    "weight": "hard",
-    "category": "bq_json",
-    "subcategory": "基础",
-    "full_code": "SELECT order_id, attrs.channel AS channel\nFROM `sales.orders`\nWHERE attrs.channel = \"web\";",
-    "expected": "",
-    "points": [
-      {
-        "id": "json_nav",
-        "text": "attrs.channel",
-        "category": "bq_json",
-        "min_weight": "hard",
-        "weight_score": 1,
-        "hint": "JSON 类型列用点号导航取字段",
-        "fill_type": "text"
-      },
-      {
-        "id": "json_filter",
-        "text": "attrs.channel = \"web\"",
-        "category": "bq_json",
-        "min_weight": "medium",
-        "weight_score": 1,
-        "hint": "对 JSON 字段过滤",
-        "fill_type": "text"
-      }
-    ],
-    "hints": {
-      "level_1": "💡 列类型是 JSON（非字符串）时如何取值与过滤？",
-      "level_2": "📖 JSON 类型可直接 `列.字段` 点号导航",
-      "level_3": "👀 `attrs.channel` 直接取值、参与 WHERE",
-      "level_4": "📝 正确答案：`attrs.channel`（点号导航）"
-    },
-    "explanation": "若列声明为 JSON 类型（推荐），直接 `列.字段` 导航；若存的是字符串才需要 JSON_VALUE。"
   }
 ]

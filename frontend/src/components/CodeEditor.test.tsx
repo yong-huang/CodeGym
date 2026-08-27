@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { renderToStaticMarkup } from 'react-dom/server';
-import CodeEditor, { extractAnswers, toPlaceholderText } from './CodeEditor';
+import CodeEditor, { extractAnswers, toPlaceholderText, updateRanges } from './CodeEditor';
 import type { VariantFillPoint } from '../types';
 
 const TEMPLATE =
@@ -210,5 +210,84 @@ describe('CodeEditor rendering', () => {
     const lineDivs = html.match(/class="code-line"/g);
     expect(lineDivs?.length).toBe(7); // 5 real + 2 blank lines
     expect(html).toContain('empty-line'); // blanks carry a height-preserving marker
+  });
+});
+describe('updateRanges (增量跟踪，修复空格分隔相邻填空)', () => {
+  // devops-ansible-002: `ansible webservers -m command -a "uptime"`
+  const MARKED002 = 'ansible webservers ____FILL_mod_cmd____ ____FILL_args____';
+
+  it('填第一个含空格的答案不被截断', () => {
+    const initial = toPlaceholderText(MARKED002);
+    const initRanges = extractAnswers(MARKED002, initial, ['mod_cmd', 'args']).ranges;
+    // 占位符定位
+    expect(initial.slice(initRanges[0].start, initRanges[0].end)).toBe('____');
+    expect(initial.slice(initRanges[1].start, initRanges[1].end)).toBe('____');
+
+    // 用户在第一个空输入 `-m command`（替换占位符）
+    const typed = initial.replace('____', '-m command');
+    const ranges = updateRanges(initial, typed, initRanges);
+    const a = typed.slice(ranges[0].start, ranges[0].end);
+    const b = typed.slice(ranges[1].start, ranges[1].end);
+    expect(a).toBe('-m command'); // 关键：不能被截断成 `-m`
+    expect(b).toBe('____');
+  });
+
+  it('再填第二个含空格的答案', () => {
+    const initial = toPlaceholderText(MARKED002);
+    const initRanges = extractAnswers(MARKED002, initial, ['mod_cmd', 'args']).ranges;
+    const after1 = initial.replace('____', '-m command');
+    const r1 = updateRanges(initial, after1, initRanges);
+    const after2 = after1.replace('____', '-a "uptime"');
+    const r2 = updateRanges(after1, after2, r1);
+    const a = after2.slice(r2[0].start, r2[0].end);
+    const b = after2.slice(r2[1].start, r2[1].end);
+    expect(a).toBe('-m command');
+    expect(b).toBe('-a "uptime"');
+  });
+
+  it('sql-basics-017: ORDER BY price 与 ASC 相邻填空', () => {
+    const MARKED = 'SELECT name, price FROM products ____FILL_order_by____ ____FILL_asc_kw____;';
+    const initial = toPlaceholderText(MARKED);
+    const initRanges = extractAnswers(MARKED, initial, ['order_by', 'asc_kw']).ranges;
+    const after1 = initial.replace('____', 'ORDER BY price');
+    const r1 = updateRanges(initial, after1, initRanges);
+    const after2 = after1.replace('____', 'ASC');
+    const r2 = updateRanges(after1, after2, r1);
+    expect(after2.slice(r2[0].start, r2[0].end)).toBe('ORDER BY price');
+    expect(after2.slice(r2[1].start, r2[1].end)).toBe('ASC');
+  });
+
+  it('退格删除填空末尾字符时区间收缩', () => {
+    const initial = toPlaceholderText(MARKED002);
+    const initRanges = extractAnswers(MARKED002, initial, ['mod_cmd', 'args']).ranges;
+    const typed = initial.replace('____', '-m command');
+    const r1 = updateRanges(initial, typed, initRanges);
+    // 删除填空内容最后一个字符 'd'（退格）
+    const last = r1[0].end;
+    const trimmed = typed.slice(0, last - 1) + typed.slice(last);
+    const r2 = updateRanges(typed, trimmed, r1, last - 1);
+    expect(trimmed.slice(r2[0].start, r2[0].end)).toBe('-m comman');
+    // 第二个填空（未动的占位符）位置整体前移一位
+    expect(trimmed.slice(r2[1].start, r2[1].end)).toBe('____');
+  });
+
+  it('逐字符输入含空格的答案时填空区间持续增长', () => {
+    const initial = toPlaceholderText(MARKED002);
+    let ranges = extractAnswers(MARKED002, initial, ['mod_cmd', 'args']).ranges;
+    let text = initial;
+    let prevText = initial;
+    for (let i = 0; i < '-m command'.length; i++) {
+      const ch = '-m command'[i];
+      // 首个字符替换占位符，之后在填空末尾插入
+      text =
+        i === 0
+          ? text.slice(0, ranges[0].start) + ch + text.slice(ranges[0].end)
+          : text.slice(0, ranges[0].end) + ch + text.slice(ranges[0].end);
+      const caret = ranges[0].start + i + 1;
+      ranges = updateRanges(prevText, text, ranges, caret);
+      prevText = text;
+    }
+    expect(text.slice(ranges[0].start, ranges[0].end)).toBe('-m command');
+    expect(text.slice(ranges[1].start, ranges[1].end)).toBe('____');
   });
 });

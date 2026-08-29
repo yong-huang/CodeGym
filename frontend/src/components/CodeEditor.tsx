@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import type { VariantFillPoint } from '../types';
 
 interface CodeEditorProps {
@@ -190,6 +190,21 @@ export function extractAnswers(
   return { answers, ranges };
 }
 
+/** 校验增量区间的基本不变量：数量一致、有序、互不重叠、不越界（零宽空答案合法）。
+ *  注意不能要求区间严格夹在模板代码段之间：退格清空答案时很容易多删掉换行/缩进/
+ *  相邻字符，固定代码段被破坏是正常编辑，此时增量追踪的区间仍然语义正确；
+ *  若因此回退到从零提取，结构失配会退化成贪婪锚定，产出空答案或错位答案。 */
+function rangesSane(ranges: FillRange[], textLen: number, count: number): boolean {
+  if (ranges.length !== count) return false;
+  let prevEnd = -1;
+  for (const r of ranges) {
+    if (r.start < 0 || r.end > textLen || r.start > r.end) return false;
+    if (r.start < prevEnd) return false; // 乱序或与前一个填空重叠
+    prevEnd = r.end;
+  }
+  return true;
+}
+
 /**
  * 在旧文本与旧填空区间的基础上，按一次文本编辑（插入/删除/替换）增量调整区间。
  * 相比从零用代码段锚定重推，这能正确处理「相邻填空之间只有空白分隔、
@@ -205,6 +220,16 @@ export function updateRanges(
   oldRanges: FillRange[],
   caret?: number,
 ): FillRange[] {
+  const { start, oldEnd, newEnd } = diffEdit(oldValue, newValue, caret);
+  return applyEdit(start, oldEnd, start, newEnd, oldRanges);
+}
+
+/** 定位一次编辑：旧文本中被替换的区间 [start, oldEnd) 与新文本中的写入区 [start, newEnd)。 */
+export function diffEdit(
+  oldValue: string,
+  newValue: string,
+  caret?: number,
+): { start: number; oldEnd: number; newEnd: number } {
   const oldLen = oldValue.length;
   const newLen = newValue.length;
 
@@ -217,7 +242,7 @@ export function updateRanges(
     const maxP = Math.min(oldLen - s, newLen - s, caret);
     let p = 0;
     while (p < maxP && oldValue[p] === newValue[p]) p++;
-    return applyEdit(p, oldLen - s, p, caret, oldRanges);
+    return { start: p, oldEnd: oldLen - s, newEnd: caret };
   }
 
   // 无光标信息：退化为公共前缀 + 公共后缀（初始/异常路径）
@@ -227,7 +252,7 @@ export function updateRanges(
   let s = 0;
   const maxS0 = Math.min(oldLen - p, newLen - p);
   while (s < maxS0 && oldValue[oldLen - 1 - s] === newValue[newLen - 1 - s]) s++;
-  return applyEdit(p, oldLen - s, p, newLen - s, oldRanges);
+  return { start: p, oldEnd: oldLen - s, newEnd: newLen - s };
 }
 
 function applyEdit(
@@ -238,9 +263,13 @@ function applyEdit(
   oldRanges: FillRange[],
 ): FillRange[] {
   const delta = newEnd - newStart - (oldEnd - oldStart);
+  // 纯插入（退格清空后重新输入、光标停在填空左边界输入）：插入点正好是某填空的
+  // start，新文本属于该填空。若按「整体在编辑之后」平移，空答案的零宽区间会被
+  // 推出插入点且永不扩张，重新输入的内容将永远提取不到（提交时按空答案判分）。
+  const isInsertion = oldStart === oldEnd && newEnd > newStart;
   return oldRanges.map((r) => {
     if (r.end < oldStart) return r; // 编辑完全在该填空之前
-    if (r.start >= oldEnd) {
+    if (r.start >= oldEnd && !(isInsertion && r.start === oldEnd)) {
       return { id: r.id, start: r.start + delta, end: r.end + delta }; // 完全在编辑之后，平移
     }
     // 与编辑段相交：伸缩受影响的边界
@@ -249,6 +278,83 @@ function applyEdit(
     if (start > end) end = start;
     return { id: r.id, start, end };
   });
+}
+
+/** 增量区间追踪的状态，供 computeRanges 跨编辑复用。 */
+export interface RangeState {
+  marked: string;
+  value: string;
+  ranges: FillRange[];
+}
+
+/**
+ * 计算一组填空区间，按编辑性质三向路由：
+ * 1. 普通编辑（编辑区只在填空附近，含退格多删破坏模板结构）→ 信任增量追踪，
+ *    它对任意编辑都语义正确；
+ * 2. 结构性替换（编辑区越过固定代码段，如全选粘贴）且新文本仍与模板对齐 →
+ *    按模板代码段从零提取（答案边界最准确）；
+ * 3. 结构性替换但新文本已无法匹配模板（挤叠/残缺）→ 回退从零提取的贪婪兜底。
+ */
+export function computeRanges(
+  prev: RangeState | null,
+  markedCode: string,
+  value: string,
+  fillIds: string[],
+  caret?: number,
+): RangeState {
+  if (!markedCode) return { marked: '', value, ranges: [] };
+  if (prev && prev.marked === markedCode && prev.value === value) return prev;
+  if (prev && prev.marked === markedCode) {
+    const next = updateRanges(prev.value, value, prev.ranges, caret);
+    if (rangesSane(next, value.length, fillIds.length)) {
+      if (!editCrossesCode(prev, value, caret)) {
+        return { marked: markedCode, value, ranges: next };
+      }
+      if (!templateLocatable(value, markedCode, fillIds)) {
+        // 结构已被编辑破坏：增量区间仍是正确的那一个
+        return { marked: markedCode, value, ranges: next };
+      }
+    }
+  }
+  const fresh = extractAnswers(markedCode, value, fillIds).ranges;
+  return { marked: markedCode, value, ranges: fresh };
+}
+
+/** 判断这次编辑是否为「结构性替换」：被删除的旧区间越过了固定代码段
+ *  （如全选粘贴把占位符连同后面的 `")` 一起换掉）。此时增量区间的边界
+ *  不可信，应按模板代码段从零重提取。结构已被破坏到无法定位代码段时
+ *  （退格多删合并行等），返回 false——增量追踪仍然是正确的那一个。 */
+function editCrossesCode(prev: RangeState, value: string, caret?: number): boolean {
+  const { start, oldEnd } = diffEdit(prev.value, value, caret);
+  if (oldEnd <= start) return false; // 纯插入，不删除内容
+  const ids = fillIdsOf(prev.marked);
+  const segs = parseTemplate(prev.marked, ids);
+  const codeSegs = segs.filter((s) => s.type === 'code' && s.text).map((s) => s.text!);
+  const hasTrailingFill = segs[segs.length - 1]?.type === 'fill';
+  const positions = locateCodeSegments(codeSegs, prev.value, hasTrailingFill);
+  if (!positions) return false; // 模板结构已破坏，无法判定
+  return codeSegs.some((text, i) => {
+    const segStart = positions[i];
+    const segEnd = segStart + text.length;
+    return segStart < oldEnd && start < segEnd;
+  });
+}
+
+/** 模板代码段能否在 text 中按顺序精确定位（即按模板重提取是否可靠）。 */
+function templateLocatable(value: string, markedCode: string, fillIds: string[]): boolean {
+  const segs = parseTemplate(markedCode, fillIds);
+  const codeSegs = segs.filter((s) => s.type === 'code' && s.text).map((s) => s.text!);
+  const hasTrailingFill = segs[segs.length - 1]?.type === 'fill';
+  return locateCodeSegments(codeSegs, value, hasTrailingFill) !== null;
+}
+
+/** 从 marked 模板里解析出填空 id（供 editCrossesCode 定位代码段）。 */
+function fillIdsOf(markedCode: string): string[] {
+  const ids: string[] = [];
+  const re = /____FILL_([A-Za-z0-9_]+)____/g;
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(markedCode))) ids.push(m[1]);
+  return ids;
 }
 
 // --- rendering -----------------------------------------------------------
@@ -330,7 +436,21 @@ export default function CodeEditor({
   onAnswers,
 }: CodeEditorProps) {
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const preRef = useRef<HTMLPreElement>(null);
   const fillIds = useMemo(() => fillPoints.map((p) => p.id), [fillPoints]);
+
+  // 高亮层（与正文同字体）按内容撑开后的实测尺寸，同步给 textarea 与行号栏
+  // 外层，让超长行把 editor-body 撑出横向滚动条，而不是被裁剪。
+  const [contentSize, setContentSize] = useState<{ w: number; h: number } | null>(null);
+
+  useLayoutEffect(() => {
+    const pre = preRef.current;
+    if (!pre) return;
+    const r = pre.getBoundingClientRect();
+    setContentSize((prev) =>
+      prev && prev.w === r.width && prev.h === r.height ? prev : { w: r.width, h: r.height },
+    );
+  }, [value, markedCode]);
 
   // 记录最近一次编辑后的光标位置，供增量区间调整消除「敲空格/重复字符」歧义
   const caretRef = useRef<number | undefined>(undefined);
@@ -339,22 +459,12 @@ export default function CodeEditor({
   // 按 diff + 光标位置精确伸缩受影响的填空，而不是从零重新推导——避免「空格分隔的
   // 相邻填空 + 答案含空格」时（如 `-m command` 与 `-a "uptime"`）边界歧义导致
   // 答案被截断。
-  const rangeStateRef = useRef<{ marked: string; value: string; ranges: FillRange[] } | null>(null);
+  const rangeStateRef = useRef<RangeState | null>(null);
 
   const ranges = useMemo(() => {
-    if (!markedCode) return [];
-    const prev = rangeStateRef.current;
-    if (prev && prev.marked === markedCode && prev.value === value) {
-      return prev.ranges;
-    }
-    if (prev && prev.marked === markedCode) {
-      const next = updateRanges(prev.value, value, prev.ranges, caretRef.current);
-      rangeStateRef.current = { marked: markedCode, value, ranges: next };
-      return next;
-    }
-    const fresh = extractAnswers(markedCode, value, fillIds).ranges;
-    rangeStateRef.current = { marked: markedCode, value, ranges: fresh };
-    return fresh;
+    const next = computeRanges(rangeStateRef.current, markedCode, value, fillIds, caretRef.current);
+    rangeStateRef.current = next;
+    return next.ranges;
   }, [markedCode, value, fillIds]);
 
   // 把按增量区间切出的答案回报给父组件（判题提交用），初始占位符也会回报。
@@ -408,16 +518,21 @@ export default function CodeEditor({
           height) and the highlight/gutter (absolute) are all its children, so
           they scroll together perfectly — click/caret alignment is automatic. */}
       <div className="editor-body">
-        <div className="editor-gutter" style={INLINE_STYLE}>
-          {gutterLines}
+        <div
+          className="editor-gutter-wrap"
+          style={contentSize ? { width: 48 + contentSize.w, height: contentSize.h } : undefined}
+        >
+          <div className="editor-gutter" style={INLINE_STYLE}>
+            {gutterLines}
+          </div>
         </div>
-        <pre className="editor-pre" style={INLINE_STYLE}>
+        <pre className="editor-pre" style={INLINE_STYLE} ref={preRef}>
           {highlight}
         </pre>
         <textarea
           ref={inputRef}
           className="editor-input"
-          style={INLINE_STYLE}
+          style={{ ...INLINE_STYLE, width: contentSize ? `${contentSize.w}px` : undefined }}
           wrap="off"
           spellCheck={false}
           rows={Math.max(lines, 2)}

@@ -879,18 +879,25 @@ body {
   min-height: 240px;
   max-height: 560px;
 }
-.editor-gutter {
+.editor-gutter-wrap {
   position: absolute;
   left: 0;
   top: 0;
-  bottom: 0;
+  min-width: 100%;
+  min-height: 100%;
+  z-index: 1;
+  pointer-events: none; /* 点击穿透：行号栏区域不拦截编辑器交互 */
+}
+.editor-gutter {
+  position: sticky; /* 横向滚动时钉在可视区左缘；纵向随内容滚动保持行对齐 */
+  left: 0;
   width: 48px;
+  height: 100%; /* 由 wrap（按内容实测尺寸）撑满 */
   padding: 12px 0;
   color: #44506b;
   text-align: right;
   user-select: none;
   overflow: hidden;
-  z-index: 1;
   background: linear-gradient(90deg, #0b101b 0%, #0a0e16 100%);
   border-right: 1px solid rgba(44, 58, 85, 0.5);
 }
@@ -900,9 +907,13 @@ body {
 .editor-pre {
   position: absolute;
   left: 48px;
-  right: 0;
   top: 0;
-  bottom: 0;
+  /* 按内容真实宽度/高度撑开，横向滚动由 editor-body 统一提供；
+     right/bottom:0 会把层裁剪到可视区域，超长行/超高代码显示不全 */
+  width: max-content;
+  min-width: calc(100% - 48px);
+  height: max-content;
+  min-height: 100%;
   margin: 0;
   padding: 12px 16px;
   box-sizing: border-box;
@@ -936,6 +947,8 @@ body {
   position: relative; /* in-flow: defines the editor-body height */
   display: block;
   width: calc(100% - 48px);
+  /* 宽度由 CodeEditor 按高亮层实测设置（内联），长行时撑出横向滚动 */
+  min-width: calc(100% - 48px);
   margin: 0 0 0 48px;
   padding: 12px 16px;
   box-sizing: border-box;
@@ -945,7 +958,7 @@ body {
   border: none;
   outline: none;
   resize: none;
-  overflow: hidden; /* no internal scrollbar: the editor-body scrolls */
+  overflow: hidden; /* 内部不滚动：输入框与高亮层同宽，由 editor-body 统一滚动 */
   z-index: 2;
 }
 .editor-input::selection {

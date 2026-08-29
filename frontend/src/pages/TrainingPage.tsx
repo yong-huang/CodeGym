@@ -66,9 +66,9 @@ export default function TrainingPage({ id }: { id: string }) {
     setCode(next);
   };
 
-  const onAnswersChange = (ans: Record<string, string>) => {
+  const onAnswersChange = useCallback((ans: Record<string, string>) => {
     setAnswers(ans);
-  };
+  }, []);
 
   const onHint = (pointId: string, levelNo: number) => {
     setHintUsage((s) => ({ ...s, [pointId]: Math.max(s[pointId] ?? 0, levelNo) }));

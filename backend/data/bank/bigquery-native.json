@@ -476,11 +476,11 @@
     "points": [
       {
         "id": "prune_filter",
-        "text": "DATE(created_at) >= \"2026-01-01\"\n  AND DATE(created_at) < \"2026-02-01\"",
+        "text": "DATE(created_at) >= \"2026-01-01\"",
         "category": "bq_schema",
         "min_weight": "hard",
         "weight_score": 1,
-        "hint": "对分区键加范围条件，只扫一个月的分区",
+        "hint": "下界条件：分区键 >= 起点（配合下方 < 上界裁剪整月）",
         "fill_type": "text"
       },
       {

@@ -1102,6 +1102,7 @@ var categoryHint2Map = map[string]string{
 	"secret_data":   "📖 `data` 值必须 base64；`stringData` 自动编码",
 	"configmap":     "📖 ConfigMap 存非敏感配置，Pod 用 env 或 volume 引用",
 	"config":        "📖 找出该配置对应的键，填上正确的取值（注意数字/字符串引号、单位）",
+	"docker_env":    "📖 Docker 环境变量：Dockerfile 用 `ENV 键=值`；compose 的 `environment:` 下用 `键: 值` 逐行设置（字符串可加引号）",
 	"env":           "📖 env 注入环境变量：直接 value，或 valueFrom 引用 ConfigMap/Secret",
 	"volume":        "📖 卷先声明来源（emptyDir/PVC/ConfigMap…），再用 volumeMounts 挂载",
 	"mount_path":    "📖 挂载到容器内的绝对路径",

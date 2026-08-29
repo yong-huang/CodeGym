@@ -24,7 +24,8 @@ type seedPoint struct {
 	options           []string
 	acceptableAnswers []string
 	alwaysFill        bool
-	occurrence        int // 0-based occurrence of `text` to use
+	occurrence        int   // 0-based occurrence of `text` to use
+	orderGroup        string // 顺序可互换分组（同组判题时双射匹配）
 }
 
 type seedExercise struct {
@@ -63,6 +64,7 @@ type bankPointJSON struct {
 	AcceptableAnswers []string `json:"acceptable_answers,omitempty"`
 	AlwaysFill        bool     `json:"always_fill,omitempty"`
 	Occurrence        int      `json:"occurrence,omitempty"`
+	OrderGroup        string   `json:"order_group,omitempty"`
 }
 
 // bankSeedJSON is the on-disk JSON schema of one question.
@@ -92,7 +94,7 @@ func (j bankPointJSON) toSeed() seedPoint {
 		id: j.ID, text: j.Text, category: j.Category, minWeight: j.MinWeight,
 		weightScore: j.WeightScore, hint: j.Hint, fillType: j.FillType,
 		options: j.Options, acceptableAnswers: j.AcceptableAnswers,
-		alwaysFill: j.AlwaysFill, occurrence: j.Occurrence,
+		alwaysFill: j.AlwaysFill, occurrence: j.Occurrence, orderGroup: j.OrderGroup,
 	}
 }
 
@@ -101,7 +103,7 @@ func (p seedPoint) toBankJSON() bankPointJSON {
 		ID: p.id, Text: p.text, Category: p.category, MinWeight: p.minWeight,
 		WeightScore: p.weightScore, Hint: p.hint, FillType: p.fillType,
 		Options: p.options, AcceptableAnswers: p.acceptableAnswers,
-		AlwaysFill: p.alwaysFill, Occurrence: p.occurrence,
+		AlwaysFill: p.alwaysFill, Occurrence: p.occurrence, OrderGroup: p.orderGroup,
 	}
 }
 
@@ -191,6 +193,7 @@ func buildExercise(s seedExercise) (model.Exercise, error) {
 			Hint:              p.hint,
 			FillType:          p.fillType,
 			Options:           p.options,
+			OrderGroup:        p.orderGroup,
 		})
 	}
 	// fill points are fully baked into the bank JSON (including auto ones),
@@ -267,14 +270,6 @@ func CategoryPlan() []CategoryPair {
 		{Tech: "openshift", Sub: "高级"},
 		{Tech: "openshift", Sub: "实战"},
 		{Tech: "openshift", Sub: "web"},
-		{Tech: "docker", Sub: "基础"},
-		{Tech: "docker", Sub: "高级"},
-		{Tech: "docker", Sub: "实战"},
-		{Tech: "docker", Sub: "web"},
-		{Tech: "prometheus", Sub: "基础"},
-		{Tech: "prometheus", Sub: "高级"},
-		{Tech: "prometheus", Sub: "实战"},
-		{Tech: "prometheus", Sub: "web"},
 		{Tech: "sql", Sub: "基础"},
 		{Tech: "sql", Sub: "高级"},
 		{Tech: "sql", Sub: "实战"},
@@ -286,6 +281,8 @@ func CategoryPlan() []CategoryPair {
 		{Tech: "bigquery", Sub: "web"},
 		{Tech: "devops", Sub: "terraform"},
 		{Tech: "devops", Sub: "ansible"},
+		{Tech: "devops", Sub: "docker"},
+		{Tech: "devops", Sub: "prometheus"},
 		{Tech: "devops", Sub: "高级"},
 		{Tech: "devops", Sub: "实战"},
 		{Tech: "devops", Sub: "web"},

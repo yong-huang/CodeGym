@@ -85,6 +85,9 @@ type FillPoint struct {
 	Hint              string       `json:"hint"`
 	FillType          string       `json:"fill_type"` // text / select / code / code_block
 	Options           []string     `json:"options,omitempty"`
+	// OrderGroup 标记一组位置可互换的训练点（如 HCL/YAML 块内先后无关的属性行）。
+	// 同组训练点判题时做双射匹配：学员把两行写反同样判对。为空表示顺序敏感。
+	OrderGroup string `json:"order_group,omitempty"`
 }
 
 // FillPointsConfig holds the points list plus density bounds.

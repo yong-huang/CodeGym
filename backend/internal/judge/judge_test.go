@@ -82,6 +82,58 @@ func TestGradeFillWrongAnswer(t *testing.T) {
 	}
 }
 
+func TestGradeFillOrderGroupSwap(t *testing.T) {
+	// devops-terra-028：HCL 块内两行属性顺序无关，写反也应判对
+	grouped := []model.FillPoint{
+		{ID: "type_attr", OriginalText: "type      = string", WeightScore: 1, OrderGroup: "attrs"},
+		{ID: "sensitive", OriginalText: "sensitive = true", WeightScore: 1, OrderGroup: "attrs"},
+	}
+	ex := model.Exercise{FillPoints: model.FillPointsConfig{Points: grouped}}
+	swapped := map[string]string{
+		"FILL_type_attr": "sensitive = true",
+		"FILL_sensitive": "type = string",
+	}
+
+	results, total := GradeFill(ex, grouped, swapped, "", "", map[string]int{})
+	if total != 100 {
+		t.Errorf("swapped interchangeable lines should score 100, got %v", total)
+	}
+	for _, r := range results {
+		if !r.IsCorrect {
+			t.Errorf("point %s should be correct after swap (expected %q, answered %q)", r.PointID, r.Expected, r.UserAnswer)
+		}
+	}
+
+	// 无分组时同样的互换仍判错（默认顺序敏感）
+	plain := []model.FillPoint{
+		{ID: "type_attr", OriginalText: "type      = string", WeightScore: 1},
+		{ID: "sensitive", OriginalText: "sensitive = true", WeightScore: 1},
+	}
+	_, total = GradeFill(ex, plain, swapped, "", "", map[string]int{})
+	if total != 0 {
+		t.Errorf("without order_group, swapped answers should score 0, got %v", total)
+	}
+
+	// 两空填同样内容：双射匹配下只能对一个训练点，防止糊弄
+	dup := map[string]string{
+		"FILL_type_attr": "sensitive = true",
+		"FILL_sensitive": "sensitive = true",
+	}
+	results, total = GradeFill(ex, grouped, dup, "", "", map[string]int{})
+	if total != 50 {
+		t.Errorf("duplicated answer should score 50, got %v", total)
+	}
+	correct := 0
+	for _, r := range results {
+		if r.IsCorrect {
+			correct++
+		}
+	}
+	if correct != 1 {
+		t.Errorf("duplicated answer should match exactly one point, got %d", correct)
+	}
+}
+
 func TestGradeBugfix(t *testing.T) {
 	ex := model.Exercise{
 		FullCode: "def f():\n    return 1\n",

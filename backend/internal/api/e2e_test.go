@@ -982,11 +982,17 @@ func TestE2E_K8sBasics(t *testing.T) {
 		t.Errorf("k8s-sched-003 => score=%v correct=%v", res.Score, res.IsCorrect)
 	}
 
-	// Prometheus bank: exactly 30, a promql + a config question answer correctly
+	// Prometheus bank: exactly 30 under devops, a promql + a config question answer correctly
 	var promList []struct{ ID string `json:"id"` }
-	doJSON(t, "GET", base+"/exercises?tech_stack=prometheus", nil, &promList)
-	if len(promList) != 30 {
-		t.Fatalf("prometheus count = %d, want 30", len(promList))
+	doJSON(t, "GET", base+"/exercises?tech_stack=devops", nil, &promList)
+	nProm := 0
+	for _, it := range promList {
+		if strings.HasPrefix(it.ID, "prom-") {
+			nProm++
+		}
+	}
+	if nProm != 30 {
+		t.Fatalf("prometheus count = %d, want 30", nProm)
 	}
 	doJSON(t, "POST", base+"/execute", map[string]any{
 		"exercise_id":  "prom-basics-011",
@@ -1033,11 +1039,11 @@ func TestE2E_K8sBasics(t *testing.T) {
 		t.Errorf("py-basics-016 => output=%q score=%v correct=%v", pyExec.Output, pyExec.Score, pyExec.IsCorrect)
 	}
 
-	// Docker 基础 bank: exactly 50, command + Dockerfile answer-match
+	// Docker 基础 bank: exactly 50 under devops, command + Dockerfile answer-match
 	var dkList []struct {
 		ID string `json:"id"`
 	}
-	doJSON(t, "GET", base+"/exercises?tech_stack=docker", nil, &dkList)
+	doJSON(t, "GET", base+"/exercises?tech_stack=devops", nil, &dkList)
 	nDk := 0
 	for _, it := range dkList {
 		if strings.HasPrefix(it.ID, "docker-basics-") {

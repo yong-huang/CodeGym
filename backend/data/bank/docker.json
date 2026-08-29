@@ -4,10 +4,10 @@
     "title": "构建镜像",
     "description": "从当前目录构建镜像并打标签",
     "exercise_type": "command",
-    "tech_stack": "docker",
+    "tech_stack": "devops",
     "weight": "easy",
     "category": "docker_build",
-    "subcategory": "基础",
+    "subcategory": "docker",
     "full_code": "docker build -t myapp:v1 .",
     "expected": "",
     "points": [
@@ -34,10 +34,10 @@
     "title": "后台运行容器",
     "description": "以后台守护方式运行 nginx",
     "exercise_type": "command",
-    "tech_stack": "docker",
+    "tech_stack": "devops",
     "weight": "easy",
     "category": "docker_run",
-    "subcategory": "基础",
+    "subcategory": "docker",
     "full_code": "docker run -d nginx",
     "expected": "",
     "points": [
@@ -64,10 +64,10 @@
     "title": "交互运行",
     "description": "以交互式终端运行 Ubuntu",
     "exercise_type": "command",
-    "tech_stack": "docker",
+    "tech_stack": "devops",
     "weight": "easy",
     "category": "docker_run",
-    "subcategory": "基础",
+    "subcategory": "docker",
     "full_code": "docker run -it ubuntu bash",
     "expected": "",
     "points": [
@@ -94,10 +94,10 @@
     "title": "端口映射",
     "description": "把容器 80 映射到主机 8080",
     "exercise_type": "command",
-    "tech_stack": "docker",
+    "tech_stack": "devops",
     "weight": "easy",
     "category": "docker_run",
-    "subcategory": "基础",
+    "subcategory": "docker",
     "full_code": "docker run -p 8080:80 nginx",
     "expected": "",
     "points": [
@@ -124,10 +124,10 @@
     "title": "挂载数据卷",
     "description": "把宿主机目录挂载进容器",
     "exercise_type": "command",
-    "tech_stack": "docker",
+    "tech_stack": "devops",
     "weight": "easy",
     "category": "docker_run",
-    "subcategory": "基础",
+    "subcategory": "docker",
     "full_code": "docker run -v /data:/data nginx",
     "expected": "",
     "points": [
@@ -154,10 +154,10 @@
     "title": "设置环境变量",
     "description": "运行容器并设置环境变量",
     "exercise_type": "command",
-    "tech_stack": "docker",
+    "tech_stack": "devops",
     "weight": "easy",
     "category": "docker_run",
-    "subcategory": "基础",
+    "subcategory": "docker",
     "full_code": "docker run -e MODE=prod nginx",
     "expected": "",
     "points": [
@@ -184,10 +184,10 @@
     "title": "指定容器名",
     "description": "运行容器并命名为 web",
     "exercise_type": "command",
-    "tech_stack": "docker",
+    "tech_stack": "devops",
     "weight": "easy",
     "category": "docker_run",
-    "subcategory": "基础",
+    "subcategory": "docker",
     "full_code": "docker run --name web nginx",
     "expected": "",
     "points": [
@@ -203,7 +203,7 @@
     ],
     "hints": {
       "level_1": "💡 指定容器名的选项",
-      "level_2": "📖 `--name \u003c名\u003e`",
+      "level_2": "📖 `--name <名>`",
       "level_3": "👀 `docker run --name web nginx`",
       "level_4": "📝 正确答案：docker run --name web nginx"
     },
@@ -214,10 +214,10 @@
     "title": "拉取镜像",
     "description": "拉取 nginx:1.25 镜像",
     "exercise_type": "command",
-    "tech_stack": "docker",
+    "tech_stack": "devops",
     "weight": "easy",
     "category": "docker_pull",
-    "subcategory": "基础",
+    "subcategory": "docker",
     "full_code": "docker pull nginx:1.25",
     "expected": "",
     "points": [
@@ -233,7 +233,7 @@
     ],
     "hints": {
       "level_1": "💡 拉取镜像的命令",
-      "level_2": "📖 `docker pull \u003c镜像\u003e`",
+      "level_2": "📖 `docker pull <镜像>`",
       "level_3": "👀 `docker pull nginx:1.25`",
       "level_4": "📝 正确答案：docker pull nginx:1.25"
     },
@@ -244,10 +244,10 @@
     "title": "查看镜像",
     "description": "列出本地镜像",
     "exercise_type": "command",
-    "tech_stack": "docker",
+    "tech_stack": "devops",
     "weight": "easy",
     "category": "docker_ps",
-    "subcategory": "基础",
+    "subcategory": "docker",
     "full_code": "docker images",
     "expected": "",
     "points": [
@@ -274,10 +274,10 @@
     "title": "查看运行容器",
     "description": "列出正在运行的容器",
     "exercise_type": "command",
-    "tech_stack": "docker",
+    "tech_stack": "devops",
     "weight": "easy",
     "category": "docker_ps",
-    "subcategory": "基础",
+    "subcategory": "docker",
     "full_code": "docker ps",
     "expected": "",
     "points": [
@@ -304,10 +304,10 @@
     "title": "查看所有容器",
     "description": "列出所有容器（含已停止）",
     "exercise_type": "command",
-    "tech_stack": "docker",
+    "tech_stack": "devops",
     "weight": "easy",
     "category": "docker_ps",
-    "subcategory": "基础",
+    "subcategory": "docker",
     "full_code": "docker ps -a",
     "expected": "",
     "points": [
@@ -334,10 +334,10 @@
     "title": "停止容器",
     "description": "停止 web 容器",
     "exercise_type": "command",
-    "tech_stack": "docker",
+    "tech_stack": "devops",
     "weight": "easy",
     "category": "docker_stop",
-    "subcategory": "基础",
+    "subcategory": "docker",
     "full_code": "docker stop web",
     "expected": "",
     "points": [
@@ -353,7 +353,7 @@
     ],
     "hints": {
       "level_1": "💡 停止容器的命令",
-      "level_2": "📖 `docker stop \u003c名\u003e`",
+      "level_2": "📖 `docker stop <名>`",
       "level_3": "👀 `docker stop web`",
       "level_4": "📝 正确答案：docker stop web"
     },
@@ -364,10 +364,10 @@
     "title": "启动容器",
     "description": "启动已停止的 web 容器",
     "exercise_type": "command",
-    "tech_stack": "docker",
+    "tech_stack": "devops",
     "weight": "easy",
     "category": "docker_start",
-    "subcategory": "基础",
+    "subcategory": "docker",
     "full_code": "docker start web",
     "expected": "",
     "points": [
@@ -383,7 +383,7 @@
     ],
     "hints": {
       "level_1": "💡 启动容器的命令",
-      "level_2": "📖 `docker start \u003c名\u003e`",
+      "level_2": "📖 `docker start <名>`",
       "level_3": "👀 `docker start web`",
       "level_4": "📝 正确答案：docker start web"
     },
@@ -394,10 +394,10 @@
     "title": "删除容器",
     "description": "删除 web 容器",
     "exercise_type": "command",
-    "tech_stack": "docker",
+    "tech_stack": "devops",
     "weight": "easy",
     "category": "docker_rm",
-    "subcategory": "基础",
+    "subcategory": "docker",
     "full_code": "docker rm web",
     "expected": "",
     "points": [
@@ -413,7 +413,7 @@
     ],
     "hints": {
       "level_1": "💡 删除容器的命令",
-      "level_2": "📖 `docker rm \u003c名\u003e`",
+      "level_2": "📖 `docker rm <名>`",
       "level_3": "👀 `docker rm web`",
       "level_4": "📝 正确答案：docker rm web"
     },
@@ -424,10 +424,10 @@
     "title": "强制删除运行容器",
     "description": "强制删除正在运行的容器",
     "exercise_type": "command",
-    "tech_stack": "docker",
+    "tech_stack": "devops",
     "weight": "easy",
     "category": "docker_rm",
-    "subcategory": "基础",
+    "subcategory": "docker",
     "full_code": "docker rm -f web",
     "expected": "",
     "points": [
@@ -454,10 +454,10 @@
     "title": "删除镜像",
     "description": "删除本地 nginx 镜像",
     "exercise_type": "command",
-    "tech_stack": "docker",
+    "tech_stack": "devops",
     "weight": "easy",
     "category": "docker_rmi",
-    "subcategory": "基础",
+    "subcategory": "docker",
     "full_code": "docker rmi nginx",
     "expected": "",
     "points": [
@@ -473,7 +473,7 @@
     ],
     "hints": {
       "level_1": "💡 删除镜像的命令",
-      "level_2": "📖 `docker rmi \u003c镜像\u003e`",
+      "level_2": "📖 `docker rmi <镜像>`",
       "level_3": "👀 `docker rmi nginx`",
       "level_4": "📝 正确答案：docker rmi nginx"
     },
@@ -484,10 +484,10 @@
     "title": "进入容器",
     "description": "进入 web 容器的 bash",
     "exercise_type": "command",
-    "tech_stack": "docker",
+    "tech_stack": "devops",
     "weight": "easy",
     "category": "docker_exec",
-    "subcategory": "基础",
+    "subcategory": "docker",
     "full_code": "docker exec -it web bash",
     "expected": "",
     "points": [
@@ -503,7 +503,7 @@
     ],
     "hints": {
       "level_1": "💡 进入容器执行的命令",
-      "level_2": "📖 `docker exec -it \u003c名\u003e bash`",
+      "level_2": "📖 `docker exec -it <名> bash`",
       "level_3": "👀 `docker exec -it web bash`",
       "level_4": "📝 正确答案：docker exec -it web bash"
     },
@@ -514,10 +514,10 @@
     "title": "查看容器日志",
     "description": "查看 web 容器日志",
     "exercise_type": "command",
-    "tech_stack": "docker",
+    "tech_stack": "devops",
     "weight": "easy",
     "category": "docker_logs",
-    "subcategory": "基础",
+    "subcategory": "docker",
     "full_code": "docker logs web",
     "expected": "",
     "points": [
@@ -533,7 +533,7 @@
     ],
     "hints": {
       "level_1": "💡 查看日志的命令",
-      "level_2": "📖 `docker logs \u003c名\u003e`",
+      "level_2": "📖 `docker logs <名>`",
       "level_3": "👀 `docker logs web`",
       "level_4": "📝 正确答案：docker logs web"
     },
@@ -544,10 +544,10 @@
     "title": "实时跟随日志",
     "description": "实时输出 web 容器日志",
     "exercise_type": "command",
-    "tech_stack": "docker",
+    "tech_stack": "devops",
     "weight": "easy",
     "category": "docker_logs",
-    "subcategory": "基础",
+    "subcategory": "docker",
     "full_code": "docker logs -f web",
     "expected": "",
     "points": [
@@ -574,10 +574,10 @@
     "title": "容器详情",
     "description": "查看 web 容器详细配置",
     "exercise_type": "command",
-    "tech_stack": "docker",
+    "tech_stack": "devops",
     "weight": "easy",
     "category": "docker_inspect",
-    "subcategory": "基础",
+    "subcategory": "docker",
     "full_code": "docker inspect web",
     "expected": "",
     "points": [
@@ -593,7 +593,7 @@
     ],
     "hints": {
       "level_1": "💡 查看容器详情的命令",
-      "level_2": "📖 `docker inspect \u003c名\u003e`",
+      "level_2": "📖 `docker inspect <名>`",
       "level_3": "👀 `docker inspect web`",
       "level_4": "📝 正确答案：docker inspect web"
     },
@@ -604,10 +604,10 @@
     "title": "查看端口映射",
     "description": "查看 web 容器的端口映射",
     "exercise_type": "command",
-    "tech_stack": "docker",
+    "tech_stack": "devops",
     "weight": "easy",
     "category": "docker_port",
-    "subcategory": "基础",
+    "subcategory": "docker",
     "full_code": "docker port web",
     "expected": "",
     "points": [
@@ -623,7 +623,7 @@
     ],
     "hints": {
       "level_1": "💡 查看端口映射的命令",
-      "level_2": "📖 `docker port \u003c名\u003e`",
+      "level_2": "📖 `docker port <名>`",
       "level_3": "👀 `docker port web`",
       "level_4": "📝 正确答案：docker port web"
     },
@@ -634,10 +634,10 @@
     "title": "复制文件",
     "description": "把本地文件复制进容器",
     "exercise_type": "command",
-    "tech_stack": "docker",
+    "tech_stack": "devops",
     "weight": "easy",
     "category": "docker_cp",
-    "subcategory": "基础",
+    "subcategory": "docker",
     "full_code": "docker cp app.txt web:/tmp",
     "expected": "",
     "points": [
@@ -653,7 +653,7 @@
     ],
     "hints": {
       "level_1": "💡 复制文件的命令",
-      "level_2": "📖 `docker cp 本地 \u003c名\u003e:路径`",
+      "level_2": "📖 `docker cp 本地 <名>:路径`",
       "level_3": "👀 `docker cp app.txt web:/tmp`",
       "level_4": "📝 正确答案：docker cp app.txt web:/tmp"
     },
@@ -664,10 +664,10 @@
     "title": "资源统计",
     "description": "实时查看容器资源占用",
     "exercise_type": "command",
-    "tech_stack": "docker",
+    "tech_stack": "devops",
     "weight": "easy",
     "category": "docker_stats",
-    "subcategory": "基础",
+    "subcategory": "docker",
     "full_code": "docker stats",
     "expected": "",
     "points": [
@@ -694,10 +694,10 @@
     "title": "查看网络",
     "description": "列出 Docker 网络",
     "exercise_type": "command",
-    "tech_stack": "docker",
+    "tech_stack": "devops",
     "weight": "easy",
     "category": "docker_network",
-    "subcategory": "基础",
+    "subcategory": "docker",
     "full_code": "docker network ls",
     "expected": "",
     "points": [
@@ -724,10 +724,10 @@
     "title": "查看数据卷",
     "description": "列出 Docker 数据卷",
     "exercise_type": "command",
-    "tech_stack": "docker",
+    "tech_stack": "devops",
     "weight": "easy",
     "category": "docker_volume",
-    "subcategory": "基础",
+    "subcategory": "docker",
     "full_code": "docker volume ls",
     "expected": "",
     "points": [
@@ -754,10 +754,10 @@
     "title": "打镜像标签",
     "description": "给镜像打新标签",
     "exercise_type": "command",
-    "tech_stack": "docker",
+    "tech_stack": "devops",
     "weight": "easy",
     "category": "docker_tag",
-    "subcategory": "基础",
+    "subcategory": "docker",
     "full_code": "docker tag myapp myrepo/myapp:v1",
     "expected": "",
     "points": [
@@ -784,10 +784,10 @@
     "title": "推送镜像",
     "description": "把镜像推送到仓库",
     "exercise_type": "command",
-    "tech_stack": "docker",
+    "tech_stack": "devops",
     "weight": "easy",
     "category": "docker_push",
-    "subcategory": "基础",
+    "subcategory": "docker",
     "full_code": "docker push myrepo/myapp:v1",
     "expected": "",
     "points": [
@@ -803,7 +803,7 @@
     ],
     "hints": {
       "level_1": "💡 推送镜像的命令",
-      "level_2": "📖 `docker push \u003c仓库\u003e/\u003c名\u003e:\u003ctag\u003e`",
+      "level_2": "📖 `docker push <仓库>/<名>:<tag>`",
       "level_3": "👀 `docker push myrepo/myapp:v1`",
       "level_4": "📝 正确答案：docker push myrepo/myapp:v1"
     },
@@ -814,10 +814,10 @@
     "title": "保存镜像",
     "description": "把镜像保存为 tar 文件",
     "exercise_type": "command",
-    "tech_stack": "docker",
+    "tech_stack": "devops",
     "weight": "easy",
     "category": "docker_save",
-    "subcategory": "基础",
+    "subcategory": "docker",
     "full_code": "docker save -o app.tar myapp:v1",
     "expected": "",
     "points": [
@@ -833,7 +833,7 @@
     ],
     "hints": {
       "level_1": "💡 保存镜像的命令",
-      "level_2": "📖 `docker save -o \u003c文件\u003e \u003c镜像\u003e`",
+      "level_2": "📖 `docker save -o <文件> <镜像>`",
       "level_3": "👀 `docker save -o app.tar myapp:v1`",
       "level_4": "📝 正确答案：docker save -o app.tar myapp:v1"
     },
@@ -844,11 +844,11 @@
     "title": "导出容器文件系统",
     "description": "把容器导出为 tar",
     "exercise_type": "command",
-    "tech_stack": "docker",
+    "tech_stack": "devops",
     "weight": "easy",
     "category": "docker_export",
-    "subcategory": "基础",
-    "full_code": "docker export web \u003e web.tar",
+    "subcategory": "docker",
+    "full_code": "docker export web > web.tar",
     "expected": "",
     "points": [
       {
@@ -863,9 +863,9 @@
     ],
     "hints": {
       "level_1": "💡 导出容器的命令",
-      "level_2": "📖 `docker export \u003c名\u003e`",
+      "level_2": "📖 `docker export <名>`",
       "level_3": "👀 `docker export web`",
-      "level_4": "📝 正确答案：docker export web \u003e web.tar"
+      "level_4": "📝 正确答案：docker export web > web.tar"
     },
     "explanation": "`export` 导出容器文件系统（不含元数据），与 `save`（镜像）不同。"
   },
@@ -874,10 +874,10 @@
     "title": "清理未用资源",
     "description": "清理未使用的镜像/容器/网络",
     "exercise_type": "command",
-    "tech_stack": "docker",
+    "tech_stack": "devops",
     "weight": "easy",
     "category": "docker_prune",
-    "subcategory": "基础",
+    "subcategory": "docker",
     "full_code": "docker system prune",
     "expected": "",
     "points": [
@@ -904,10 +904,10 @@
     "title": "compose 启动",
     "description": "后台启动 compose 服务",
     "exercise_type": "command",
-    "tech_stack": "docker",
+    "tech_stack": "devops",
     "weight": "easy",
     "category": "docker_compose",
-    "subcategory": "基础",
+    "subcategory": "docker",
     "full_code": "docker compose up -d",
     "expected": "",
     "points": [
@@ -934,10 +934,10 @@
     "title": "compose 停止",
     "description": "停止并移除 compose 服务",
     "exercise_type": "command",
-    "tech_stack": "docker",
+    "tech_stack": "devops",
     "weight": "easy",
     "category": "docker_compose",
-    "subcategory": "基础",
+    "subcategory": "docker",
     "full_code": "docker compose down",
     "expected": "",
     "points": [
@@ -964,10 +964,10 @@
     "title": "Dockerfile 基础镜像",
     "description": "用 FROM 指定基础镜像",
     "exercise_type": "config",
-    "tech_stack": "docker",
+    "tech_stack": "devops",
     "weight": "medium",
     "category": "dockerfile",
-    "subcategory": "基础",
+    "subcategory": "docker",
     "full_code": "FROM python:3.11-slim",
     "expected": "",
     "points": [
@@ -994,11 +994,11 @@
     "title": "Dockerfile 执行命令",
     "description": "构建时安装依赖",
     "exercise_type": "config",
-    "tech_stack": "docker",
+    "tech_stack": "devops",
     "weight": "medium",
     "category": "dockerfile",
-    "subcategory": "基础",
-    "full_code": "FROM ubuntu:22.04\nRUN apt-get update \u0026\u0026 apt-get install -y curl",
+    "subcategory": "docker",
+    "full_code": "FROM ubuntu:22.04\nRUN apt-get update && apt-get install -y curl",
     "expected": "",
     "points": [
       {
@@ -1024,19 +1024,19 @@
       "level_1": "💡 `apt-get update` / `apt-get install -y curl`",
       "level_2": "📖 RUN 指令",
       "level_3": "👀 `RUN` 在构建镜像时执行命令",
-      "level_4": "📝 正确答案：FROM ubuntu:22.04\nRUN apt-get update \u0026\u0026 apt-get install -y curl"
+      "level_4": "📝 正确答案：FROM ubuntu:22.04\nRUN apt-get update && apt-get install -y curl"
     },
-    "explanation": "`RUN` 在构建阶段执行命令，`\u0026\u0026` 串联可减少镜像层。"
+    "explanation": "`RUN` 在构建阶段执行命令，`&&` 串联可减少镜像层。"
   },
   {
     "id": "docker-basics-035",
     "title": "COPY 拷贝文件",
     "description": "把本地目录拷贝进镜像",
     "exercise_type": "config",
-    "tech_stack": "docker",
+    "tech_stack": "devops",
     "weight": "medium",
     "category": "dockerfile",
-    "subcategory": "基础",
+    "subcategory": "docker",
     "full_code": "FROM python:3.11-slim\nWORKDIR /app\nCOPY . .",
     "expected": "",
     "points": [
@@ -1072,10 +1072,10 @@
     "title": "ADD 拷贝与解压",
     "description": "用 ADD 拷贝并可自动解压",
     "exercise_type": "config",
-    "tech_stack": "docker",
+    "tech_stack": "devops",
     "weight": "medium",
     "category": "dockerfile",
-    "subcategory": "基础",
+    "subcategory": "docker",
     "full_code": "FROM ubuntu:22.04\nADD app.tar.gz /app/",
     "expected": "",
     "points": [
@@ -1102,10 +1102,10 @@
     "title": "CMD 默认命令",
     "description": "设容器默认启动命令",
     "exercise_type": "config",
-    "tech_stack": "docker",
+    "tech_stack": "devops",
     "weight": "medium",
     "category": "dockerfile",
-    "subcategory": "基础",
+    "subcategory": "docker",
     "full_code": "FROM nginx:1.25\nCMD [\"nginx\", \"-g\", \"daemon off;\"]",
     "expected": "",
     "points": [
@@ -1141,10 +1141,10 @@
     "title": "ENTRYPOINT 入口",
     "description": "设置不可覆盖的入口命令",
     "exercise_type": "config",
-    "tech_stack": "docker",
+    "tech_stack": "devops",
     "weight": "medium",
     "category": "dockerfile",
-    "subcategory": "基础",
+    "subcategory": "docker",
     "full_code": "FROM python:3.11-slim\nENTRYPOINT [\"python\", \"app.py\"]",
     "expected": "",
     "points": [
@@ -1171,10 +1171,10 @@
     "title": "EXPOSE 端口",
     "description": "声明容器监听端口",
     "exercise_type": "config",
-    "tech_stack": "docker",
+    "tech_stack": "devops",
     "weight": "medium",
     "category": "dockerfile",
-    "subcategory": "基础",
+    "subcategory": "docker",
     "full_code": "FROM nginx:1.25\nEXPOSE 80",
     "expected": "",
     "points": [
@@ -1201,20 +1201,20 @@
     "title": "ENV 环境变量",
     "description": "在镜像内设置环境变量",
     "exercise_type": "config",
-    "tech_stack": "docker",
+    "tech_stack": "devops",
     "weight": "medium",
     "category": "dockerfile",
-    "subcategory": "基础",
+    "subcategory": "docker",
     "full_code": "FROM python:3.11-slim\nENV PYTHONUNBUFFERED=1",
     "expected": "",
     "points": [
       {
         "id": "env",
         "text": "PYTHONUNBUFFERED=1",
-        "category": "env",
+        "category": "docker_env",
         "min_weight": "beginner",
         "weight_score": 1,
-        "hint": "环境变量键值",
+        "hint": "环境变量键值（ENV 键=值）",
         "fill_type": "text"
       }
     ],
@@ -1231,10 +1231,10 @@
     "title": "ARG 构建参数",
     "description": "声明可传参的构建变量",
     "exercise_type": "config",
-    "tech_stack": "docker",
+    "tech_stack": "devops",
     "weight": "medium",
     "category": "dockerfile",
-    "subcategory": "基础",
+    "subcategory": "docker",
     "full_code": "FROM python:3.11-slim\nARG VERSION=1.0\nRUN echo $VERSION",
     "expected": "",
     "points": [
@@ -1261,11 +1261,11 @@
     "title": "USER 运行用户",
     "description": "以非 root 用户运行",
     "exercise_type": "config",
-    "tech_stack": "docker",
+    "tech_stack": "devops",
     "weight": "medium",
     "category": "dockerfile",
-    "subcategory": "基础",
-    "full_code": "FROM ubuntu:22.04\nRUN groupadd -r app \u0026\u0026 useradd -r -g app app\nUSER app",
+    "subcategory": "docker",
+    "full_code": "FROM ubuntu:22.04\nRUN groupadd -r app && useradd -r -g app app\nUSER app",
     "expected": "",
     "points": [
       {
@@ -1282,7 +1282,7 @@
       "level_1": "💡 `USER app`",
       "level_2": "📖 USER 指令",
       "level_3": "👀 `USER` 切换后续 RUN/CMD 的运行用户",
-      "level_4": "📝 正确答案：FROM ubuntu:22.04\nRUN groupadd -r app \u0026\u0026 useradd -r -g app app\nUSER app"
+      "level_4": "📝 正确答案：FROM ubuntu:22.04\nRUN groupadd -r app && useradd -r -g app app\nUSER app"
     },
     "explanation": "`USER` 设置镜像内后续操作以非 root 用户执行，提升安全性。"
   },
@@ -1291,10 +1291,10 @@
     "title": "VOLUME 声明卷",
     "description": "声明匿名数据卷",
     "exercise_type": "config",
-    "tech_stack": "docker",
+    "tech_stack": "devops",
     "weight": "medium",
     "category": "dockerfile",
-    "subcategory": "基础",
+    "subcategory": "docker",
     "full_code": "FROM nginx:1.25\nVOLUME /var/www/html",
     "expected": "",
     "points": [
@@ -1321,10 +1321,10 @@
     "title": "HEALTHCHECK 健康检查",
     "description": "给镜像加健康检查",
     "exercise_type": "config",
-    "tech_stack": "docker",
+    "tech_stack": "devops",
     "weight": "medium",
     "category": "dockerfile",
-    "subcategory": "基础",
+    "subcategory": "docker",
     "full_code": "FROM nginx:1.25\nHEALTHCHECK CMD curl -f http://localhost/ || exit 1",
     "expected": "",
     "points": [
@@ -1341,7 +1341,7 @@
     "hints": {
       "level_1": "💡 `curl -f http://localhost/`",
       "level_2": "📖 HEALTHCHECK 指令",
-      "level_3": "👀 `HEALTHCHECK CMD \u003c命令\u003e` 定义健康探测",
+      "level_3": "👀 `HEALTHCHECK CMD <命令>` 定义健康探测",
       "level_4": "📝 正确答案：FROM nginx:1.25\nHEALTHCHECK CMD curl -f http://localhost/ || exit 1"
     },
     "explanation": "HEALTHCHECK 让 Docker 定时探测容器健康，失败会标记 unhealthy。"
@@ -1351,10 +1351,10 @@
     "title": "LABEL 元数据",
     "description": "给镜像打标签元数据",
     "exercise_type": "config",
-    "tech_stack": "docker",
+    "tech_stack": "devops",
     "weight": "medium",
     "category": "dockerfile",
-    "subcategory": "基础",
+    "subcategory": "docker",
     "full_code": "FROM nginx:1.25\nLABEL maintainer=\"ops@example.com\"",
     "expected": "",
     "points": [
@@ -1381,10 +1381,10 @@
     "title": "compose 服务与镜像",
     "description": "定义一个服务并指定镜像",
     "exercise_type": "config",
-    "tech_stack": "docker",
+    "tech_stack": "devops",
     "weight": "medium",
     "category": "compose",
-    "subcategory": "基础",
+    "subcategory": "docker",
     "full_code": "services:\n  web:\n    image: nginx:1.25",
     "expected": "",
     "points": [
@@ -1411,10 +1411,10 @@
     "title": "compose 端口映射",
     "description": "映射服务端口",
     "exercise_type": "config",
-    "tech_stack": "docker",
+    "tech_stack": "devops",
     "weight": "medium",
     "category": "compose",
-    "subcategory": "基础",
+    "subcategory": "docker",
     "full_code": "services:\n  web:\n    image: nginx:1.25\n    ports:\n    - \"8080:80\"",
     "expected": "",
     "points": [
@@ -1441,10 +1441,10 @@
     "title": "compose 数据卷",
     "description": "为服务挂载数据卷",
     "exercise_type": "config",
-    "tech_stack": "docker",
+    "tech_stack": "devops",
     "weight": "medium",
     "category": "compose",
-    "subcategory": "基础",
+    "subcategory": "docker",
     "full_code": "services:\n  db:\n    image: postgres:15\n    volumes:\n    - db-data:/var/lib/postgresql/data\nvolumes:\n  db-data:",
     "expected": "",
     "points": [
@@ -1489,21 +1489,27 @@
     "title": "compose 环境变量",
     "description": "给服务设置环境变量",
     "exercise_type": "config",
-    "tech_stack": "docker",
+    "tech_stack": "devops",
     "weight": "medium",
     "category": "compose",
-    "subcategory": "基础",
+    "subcategory": "docker",
     "full_code": "services:\n  web:\n    image: myapp\n    environment:\n      MODE: prod\n      DEBUG: \"false\"",
     "expected": "",
     "points": [
       {
         "id": "mode",
-        "text": "prod",
-        "category": "env",
+        "text": "MODE: prod",
+        "category": "docker_env",
         "min_weight": "beginner",
         "weight_score": 1,
-        "hint": "环境变量值",
-        "fill_type": "text"
+        "hint": "环境变量赋值：键: 值",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "mode: prod",
+          "MODE=prod",
+          "mode=prod",
+          "MODE:prod"
+        ]
       },
       {
         "id": "auto_image_myapp",
@@ -1511,27 +1517,27 @@
         "category": "config",
         "min_weight": "easy",
         "weight_score": 0.7,
-        "hint": "补充「容器镜像」",
+        "hint": "在 image: 后填镜像名",
         "fill_type": "text"
       }
     ],
     "hints": {
-      "level_1": "💡 `MODE: prod`",
-      "level_2": "📖 compose 环境变量",
-      "level_3": "👀 `environment` 键值列表",
-      "level_4": "📝 正确答案：services:\n  web:\n    image: myapp\n    environment:\n      MODE: prod\n      DEBUG: \"false\""
+      "level_1": "💡 environment 里每行一个环境变量",
+      "level_2": "📖 compose 用 `键: 值` 设置环境变量，值可为字符串（引号可选）",
+      "level_3": "👀 `MODE: prod`",
+      "level_4": "📝 正确答案：MODE: prod"
     },
-    "explanation": "`environment` 以键值设置服务环境变量。"
+    "explanation": "`environment:` 下以 `键: 值` 逐行设置服务环境变量；值与 Dockerfile `ENV` 等价但写在编排层。"
   },
   {
     "id": "docker-basics-050",
     "title": "compose 重启与依赖",
     "description": "设置重启策略与依赖顺序",
     "exercise_type": "config",
-    "tech_stack": "docker",
+    "tech_stack": "devops",
     "weight": "medium",
     "category": "compose",
-    "subcategory": "基础",
+    "subcategory": "docker",
     "full_code": "services:\n  app:\n    image: myapp\n    restart: unless-stopped\n    depends_on:\n    - db\n  db:\n    image: postgres:15",
     "expected": "",
     "points": [

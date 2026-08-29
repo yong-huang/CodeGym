@@ -87,11 +87,107 @@ func GradeLabel(grade string) string {
 	}[grade]
 }
 
+// maxOrderGroupSize caps the brute-force injection search for interchangeable
+// points (7! = 5040 worst case, negligible per submission).
+const maxOrderGroupSize = 7
+
+// orderFreeAssign reassigns user answers among fill points that share the same
+// OrderGroup (interchangeable positions — e.g. HCL/YAML attributes whose lines
+// may appear in any order). Every answer is assigned to exactly one point and
+// the injection with the highest total base score wins, so swapped lines grade
+// as correct while duplicated answers still fail one of the points. Points
+// without a group keep their own answer (order-sensitive by default).
+func orderFreeAssign(points []model.FillPoint, answers map[string]string) map[string]string {
+	byGroup := map[string][]model.FillPoint{}
+	for _, p := range points {
+		if p.OrderGroup != "" {
+			byGroup[p.OrderGroup] = append(byGroup[p.OrderGroup], p)
+		}
+	}
+	if len(byGroup) == 0 {
+		return answers
+	}
+	out := make(map[string]string, len(answers))
+	for k, v := range answers {
+		out[k] = v
+	}
+	for _, group := range byGroup {
+		if len(group) < 2 || len(group) > maxOrderGroupSize {
+			continue
+		}
+		ids := make([]string, 0, len(group))
+		var cand []string
+		for _, p := range group {
+			ids = append(ids, p.ID)
+			if a, ok := answers["FILL_"+p.ID]; ok {
+				cand = append(cand, a)
+			}
+		}
+		if len(cand) < 2 {
+			continue // 只有一个答案，无可交换
+		}
+		base := func(p model.FillPoint, answer string) float64 {
+			switch {
+			case IsAcceptedAnswer(answer, p):
+				return 100
+			case IsPartiallyCorrect(answer, p.OriginalText):
+				return 50
+			}
+			return 0
+		}
+		best := make([]int, len(cand))
+		for i := range best {
+			best[i] = i
+		}
+		bestScore := -1.0
+		injectAssignments(len(cand), len(ids), func(assign []int) {
+			score := 0.0
+			for ci, pi := range assign {
+				score += base(group[pi], cand[ci])
+			}
+			if score > bestScore {
+				bestScore = score
+				copy(best, assign)
+			}
+		})
+		for ci, pi := range best {
+			out["FILL_"+ids[pi]] = cand[ci]
+		}
+	}
+	return out
+}
+
+// injectAssignments iterates every injective mapping of k candidates onto n
+// targets: assign[i] is the target chosen for candidate i, all distinct.
+func injectAssignments(k, n int, fn func(assign []int)) {
+	assign := make([]int, k)
+	used := make([]bool, n)
+	var rec func(i int)
+	rec = func(i int) {
+		if i == k {
+			fn(assign)
+			return
+		}
+		for p := 0; p < n; p++ {
+			if used[p] {
+				continue
+			}
+			used[p] = true
+			assign[i] = p
+			rec(i + 1)
+			used[p] = false
+		}
+	}
+	rec(0)
+}
+
 // GradeFill judges the whole exercise after execution per design section 7.
 // hintUsage maps fill point id -> max hint level used.
 // Results are returned in code position order (top-to-bottom), so the score
 // table matches the code the user sees.
 func GradeFill(ex model.Exercise, points []model.FillPoint, answers map[string]string, output, expected string, hintUsage map[string]int) ([]model.FillResult, float64) {
+	answers = orderFreeAssign(points, answers)
+
 	ordered := make([]model.FillPoint, len(points))
 	copy(ordered, points)
 	// sort by absolute span offset (top-to-bottom in code). Some hand-imported

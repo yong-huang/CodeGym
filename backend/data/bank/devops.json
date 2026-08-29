@@ -978,7 +978,8 @@
         "min_weight": "medium",
         "weight_score": 1,
         "hint": "标记敏感",
-        "fill_type": "text"
+        "fill_type": "text",
+        "order_group": "attrs"
       },
       {
         "id": "type_attr",
@@ -987,7 +988,8 @@
         "min_weight": "easy",
         "weight_score": 1,
         "hint": "变量类型",
-        "fill_type": "text"
+        "fill_type": "text",
+        "order_group": "attrs"
       }
     ],
     "hints": {
@@ -1785,11 +1787,11 @@
     "points": [
       {
         "id": "pkg_list",
-        "text": "name:\n          - git",
+        "text": "- git",
         "category": "ans_module",
         "min_weight": "beginner",
         "weight_score": 1,
-        "hint": "包列表",
+        "hint": "包列表项：`- 包名`（与下方 - curl 同格式）",
         "fill_type": "text"
       },
       {
@@ -1803,10 +1805,10 @@
       }
     ],
     "hints": {
-      "level_1": "💡 一次安装多个包，Debian 系用什么模块？",
+      "level_1": "💡 apt 模块用 name 列表声明包",
       "level_2": "📖 `apt:` 模块 name 列表 + state: present；RedHat 系用 yum/dnf",
-      "level_3": "👀 `apt:` + `state: present`",
-      "level_4": "📝 正确答案：`state: present`"
+      "level_3": "👀 `- git`（列表项 `- 包名`）",
+      "level_4": "📝 正确答案：- git 与 state: present"
     },
     "explanation": "apt 模块按声明状态管理包（present 装、absent 卸、latest 升级）；模块幂等，未变化不改系统。"
   },

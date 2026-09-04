@@ -1,0 +1,173 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "CodeGym 题库与判题数据流",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "viewBox": [
+      1080,
+      620
+    ]
+  },
+  "stages": [
+    {
+      "label": "题库源"
+    },
+    {
+      "label": "装载"
+    },
+    {
+      "label": "存储"
+    },
+    {
+      "label": "训练"
+    },
+    {
+      "label": "判题与成长"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "bank",
+      "type": "external",
+      "label": "题库 JSON",
+      "sublabel": "data/bank ×19 · 856 题",
+      "stage": 0,
+      "row": 0,
+      "tag": "手工可编辑"
+    },
+    {
+      "id": "aigen",
+      "type": "external",
+      "label": "AI 出题",
+      "sublabel": "Ollama · 教练触发",
+      "stage": 0,
+      "row": 2,
+      "tag": "可选"
+    },
+    {
+      "id": "seed",
+      "type": "backend",
+      "label": "seed 装载",
+      "sublabel": "按原文重算 span",
+      "stage": 1,
+      "row": 1
+    },
+    {
+      "id": "exercises",
+      "type": "database",
+      "label": "exercises 表",
+      "sublabel": "SQLite · 唯一题目源",
+      "stage": 2,
+      "row": 1
+    },
+    {
+      "id": "variant",
+      "type": "backend",
+      "label": "variant 变体",
+      "sublabel": "负重抽点 · 掩码",
+      "stage": 3,
+      "row": 0
+    },
+    {
+      "id": "editor",
+      "type": "frontend",
+      "label": "CodeEditor",
+      "sublabel": "增量提取答案",
+      "stage": 3,
+      "row": 2
+    },
+    {
+      "id": "judge",
+      "type": "backend",
+      "label": "judge 判题",
+      "sublabel": "双路径评分",
+      "stage": 4,
+      "row": 1
+    },
+    {
+      "id": "progress",
+      "type": "database",
+      "label": "作答与成长",
+      "sublabel": "attempt_records · 进度",
+      "stage": 4,
+      "row": 3
+    }
+  ],
+  "flows": [
+    {
+      "id": "bank-to-seed",
+      "from": "bank",
+      "to": "seed",
+      "label": "题目 + 训练点原文",
+      "variant": "emphasis"
+    },
+    {
+      "id": "ai-to-store",
+      "from": "aigen",
+      "to": "exercises",
+      "label": "生成题目直接落库",
+      "variant": "dashed",
+      "route": "bottom-channel"
+    },
+    {
+      "id": "seed-to-store",
+      "from": "seed",
+      "to": "exercises",
+      "label": "upsert 题库",
+      "variant": "emphasis",
+      "route": "straight",
+      "labelDy": -28
+    },
+    {
+      "id": "store-to-variant",
+      "from": "exercises",
+      "to": "variant",
+      "label": "full_code + fill_points"
+    },
+    {
+      "id": "variant-to-editor",
+      "from": "variant",
+      "to": "editor",
+      "label": "掩码变体标记",
+      "variant": "emphasis",
+      "labelDy": 34
+    },
+    {
+      "id": "editor-to-judge",
+      "from": "editor",
+      "to": "judge",
+      "label": "学员答案 · hint_usage"
+    },
+    {
+      "id": "judge-to-progress",
+      "from": "judge",
+      "to": "progress",
+      "label": "作答记录 · 薄弱部位",
+      "variant": "emphasis",
+      "labelDy": 58
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "装载不变量",
+      "items": [
+        "题库 JSON 不存坐标，seed 按原文重算 span，改代码无需算位置",
+        "ensureBeginnerPoint 保证每题入门负重至少一个可填点",
+        "教练端/AI 落库绕过 seed，直接 upsert exercises",
+        "seed 的 upsert 只动 exercises 表，绝不改进度与收藏"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "判题依据",
+      "items": [
+        "判题答案取自 exercises 表的 original_text / expected_output",
+        "python/go 真实执行比对 stdout，其余技术栈答案匹配",
+        "结果写 attempt_records 并驱动薄弱部位与打卡"
+      ]
+    }
+  ]
+}

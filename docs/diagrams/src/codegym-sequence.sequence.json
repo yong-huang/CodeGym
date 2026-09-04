@@ -1,0 +1,130 @@
+{
+  "schema_version": 1,
+  "diagram_type": "sequence",
+  "meta": {
+    "title": "CodeGym 训练闭环时序",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "column_fit": "spread",
+    "viewBox": [
+      1080,
+      580
+    ]
+  },
+  "participants": [
+    {
+      "id": "trainee",
+      "type": "external",
+      "label": "学员",
+      "sublabel": "浏览器"
+    },
+    {
+      "id": "spa",
+      "type": "frontend",
+      "label": "训练页",
+      "sublabel": "React · CodeEditor"
+    },
+    {
+      "id": "api",
+      "type": "backend",
+      "label": "API Server",
+      "sublabel": "Go · :8090"
+    }
+  ],
+  "segments": [
+    {
+      "from": 160,
+      "to": 305,
+      "label": "取变体"
+    },
+    {
+      "from": 312,
+      "to": 525,
+      "label": "填写 · 运行验证 · 评分"
+    }
+  ],
+  "messages": [
+    {
+      "id": "pick",
+      "from": "trainee",
+      "to": "spa",
+      "y": 185,
+      "label": "选题并选负重（入门→专家）"
+    },
+    {
+      "id": "get-variant",
+      "from": "spa",
+      "to": "api",
+      "y": 232,
+      "label": "GET /exercises/:id/variant?level=…",
+      "variant": "emphasis",
+      "note": "variant 引擎按负重随机抽训练点；store 读题目"
+    },
+    {
+      "id": "variant-ok",
+      "from": "api",
+      "to": "spa",
+      "y": 280,
+      "label": "200 掩码变体（不含答案）",
+      "variant": "return"
+    },
+    {
+      "id": "fill",
+      "from": "trainee",
+      "to": "spa",
+      "y": 330,
+      "label": "在虚线处填写训练点",
+      "note": "前端增量追踪填空区间，实时提取答案"
+    },
+    {
+      "id": "execute",
+      "from": "spa",
+      "to": "api",
+      "y": 382,
+      "label": "POST /api/v1/execute（fill_answers · hint_usage）",
+      "variant": "emphasis"
+    },
+    {
+      "id": "run-and-grade",
+      "from": "api",
+      "to": "spa",
+      "y": 430,
+      "label": "执行 · 判题 · 评分",
+      "variant": "return",
+      "note": "engine 子进程跑 python3/go run；judge 输出比对+逐点匹配+辅助扣分；store 写作答记录与打卡"
+    },
+    {
+      "id": "result",
+      "from": "spa",
+      "to": "trainee",
+      "y": 478,
+      "label": "渲染评分卡（逐点结果 · 薄弱分析）",
+      "variant": "return"
+    }
+  ],
+  "activations": [
+    {
+      "participant": "spa",
+      "from": 213,
+      "to": 483,
+      "type": "frontend"
+    },
+    {
+      "participant": "api",
+      "from": 232,
+      "to": 435,
+      "type": "backend"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "闭环要点",
+      "items": [
+        "掩码变体不携带答案；负重级别决定抽点数量",
+        "python/go 真实子进程执行，其余栈答案匹配",
+        "辅助 L2/L3/L4 扣 5/15/30 分，总分映射 S/A/B/C/D"
+      ]
+    }
+  ]
+}

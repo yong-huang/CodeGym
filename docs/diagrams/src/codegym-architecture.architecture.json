@@ -1,0 +1,388 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "CodeGym 组件架构",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/yong-huang/CodeGym",
+      "revision": "fed1e5f5ad8649cc01a7081bed8884474d165578"
+    }
+  },
+  "components": [
+    {
+      "id": "bank",
+      "type": "external",
+      "label": "题库 JSON",
+      "sublabel": "data/bank/*.json ×19",
+      "pos": [
+        40,
+        130
+      ],
+      "size": [
+        150,
+        60
+      ],
+      "sources": [
+        {
+          "path": "backend/data/bank/python.json",
+          "label": "题库样例"
+        }
+      ]
+    },
+    {
+      "id": "seed",
+      "type": "backend",
+      "label": "seed 题库装载",
+      "sublabel": "启动时 span 重算",
+      "pos": [
+        300,
+        130
+      ],
+      "size": [
+        150,
+        60
+      ],
+      "sources": [
+        {
+          "path": "backend/internal/seed/seed.go",
+          "label": "BuildAll"
+        }
+      ]
+    },
+    {
+      "id": "store",
+      "type": "backend",
+      "label": "store 存储层",
+      "sublabel": "SQLite 访问",
+      "pos": [
+        560,
+        130
+      ],
+      "size": [
+        150,
+        60
+      ],
+      "sources": [
+        {
+          "path": "backend/internal/store/store.go",
+          "label": "Store"
+        }
+      ]
+    },
+    {
+      "id": "sqlite",
+      "type": "database",
+      "label": "SQLite",
+      "sublabel": "data/codegym.db · 7 表",
+      "pos": [
+        820,
+        130
+      ],
+      "size": [
+        150,
+        60
+      ]
+    },
+    {
+      "id": "ollama",
+      "type": "external",
+      "label": "Ollama",
+      "sublabel": "本地大模型 :11434",
+      "pos": [
+        1080,
+        130
+      ],
+      "size": [
+        150,
+        60
+      ]
+    },
+    {
+      "id": "trainee",
+      "type": "external",
+      "label": "学员",
+      "sublabel": "浏览器",
+      "pos": [
+        40,
+        310
+      ],
+      "size": [
+        130,
+        64
+      ]
+    },
+    {
+      "id": "spa",
+      "type": "frontend",
+      "label": "React SPA",
+      "sublabel": "Vite :5190 · hash 路由",
+      "pos": [
+        300,
+        310
+      ],
+      "size": [
+        160,
+        72
+      ],
+      "sources": [
+        {
+          "path": "frontend/src/App.tsx",
+          "label": "路由"
+        },
+        {
+          "path": "frontend/src/components/CodeEditor.tsx",
+          "label": "编辑器"
+        }
+      ]
+    },
+    {
+      "id": "api",
+      "type": "backend",
+      "label": "API Server",
+      "sublabel": "net/http :8090",
+      "pos": [
+        560,
+        310
+      ],
+      "size": [
+        160,
+        76
+      ],
+      "sources": [
+        {
+          "path": "backend/internal/api/handlers.go",
+          "label": "路由与处理器"
+        }
+      ]
+    },
+    {
+      "id": "judge",
+      "type": "backend",
+      "label": "judge 判题",
+      "sublabel": "答案匹配 · 评分",
+      "pos": [
+        820,
+        310
+      ],
+      "size": [
+        150,
+        60
+      ],
+      "sources": [
+        {
+          "path": "backend/internal/judge/judge.go",
+          "label": "GradeFill"
+        }
+      ]
+    },
+    {
+      "id": "variant",
+      "type": "backend",
+      "label": "variant 留空引擎",
+      "sublabel": "负重随机抽训练点",
+      "pos": [
+        1080,
+        310
+      ],
+      "size": [
+        150,
+        60
+      ],
+      "sources": [
+        {
+          "path": "backend/internal/variant/variant.go",
+          "label": "SelectPoints"
+        }
+      ]
+    },
+    {
+      "id": "engine",
+      "type": "backend",
+      "label": "engine 执行引擎",
+      "sublabel": "python3 · go run",
+      "pos": [
+        560,
+        480
+      ],
+      "size": [
+        160,
+        60
+      ],
+      "sources": [
+        {
+          "path": "backend/internal/engine/engine.go",
+          "label": "Run"
+        }
+      ]
+    },
+    {
+      "id": "proc",
+      "type": "external",
+      "label": "执行子进程",
+      "sublabel": "带超时本地进程",
+      "pos": [
+        820,
+        480
+      ],
+      "size": [
+        150,
+        60
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "前端 · React 18 + Vite",
+      "wraps": [
+        "spa"
+      ]
+    },
+    {
+      "kind": "region",
+      "label": "后端 · Go net/http",
+      "wraps": [
+        "api",
+        "judge",
+        "variant",
+        "engine",
+        "store",
+        "seed"
+      ]
+    },
+    {
+      "kind": "region",
+      "label": "本地数据与执行环境",
+      "wraps": [
+        "bank",
+        "sqlite",
+        "ollama",
+        "proc"
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "trainee-to-spa",
+      "from": "trainee",
+      "to": "spa",
+      "label": "浏览器交互",
+      "variant": "emphasis"
+    },
+    {
+      "id": "spa-to-api",
+      "from": "spa",
+      "to": "api",
+      "label": "REST /api/v1",
+      "variant": "emphasis"
+    },
+    {
+      "id": "api-to-judge",
+      "from": "api",
+      "to": "judge",
+      "label": "提交判题"
+    },
+    {
+      "id": "api-to-variant",
+      "from": "api",
+      "to": "variant",
+      "label": "负重抽训练点",
+      "fromSide": "top",
+      "toSide": "top"
+    },
+    {
+      "id": "api-to-store",
+      "from": "api",
+      "to": "store",
+      "label": "读写",
+      "fromSide": "top",
+      "toSide": "bottom",
+      "labelAt": [
+        600,
+        252
+      ]
+    },
+    {
+      "id": "api-to-engine",
+      "from": "api",
+      "to": "engine",
+      "label": "运行代码",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "labelDy": 55
+    },
+    {
+      "id": "api-to-ollama",
+      "from": "api",
+      "to": "ollama",
+      "label": "AI 出题（可选）",
+      "variant": "dashed",
+      "fromSide": "top",
+      "toSide": "bottom"
+    },
+    {
+      "id": "engine-to-proc",
+      "from": "engine",
+      "to": "proc",
+      "label": "spawn 子进程"
+    },
+    {
+      "id": "seed-to-bank",
+      "from": "seed",
+      "to": "bank",
+      "label": "读取 JSON"
+    },
+    {
+      "id": "seed-to-store",
+      "from": "seed",
+      "to": "store",
+      "label": "启动 upsert",
+      "labelDy": -42
+    },
+    {
+      "id": "store-to-sqlite",
+      "from": "store",
+      "to": "sqlite",
+      "label": "SQL 读写"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "请求路径",
+      "items": [
+        "REST /api/v1 全部经 api.Server 分发",
+        "学员身份取 X-User-Id 头，缺省 demo-user",
+        "教练端 /admin/* 可选令牌鉴权（constant-time 比对）"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "训练内核",
+      "items": [
+        "variant 按负重级别随机抽训练点并生成掩码代码",
+        "judge 双路径：python/go 真实执行比对 stdout，其余答案匹配",
+        "engine 子进程带硬超时，Go 经临时 module go run"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "数据",
+      "items": [
+        "SQLite 7 表：题库/作答/进度/收藏/分类/环境/设置",
+        "19 个题库 JSON 共 856 题，seed 启动按原文重算 span 后 upsert",
+        "题库 JSON 不存坐标，手工可编辑"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "AI（可选）",
+      "items": [
+        "Ollama 出题：endpoint/model 存 settings 表，页面可配",
+        "生成结果在代码中定位训练点后落库"
+      ]
+    }
+  ]
+}

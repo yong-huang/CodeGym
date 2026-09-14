@@ -1,0 +1,1163 @@
+[
+  {
+    "id": "go-types-001",
+    "title": "零值约定",
+    "description": "每种类型都有确定的零值",
+    "exercise_type": "fill",
+    "tech_stack": "go",
+    "weight": "beginner",
+    "category": "go_types_basic",
+    "subcategory": "类型系统",
+    "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tvar i int\n\tvar f float64\n\tvar s string\n\tvar b bool\n\tfmt.Println(i, f, s == \"\", b)\n}",
+    "expected": "0 0 true false",
+    "points": [
+      {
+        "id": "zeroi",
+        "text": "var i int",
+        "category": "go_types_basic",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "💡 int 没赋值时是多少？",
+        "fill_type": "text"
+      },
+      {
+        "id": "zeros",
+        "text": "var s string",
+        "category": "go_types_basic",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "💡 string 的零值是空串不是 nil",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 int 没赋值时是多少？",
+      "level_2": "📖 Go 静态类型：var 有零值约定，:= 推导类型，type 定义新类型（与别名 = 不同）",
+      "level_3": "👀 接近答案：`var i int`、`var s string`",
+      "level_4": "📝 正确答案：`var i int`；`var s string`"
+    },
+    "explanation": "Go 的零值约定让每个变量声明即可用：数值 0、bool false、string 空串、指针/切片 nil。"
+  },
+  {
+    "id": "go-types-002",
+    "title": "类型推断",
+    "description": "短声明 := 会推导类型",
+    "exercise_type": "fill",
+    "tech_stack": "go",
+    "weight": "beginner",
+    "category": "go_types_basic",
+    "subcategory": "类型系统",
+    "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tpi := 3.14\n\tname := \"Go\"\n\tisFun := true\n\tfmt.Printf(\"%T %T %T\\n\", pi, name, isFun)\n}",
+    "expected": "float64 string bool",
+    "points": [
+      {
+        "id": "pi",
+        "text": "pi := 3.14",
+        "category": "go_types_basic",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "💡 小数字面量推断成 float64",
+        "fill_type": "text"
+      },
+      {
+        "id": "printf",
+        "text": "%T %T %T",
+        "category": "go_types_basic",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 fmt 的 %T 动词打印类型名",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 小数字面量推断成 float64",
+      "level_2": "📖 Go 静态类型：var 有零值约定，:= 推导类型，type 定义新类型（与别名 = 不同）",
+      "level_3": "👀 接近答案：`pi := 3.14`、`%T %T %T`",
+      "level_4": "📝 正确答案：`pi := 3.14`；`%T %T %T`"
+    },
+    "explanation": ":= 不是无类型，而是编译器推导类型；可以用 %T 验证。"
+  },
+  {
+    "id": "go-types-003",
+    "title": "iota 枚举",
+    "description": "用 iota 实现自增常量",
+    "exercise_type": "fill",
+    "tech_stack": "go",
+    "weight": "easy",
+    "category": "go_types_basic",
+    "subcategory": "类型系统",
+    "full_code": "package main\n\nimport \"fmt\"\n\ntype Level int\n\nconst (\n\tLow Level = iota\n\tMedium\n\tHigh\n)\n\nfunc main() {\n\tfmt.Println(Low, Medium, High)\n}",
+    "expected": "0 1 2",
+    "points": [
+      {
+        "id": "iota",
+        "text": "Low Level = iota",
+        "category": "go_types_basic",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 const 块里首行接 iota，后续省略重复",
+        "fill_type": "text"
+      },
+      {
+        "id": "deftype",
+        "text": "type Level int",
+        "category": "go_types_basic",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "💡 type 基于 int 定义新类型",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 const 块里首行接 iota，后续省略重复",
+      "level_2": "📖 Go 静态类型：var 有零值约定，:= 推导类型，type 定义新类型（与别名 = 不同）",
+      "level_3": "👀 接近答案：`Low Level = iota`、`type Level int`",
+      "level_4": "📝 正确答案：`Low Level = iota`；`type Level int`"
+    },
+    "explanation": "iota 在每个 const 块从 0 开始逐行递增，是 Go 惯用的枚举写法。"
+  },
+  {
+    "id": "go-types-004",
+    "title": "定义类型与别名",
+    "description": "区分 type A int 与 type A = int",
+    "exercise_type": "fill",
+    "tech_stack": "go",
+    "weight": "medium",
+    "category": "go_types_basic",
+    "subcategory": "类型系统",
+    "full_code": "package main\n\nimport \"fmt\"\n\ntype Celsius float64\ntype Alias = float64\n\nfunc main() {\n\tvar c Celsius = 25\n\tvar a Alias = 25\n\tfmt.Println(c + 5)\n\tfmt.Printf(\"%T\\n\", a)\n\tfmt.Println(Celsius(a) == c)\n}",
+    "expected": "30\nfloat64\ntrue",
+    "points": [
+      {
+        "id": "deftype",
+        "text": "type Celsius float64",
+        "category": "go_types_basic",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 不带 = 的是定义新类型",
+        "fill_type": "text"
+      },
+      {
+        "id": "alias",
+        "text": "type Alias = float64",
+        "category": "go_types_basic",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 带 = 的是别名，类型完全相同",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 不带 = 的是定义新类型",
+      "level_2": "📖 Go 静态类型：var 有零值约定，:= 推导类型，type 定义新类型（与别名 = 不同）",
+      "level_3": "👀 接近答案：`type Celsius float64`、`type Alias = float64`",
+      "level_4": "📝 正确答案：`type Celsius float64`；`type Alias = float64`"
+    },
+    "explanation": "type A B 创建新类型（需显式转换），type A = B 只是别名。新类型可定义自己的方法。"
+  },
+  {
+    "id": "go-types-005",
+    "title": "整型溢出",
+    "description": "int8 的表示范围与回绕",
+    "exercise_type": "fill",
+    "tech_stack": "go",
+    "weight": "medium",
+    "category": "go_types_basic",
+    "subcategory": "类型系统",
+    "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tvar i8 int8 = 127\n\tvar u64 uint64 = 10\n\tvar f32 float32 = 1.5\n\tfmt.Println(i8, u64, f32)\n\tfmt.Println(i8+1 > 127)\n}",
+    "expected": "127 10 1.5\nfalse",
+    "points": [
+      {
+        "id": "i8",
+        "text": "var i8 int8 = 127",
+        "category": "go_types_basic",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 int8 范围是 -128 到 127",
+        "fill_type": "text"
+      },
+      {
+        "id": "overflow",
+        "text": "fmt.Println(i8+1 > 127)",
+        "category": "go_types_basic",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 127 加 1 会回绕",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 int8 范围是 -128 到 127",
+      "level_2": "📖 Go 静态类型：var 有零值约定，:= 推导类型，type 定义新类型（与别名 = 不同）",
+      "level_3": "👀 接近答案：`var i8 int8 = 127`、`fmt.Println(i8+1 > 127)`",
+      "level_4": "📝 正确答案：`var i8 int8 = 127`；`fmt.Println(i8+1 > 127)`"
+    },
+    "explanation": "有符号整型溢出会静默回绕：int8 的 127+1 变成 -128，比较结果为 false。"
+  },
+  {
+    "id": "go-types-006",
+    "title": "显式类型转换",
+    "description": "不同类型之间必须显式转换",
+    "exercise_type": "fill",
+    "tech_stack": "go",
+    "weight": "beginner",
+    "category": "go_types_convert",
+    "subcategory": "类型系统",
+    "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\ti := 100\n\tf := float64(i) / 8\n\tu := uint(i)\n\tfmt.Println(f, u)\n}",
+    "expected": "12.5 100",
+    "points": [
+      {
+        "id": "conv",
+        "text": "f := float64(i) / 8",
+        "category": "go_types_convert",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "💡 用 T(x) 语法做显式转换",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 用 T(x) 语法做显式转换",
+      "level_2": "📖 不同类型不能直接运算：T(x) 显式转换；string 与 []byte/rune 互转注意字节与字符",
+      "level_3": "👀 接近答案：`f := float64(i) / 8`",
+      "level_4": "📝 正确答案：`f := float64(i) / 8`"
+    },
+    "explanation": "Go 不做隐式类型转换：int 与 float64 混算必须先 T(x) 转换，编译期就拦住精度问题。"
+  },
+  {
+    "id": "go-types-007",
+    "title": "string 与 []byte",
+    "description": "字符串与字节切片互转",
+    "exercise_type": "fill",
+    "tech_stack": "go",
+    "weight": "beginner",
+    "category": "go_types_convert",
+    "subcategory": "类型系统",
+    "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\ts := \"Go语言\"\n\tb := []byte(s)\n\tfmt.Println(len(s), len(b))\n\tfmt.Println(string(b) == s)\n}",
+    "expected": "8 8\ntrue",
+    "points": [
+      {
+        "id": "bytes",
+        "text": "b := []byte(s)",
+        "category": "go_types_convert",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "💡 []byte(s) 转成字节切片",
+        "fill_type": "text"
+      },
+      {
+        "id": "back",
+        "text": "fmt.Println(string(b) == s)",
+        "category": "go_types_convert",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "💡 string(b) 转回字符串",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 []byte(s) 转成字节切片",
+      "level_2": "📖 不同类型不能直接运算：T(x) 显式转换；string 与 []byte/rune 互转注意字节与字符",
+      "level_3": "👀 接近答案：`b := []byte(s)`、`fmt.Println(string(b) == s)`",
+      "level_4": "📝 正确答案：`b := []byte(s)`；`fmt.Println(string(b) == s)`"
+    },
+    "explanation": "string 底层是只读字节序列；len 按字节计，'语言' 每个 3 字节。"
+  },
+  {
+    "id": "go-types-008",
+    "title": "rune 与字符",
+    "description": "按 Unicode 码点遍历字符串",
+    "exercise_type": "fill",
+    "tech_stack": "go",
+    "weight": "easy",
+    "category": "go_types_convert",
+    "subcategory": "类型系统",
+    "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\ts := \"中文ABC\"\n\trs := []rune(s)\n\tfmt.Println(len(s), len(rs))\n\tfmt.Println(string(rs[0]), rs[2])\n}",
+    "expected": "9 5\n中 65",
+    "points": [
+      {
+        "id": "runeconv",
+        "text": "rs := []rune(s)",
+        "category": "go_types_convert",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 []rune 把字符串按字符切开",
+        "fill_type": "text"
+      },
+      {
+        "id": "idx",
+        "text": "string(rs[0])",
+        "category": "go_types_convert",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 rs[0] 是码点，string() 转回字符",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 []rune 把字符串按字符切开",
+      "level_2": "📖 不同类型不能直接运算：T(x) 显式转换；string 与 []byte/rune 互转注意字节与字符",
+      "level_3": "👀 接近答案：`rs := []rune(s)`、`string(rs[0])`",
+      "level_4": "📝 正确答案：`rs := []rune(s)`；`string(rs[0])`"
+    },
+    "explanation": "len 按字节、[]rune 按码点：'中文ABC' 是 9 字节 5 字符。处理中文务必用 rune。"
+  },
+  {
+    "id": "go-types-009",
+    "title": "strconv 转换",
+    "description": "字符串与数字的安全转换",
+    "exercise_type": "fill",
+    "tech_stack": "go",
+    "weight": "beginner",
+    "category": "go_types_convert",
+    "subcategory": "类型系统",
+    "full_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"strconv\"\n)\n\nfunc main() {\n\tn, err := strconv.Atoi(\"42\")\n\tfmt.Println(n, err == nil)\n\tf, _ := strconv.ParseFloat(\"3.5\", 64)\n\tfmt.Println(f + 0.5)\n\tbad, err2 := strconv.Atoi(\"abc\")\n\tfmt.Println(bad, err2 != nil)\n}",
+    "expected": "42 true\n4\n0 true",
+    "points": [
+      {
+        "id": "atoi",
+        "text": "n, err := strconv.Atoi(\"42\")",
+        "category": "go_types_convert",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "💡 Atoi 返回 (值, 错误) 两个值",
+        "fill_type": "text"
+      },
+      {
+        "id": "errcheck",
+        "text": "err2 != nil",
+        "category": "go_types_convert",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 失败时值无意义，错误非 nil",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 Atoi 返回 (值, 错误) 两个值",
+      "level_2": "📖 不同类型不能直接运算：T(x) 显式转换；string 与 []byte/rune 互转注意字节与字符",
+      "level_3": "👀 接近答案：`n, err := strconv.Atoi(\"42\")`、`err2 != nil`",
+      "level_4": "📝 正确答案：`n, err := strconv.Atoi(\"42\")`；`err2 != nil`"
+    },
+    "explanation": "strconv 的函数都返回 (值, err)：失败时 err 非 nil，必须检查。"
+  },
+  {
+    "id": "go-types-010",
+    "title": "带 ok 的类型断言",
+    "description": "从接口值安全地取出具体类型",
+    "exercise_type": "fill",
+    "tech_stack": "go",
+    "weight": "medium",
+    "category": "go_types_assert",
+    "subcategory": "类型系统",
+    "full_code": "package main\n\nimport \"fmt\"\n\nfunc describe(v any) {\n\tif s, ok := v.(string); ok {\n\t\tfmt.Println(\"字符串:\", s)\n\t\treturn\n\t}\n\tif i, ok := v.(int); ok {\n\t\tfmt.Println(\"整数:\", i*2)\n\t\treturn\n\t}\n\tfmt.Println(\"未知类型\")\n}\n\nfunc main() {\n\tdescribe(\"hello\")\n\tdescribe(21)\n\tdescribe(3.14)\n}",
+    "expected": "字符串: hello\n整数: 42\n未知类型",
+    "points": [
+      {
+        "id": "assertok",
+        "text": "if s, ok := v.(string); ok {",
+        "category": "go_types_assert",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 x.(T) 带 , ok 形式不会 panic",
+        "fill_type": "text"
+      },
+      {
+        "id": "use",
+        "text": "fmt.Println(\"整数:\", i*2)",
+        "category": "go_types_assert",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 断言成功后变量就是具体类型",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 x.(T) 带 , ok 形式不会 panic",
+      "level_2": "📖 类型断言 x.(T) 带 ok 不 panic；type switch 一次断言多种类型",
+      "level_3": "👀 接近答案：`if s, ok := v.(string); ok {`、`fmt.Println(\"整数:\", i*2)`",
+      "level_4": "📝 正确答案：`if s, ok := v.(string); ok {`；`fmt.Println(\"整数:\", i*2)`"
+    },
+    "explanation": "接口值取回具体类型用断言：单值形式失败会 panic，逗号 ok 形式安全。"
+  },
+  {
+    "id": "go-types-011",
+    "title": "类型开关",
+    "description": "用 type switch 一次断言多种类型",
+    "exercise_type": "fill",
+    "tech_stack": "go",
+    "weight": "medium",
+    "category": "go_types_assert",
+    "subcategory": "类型系统",
+    "full_code": "package main\n\nimport \"fmt\"\n\nfunc typeOf(v any) string {\n\tswitch x := v.(type) {\n\tcase string:\n\t\treturn \"string:\" + x\n\tcase int:\n\t\treturn \"int\"\n\tcase bool:\n\t\treturn \"bool\"\n\tdefault:\n\t\treturn fmt.Sprintf(\"%T\", x)\n\t}\n}\n\nfunc main() {\n\tfmt.Println(typeOf(\"go\"), typeOf(7), typeOf(true), typeOf(1.5))\n}",
+    "expected": "string:go int bool float64",
+    "points": [
+      {
+        "id": "typeswitch",
+        "text": "switch x := v.(type) {",
+        "category": "go_types_assert",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 switch v.(type) 配多个 case",
+        "fill_type": "text"
+      },
+      {
+        "id": "default",
+        "text": "return fmt.Sprintf(\"%T\", x)",
+        "category": "go_types_assert",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 default 分支兜底未知类型",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 switch v.(type) 配多个 case",
+      "level_2": "📖 类型断言 x.(T) 带 ok 不 panic；type switch 一次断言多种类型",
+      "level_3": "👀 接近答案：`switch x := v.(type) {`、`return fmt.Sprintf(\"%T\", x)`",
+      "level_4": "📝 正确答案：`switch x := v.(type) {`；`return fmt.Sprintf(\"%T\", x)`"
+    },
+    "explanation": "多类型分支用 type switch，比一串 if 断言清晰；每个 case 里 x 自动是对应类型。"
+  },
+  {
+    "id": "go-types-012",
+    "title": "数组与切片类型",
+    "description": "数组类型含长度，切片可增长",
+    "exercise_type": "fill",
+    "tech_stack": "go",
+    "weight": "beginner",
+    "category": "go_types_basic",
+    "subcategory": "类型系统",
+    "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tarr := [3]int{1, 2, 3}\n\tslc := []int{1, 2, 3}\n\tfmt.Printf(\"%T %T\\n\", arr, slc)\n\tslc = append(slc, 4)\n\tfmt.Println(len(arr), len(slc))\n}",
+    "expected": "[3]int []int\n3 4",
+    "points": [
+      {
+        "id": "arrtype",
+        "text": "arr := [3]int{1, 2, 3}",
+        "category": "go_types_basic",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "💡 [3]int 与 []int 是不同类型",
+        "fill_type": "text"
+      },
+      {
+        "id": "append",
+        "text": "slc = append(slc, 4)",
+        "category": "go_types_basic",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "💡 append 可以给切片追加元素",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 [3]int 与 []int 是不同类型",
+      "level_2": "📖 Go 静态类型：var 有零值约定，:= 推导类型，type 定义新类型（与别名 = 不同）",
+      "level_3": "👀 接近答案：`arr := [3]int{1, 2, 3}`、`slc = append(slc, 4)`",
+      "level_4": "📝 正确答案：`arr := [3]int{1, 2, 3}`；`slc = append(slc, 4)`"
+    },
+    "explanation": "[3]int 和 []int 互不相同也不可互换；数组定长值类型，切片动态引用类型。"
+  },
+  {
+    "id": "go-types-013",
+    "title": "结构体可比较",
+    "description": "字段全可比较的结构体可作 map 键",
+    "exercise_type": "fill",
+    "tech_stack": "go",
+    "weight": "easy",
+    "category": "go_struct",
+    "subcategory": "类型系统",
+    "full_code": "package main\n\nimport \"fmt\"\n\ntype Point struct{ X, Y int }\n\nfunc main() {\n\tp1 := Point{1, 2}\n\tp2 := Point{1, 2}\n\tfmt.Println(p1 == p2)\n\tm := map[Point]string{}\n\tm[p1] = \"原点附近\"\n\tfmt.Println(m[p2])\n}",
+    "expected": "true\n原点附近",
+    "points": [
+      {
+        "id": "cmp",
+        "text": "fmt.Println(p1 == p2)",
+        "category": "go_struct",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 相同字段值的结构体相等",
+        "fill_type": "text"
+      },
+      {
+        "id": "mapkey",
+        "text": "m := map[Point]string{}",
+        "category": "go_struct",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 结构体可以作为 map 的键",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 相同字段值的结构体相等",
+      "level_2": "📖 结构体：值接收者操作副本，指针接收者可修改原值；嵌入字段被提升；全可比较则可作 map 键",
+      "level_3": "👀 接近答案：`fmt.Println(p1 == p2)`、`m := map[Point]string{}`",
+      "level_4": "📝 正确答案：`fmt.Println(p1 == p2)`；`m := map[Point]string{}`"
+    },
+    "explanation": "结构体可比较性由字段决定：全可比较字段 → 结构体可 == 也可作 map 键；含切片则不行。"
+  },
+  {
+    "id": "go-types-014",
+    "title": "结构体字面量",
+    "description": "字段名与顺序两种写法",
+    "exercise_type": "fill",
+    "tech_stack": "go",
+    "weight": "beginner",
+    "category": "go_struct",
+    "subcategory": "类型系统",
+    "full_code": "package main\n\nimport \"fmt\"\n\ntype User struct {\n\tName string\n\tAge  int\n}\n\nfunc main() {\n\tu1 := User{Name: \"Ann\", Age: 20}\n\tu2 := User{\"Bob\", 30}\n\tfmt.Println(u1.Name, u2.Name)\n\tfmt.Println(u1 == User{Name: \"Ann\", Age: 20})\n}",
+    "expected": "Ann Bob\ntrue",
+    "points": [
+      {
+        "id": "named",
+        "text": "u1 := User{Name: \"Ann\", Age: 20}",
+        "category": "go_struct",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "💡 推荐用字段名初始化",
+        "fill_type": "text"
+      },
+      {
+        "id": "positional",
+        "text": "u2 := User{\"Bob\", 30}",
+        "category": "go_struct",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 顺序写法必须给全所有字段",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 推荐用字段名初始化",
+      "level_2": "📖 结构体：值接收者操作副本，指针接收者可修改原值；嵌入字段被提升；全可比较则可作 map 键",
+      "level_3": "👀 接近答案：`u1 := User{Name: \"Ann\", Age: 20}`、`u2 := User{\"Bob\", 30}`",
+      "level_4": "📝 正确答案：`u1 := User{Name: \"Ann\", Age: 20}`；`u2 := User{\"Bob\", 30}`"
+    },
+    "explanation": "字段名字面量可以省略零值字段且不受字段顺序影响；顺序写法脆弱，混合写法会编译错误。"
+  },
+  {
+    "id": "go-types-015",
+    "title": "值与指针接收者",
+    "description": "指针接收者才能修改结构体",
+    "exercise_type": "fill",
+    "tech_stack": "go",
+    "weight": "medium",
+    "category": "go_struct",
+    "subcategory": "类型系统",
+    "full_code": "package main\n\nimport \"fmt\"\n\ntype Counter struct{ N int }\n\nfunc (c Counter) IncValue() { c.N++ }\nfunc (c *Counter) IncPointer() { c.N++ }\n\nfunc main() {\n\tc := Counter{}\n\tc.IncValue()\n\tc.IncPointer()\n\tc.IncPointer()\n\tfmt.Println(c.N)\n}",
+    "expected": "2",
+    "points": [
+      {
+        "id": "valrecv",
+        "text": "func (c Counter) IncValue() { c.N++ }",
+        "category": "go_struct",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 值接收者修改的是副本",
+        "fill_type": "text"
+      },
+      {
+        "id": "ptrrecv",
+        "text": "func (c *Counter) IncPointer() { c.N++ }",
+        "category": "go_struct",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 指针接收者才能改到原结构体",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 值接收者修改的是副本",
+      "level_2": "📖 结构体：值接收者操作副本，指针接收者可修改原值；嵌入字段被提升；全可比较则可作 map 键",
+      "level_3": "👀 接近答案：`func (c Counter) IncValue() { c.N++ }`、`func (c *Counter) IncPointer() { c.N++ }`",
+      "level_4": "📝 正确答案：`func (c Counter) IncValue() { c.N++ }`；`func (c *Counter) IncPointer() { c.N++ }`"
+    },
+    "explanation": "方法集规则：值接收者操作副本；要修改结构体或避免大结构体拷贝，用指针接收者。"
+  },
+  {
+    "id": "go-types-016",
+    "title": "构造函数",
+    "description": "用 New 函数封装构造与默认值",
+    "exercise_type": "fill",
+    "tech_stack": "go",
+    "weight": "easy",
+    "category": "go_struct",
+    "subcategory": "类型系统",
+    "full_code": "package main\n\nimport \"fmt\"\n\ntype Server struct {\n\tHost string\n\tPort int\n}\n\nfunc NewServer(host string, port int) *Server {\n\tif port == 0 {\n\t\tport = 8080\n\t}\n\treturn &Server{Host: host, Port: port}\n}\n\nfunc main() {\n\ts := NewServer(\"localhost\", 0)\n\tfmt.Println(s.Host, s.Port)\n}",
+    "expected": "localhost 8080",
+    "points": [
+      {
+        "id": "newret",
+        "text": "return &Server{Host: host, Port: port}",
+        "category": "go_struct",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 New 函数返回 *Server",
+        "fill_type": "text"
+      },
+      {
+        "id": "default",
+        "text": "if port == 0 {",
+        "category": "go_struct",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 构造时填好默认值",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 New 函数返回 *Server",
+      "level_2": "📖 结构体：值接收者操作副本，指针接收者可修改原值；嵌入字段被提升；全可比较则可作 map 键",
+      "level_3": "👀 接近答案：`return &Server{Host: host, Port: port}`、`if port == 0 {`",
+      "level_4": "📝 正确答案：`return &Server{Host: host, Port: port}`；`if port == 0 {`"
+    },
+    "explanation": "Go 没有构造函数，惯例是 NewXxx 返回 *T：集中校验与默认值，调用方不必知道内部细节。"
+  },
+  {
+    "id": "go-types-017",
+    "title": "结构体嵌入",
+    "description": "嵌入字段被提升到外层",
+    "exercise_type": "fill",
+    "tech_stack": "go",
+    "weight": "medium",
+    "category": "go_struct",
+    "subcategory": "类型系统",
+    "full_code": "package main\n\nimport \"fmt\"\n\ntype Base struct{ ID int }\n\ntype User struct {\n\tBase\n\tName string\n}\n\nfunc main() {\n\tu := User{Base: Base{ID: 7}, Name: \"Ann\"}\n\tfmt.Println(u.ID, u.Name)\n\tfmt.Println(u.Base.ID)\n}",
+    "expected": "7 Ann\n7",
+    "points": [
+      {
+        "id": "embed",
+        "text": "u := User{Base: Base{ID: 7}, Name: \"Ann\"}",
+        "category": "go_struct",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 嵌入的 struct 只写类型名",
+        "fill_type": "text"
+      },
+      {
+        "id": "promoted",
+        "text": "fmt.Println(u.ID, u.Name)",
+        "category": "go_struct",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 内层字段被提升可直接访问",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 嵌入的 struct 只写类型名",
+      "level_2": "📖 结构体：值接收者操作副本，指针接收者可修改原值；嵌入字段被提升；全可比较则可作 map 键",
+      "level_3": "👀 接近答案：`u := User{Base: Base{ID: 7}, Name: \"Ann\"`、`fmt.Println(u.ID, u.Name)`",
+      "level_4": "📝 正确答案：`u := User{Base: Base{ID: 7}, Name: \"Ann\"}`；`fmt.Println(u.ID, u.Name)`"
+    },
+    "explanation": "嵌入（组合）不是继承：内层类型的字段与方法被提升到外层，但 u.Base 与 u.ID 是同一个东西。"
+  },
+  {
+    "id": "go-types-018",
+    "title": "结构体标签",
+    "description": "用 reflect 读取结构体标签",
+    "exercise_type": "fill",
+    "tech_stack": "go",
+    "weight": "medium",
+    "category": "go_struct",
+    "subcategory": "类型系统",
+    "full_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"reflect\"\n)\n\ntype Request struct {\n\tName string `json:\"name\"`\n\tAge  int    `json:\"age\"`\n}\n\nfunc main() {\n\tt := reflect.TypeOf(Request{})\n\tf, _ := t.FieldByName(\"Name\")\n\tfmt.Println(f.Tag.Get(\"json\"))\n\tf2, _ := t.FieldByName(\"Age\")\n\tfmt.Println(f2.Tag.Get(\"json\"))\n}",
+    "expected": "name\nage",
+    "points": [
+      {
+        "id": "tag",
+        "text": "Name string `json:\"name\"`",
+        "category": "go_struct",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 字段后面的反引号是结构体标签",
+        "fill_type": "text"
+      },
+      {
+        "id": "gettag",
+        "text": "fmt.Println(f.Tag.Get(\"json\"))",
+        "category": "go_struct",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 reflect 可以按 key 读取标签",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 字段后面的反引号是结构体标签",
+      "level_2": "📖 结构体：值接收者操作副本，指针接收者可修改原值；嵌入字段被提升；全可比较则可作 map 键",
+      "level_3": "👀 接近答案：`Name string `json:\"name\"``、`fmt.Println(f.Tag.Get(\"json\"))`",
+      "level_4": "📝 正确答案：`Name string `json:\"name\"``；`fmt.Println(f.Tag.Get(\"json\"))`"
+    },
+    "explanation": "结构体标签是元数据：encoding/json 等库靠它决定字段映射，reflect 是读取标签的标准方式。"
+  },
+  {
+    "id": "go-types-019",
+    "title": "隐式实现",
+    "description": "实现方法即满足接口，无需声明",
+    "exercise_type": "fill",
+    "tech_stack": "go",
+    "weight": "medium",
+    "category": "go_interface",
+    "subcategory": "类型系统",
+    "full_code": "package main\n\nimport \"fmt\"\n\ntype Greeter interface {\n\tGreet() string\n}\n\ntype Robot struct{ Name string }\n\nfunc (r Robot) Greet() string { return \"哔哔，我是 \" + r.Name }\n\nfunc greetAll(gs []Greeter) {\n\tfor _, g := range gs {\n\t\tfmt.Println(g.Greet())\n\t}\n}\n\nfunc main() {\n\tgreetAll([]Greeter{Robot{Name: \"R2\"}})\n}",
+    "expected": "哔哔，我是 R2",
+    "points": [
+      {
+        "id": "impl",
+        "text": "func (r Robot) Greet() string { return \"哔哔，我是 \" + r.Name }",
+        "category": "go_interface",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 实现 Greet 方法即满足 Greeter",
+        "fill_type": "text"
+      },
+      {
+        "id": "useiface",
+        "text": "gs []Greeter",
+        "category": "go_interface",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 函数参数声明为接口类型",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 实现 Greet 方法即满足 Greeter",
+      "level_2": "📖 接口隐式实现；接口值=(类型,值)，带类型的 nil 不等于 nil 接口；any 是空接口",
+      "level_3": "👀 接近答案：`func (r Robot) Greet() string { return \"`、`gs []Greeter`",
+      "level_4": "📝 正确答案：`func (r Robot) Greet() string { return \"哔哔，我是 \" + r.Name }`；`gs []Greeter`"
+    },
+    "explanation": "Go 的接口是隐式满足的：不用 implements 声明。这让定义方与实现方完全解耦。"
+  },
+  {
+    "id": "go-types-020",
+    "title": "接口值的本质",
+    "description": "接口值保存 类型与值 两部分",
+    "exercise_type": "fill",
+    "tech_stack": "go",
+    "weight": "easy",
+    "category": "go_interface",
+    "subcategory": "类型系统",
+    "full_code": "package main\n\nimport \"fmt\"\n\ntype Speaker interface {\n\tSpeak() string\n}\n\ntype Dog struct{}\n\nfunc (Dog) Speak() string { return \"汪\" }\n\nfunc main() {\n\tvar s Speaker = Dog{}\n\tfmt.Printf(\"%T\\n\", s)\n\tfmt.Println(s.Speak())\n}",
+    "expected": "main.Dog\n汪",
+    "points": [
+      {
+        "id": "asgn",
+        "text": "var s Speaker = Dog{}",
+        "category": "go_interface",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "💡 把具体值赋给接口变量",
+        "fill_type": "text"
+      },
+      {
+        "id": "dyn",
+        "text": "s.Speak()",
+        "category": "go_interface",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 %T 可以看到接口里装的具体类型",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 把具体值赋给接口变量",
+      "level_2": "📖 接口隐式实现；接口值=(类型,值)，带类型的 nil 不等于 nil 接口；any 是空接口",
+      "level_3": "👀 接近答案：`var s Speaker = Dog{}`、`s.Speak()`",
+      "level_4": "📝 正确答案：`var s Speaker = Dog{}`；`s.Speak()`"
+    },
+    "explanation": "接口值是一个 (动态类型, 动态值) 二元组；%T 看动态类型，方法调用动态分派。"
+  },
+  {
+    "id": "go-types-021",
+    "title": "nil 接口陷阱",
+    "description": "带类型的 nil 不等于 nil 接口",
+    "exercise_type": "fill",
+    "tech_stack": "go",
+    "weight": "medium",
+    "category": "go_interface",
+    "subcategory": "类型系统",
+    "full_code": "package main\n\nimport \"fmt\"\n\ntype Speaker interface {\n\tSpeak() string\n}\n\ntype Dog struct{}\n\nfunc (d *Dog) Speak() string { return \"汪\" }\n\nfunc get() Speaker {\n\tvar d *Dog\n\treturn d\n}\n\nfunc main() {\n\ts := get()\n\tfmt.Println(\"接口 == nil:\", s == nil)\n\tvar explicitNil *Dog\n\tfmt.Println(\"指针 == nil:\", explicitNil == nil)\n}",
+    "expected": "接口 == nil: false\n指针 == nil: true",
+    "points": [
+      {
+        "id": "trap",
+        "text": "return d",
+        "category": "go_interface",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 返回的接口装着 *Dog 类型的 nil",
+        "fill_type": "text"
+      },
+      {
+        "id": "check",
+        "text": "fmt.Println(\"接口 == nil:\", s == nil)",
+        "category": "go_interface",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 接口等于 nil 要求类型和值都为空",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 返回的接口装着 *Dog 类型的 nil",
+      "level_2": "📖 接口隐式实现；接口值=(类型,值)，带类型的 nil 不等于 nil 接口；any 是空接口",
+      "level_3": "👀 接近答案：`return d`、`fmt.Println(\"接口 == nil:\", s == nil)`",
+      "level_4": "📝 正确答案：`return d`；`fmt.Println(\"接口 == nil:\", s == nil)`"
+    },
+    "explanation": "经典陷阱：把 nil 的 *Dog 赋给接口，接口值=(*Dog, nil)，不等于 nil。返回 error 时务必显式返回 nil。"
+  },
+  {
+    "id": "go-types-022",
+    "title": "空接口 any",
+    "description": "any 接收任意类型的值",
+    "exercise_type": "fill",
+    "tech_stack": "go",
+    "weight": "beginner",
+    "category": "go_interface",
+    "subcategory": "类型系统",
+    "full_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"strings\"\n)\n\nfunc printAll(vals []any) {\n\tparts := make([]string, len(vals))\n\tfor i, v := range vals {\n\t\tparts[i] = fmt.Sprintf(\"%v(%T)\", v, v)\n\t}\n\tfmt.Println(strings.Join(parts, \" \"))\n}\n\nfunc main() {\n\tprintAll([]any{1, \"two\", 3.0, true})\n}",
+    "expected": "1(int) two(string) 3(float64) true(bool)",
+    "points": [
+      {
+        "id": "anyparam",
+        "text": "vals []any",
+        "category": "go_interface",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "💡 []any 可以装任意类型的切片",
+        "fill_type": "text"
+      },
+      {
+        "id": "fmtT",
+        "text": "\"%v(%T)\"",
+        "category": "go_interface",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 %v 与 %T 配合打印值与类型",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 []any 可以装任意类型的切片",
+      "level_2": "📖 接口隐式实现；接口值=(类型,值)，带类型的 nil 不等于 nil 接口；any 是空接口",
+      "level_3": "👀 接近答案：`vals []any`、`\"%v(%T)\"`",
+      "level_4": "📝 正确答案：`vals []any`；`\"%v(%T)\"`"
+    },
+    "explanation": "any 是 interface{} 的别名：不约束任何方法。代价是失去类型安全，需要断言才能用具体值。"
+  },
+  {
+    "id": "go-types-023",
+    "title": "error 接口",
+    "description": "error 就是一个内置接口",
+    "exercise_type": "fill",
+    "tech_stack": "go",
+    "weight": "beginner",
+    "category": "go_interface",
+    "subcategory": "类型系统",
+    "full_code": "package main\n\nimport (\n\t\"errors\"\n\t\"fmt\"\n)\n\nfunc parse(age int) error {\n\tif age < 0 {\n\t\treturn errors.New(\"年龄不能为负\")\n\t}\n\treturn nil\n}\n\nfunc main() {\n\tfmt.Println(parse(-1))\n\tfmt.Println(parse(20))\n\tfmt.Println(parse(-1) == nil)\n}",
+    "expected": "年龄不能为负\n<nil>\nfalse",
+    "points": [
+      {
+        "id": "errnew",
+        "text": "return errors.New(\"年龄不能为负\")",
+        "category": "go_interface",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "💡 错误用 errors.New 创建",
+        "fill_type": "text"
+      },
+      {
+        "id": "nilerr",
+        "text": "return nil",
+        "category": "go_interface",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 成功时显式返回 nil",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 错误用 errors.New 创建",
+      "level_2": "📖 接口隐式实现；接口值=(类型,值)，带类型的 nil 不等于 nil 接口；any 是空接口",
+      "level_3": "👀 接近答案：`return errors.New(\"年龄不能为负\")`、`return nil`",
+      "level_4": "📝 正确答案：`return errors.New(\"年龄不能为负\")`；`return nil`"
+    },
+    "explanation": "error 接口只有一个 Error() string 方法。惯用签名 (T, error)：失败返回零值+错误，成功返回值+nil。"
+  },
+  {
+    "id": "go-types-024",
+    "title": "接口组合",
+    "description": "小接口组合成大接口",
+    "exercise_type": "fill",
+    "tech_stack": "go",
+    "weight": "medium",
+    "category": "go_interface",
+    "subcategory": "类型系统",
+    "full_code": "package main\n\nimport \"fmt\"\n\ntype Reader interface{ Read() string }\ntype Writer interface{ Write(s string) }\n\ntype ReadWriter interface {\n\tReader\n\tWriter\n}\n\ntype Memory struct{ data string }\n\nfunc (m *Memory) Read() string  { return m.data }\nfunc (m *Memory) Write(s string) { m.data += s }\n\nfunc main() {\n\tvar rw ReadWriter = &Memory{}\n\trw.Write(\"hello\")\n\trw.Write(\" world\")\n\tfmt.Println(rw.Read())\n}",
+    "expected": "hello world",
+    "points": [
+      {
+        "id": "combine",
+        "text": "type ReadWriter interface {",
+        "category": "go_interface",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 ReadWriter 嵌入了 Reader 和 Writer",
+        "fill_type": "text"
+      },
+      {
+        "id": "writeimpl",
+        "text": "func (m *Memory) Write(s string) { m.data += s }",
+        "category": "go_interface",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 实现两个方法即满足组合接口",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 ReadWriter 嵌入了 Reader 和 Writer",
+      "level_2": "📖 接口隐式实现；接口值=(类型,值)，带类型的 nil 不等于 nil 接口；any 是空接口",
+      "level_3": "👀 接近答案：`type ReadWriter interface {`、`func (m *Memory) Write(s string) { m.dat`",
+      "level_4": "📝 正确答案：`type ReadWriter interface {`；`func (m *Memory) Write(s string) { m.data += s }`"
+    },
+    "explanation": "io.Reader/io.Writer 的设计思想：小接口组合成大接口。实现方只需各自实现小接口的方法集。"
+  },
+  {
+    "id": "go-types-025",
+    "title": "接口到接口断言",
+    "description": "判断接口值是否还实现了其他接口",
+    "exercise_type": "fill",
+    "tech_stack": "go",
+    "weight": "medium",
+    "category": "go_interface",
+    "subcategory": "类型系统",
+    "full_code": "package main\n\nimport \"fmt\"\n\ntype Walker interface{ Walk() string }\ntype Swimmer interface{ Swim() string }\n\ntype Duck struct{}\n\nfunc (Duck) Walk() string { return \"走路\" }\nfunc (Duck) Swim() string { return \"游泳\" }\n\nfunc main() {\n\tvar w Walker = Duck{}\n\tif sw, ok := w.(Swimmer); ok {\n\t\tfmt.Println(\"既会\", w.Walk(), \"又会\", sw.Swim())\n\t} else {\n\t\tfmt.Println(\"只会走路\")\n\t}\n}",
+    "expected": "既会 走路 又会 游泳",
+    "points": [
+      {
+        "id": "ifacetoiface",
+        "text": "if sw, ok := w.(Swimmer); ok {",
+        "category": "go_interface",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 接口值可以断言到另一个接口",
+        "fill_type": "text"
+      },
+      {
+        "id": "both",
+        "text": "fmt.Println(\"既会\", w.Walk(), \"又会\", sw.Swim())",
+        "category": "go_interface",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 带 ok 的形式安全判断能力",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 接口值可以断言到另一个接口",
+      "level_2": "📖 接口隐式实现；接口值=(类型,值)，带类型的 nil 不等于 nil 接口；any 是空接口",
+      "level_3": "👀 接近答案：`if sw, ok := w.(Swimmer); ok {`、`fmt.Println(\"既会\", w.Walk(), \"又会\", sw.Swi`",
+      "level_4": "📝 正确答案：`if sw, ok := w.(Swimmer); ok {`；`fmt.Println(\"既会\", w.Walk(), \"又会\", sw.Swim())`"
+    },
+    "explanation": "接口断言的目标也可以是接口：判断动态值是否实现了更大/不同的方法集，常用于能力探测。"
+  },
+  {
+    "id": "go-types-026",
+    "title": "泛型函数",
+    "description": "类型参数让函数同时支持多种类型",
+    "exercise_type": "fill",
+    "tech_stack": "go",
+    "weight": "medium",
+    "category": "go_generics",
+    "subcategory": "类型系统",
+    "full_code": "package main\n\nimport \"fmt\"\n\nfunc Max[T int | float64 | string](a, b T) T {\n\tif a > b {\n\t\treturn a\n\t}\n\treturn b\n}\n\nfunc main() {\n\tfmt.Println(Max(3, 7), Max(2.5, 1.5), Max(\"apple\", \"banana\"))\n}",
+    "expected": "7 2.5 banana",
+    "points": [
+      {
+        "id": "typeparam",
+        "text": "func Max[T int | float64 | string](a, b T) T {",
+        "category": "go_generics",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 方括号里声明类型参数与约束",
+        "fill_type": "text"
+      },
+      {
+        "id": "call",
+        "text": "Max(\"apple\", \"banana\")",
+        "category": "go_generics",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 调用时不写类型，编译器推断",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 方括号里声明类型参数与约束",
+      "level_2": "📖 泛型：[T 约束] 声明类型参数，约束是类型集合，~T 表示底层类型",
+      "level_3": "👀 接近答案：`func Max[T int | float64 | string](a, b `、`Max(\"apple\", \"banana\")`",
+      "level_4": "📝 正确答案：`func Max[T int | float64 | string](a, b T) T {`；`Max(\"apple\", \"banana\")`"
+    },
+    "explanation": "[T int | float64 | string] 声明类型参数 T 及其约束（类型集合）。泛型在编译期实例化，无运行时开销。"
+  },
+  {
+    "id": "go-types-027",
+    "title": "泛型约束",
+    "description": "用接口声明约束类型集合",
+    "exercise_type": "fill",
+    "tech_stack": "go",
+    "weight": "medium",
+    "category": "go_generics",
+    "subcategory": "类型系统",
+    "full_code": "package main\n\nimport \"fmt\"\n\ntype Number interface {\n\t~int | ~float64\n}\n\nfunc Sum[T Number](nums []T) T {\n\tvar total T\n\tfor _, n := range nums {\n\t\ttotal += n\n\t}\n\treturn total\n}\n\nfunc main() {\n\tfmt.Println(Sum([]int{1, 2, 3}), Sum([]float64{1.5, 2.5}))\n}",
+    "expected": "6 4",
+    "points": [
+      {
+        "id": "constraint",
+        "text": "type Number interface {",
+        "category": "go_generics",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 约束是列出类型集合的接口",
+        "fill_type": "text"
+      },
+      {
+        "id": "tilde",
+        "text": "~int | ~float64",
+        "category": "go_generics",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 ~int 表示底层类型为 int 的所有类型",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 约束是列出类型集合的接口",
+      "level_2": "📖 泛型：[T 约束] 声明类型参数，约束是类型集合，~T 表示底层类型",
+      "level_3": "👀 接近答案：`type Number interface {`、`~int | ~float64`",
+      "level_4": "📝 正确答案：`type Number interface {`；`~int | ~float64`"
+    },
+    "explanation": "泛型约束就是接口：普通写法只匹配该类型，~T 匹配底层类型为 T 的所有类型（含自定义类型）。"
+  },
+  {
+    "id": "go-types-028",
+    "title": "泛型类型",
+    "description": "类型参数也可以用在类型定义上",
+    "exercise_type": "fill",
+    "tech_stack": "go",
+    "weight": "medium",
+    "category": "go_generics",
+    "subcategory": "类型系统",
+    "full_code": "package main\n\nimport \"fmt\"\n\ntype Stack[T any] struct {\n\titems []T\n}\n\nfunc (s *Stack[T]) Push(v T) { s.items = append(s.items, v) }\n\nfunc (s *Stack[T]) Pop() (T, bool) {\n\tif len(s.items) == 0 {\n\t\tvar zero T\n\t\treturn zero, false\n\t}\n\tv := s.items[len(s.items)-1]\n\ts.items = s.items[:len(s.items)-1]\n\treturn v, true\n}\n\nfunc main() {\n\ts := Stack[string]{}\n\ts.Push(\"a\")\n\ts.Push(\"b\")\n\tv, _ := s.Pop()\n\tfmt.Println(v, len(s.items))\n}",
+    "expected": "b 1",
+    "points": [
+      {
+        "id": "genericstruct",
+        "text": "type Stack[T any] struct {",
+        "category": "go_generics",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 类型定义也可带类型参数",
+        "fill_type": "text"
+      },
+      {
+        "id": "zero",
+        "text": "var zero T",
+        "category": "go_generics",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 空栈返回 T 的零值与 false",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 类型定义也可带类型参数",
+      "level_2": "📖 泛型：[T 约束] 声明类型参数，约束是类型集合，~T 表示底层类型",
+      "level_3": "👀 接近答案：`type Stack[T any] struct {`、`var zero T`",
+      "level_4": "📝 正确答案：`type Stack[T any] struct {`；`var zero T`"
+    },
+    "explanation": "泛型类型在声明与每个方法上都要带 [T]；栈空时用 var zero T 返回零值，避免 panic。"
+  },
+  {
+    "id": "go-types-029",
+    "title": "值传递与指针",
+    "description": "传值是副本，传指针才能修改原值",
+    "exercise_type": "fill",
+    "tech_stack": "go",
+    "weight": "medium",
+    "category": "go_pointer",
+    "subcategory": "类型系统",
+    "full_code": "package main\n\nimport \"fmt\"\n\nfunc failedUpdate(p int) { p = 100 }\n\nfunc update(p *int) { *p = 100 }\n\nfunc main() {\n\tx := 1\n\tfailedUpdate(x)\n\tfmt.Println(x)\n\tupdate(&x)\n\tfmt.Println(x)\n}",
+    "expected": "1\n100",
+    "points": [
+      {
+        "id": "deref",
+        "text": "*p = 100",
+        "category": "go_pointer",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 普通传参修改的是副本",
+        "fill_type": "text"
+      },
+      {
+        "id": "addr",
+        "text": "update(&x)",
+        "category": "go_pointer",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "💡 传 &x 并用 *p 解引用才能改原值",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 普通传参修改的是副本",
+      "level_2": "📖 值传参是副本，指针传参共享；map/slice 底层共享，无需取地址即可修改",
+      "level_3": "👀 接近答案：`*p = 100`、`update(&x)`",
+      "level_4": "📝 正确答案：`*p = 100`；`update(&x)`"
+    },
+    "explanation": "Go 所有传参都是值传递：传 int 是拷贝，传 *int 拷贝的是地址，但指向同一原值。"
+  },
+  {
+    "id": "go-types-030",
+    "title": "map 与切片的引用语义",
+    "description": "map/切片无需取地址即可被修改",
+    "exercise_type": "fill",
+    "tech_stack": "go",
+    "weight": "medium",
+    "category": "go_pointer",
+    "subcategory": "类型系统",
+    "full_code": "package main\n\nimport \"fmt\"\n\nfunc mutate(m map[string]int, s []int) {\n\tm[\"k\"] = 9\n\ts[0] = 99\n}\n\nfunc main() {\n\tm := map[string]int{\"k\": 1}\n\ts := []int{1, 2}\n\tmutate(m, s)\n\tfmt.Println(m[\"k\"], s[0])\n}",
+    "expected": "9 99",
+    "points": [
+      {
+        "id": "mutate",
+        "text": "m[\"k\"] = 9",
+        "category": "go_pointer",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 函数内直接修改 map 与切片元素",
+        "fill_type": "text"
+      },
+      {
+        "id": "call",
+        "text": "mutate(m, s)",
+        "category": "go_pointer",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "💡 调用后原 map 与切片已被改变",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 函数内直接修改 map 与切片元素",
+      "level_2": "📖 值传参是副本，指针传参共享；map/slice 底层共享，无需取地址即可修改",
+      "level_3": "👀 接近答案：`m[\"k\"] = 9`、`mutate(m, s)`",
+      "level_4": "📝 正确答案：`m[\"k\"] = 9`；`mutate(m, s)`"
+    },
+    "explanation": "map/切片传参拷贝的是『头部』，底层数据共享——所以函数内修改对外可见，无需指针。"
+  }
+]

@@ -1,0 +1,392 @@
+[
+  {
+    "id": "ds-stack-001",
+    "title": "数组实现栈",
+    "description": "后进先出的基本栈",
+    "exercise_type": "fill",
+    "tech_stack": "datastructure",
+    "weight": "beginner",
+    "category": "ds_stackqueue",
+    "subcategory": "栈与队列",
+    "full_code": "class Stack:\n    def __init__(self):\n        self.items = []\n\n    def push(self, v):\n        self.items.append(v)\n\n    def pop(self):\n        return self.items.pop() if self.items else None\n\n    def peek(self):\n        return self.items[-1] if self.items else None\n\ns = Stack()\nfor v in (1, 2, 3):\n    s.push(v)\nprint(s.pop(), s.peek())\nprint(\"剩余:\", s.items)",
+    "expected": "3 2\n剩余: [1, 2]",
+    "points": [
+      {
+        "id": "push",
+        "text": "self.items.append(v)",
+        "category": "ds_stackqueue",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "💡 栈顶就是数组尾部",
+        "fill_type": "text"
+      },
+      {
+        "id": "pop",
+        "text": "return self.items.pop() if self.items else None",
+        "category": "ds_stackqueue",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 pop 前先判断栈是否为空",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 栈顶就是数组尾部",
+      "level_2": "📖 栈 LIFO 后进先出，队列 FIFO 先进先出；单调栈/单调队列维护有序性",
+      "level_3": "👀 接近答案：`self.items.append(v)`、`return self.items.pop() if self.items el`",
+      "level_4": "📝 正确答案：`self.items.append(v)`；`return self.items.pop() if self.items else None`"
+    },
+    "explanation": "栈 LIFO：尾部进、尾部出。list 的 append/pop 都是 O(1)，天然适合当栈。"
+  },
+  {
+    "id": "ds-stack-002",
+    "title": "括号匹配",
+    "description": "栈的经典应用：检查括号配对",
+    "exercise_type": "fill",
+    "tech_stack": "datastructure",
+    "weight": "easy",
+    "category": "ds_stackqueue",
+    "subcategory": "栈与队列",
+    "full_code": "PAIRS = {\")\": \"(\", \"]\": \"[\", \"}\": \"{\"}\n\ndef is_balanced(text):\n    stack = []\n    for ch in text:\n        if ch in \"([{\":\n            stack.append(ch)\n        elif ch in PAIRS:\n            if not stack or stack.pop() != PAIRS[ch]:\n                return False\n    return not stack\n\nprint(is_balanced(\"a(b[c]d)e\"))\nprint(is_balanced(\"f(x))\"))",
+    "expected": "True\nFalse",
+    "points": [
+      {
+        "id": "push",
+        "text": "stack.append(ch)",
+        "category": "ds_stackqueue",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 左括号压栈",
+        "fill_type": "text"
+      },
+      {
+        "id": "mismatch",
+        "text": "if not stack or stack.pop() != PAIRS[ch]:",
+        "category": "ds_stackqueue",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 右括号必须与栈顶配对，最后栈要为空",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 左括号压栈",
+      "level_2": "📖 栈 LIFO 后进先出，队列 FIFO 先进先出；单调栈/单调队列维护有序性",
+      "level_3": "👀 接近答案：`stack.append(ch)`、`if not stack or stack.pop() != PAIRS[ch]`",
+      "level_4": "📝 正确答案：`stack.append(ch)`；`if not stack or stack.pop() != PAIRS[ch]:`"
+    },
+    "explanation": "括号匹配是栈的招牌题：左括号进栈，右括号与栈顶比对。结束时栈非空也算不匹配。"
+  },
+  {
+    "id": "ds-stack-003",
+    "title": "逆波兰表达式",
+    "description": "后缀表达式用栈求值",
+    "exercise_type": "fill",
+    "tech_stack": "datastructure",
+    "weight": "medium",
+    "category": "ds_stackqueue",
+    "subcategory": "栈与队列",
+    "full_code": "OPS = {\"+\": lambda a, b: a + b, \"-\": lambda a, b: a - b,\n       \"*\": lambda a, b: a * b, \"/\": lambda a, b: int(a / b)}\n\ndef eval_rpn(tokens):\n    stack = []\n    for t in tokens:\n        if t in OPS:\n            b = stack.pop()\n            a = stack.pop()\n            stack.append(OPS[t](a, b))\n        else:\n            stack.append(int(t))\n    return stack[0]\n\nprint(eval_rpn([\"2\", \"1\", \"+\", \"3\", \"*\"]))",
+    "expected": "9",
+    "points": [
+      {
+        "id": "num",
+        "text": "stack.append(int(t))",
+        "category": "ds_stackqueue",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 数字进栈",
+        "fill_type": "text"
+      },
+      {
+        "id": "apply",
+        "text": "stack.append(OPS[t](a, b))",
+        "category": "ds_stackqueue",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 遇运算符弹两个数，先弹的是右操作数",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 数字进栈",
+      "level_2": "📖 栈 LIFO 后进先出，队列 FIFO 先进先出；单调栈/单调队列维护有序性",
+      "level_3": "👀 接近答案：`stack.append(int(t))`、`stack.append(OPS[t](a, b))`",
+      "level_4": "📝 正确答案：`stack.append(int(t))`；`stack.append(OPS[t](a, b))`"
+    },
+    "explanation": "逆波兰式不需要括号：操作数进栈，运算符弹出两个操作数计算后压回。注意先弹出的是右数。"
+  },
+  {
+    "id": "ds-stack-004",
+    "title": "最小栈",
+    "description": "辅助栈让 getMin 也是 O(1)",
+    "exercise_type": "fill",
+    "tech_stack": "datastructure",
+    "weight": "medium",
+    "category": "ds_stackqueue",
+    "subcategory": "栈与队列",
+    "full_code": "class MinStack:\n    def __init__(self):\n        self.stack = []\n        self.mins = []\n\n    def push(self, v):\n        self.stack.append(v)\n        current = self.mins[-1] if self.mins else v\n        self.mins.append(min(v, current))\n\n    def pop(self):\n        self.stack.pop()\n        self.mins.pop()\n\n    def min(self):\n        return self.mins[-1]\n\ns = MinStack()\nfor v in (5, 2, 7, 1):\n    s.push(v)\nprint(\"栈顶:\", s.stack[-1], \"| 最小:\", s.min())\ns.pop()\nprint(\"弹出一个后最小:\", s.min())",
+    "expected": "栈顶: 1 | 最小: 1\n弹出一个后最小: 2",
+    "points": [
+      {
+        "id": "aux",
+        "text": "self.mins.append(min(v, current))",
+        "category": "ds_stackqueue",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 push 时辅助栈同步压入当前最小",
+        "fill_type": "text"
+      },
+      {
+        "id": "cur",
+        "text": "current = self.mins[-1] if self.mins else v",
+        "category": "ds_stackqueue",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 pop 时两个栈一起弹",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 push 时辅助栈同步压入当前最小",
+      "level_2": "📖 栈 LIFO 后进先出，队列 FIFO 先进先出；单调栈/单调队列维护有序性",
+      "level_3": "👀 接近答案：`self.mins.append(min(v, current))`、`current = self.mins[-1] if self.mins els`",
+      "level_4": "📝 正确答案：`self.mins.append(min(v, current))`；`current = self.mins[-1] if self.mins else v`"
+    },
+    "explanation": "辅助栈与主栈逐层对应：mins[-1] 永远是当前栈的最小值，出栈后能回退到历史最小。"
+  },
+  {
+    "id": "ds-stack-005",
+    "title": "两个栈实现队列",
+    "description": "倒灌实现先进先出",
+    "exercise_type": "fill",
+    "tech_stack": "datastructure",
+    "weight": "medium",
+    "category": "ds_stackqueue",
+    "subcategory": "栈与队列",
+    "full_code": "class QueueByStacks:\n    def __init__(self):\n        self.inbox = []\n        self.outbox = []\n\n    def enqueue(self, v):\n        self.inbox.append(v)\n\n    def dequeue(self):\n        if not self.outbox:\n            while self.inbox:\n                self.outbox.append(self.inbox.pop())\n        return self.outbox.pop() if self.outbox else None\n\nq = QueueByStacks()\nq.enqueue(1)\nq.enqueue(2)\nprint(q.dequeue())\nq.enqueue(3)\nprint(q.dequeue(), q.dequeue())",
+    "expected": "1\n2 3",
+    "points": [
+      {
+        "id": "pour",
+        "text": "self.outbox.append(self.inbox.pop())",
+        "category": "ds_stackqueue",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 入队压 inbox",
+        "fill_type": "text"
+      },
+      {
+        "id": "fifo",
+        "text": "return self.outbox.pop() if self.outbox else None",
+        "category": "ds_stackqueue",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 出队时 outbox 为空才把 inbox 倒灌过来",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 入队压 inbox",
+      "level_2": "📖 栈 LIFO 后进先出，队列 FIFO 先进先出；单调栈/单调队列维护有序性",
+      "level_3": "👀 接近答案：`self.outbox.append(self.inbox.pop())`、`return self.outbox.pop() if self.outbox `",
+      "level_4": "📝 正确答案：`self.outbox.append(self.inbox.pop())`；`return self.outbox.pop() if self.outbox else None`"
+    },
+    "explanation": "两个栈倒一次顺序就反过来了：摊还分析下每个元素只倒一次，dequeue 均摊 O(1)。"
+  },
+  {
+    "id": "ds-stack-006",
+    "title": "循环队列",
+    "description": "取模让数组首尾相接",
+    "exercise_type": "fill",
+    "tech_stack": "datastructure",
+    "weight": "medium",
+    "category": "ds_stackqueue",
+    "subcategory": "栈与队列",
+    "full_code": "class CircularQueue:\n    def __init__(self, capacity):\n        self.data = [None] * capacity\n        self.head = 0\n        self.count = 0\n\n    def enqueue(self, v):\n        if self.count == len(self.data):\n            return False\n        self.data[(self.head + self.count) % len(self.data)] = v\n        self.count += 1\n        return True\n\n    def dequeue(self):\n        if self.count == 0:\n            return None\n        v = self.data[self.head]\n        self.head = (self.head + 1) % len(self.data)\n        self.count -= 1\n        return v\n\nq = CircularQueue(3)\nfor v in (1, 2, 3):\n    q.enqueue(v)\nprint(\"满后入队:\", q.enqueue(4))\nprint(q.dequeue(), q.dequeue())\nq.enqueue(5)\nprint(\"剩余:\", [q.dequeue() for _ in range(2)])",
+    "expected": "满后入队: False\n1 2\n剩余: [3, 5]",
+    "points": [
+      {
+        "id": "ring",
+        "text": "(self.head + self.count) % len(self.data)",
+        "category": "ds_stackqueue",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 用 head + count 定位队尾",
+        "fill_type": "text"
+      },
+      {
+        "id": "advance",
+        "text": "self.head = (self.head + 1) % len(self.data)",
+        "category": "ds_stackqueue",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 下标都对容量取模实现环绕",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 用 head + count 定位队尾",
+      "level_2": "📖 栈 LIFO 后进先出，队列 FIFO 先进先出；单调栈/单调队列维护有序性",
+      "level_3": "👀 接近答案：`(self.head + self.count) % len(self.data`、`self.head = (self.head + 1) % len(self.d`",
+      "level_4": "📝 正确答案：`(self.head + self.count) % len(self.data)`；`self.head = (self.head + 1) % len(self.data)`"
+    },
+    "explanation": "循环队列用 head+count 代替 head/tail 双指针，避免『满』与『空』的判别歧义。"
+  },
+  {
+    "id": "ds-stack-007",
+    "title": "单调栈",
+    "description": "求每个元素右边第一个更大值",
+    "exercise_type": "fill",
+    "tech_stack": "datastructure",
+    "weight": "medium",
+    "category": "ds_stackqueue",
+    "subcategory": "栈与队列",
+    "full_code": "def next_greater(nums):\n    result = [-1] * len(nums)\n    stack = []\n    for i, v in enumerate(nums):\n        while stack and nums[stack[-1]] < v:\n            index = stack.pop()\n            result[index] = v\n        stack.append(i)\n    return result\n\nprint(next_greater([2, 1, 3, 4, 1]))",
+    "expected": "[3, 3, 4, -1, -1]",
+    "points": [
+      {
+        "id": "mono",
+        "text": "while stack and nums[stack[-1]] < v:",
+        "category": "ds_stackqueue",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 栈里存下标，对应值递减",
+        "fill_type": "text"
+      },
+      {
+        "id": "resolve",
+        "text": "result[index] = v",
+        "category": "ds_stackqueue",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 当前值比栈顶大就弹出并结算",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 栈里存下标，对应值递减",
+      "level_2": "📖 栈 LIFO 后进先出，队列 FIFO 先进先出；单调栈/单调队列维护有序性",
+      "level_3": "👀 接近答案：`while stack and nums[stack[-1]] < v:`、`result[index] = v`",
+      "level_4": "📝 正确答案：`while stack and nums[stack[-1]] < v:`；`result[index] = v`"
+    },
+    "explanation": "单调栈：元素入栈前把比它小的全部结算。每个元素最多进栈出栈一次，整体 O(n)。"
+  },
+  {
+    "id": "ds-stack-008",
+    "title": "单调队列",
+    "description": "滑动窗口最大值",
+    "exercise_type": "fill",
+    "tech_stack": "datastructure",
+    "weight": "medium",
+    "category": "ds_stackqueue",
+    "subcategory": "栈与队列",
+    "full_code": "from collections import deque\n\ndef max_window(nums, k):\n    dq = deque()\n    out = []\n    for i, v in enumerate(nums):\n        while dq and nums[dq[-1]] <= v:\n            dq.pop()\n        dq.append(i)\n        if dq[0] <= i - k:\n            dq.popleft()\n        if i >= k - 1:\n            out.append(nums[dq[0]])\n    return out\n\nprint(max_window([1, 3, -1, -3, 5, 3, 6, 7], 3))",
+    "expected": "[3, 3, 5, 5, 6, 7]",
+    "points": [
+      {
+        "id": "shrink",
+        "text": "while dq and nums[dq[-1]] <= v:",
+        "category": "ds_stackqueue",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 队头永远是当前窗口最大值的下标",
+        "fill_type": "text"
+      },
+      {
+        "id": "expire",
+        "text": "if dq[0] <= i - k:",
+        "category": "ds_stackqueue",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 新元素入队前弹掉不比它大的",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 队头永远是当前窗口最大值的下标",
+      "level_2": "📖 栈 LIFO 后进先出，队列 FIFO 先进先出；单调栈/单调队列维护有序性",
+      "level_3": "👀 接近答案：`while dq and nums[dq[-1]] <= v:`、`if dq[0] <= i - k:`",
+      "level_4": "📝 正确答案：`while dq and nums[dq[-1]] <= v:`；`if dq[0] <= i - k:`"
+    },
+    "explanation": "单调队列让滑动窗口最大值降到 O(n)：队头管最大值，队尾维护单调性，过期从队头出。"
+  },
+  {
+    "id": "ds-stack-009",
+    "title": "双端队列",
+    "description": "两端都能进出的 deque",
+    "exercise_type": "fill",
+    "tech_stack": "datastructure",
+    "weight": "beginner",
+    "category": "ds_stackqueue",
+    "subcategory": "栈与队列",
+    "full_code": "from collections import deque\n\ndef process(tasks):\n    dq = deque()\n    log = []\n    for action, value in tasks:\n        if action == \"push_back\":\n            dq.append(value)\n        elif action == \"push_front\":\n            dq.appendleft(value)\n        elif action == \"pop_back\":\n            log.append(dq.pop())\n        elif action == \"pop_front\":\n            log.append(dq.popleft())\n    return dq, log\n\ndq, log = process([(\"push_back\", 1), (\"push_front\", 2),\n                   (\"push_back\", 3), (\"pop_front\", None)])\nprint(\"弹出:\", log, \"| 剩余:\", list(dq))",
+    "expected": "弹出: [2] | 剩余: [1, 3]",
+    "points": [
+      {
+        "id": "front",
+        "text": "dq.appendleft(value)",
+        "category": "ds_stackqueue",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 push_back/pop_back 操作尾部",
+        "fill_type": "text"
+      },
+      {
+        "id": "popleft",
+        "text": "log.append(dq.popleft())",
+        "category": "ds_stackqueue",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 push_front/pop_front 操作头部",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 push_back/pop_back 操作尾部",
+      "level_2": "📖 栈 LIFO 后进先出，队列 FIFO 先进先出；单调栈/单调队列维护有序性",
+      "level_3": "👀 接近答案：`dq.appendleft(value)`、`log.append(dq.popleft())`",
+      "level_4": "📝 正确答案：`dq.appendleft(value)`；`log.append(dq.popleft())`"
+    },
+    "explanation": "deque 两端操作都是 O(1)，既是栈也是队列，还是单调队列与滑动窗口的载体。"
+  },
+  {
+    "id": "ds-stack-010",
+    "title": "两个队列实现栈",
+    "description": "每次把新元素排到最前",
+    "exercise_type": "fill",
+    "tech_stack": "datastructure",
+    "weight": "medium",
+    "category": "ds_stackqueue",
+    "subcategory": "栈与队列",
+    "full_code": "from collections import deque\n\nclass StackByQueues:\n    def __init__(self):\n        self.q1 = deque()\n        self.q2 = deque()\n\n    def push(self, v):\n        self.q2.append(v)\n        while self.q1:\n            self.q2.append(self.q1.popleft())\n        self.q1, self.q2 = self.q2, self.q1\n\n    def pop(self):\n        return self.q1.popleft() if self.q1 else None\n\ns = StackByQueues()\ns.push(1)\ns.push(2)\ns.push(3)\nprint(s.pop(), s.pop(), s.pop())",
+    "expected": "3 2 1",
+    "points": [
+      {
+        "id": "fill",
+        "text": "while self.q1:",
+        "category": "ds_stackqueue",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 新元素先进 q2",
+        "fill_type": "text"
+      },
+      {
+        "id": "swap",
+        "text": "self.q1, self.q2 = self.q2, self.q1",
+        "category": "ds_stackqueue",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 把 q1 的旧元素接在后面再交换",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 新元素先进 q2",
+      "level_2": "📖 栈 LIFO 后进先出，队列 FIFO 先进先出；单调栈/单调队列维护有序性",
+      "level_3": "👀 接近答案：`while self.q1:`、`self.q1, self.q2 = self.q2, self.q1`",
+      "level_4": "📝 正确答案：`while self.q1:`；`self.q1, self.q2 = self.q2, self.q1`"
+    },
+    "explanation": "用队列模拟栈的代价在 push：每次把新元素顶到队首。与两栈成队（代价在 pop）互为镜像。"
+  }
+]

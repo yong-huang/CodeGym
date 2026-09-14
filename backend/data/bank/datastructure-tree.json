@@ -1,0 +1,392 @@
+[
+  {
+    "id": "ds-tree-001",
+    "title": "前序与中序遍历",
+    "description": "递归遍历二叉树",
+    "exercise_type": "fill",
+    "tech_stack": "datastructure",
+    "weight": "beginner",
+    "category": "ds_tree",
+    "subcategory": "树",
+    "full_code": "class TreeNode:\n    def __init__(self, value, left=None, right=None):\n        self.value = value\n        self.left = left\n        self.right = right\n\ndef preorder(node, out=None):\n    out = out if out is not None else []\n    if node:\n        out.append(node.value)\n        preorder(node.left, out)\n        preorder(node.right, out)\n    return out\n\ndef inorder(node, out=None):\n    out = out if out is not None else []\n    if node:\n        inorder(node.left, out)\n        out.append(node.value)\n        inorder(node.right, out)\n    return out\n\nroot = TreeNode(1, TreeNode(2, TreeNode(4)), TreeNode(3))\nprint(\"前序:\", preorder(root))\nprint(\"中序:\", inorder(root))",
+    "expected": "前序: [1, 2, 4, 3]\n中序: [4, 2, 1, 3]",
+    "points": [
+      {
+        "id": "preroot",
+        "text": "out.append(node.value)\n        preorder(node.left, out)",
+        "category": "ds_tree",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 前序顺序：根、左、右",
+        "fill_type": "text"
+      },
+      {
+        "id": "inleft",
+        "text": "inorder(node.left, out)",
+        "category": "ds_tree",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 中序顺序：左、根、右",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 前序顺序：根、左、右",
+      "level_2": "📖 二叉树递归套路；BST 中序有序；堆是完全二叉树；Trie 按字符分叉",
+      "level_3": "👀 接近答案：`out.append(node.value)\n        preorder(`、`inorder(node.left, out)`",
+      "level_4": "📝 正确答案：`out.append(node.value)\n        preorder(node.left, out)`；`inorder(node.left, out)`"
+    },
+    "explanation": "三种遍历只差『访问根』的位置。递归写法简洁；面试常考非递归（显式栈）版本。"
+  },
+  {
+    "id": "ds-tree-002",
+    "title": "层序遍历",
+    "description": "用队列逐层访问二叉树",
+    "exercise_type": "fill",
+    "tech_stack": "datastructure",
+    "weight": "beginner",
+    "category": "ds_tree",
+    "subcategory": "树",
+    "full_code": "from collections import deque\n\nclass TreeNode:\n    def __init__(self, value, left=None, right=None):\n        self.value = value\n        self.left = left\n        self.right = right\n\ndef level_order(root):\n    order = []\n    queue = deque([root] if root else [])\n    while queue:\n        node = queue.popleft()\n        order.append(node.value)\n        if node.left:\n            queue.append(node.left)\n        if node.right:\n            queue.append(node.right)\n    return order\n\nroot = TreeNode(1, TreeNode(2, TreeNode(4)), TreeNode(3, right=TreeNode(5)))\nprint(level_order(root))",
+    "expected": "[1, 2, 3, 4, 5]",
+    "points": [
+      {
+        "id": "bfs",
+        "text": "node = queue.popleft()",
+        "category": "ds_tree",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 队列保证按层访问",
+        "fill_type": "text"
+      },
+      {
+        "id": "expand",
+        "text": "queue.append(node.left)",
+        "category": "ds_tree",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 出队一个就把它的孩子排队",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 队列保证按层访问",
+      "level_2": "📖 二叉树递归套路；BST 中序有序；堆是完全二叉树；Trie 按字符分叉",
+      "level_3": "👀 接近答案：`node = queue.popleft()`、`queue.append(node.left)`",
+      "level_4": "📝 正确答案：`node = queue.popleft()`；`queue.append(node.left)`"
+    },
+    "explanation": "层序=图 BFS 在树上的特例。需要按层分组时，在每轮循环前记录队列长度即可。"
+  },
+  {
+    "id": "ds-tree-003",
+    "title": "二叉搜索树",
+    "description": "插入与查找都走同一条路径",
+    "exercise_type": "fill",
+    "tech_stack": "datastructure",
+    "weight": "medium",
+    "category": "ds_tree",
+    "subcategory": "树",
+    "full_code": "class TreeNode:\n    def __init__(self, value, left=None, right=None):\n        self.value = value\n        self.left = left\n        self.right = right\n\nclass BST:\n    def __init__(self):\n        self.root = None\n\n    def insert(self, value):\n        def _insert(node, value):\n            if node is None:\n                return TreeNode(value)\n            if value < node.value:\n                node.left = _insert(node.left, value)\n            elif value > node.value:\n                node.right = _insert(node.right, value)\n            return node\n        self.root = _insert(self.root, value)\n\n    def contains(self, value):\n        node = self.root\n        while node:\n            if value == node.value:\n                return True\n            node = node.left if value < node.value else node.right\n        return False\n\ntree = BST()\nfor v in (5, 3, 8, 1):\n    tree.insert(v)\nprint(tree.contains(3), tree.contains(9))",
+    "expected": "True False",
+    "points": [
+      {
+        "id": "recurins",
+        "text": "node.left = _insert(node.left, value)",
+        "category": "ds_tree",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 小于当前值走左边，大于走右边",
+        "fill_type": "text"
+      },
+      {
+        "id": "iterfind",
+        "text": "node = node.left if value < node.value else node.right",
+        "category": "ds_tree",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 相等时不插入（去重）",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 小于当前值走左边，大于走右边",
+      "level_2": "📖 二叉树递归套路；BST 中序有序；堆是完全二叉树；Trie 按字符分叉",
+      "level_3": "👀 接近答案：`node.left = _insert(node.left, value)`、`node = node.left if value < node.value e`",
+      "level_4": "📝 正确答案：`node.left = _insert(node.left, value)`；`node = node.left if value < node.value else node.right`"
+    },
+    "explanation": "BST 左小右大：插入与查找都是一条从根向下的路径，平均 O(log n)，退化链表时 O(n)。"
+  },
+  {
+    "id": "ds-tree-004",
+    "title": "验证二叉搜索树",
+    "description": "递归时携带合法取值范围",
+    "exercise_type": "fill",
+    "tech_stack": "datastructure",
+    "weight": "medium",
+    "category": "ds_tree",
+    "subcategory": "树",
+    "full_code": "class TreeNode:\n    def __init__(self, value, left=None, right=None):\n        self.value = value\n        self.left = left\n        self.right = right\n\ndef is_bst(node, low=float(\"-inf\"), high=float(\"inf\")):\n    if node is None:\n        return True\n    if not (low < node.value < high):\n        return False\n    return is_bst(node.left, low, node.value) and is_bst(node.right, node.value, high)\n\nok = TreeNode(5, TreeNode(3), TreeNode(8, TreeNode(6)))\nbad = TreeNode(5, TreeNode(3, TreeNode(2), TreeNode(6)), TreeNode(8))\nprint(is_bst(ok))\nprint(is_bst(bad))",
+    "expected": "True\nFalse",
+    "points": [
+      {
+        "id": "bounds",
+        "text": "if not (low < node.value < high):",
+        "category": "ds_tree",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 每个节点传一个 (low, high) 开区间",
+        "fill_type": "text"
+      },
+      {
+        "id": "shrink",
+        "text": "is_bst(node.left, low, node.value)",
+        "category": "ds_tree",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 进左子树收上界，进右子树收下界",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 每个节点传一个 (low, high) 开区间",
+      "level_2": "📖 二叉树递归套路；BST 中序有序；堆是完全二叉树；Trie 按字符分叉",
+      "level_3": "👀 接近答案：`if not (low < node.value < high):`、`is_bst(node.left, low, node.value)`",
+      "level_4": "📝 正确答案：`if not (low < node.value < high):`；`is_bst(node.left, low, node.value)`"
+    },
+    "explanation": "只比较父子节点会漏判『孙辈越界』。携带上下界的递归才是正确解法；等价技巧是中序严格递增。"
+  },
+  {
+    "id": "ds-tree-005",
+    "title": "最大深度",
+    "description": "递归求左右子树深度的较大者",
+    "exercise_type": "fill",
+    "tech_stack": "datastructure",
+    "weight": "beginner",
+    "category": "ds_tree",
+    "subcategory": "树",
+    "full_code": "class TreeNode:\n    def __init__(self, value, left=None, right=None):\n        self.value = value\n        self.left = left\n        self.right = right\n\ndef max_depth(node):\n    if node is None:\n        return 0\n    return 1 + max(max_depth(node.left), max_depth(node.right))\n\nroot = TreeNode(1, TreeNode(2, TreeNode(4)), TreeNode(3, right=TreeNode(5, right=TreeNode(6))))\nprint(\"最大深度:\", max_depth(root))",
+    "expected": "最大深度: 4",
+    "points": [
+      {
+        "id": "base",
+        "text": "if node is None:",
+        "category": "ds_tree",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "💡 空节点深度为 0",
+        "fill_type": "text"
+      },
+      {
+        "id": "rec",
+        "text": "return 1 + max(max_depth(node.left), max_depth(node.right))",
+        "category": "ds_tree",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 整树深度 = 1 + max(左, 右)",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 空节点深度为 0",
+      "level_2": "📖 二叉树递归套路；BST 中序有序；堆是完全二叉树；Trie 按字符分叉",
+      "level_3": "👀 接近答案：`if node is None:`、`return 1 + max(max_depth(node.left), max`",
+      "level_4": "📝 正确答案：`if node is None:`；`return 1 + max(max_depth(node.left), max_depth(node.right))`"
+    },
+    "explanation": "树的大多数问题都能用这个模板：空树是基线，答案是 f(左, 右) 的某种组合。"
+  },
+  {
+    "id": "ds-tree-006",
+    "title": "翻转二叉树",
+    "description": "递归交换每个节点的左右子树",
+    "exercise_type": "fill",
+    "tech_stack": "datastructure",
+    "weight": "easy",
+    "category": "ds_tree",
+    "subcategory": "树",
+    "full_code": "class TreeNode:\n    def __init__(self, value, left=None, right=None):\n        self.value = value\n        self.left = left\n        self.right = right\n\ndef preorder(node, out=None):\n    out = out if out is not None else []\n    if node:\n        out.append(node.value)\n        preorder(node.left, out)\n        preorder(node.right, out)\n    return out\n\ndef invert(node):\n    if node is None:\n        return None\n    node.left, node.right = invert(node.right), invert(node.left)\n    return node\n\nroot = TreeNode(1, TreeNode(2, TreeNode(4)), TreeNode(3))\nmirrored = invert(root)\nprint(\"新左子树根:\", mirrored.left.value)\nprint(\"前序:\", preorder(mirrored))",
+    "expected": "新左子树根: 3\n前序: [1, 3, 2, 4]",
+    "points": [
+      {
+        "id": "swap",
+        "text": "node.left, node.right = invert(node.right), invert(node.left)",
+        "category": "ds_tree",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 先递归翻转两边再交换",
+        "fill_type": "text"
+      },
+      {
+        "id": "ret",
+        "text": "return node",
+        "category": "ds_tree",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 每个节点都返回自己作为子树根",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 先递归翻转两边再交换",
+      "level_2": "📖 二叉树递归套路；BST 中序有序；堆是完全二叉树；Trie 按字符分叉",
+      "level_3": "👀 接近答案：`node.left, node.right = invert(node.righ`、`return node`",
+      "level_4": "📝 正确答案：`node.left, node.right = invert(node.right), invert(node.left)`；`return node`"
+    },
+    "explanation": "翻转=先翻转左右子树再交换指针。先交换再递归也对——后序与先序只是实现顺序不同。"
+  },
+  {
+    "id": "ds-tree-007",
+    "title": "BST 最近公共祖先",
+    "description": "利用有序性一次遍历定位分叉点",
+    "exercise_type": "fill",
+    "tech_stack": "datastructure",
+    "weight": "medium",
+    "category": "ds_tree",
+    "subcategory": "树",
+    "full_code": "class TreeNode:\n    def __init__(self, value, left=None, right=None):\n        self.value = value\n        self.left = left\n        self.right = right\n\ndef lca(node, p, q):\n    while node:\n        if p < node.value and q < node.value:\n            node = node.left\n        elif p > node.value and q > node.value:\n            node = node.right\n        else:\n            return node.value\n    return None\n\ntree = TreeNode(6,\n                TreeNode(2, TreeNode(0), TreeNode(4, TreeNode(3), TreeNode(5))),\n                TreeNode(8, TreeNode(7), TreeNode(9)))\nprint(lca(tree, 2, 8))\nprint(lca(tree, 3, 5))",
+    "expected": "6\n4",
+    "points": [
+      {
+        "id": "left",
+        "text": "if p < node.value and q < node.value:",
+        "category": "ds_tree",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 两值都小于当前走左",
+        "fill_type": "text"
+      },
+      {
+        "id": "split",
+        "text": "else:",
+        "category": "ds_tree",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 都大于走右，否则当前就是分叉点",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 两值都小于当前走左",
+      "level_2": "📖 二叉树递归套路；BST 中序有序；堆是完全二叉树；Trie 按字符分叉",
+      "level_3": "👀 接近答案：`if p < node.value and q < node.value:`、`else:`",
+      "level_4": "📝 正确答案：`if p < node.value and q < node.value:`；`else:`"
+    },
+    "explanation": "BST 的 LCA 不需要父指针：第一个『分居两侧』的节点就是答案，一次遍历即可。"
+  },
+  {
+    "id": "ds-tree-008",
+    "title": "路径总和",
+    "description": "从根到叶逐段扣减目标值",
+    "exercise_type": "fill",
+    "tech_stack": "datastructure",
+    "weight": "easy",
+    "category": "ds_tree",
+    "subcategory": "树",
+    "full_code": "class TreeNode:\n    def __init__(self, value, left=None, right=None):\n        self.value = value\n        self.left = left\n        self.right = right\n\ndef has_path_sum(node, target):\n    if node is None:\n        return False\n    if node.left is None and node.right is None:\n        return target == node.value\n    remaining = target - node.value\n    return has_path_sum(node.left, remaining) or has_path_sum(node.right, remaining)\n\nroot = TreeNode(5, TreeNode(4, TreeNode(11, TreeNode(7), TreeNode(2))), TreeNode(8))\nprint(has_path_sum(root, 22))\nprint(has_path_sum(root, 10))",
+    "expected": "True\nFalse",
+    "points": [
+      {
+        "id": "leaf",
+        "text": "if node.left is None and node.right is None:",
+        "category": "ds_tree",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 走到叶子节点才判定",
+        "fill_type": "text"
+      },
+      {
+        "id": "remain",
+        "text": "remaining = target - node.value",
+        "category": "ds_tree",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 target 每层减去当前值向下传",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 走到叶子节点才判定",
+      "level_2": "📖 二叉树递归套路；BST 中序有序；堆是完全二叉树；Trie 按字符分叉",
+      "level_3": "👀 接近答案：`if node.left is None and node.right is N`、`remaining = target - node.value`",
+      "level_4": "📝 正确答案：`if node.left is None and node.right is None:`；`remaining = target - node.value`"
+    },
+    "explanation": "根到叶路径问题：把『剩余目标』当参数层层下传，到叶子检查是否恰好归零。"
+  },
+  {
+    "id": "ds-tree-009",
+    "title": "最小堆",
+    "description": "上浮与下沉维护堆序",
+    "exercise_type": "fill",
+    "tech_stack": "datastructure",
+    "weight": "medium",
+    "category": "ds_tree",
+    "subcategory": "树",
+    "full_code": "class MinHeap:\n    def __init__(self):\n        self.data = []\n\n    def push(self, v):\n        self.data.append(v)\n        i = len(self.data) - 1\n        while i > 0 and self.data[(i - 1) // 2] > self.data[i]:\n            parent = (i - 1) // 2\n            self.data[i], self.data[parent] = self.data[parent], self.data[i]\n            i = parent\n\n    def _sift_down(self, i):\n        n = len(self.data)\n        while True:\n            smallest, left, right = i, 2 * i + 1, 2 * i + 2\n            if left < n and self.data[left] < self.data[smallest]:\n                smallest = left\n            if right < n and self.data[right] < self.data[smallest]:\n                smallest = right\n            if smallest == i:\n                return\n            self.data[i], self.data[smallest] = self.data[smallest], self.data[i]\n            i = smallest\n\n    def pop_min(self):\n        top = self.data[0]\n        last = self.data.pop()\n        if self.data:\n            self.data[0] = last\n            self._sift_down(0)\n        return top\n\nh = MinHeap()\nfor v in (5, 3, 8, 1):\n    h.push(v)\nprint([h.pop_min() for _ in range(3)])",
+    "expected": "[1, 3, 5]",
+    "points": [
+      {
+        "id": "siftup",
+        "text": "while i > 0 and self.data[(i - 1) // 2] > self.data[i]:",
+        "category": "ds_tree",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 插入后上浮到正确位置",
+        "fill_type": "text"
+      },
+      {
+        "id": "siftdown",
+        "text": "smallest, left, right = i, 2 * i + 1, 2 * i + 2",
+        "category": "ds_tree",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 弹出后末尾补顶再下沉",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 插入后上浮到正确位置",
+      "level_2": "📖 二叉树递归套路；BST 中序有序；堆是完全二叉树；Trie 按字符分叉",
+      "level_3": "👀 接近答案：`while i > 0 and self.data[(i - 1) // 2] `、`smallest, left, right = i, 2 * i + 1, 2 `",
+      "level_4": "📝 正确答案：`while i > 0 and self.data[(i - 1) // 2] > self.data[i]:`；`smallest, left, right = i, 2 * i + 1, 2 * i + 2`"
+    },
+    "explanation": "堆是完全二叉树藏在数组里：下标 i 的孩子是 2i+1 与 2i+2。优先队列（Top-K、定时器）的底层就是它。"
+  },
+  {
+    "id": "ds-tree-010",
+    "title": "字典树 Trie",
+    "description": "按字符逐层分叉的前缀树",
+    "exercise_type": "fill",
+    "tech_stack": "datastructure",
+    "weight": "medium",
+    "category": "ds_tree",
+    "subcategory": "树",
+    "full_code": "class Trie:\n    def __init__(self):\n        self.children = {}\n        self.is_word = False\n\n    def insert(self, word):\n        node = self\n        for ch in word:\n            node = node.children.setdefault(ch, Trie())\n        node.is_word = True\n\n    def contains(self, word):\n        node = self._walk(word)\n        return node is not None and node.is_word\n\n    def starts_with(self, prefix):\n        return self._walk(prefix) is not None\n\n    def _walk(self, prefix):\n        node = self\n        for ch in prefix:\n            if ch not in node.children:\n                return None\n            node = node.children[ch]\n        return node\n\nt = Trie()\nt.insert(\"agent\")\nt.insert(\"apple\")\nprint(t.contains(\"agent\"), t.contains(\"app\"))\nprint(t.starts_with(\"app\"), t.starts_with(\"b\"))",
+    "expected": "True False\nTrue False",
+    "points": [
+      {
+        "id": "branch",
+        "text": "node = node.children.setdefault(ch, Trie())",
+        "category": "ds_tree",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 每个节点一个字符分支字典",
+        "fill_type": "text"
+      },
+      {
+        "id": "isword",
+        "text": "node.is_word = True",
+        "category": "ds_tree",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 词尾节点打上完整单词标记",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 每个节点一个字符分支字典",
+      "level_2": "📖 二叉树递归套路；BST 中序有序；堆是完全二叉树；Trie 按字符分叉",
+      "level_3": "👀 接近答案：`node = node.children.setdefault(ch, Trie`、`node.is_word = True`",
+      "level_4": "📝 正确答案：`node = node.children.setdefault(ch, Trie())`；`node.is_word = True`"
+    },
+    "explanation": "Trie 把公共前缀共享存储：查询与词长相关而非与词库大小相关。搜索提示、路由表都是它。"
+  }
+]

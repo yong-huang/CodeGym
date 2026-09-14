@@ -31,7 +31,7 @@ func TestBankExecutableHasExpected(t *testing.T) {
 		t.Fatalf("load bank: %v", err)
 	}
 	for _, ex := range all {
-		runnable := (ex.TechStack == "python" || ex.TechStack == "go") &&
+		runnable := (ex.TechStack == "python" || ex.TechStack == "go" || ex.TechStack == "datastructure") &&
 			ex.ExerciseType == "fill" && ex.Subcategory != "FastAPI"
 		if runnable && ex.ExpectedOutput == "" {
 			t.Errorf("%s (%s): executable fill without expected_output", ex.ID, ex.TechStack)

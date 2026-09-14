@@ -1,0 +1,392 @@
+[
+  {
+    "id": "ds-hash-001",
+    "title": "手写哈希表",
+    "description": "链地址法解决冲突",
+    "exercise_type": "fill",
+    "tech_stack": "datastructure",
+    "weight": "medium",
+    "category": "ds_hash",
+    "subcategory": "哈希表",
+    "full_code": "class HashMap:\n    def __init__(self, capacity=8):\n        self.buckets = [[] for _ in range(capacity)]\n\n    def _index(self, key):\n        return hash(key) % len(self.buckets)\n\n    def put(self, key, value):\n        bucket = self.buckets[self._index(key)]\n        for i, (k, _) in enumerate(bucket):\n            if k == key:\n                bucket[i] = (key, value)\n                return\n        bucket.append((key, value))\n\n    def get(self, key, default=None):\n        bucket = self.buckets[self._index(key)]\n        for k, v in bucket:\n            if k == key:\n                return v\n        return default\n\nm = HashMap()\nm.put(\"name\", \"小王\")\nm.put(\"city\", \"北京\")\nm.put(\"name\", \"老王\")\nprint(m.get(\"name\"), m.get(\"city\"), m.get(\"phone\", \"无\"))",
+    "expected": "老王 北京 无",
+    "points": [
+      {
+        "id": "bucketidx",
+        "text": "return hash(key) % len(self.buckets)",
+        "category": "ds_hash",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 哈希码取模定位到桶",
+        "fill_type": "text"
+      },
+      {
+        "id": "overwrite",
+        "text": "bucket[i] = (key, value)",
+        "category": "ds_hash",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 桶内链表逐个比对键，命中覆盖否则追加",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 哈希码取模定位到桶",
+      "level_2": "📖 哈希表用哈希函数定位桶；冲突用链地址或开放寻址；查询均摊 O(1)",
+      "level_3": "👀 接近答案：`return hash(key) % len(self.buckets)`、`bucket[i] = (key, value)`",
+      "level_4": "📝 正确答案：`return hash(key) % len(self.buckets)`；`bucket[i] = (key, value)`"
+    },
+    "explanation": "链地址法：每个桶是一个小列表，冲突的键值对挂在一起。Python dict 用的是开放寻址。"
+  },
+  {
+    "id": "ds-hash-002",
+    "title": "哈希函数设计",
+    "description": "多项式滚动哈希",
+    "exercise_type": "fill",
+    "tech_stack": "datastructure",
+    "weight": "medium",
+    "category": "ds_hash",
+    "subcategory": "哈希表",
+    "full_code": "def simple_hash(text, mod=10):\n    total = 0\n    for ch in text:\n        total = (total * 31 + ord(ch)) % mod\n    return total\n\nfor word in (\"apple\", \"banana\", \"cherry\"):\n    print(word, \"->\", simple_hash(word))",
+    "expected": "apple -> 0\nbanana -> 9\ncherry -> 3",
+    "points": [
+      {
+        "id": "poly",
+        "text": "total = (total * 31 + ord(ch)) % mod",
+        "category": "ds_hash",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 每读一个字符就乘 31 加码点",
+        "fill_type": "text"
+      },
+      {
+        "id": "modop",
+        "text": "% mod",
+        "category": "ds_hash",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 随时取模防止数值无限增大",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 每读一个字符就乘 31 加码点",
+      "level_2": "📖 哈希表用哈希函数定位桶；冲突用链地址或开放寻址；查询均摊 O(1)",
+      "level_3": "👀 接近答案：`total = (total * 31 + ord(ch)) % mod`、`% mod`",
+      "level_4": "📝 正确答案：`total = (total * 31 + ord(ch)) % mod`；`% mod`"
+    },
+    "explanation": "乘 31 能让高位参与低位运算、分布更均匀（31 是奇质数，位运算可优化）。这是 Java hashCode 的做法。"
+  },
+  {
+    "id": "ds-hash-003",
+    "title": "两数之和",
+    "description": "一遍扫描边存边查",
+    "exercise_type": "fill",
+    "tech_stack": "datastructure",
+    "weight": "easy",
+    "category": "ds_hash",
+    "subcategory": "哈希表",
+    "full_code": "def two_sum(nums, target):\n    seen = {}\n    for i, v in enumerate(nums):\n        need = target - v\n        if need in seen:\n            return seen[need], i\n        seen[v] = i\n    return None\n\nprint(two_sum([2, 7, 11, 15], 9))",
+    "expected": "(0, 1)",
+    "points": [
+      {
+        "id": "need",
+        "text": "need = target - v",
+        "category": "ds_hash",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 每个数先查它的补数是否出现过",
+        "fill_type": "text"
+      },
+      {
+        "id": "lookup",
+        "text": "if need in seen:",
+        "category": "ds_hash",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 查不到再把自己存进去",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 每个数先查它的补数是否出现过",
+      "level_2": "📖 哈希表用哈希函数定位桶；冲突用链地址或开放寻址；查询均摊 O(1)",
+      "level_3": "👀 接近答案：`need = target - v`、`if need in seen:`",
+      "level_4": "📝 正确答案：`need = target - v`；`if need in seen:`"
+    },
+    "explanation": "哈希表把『查找配对』从 O(n²) 双重循环降到 O(n)：用空间换时间的经典范例。"
+  },
+  {
+    "id": "ds-hash-004",
+    "title": "字符频次统计",
+    "description": "用字典做计数器",
+    "exercise_type": "fill",
+    "tech_stack": "datastructure",
+    "weight": "beginner",
+    "category": "ds_hash",
+    "subcategory": "哈希表",
+    "full_code": "def char_counts(text):\n    counts = {}\n    for ch in text:\n        counts[ch] = counts.get(ch, 0) + 1\n    return counts\n\ncounts = char_counts(\"mississippi\")\nprint(counts)\nprint(\"出现最多:\", max(counts, key=counts.get))",
+    "expected": "{'m': 1, 'i': 4, 's': 4, 'p': 2}\n出现最多: i",
+    "points": [
+      {
+        "id": "count",
+        "text": "counts.get(ch, 0) + 1",
+        "category": "ds_hash",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "💡 每个字符出现就加一",
+        "fill_type": "text"
+      },
+      {
+        "id": "argmax",
+        "text": "max(counts, key=counts.get)",
+        "category": "ds_hash",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 dict.get 的默认值让首 counted 不报错",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 每个字符出现就加一",
+      "level_2": "📖 哈希表用哈希函数定位桶；冲突用链地址或开放寻址；查询均摊 O(1)",
+      "level_3": "👀 接近答案：`counts.get(ch, 0) + 1`、`max(counts, key=counts.get)`",
+      "level_4": "📝 正确答案：`counts.get(ch, 0) + 1`；`max(counts, key=counts.get)`"
+    },
+    "explanation": "哈希计数器是最高频的哈希应用：词频、投票、状态统计都是同一个模式。"
+  },
+  {
+    "id": "ds-hash-005",
+    "title": "异位词分组",
+    "description": "排序签名作为哈希键",
+    "exercise_type": "fill",
+    "tech_stack": "datastructure",
+    "weight": "medium",
+    "category": "ds_hash",
+    "subcategory": "哈希表",
+    "full_code": "def group_anagrams(words):\n    groups = {}\n    for w in words:\n        key = \"\".join(sorted(w))\n        groups.setdefault(key, []).append(w)\n    return list(groups.values())\n\nprint(group_anagrams([\"eat\", \"tea\", \"tan\", \"ate\", \"nat\", \"bat\"]))",
+    "expected": "[['eat', 'tea', 'ate'], ['tan', 'nat'], ['bat']]",
+    "points": [
+      {
+        "id": "sigkey",
+        "text": "key = \"\".join(sorted(w))",
+        "category": "ds_hash",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 互为异位词排序后相同",
+        "fill_type": "text"
+      },
+      {
+        "id": "setdefault",
+        "text": "groups.setdefault(key, []).append(w)",
+        "category": "ds_hash",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 把排序结果当 key 分组",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 互为异位词排序后相同",
+      "level_2": "📖 哈希表用哈希函数定位桶；冲突用链地址或开放寻址；查询均摊 O(1)",
+      "level_3": "👀 接近答案：`key = \"\".join(sorted(w))`、`groups.setdefault(key, []).append(w)`",
+      "level_4": "📝 正确答案：`key = \"\".join(sorted(w))`；`groups.setdefault(key, []).append(w)`"
+    },
+    "explanation": "分组的关键是把『等价类』映射成同一个键：异位词排序后必然相同。"
+  },
+  {
+    "id": "ds-hash-006",
+    "title": "去重保序",
+    "description": "集合查重 + 列表保序",
+    "exercise_type": "fill",
+    "tech_stack": "datastructure",
+    "weight": "beginner",
+    "category": "ds_hash",
+    "subcategory": "哈希表",
+    "full_code": "def dedup_keep_order(items):\n    seen = set()\n    out = []\n    for x in items:\n        if x not in seen:\n            seen.add(x)\n            out.append(x)\n    return out\n\nprint(dedup_keep_order([3, 1, 3, 2, 1, 5]))",
+    "expected": "[3, 1, 2, 5]",
+    "points": [
+      {
+        "id": "seen",
+        "text": "if x not in seen:",
+        "category": "ds_hash",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 set 负责快速判重",
+        "fill_type": "text"
+      },
+      {
+        "id": "add",
+        "text": "seen.add(x)",
+        "category": "ds_hash",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 list 负责保持首次出现的顺序",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 set 负责快速判重",
+      "level_2": "📖 哈希表用哈希函数定位桶；冲突用链地址或开放寻址；查询均摊 O(1)",
+      "level_3": "👀 接近答案：`if x not in seen:`、`seen.add(x)`",
+      "level_4": "📝 正确答案：`if x not in seen:`；`seen.add(x)`"
+    },
+    "explanation": "set 查重 + list 保序是哈希应用的固定搭配：性能与顺序兼顾。"
+  },
+  {
+    "id": "ds-hash-007",
+    "title": "首个不重复字符",
+    "description": "两遍扫描：先计数再定位",
+    "exercise_type": "fill",
+    "tech_stack": "datastructure",
+    "weight": "beginner",
+    "category": "ds_hash",
+    "subcategory": "哈希表",
+    "full_code": "def first_unique(text):\n    counts = {}\n    for ch in text:\n        counts[ch] = counts.get(ch, 0) + 1\n    for ch in text:\n        if counts[ch] == 1:\n            return ch\n    return None\n\nprint(first_unique(\"swiss\"))",
+    "expected": "w",
+    "points": [
+      {
+        "id": "countpass",
+        "text": "for ch in text:",
+        "category": "ds_hash",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "💡 第一遍计数",
+        "fill_type": "text"
+      },
+      {
+        "id": "once",
+        "text": "if counts[ch] == 1:",
+        "category": "ds_hash",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 第二遍按原顺序找次数为 1 的字符",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 第一遍计数",
+      "level_2": "📖 哈希表用哈希函数定位桶；冲突用链地址或开放寻址；查询均摊 O(1)",
+      "level_3": "👀 接近答案：`for ch in text:`、`if counts[ch] == 1:`",
+      "level_4": "📝 正确答案：`for ch in text:`；`if counts[ch] == 1:`"
+    },
+    "explanation": "两遍扫描是哈希题通用节奏：第一遍建立统计，第二遍按原始顺序消费统计结果。"
+  },
+  {
+    "id": "ds-hash-008",
+    "title": "开放寻址法",
+    "description": "冲突时线性探测下一个槽位",
+    "exercise_type": "fill",
+    "tech_stack": "datastructure",
+    "weight": "medium",
+    "category": "ds_hash",
+    "subcategory": "哈希表",
+    "full_code": "class OpenAddressTable:\n    def __init__(self, capacity=8):\n        self.slots = [None] * capacity\n\n    def put(self, key, value):\n        i = hash(key) % len(self.slots)\n        while self.slots[i] is not None and self.slots[i][0] != key:\n            i = (i + 1) % len(self.slots)\n        self.slots[i] = (key, value)\n\n    def get(self, key):\n        i = hash(key) % len(self.slots)\n        while self.slots[i] is not None:\n            if self.slots[i][0] == key:\n                return self.slots[i][1]\n            i = (i + 1) % len(self.slots)\n        return None\n\nt = OpenAddressTable()\nt.put(\"a\", 1)\nt.put(\"b\", 2)\nt.put(\"c\", 3)\nprint(t.get(\"b\"), t.get(\"c\"), t.get(\"z\"))",
+    "expected": "2 3 None",
+    "points": [
+      {
+        "id": "probe",
+        "text": "i = (i + 1) % len(self.slots)",
+        "category": "ds_hash",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 冲突就往后找下一个空槽",
+        "fill_type": "text"
+      },
+      {
+        "id": "stop",
+        "text": "while self.slots[i] is not None:",
+        "category": "ds_hash",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 查找遇到空槽即说明键不存在",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 冲突就往后找下一个空槽",
+      "level_2": "📖 哈希表用哈希函数定位桶；冲突用链地址或开放寻址；查询均摊 O(1)",
+      "level_3": "👀 接近答案：`i = (i + 1) % len(self.slots)`、`while self.slots[i] is not None:`",
+      "level_4": "📝 正确答案：`i = (i + 1) % len(self.slots)`；`while self.slots[i] is not None:`"
+    },
+    "explanation": "开放寻址不用链表，冲突就探测下一格。缓存友好但怕满——装载率高时性能骤降，所以要扩容。"
+  },
+  {
+    "id": "ds-hash-009",
+    "title": "多数元素",
+    "description": "边计数边判断是否过半",
+    "exercise_type": "fill",
+    "tech_stack": "datastructure",
+    "weight": "easy",
+    "category": "ds_hash",
+    "subcategory": "哈希表",
+    "full_code": "def majority(nums):\n    counts = {}\n    for v in nums:\n        counts[v] = counts.get(v, 0) + 1\n        if counts[v] > len(nums) // 2:\n            return v\n    return None\n\nprint(majority([2, 2, 1, 2, 3, 2, 2]))",
+    "expected": "2",
+    "points": [
+      {
+        "id": "half",
+        "text": "if counts[v] > len(nums) // 2:",
+        "category": "ds_hash",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 计数器统计每个元素",
+        "fill_type": "text"
+      },
+      {
+        "id": "early",
+        "text": "return v",
+        "category": "ds_hash",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 某个元素一超过半数立即返回",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 计数器统计每个元素",
+      "level_2": "📖 哈希表用哈希函数定位桶；冲突用链地址或开放寻址；查询均摊 O(1)",
+      "level_3": "👀 接近答案：`if counts[v] > len(nums) // 2:`、`return v`",
+      "level_4": "📝 正确答案：`if counts[v] > len(nums) // 2:`；`return v`"
+    },
+    "explanation": "过半元素一定存在时可以提前退出；进阶的 Boyer-Moore 投票法能把空间降到 O(1)。"
+  },
+  {
+    "id": "ds-hash-010",
+    "title": "LRU 缓存",
+    "description": "利用字典有序性实现淘汰最近最少使用",
+    "exercise_type": "fill",
+    "tech_stack": "datastructure",
+    "weight": "medium",
+    "category": "ds_hash",
+    "subcategory": "哈希表",
+    "full_code": "class LRUCache:\n    def __init__(self, capacity):\n        self.capacity = capacity\n        self.data = {}\n\n    def get(self, key):\n        if key not in self.data:\n            return -1\n        value = self.data.pop(key)\n        self.data[key] = value\n        return value\n\n    def put(self, key, value):\n        if key in self.data:\n            self.data.pop(key)\n        elif len(self.data) >= self.capacity:\n            oldest = next(iter(self.data))\n            self.data.pop(oldest)\n        self.data[key] = value\n\ncache = LRUCache(2)\ncache.put(\"a\", 1)\ncache.put(\"b\", 2)\ncache.get(\"a\")\ncache.put(\"c\", 3)\nprint(\"a 淘汰后:\", cache.get(\"a\"), \"| b:\", cache.get(\"b\"), \"| c:\", cache.get(\"c\"))",
+    "expected": "a 淘汰后: 1 | b: -1 | c: 3",
+    "points": [
+      {
+        "id": "evict",
+        "text": "oldest = next(iter(self.data))",
+        "category": "ds_hash",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 get/put 都要把键移到末尾表示最新",
+        "fill_type": "text"
+      },
+      {
+        "id": "refresh",
+        "text": "self.data[key] = value",
+        "category": "ds_hash",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 容量满时淘汰字典首键",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 get/put 都要把键移到末尾表示最新",
+      "level_2": "📖 哈希表用哈希函数定位桶；冲突用链地址或开放寻址；查询均摊 O(1)",
+      "level_3": "👀 接近答案：`oldest = next(iter(self.data))`、`self.data[key] = value`",
+      "level_4": "📝 正确答案：`oldest = next(iter(self.data))`；`self.data[key] = value`"
+    },
+    "explanation": "dict 保持插入序（Python 3.7+），pop 再重插就是『标记为最新』。生产级 LRU 用双向链表+哈希表。"
+  }
+]

@@ -1,0 +1,1970 @@
+[
+  {
+    "id": "agent-basics-001",
+    "title": "多轮会话管理",
+    "description": "实现会话类：维护消息历史并驱动模型完成多轮对话",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "beginner",
+    "category": "agent_message",
+    "subcategory": "Agent 开发",
+    "full_code": "class FakeLLM:\n    \"\"\"按脚本依次回复，模拟大模型接口。\"\"\"\n\n    def __init__(self, script):\n        self.script = list(script)\n\n    def chat(self, messages):\n        return self.script.pop(0)\n\n\nclass ChatSession:\n    \"\"\"维护消息历史，并驱动模型完成多轮对话。\"\"\"\n\n    def __init__(self, system, llm):\n        self.llm = llm\n        self.messages = [{\"role\": \"system\", \"content\": system}]\n\n    def ask(self, user_text):\n        self.messages.append({\"role\": \"user\", \"content\": user_text})\n        reply = self.llm.chat(self.messages)\n        self.messages.append({\"role\": \"assistant\", \"content\": reply})\n        return reply\n\n\nllm = FakeLLM([\n    \"Agent 是能自主调用工具的程序\",\n    \"聊天机器人只会一问一答\",\n])\nsession = ChatSession(\"你是 Python 教练\", llm)\nprint(\"用户:\", session.ask(\"什么是 Agent\"))\nprint(\"用户:\", session.ask(\"它和聊天机器人的区别\"))\nprint(\"历史:\", len(session.messages), \"条\")",
+    "expected": "用户: Agent 是能自主调用工具的程序\n用户: 聊天机器人只会一问一答\n历史: 5 条",
+    "points": [
+      {
+        "id": "init",
+        "text": "self.messages = [{\"role\": \"system\", \"content\": system}]",
+        "category": "agent_message",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "💡 构造函数把 system 消息放进历史首位",
+        "fill_type": "text"
+      },
+      {
+        "id": "append",
+        "text": "self.messages.append({\"role\": \"assistant\", \"content\": reply})",
+        "category": "agent_message",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "💡 每轮把用户输入与助手回复都 append 进历史",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 构造函数把 system 消息放进历史首位",
+      "level_2": "📖 消息由 role 与 content 组成：system 设定行为，user 输入，assistant 回复，tool 回传工具结果",
+      "level_3": "👀 接近答案：`self.messages = [{\"role\": \"sys`、`self.messages.append({\"role\": `",
+      "level_4": "📝 正确答案：`self.messages = [{\"role\": \"system\", \"content\": system}]`；`self.messages.append({\"role\": \"assistant\", \"content\": reply})`"
+    },
+    "explanation": "多轮对话的本质就是不断追加的消息列表：下一轮请求必须携带完整历史，模型才能理解上下文。"
+  },
+  {
+    "id": "agent-basics-002",
+    "title": "System Prompt 生效验证",
+    "description": "验证不同 system 提示词带来完全不同的行为",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "agent_message",
+    "subcategory": "Agent 开发",
+    "full_code": "def build_messages(system, user):\n    return [\n        {\"role\": \"system\", \"content\": system},\n        {\"role\": \"user\", \"content\": user},\n    ]\n\ndef fake_llm(messages):\n    \"\"\"脚本模型：按 system 里的风格词决定回复长度。\"\"\"\n    style = messages[0][\"content\"]\n    question = messages[-1][\"content\"]\n    if \"简洁\" in style:\n        return f\"{question} -> Agent = 会用工具的模型\"\n    return f\"{question} -> Agent 是能感知环境、自主决策并调用工具的程序\"\n\nfor system in (\"回答要简洁\", \"回答要详细友好\"):\n    reply = fake_llm(build_messages(system, \"什么是 Agent\"))\n    print(f\"[{system}] {reply}\")",
+    "expected": "[回答要简洁] 什么是 Agent -> Agent = 会用工具的模型\n[回答要详细友好] 什么是 Agent -> Agent 是能感知环境、自主决策并调用工具的程序",
+    "points": [
+      {
+        "id": "style",
+        "text": "style = messages[0][\"content\"]",
+        "category": "agent_message",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 从 messages[0] 读出 system 内容",
+        "fill_type": "text"
+      },
+      {
+        "id": "branch",
+        "text": "if \"简洁\" in style:",
+        "category": "agent_message",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 用 in 判断风格词并走不同分支",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 从 messages[0] 读出 system 内容",
+      "level_2": "📖 消息由 role 与 content 组成：system 设定行为，user 输入，assistant 回复，tool 回传工具结果",
+      "level_3": "👀 接近答案：`style = messages[0][\"content\"]`、`if \"简洁\" in style:`",
+      "level_4": "📝 正确答案：`style = messages[0][\"content\"]`；`if \"简洁\" in style:`"
+    },
+    "explanation": "system prompt 直接改变模型行为。调优 Agent 时先写死几种 system 对比输出，是定位风格问题的最快手段。"
+  },
+  {
+    "id": "agent-basics-003",
+    "title": "采样策略对比",
+    "description": "实现贪心、高温轮换与 top-k 截断三种采样策略",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "agent_params",
+    "subcategory": "Agent 开发",
+    "full_code": "class Sampler:\n    \"\"\"模拟大模型采样：温度 0 贪心，高温在候选间轮换。\"\"\"\n\n    def __init__(self, candidates):\n        self.candidates = candidates\n\n    def next_token(self, temperature):\n        if temperature == 0:\n            return self.candidates[0]\n        index = temperature % len(self.candidates)\n        return self.candidates[index]\n\n    def top_k(self, k=2):\n        return self.candidates[:k]\n\ns = Sampler([\"定义\", \"解释\", \"介绍\"])\nfor t in (0, 1, 2):\n    print(f\"temperature={t}: 我来{s.next_token(t)}一下\")\nprint(\"top-2 候选:\", s.top_k(2))",
+    "expected": "temperature=0: 我来定义一下\ntemperature=1: 我来解释一下\ntemperature=2: 我来介绍一下\ntop-2 候选: ['定义', '解释']",
+    "points": [
+      {
+        "id": "greedy",
+        "text": "return self.candidates[0]",
+        "category": "agent_params",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 温度为 0 直接取第一个候选",
+        "fill_type": "text"
+      },
+      {
+        "id": "rot",
+        "text": "index = temperature % len(self.candidates)",
+        "category": "agent_params",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 高温时用取模在候选间轮换",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 温度为 0 直接取第一个候选",
+      "level_2": "📖 调用参数：temperature 控制随机性，max_tokens 限制长度，token 可按字符数÷4 粗估",
+      "level_3": "👀 接近答案：`return self.candidates[0]`、`index = temperature % len(self`",
+      "level_4": "📝 正确答案：`return self.candidates[0]`；`index = temperature % len(self.candidates)`"
+    },
+    "explanation": "temperature=0 输出稳定可复现，是 Agent 工具调用场景的默认选择；高温适合创意生成。"
+  },
+  {
+    "id": "agent-basics-004",
+    "title": "Token 预算护栏",
+    "description": "实现 token 估算、扣减与超预算拦截",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "agent_params",
+    "subcategory": "Agent 开发",
+    "full_code": "def estimate_tokens(text):\n    \"\"\"4 字符 ≈ 1 token 的粗估，至少计 1。\"\"\"\n    return max(1, len(text) // 4)\n\n\nclass TokenBudget:\n    def __init__(self, total):\n        self.total = total\n        self.used = 0\n\n    def try_consume(self, text):\n        cost = estimate_tokens(text)\n        if self.used + cost > self.total:\n            return False\n        self.used += cost\n        return True\n\nbudget = TokenBudget(20)\nturns = [\"用户: 帮我总结这份文档\", \"助手: 文档说了三件事\", \"用户: 再写个摘要\"]\nfor t in turns:\n    ok = budget.try_consume(t)\n    print(\"允许\" if ok else \"预算不足\", \"->\", t)\nprint(\"已用:\", budget.used, \"/\", budget.total)",
+    "expected": "允许 -> 用户: 帮我总结这份文档\n允许 -> 助手: 文档说了三件事\n允许 -> 用户: 再写个摘要\n已用: 7 / 20",
+    "points": [
+      {
+        "id": "est",
+        "text": "return max(1, len(text) // 4)",
+        "category": "agent_params",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 按 len//4 估算每条消息的 token",
+        "fill_type": "text"
+      },
+      {
+        "id": "guard",
+        "text": "if self.used + cost > self.total:",
+        "category": "agent_params",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 写入前判断是否会超预算",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 按 len//4 估算每条消息的 token",
+      "level_2": "📖 调用参数：temperature 控制随机性，max_tokens 限制长度，token 可按字符数÷4 粗估",
+      "level_3": "👀 接近答案：`return max(1, len(text) // 4)`、`if self.used + cost > self.tot`",
+      "level_4": "📝 正确答案：`return max(1, len(text) // 4)`；`if self.used + cost > self.total:`"
+    },
+    "explanation": "上下文窗口是硬约束。请求前用预算护栏逐条装配，超出的历史丢弃或摘要，而不是等接口报错。"
+  },
+  {
+    "id": "agent-basics-005",
+    "title": "消息校验器",
+    "description": "发请求前拦截角色非法与内容缺失的消息",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "agent_message",
+    "subcategory": "Agent 开发",
+    "full_code": "VALID_ROLES = {\"system\", \"user\", \"assistant\", \"tool\"}\n\ndef validate(messages):\n    errors = []\n    if not messages or messages[0][\"role\"] != \"system\":\n        errors.append(\"首条消息必须是 system\")\n    for i, m in enumerate(messages):\n        if m[\"role\"] not in VALID_ROLES:\n            errors.append(f\"第 {i} 条角色非法: {m['role']}\")\n        if not m.get(\"content\"):\n            errors.append(f\"第 {i} 条缺少 content\")\n    return errors\n\nbad = [{\"role\": \"user\", \"content\": \"hi\"}, {\"role\": \"assistant\"}]\nerrors = validate(bad)\nprint(\"发现问题:\", len(errors))\nfor e in errors:\n    print(\" -\", e)",
+    "expected": "发现问题: 2\n - 首条消息必须是 system\n - 第 1 条缺少 content",
+    "points": [
+      {
+        "id": "first",
+        "text": "if not messages or messages[0][\"role\"] != \"system\":",
+        "category": "agent_message",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 先检查首条是不是 system",
+        "fill_type": "text"
+      },
+      {
+        "id": "content",
+        "text": "if not m.get(\"content\"):",
+        "category": "agent_message",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 遍历时同时查角色与 content",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 先检查首条是不是 system",
+      "level_2": "📖 消息由 role 与 content 组成：system 设定行为，user 输入，assistant 回复，tool 回传工具结果",
+      "level_3": "👀 接近答案：`if not messages or messages[0]`、`if not m.get(\"content\"):`",
+      "level_4": "📝 正确答案：`if not messages or messages[0][\"role\"] != \"system\":`；`if not m.get(\"content\"):`"
+    },
+    "explanation": "把校验做在客户端：角色拼错、content 丢失这类问题在本地就能拦住，不必浪费一次 API 调用。"
+  },
+  {
+    "id": "agent-basics-006",
+    "title": "对话转录渲染",
+    "description": "把消息列表渲染成带编号、对齐的调试转录",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "beginner",
+    "category": "agent_message",
+    "subcategory": "Agent 开发",
+    "full_code": "def render(messages, width=12):\n    lines = [\"=\" * 34]\n    for i, m in enumerate(messages, 1):\n        content = m[\"content\"]\n        preview = content[:width] + (\"…\" if len(content) > width else \"\")\n        lines.append(f\"{i:02d} [{m['role']:<9}] {preview}\")\n    lines.append(\"=\" * 34)\n    return \"\\n\".join(lines)\n\nmsgs = [\n    {\"role\": \"system\", \"content\": \"你是运维助手\"},\n    {\"role\": \"user\", \"content\": \"查一下线上服务状态，顺便看看错误日志\"},\n    {\"role\": \"assistant\", \"content\": \"正在调用 status 工具\"},\n    {\"role\": \"tool\", \"content\": \"all pods healthy\"},\n]\nprint(render(msgs))",
+    "expected": "==================================\n01 [system   ] 你是运维助手\n02 [user     ] 查一下线上服务状态，顺便…\n03 [assistant] 正在调用 status …\n04 [tool     ] all pods hea…\n==================================",
+    "points": [
+      {
+        "id": "enum",
+        "text": "for i, m in enumerate(messages, 1):",
+        "category": "agent_message",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "💡 enumerate 编号后逐条格式化",
+        "fill_type": "text"
+      },
+      {
+        "id": "preview",
+        "text": "preview = content[:width] + (\"…\" if len(content) > width else \"\")",
+        "category": "agent_message",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 超长内容截断加省略号提示",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 enumerate 编号后逐条格式化",
+      "level_2": "📖 消息由 role 与 content 组成：system 设定行为，user 输入，assistant 回复，tool 回传工具结果",
+      "level_3": "👀 接近答案：`for i, m in enumerate(messages`、`preview = content[:width] + (\"`",
+      "level_4": "📝 正确答案：`for i, m in enumerate(messages, 1):`；`preview = content[:width] + (\"…\" if len(content) > width else \"\")`"
+    },
+    "explanation": "调试 Agent 的第一工具就是转录渲染：一眼看清每条消息的角色、顺序与内容。"
+  },
+  {
+    "id": "agent-tool-001",
+    "title": "工具注册表",
+    "description": "实现注册、列出提示词、按名执行的完整注册表",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "agent_tool",
+    "subcategory": "Agent 开发",
+    "full_code": "class ToolRegistry:\n    \"\"\"工具注册表：注册、生成提示词清单、按名执行。\"\"\"\n\n    def __init__(self):\n        self._tools = {}\n\n    def register(self, name, fn, description):\n        self._tools[name] = {\"fn\": fn, \"description\": description}\n\n    def as_prompt(self):\n        lines = [\"你可以使用以下工具:\"]\n        for name, tool in self._tools.items():\n            lines.append(f\"- {name}: {tool['description']}\")\n        return \"\\n\".join(lines)\n\n    def run(self, tool_name, **kwargs):\n        if tool_name not in self._tools:\n            return f\"错误: 未注册的工具 {tool_name}\"\n        return self._tools[tool_name][\"fn\"](**kwargs)\n\n\nreg = ToolRegistry()\nreg.register(\"add\", lambda a, b: a + b, \"两数相加\")\nreg.register(\"greet\", lambda name: f\"你好, {name}\", \"打招呼\")\nprint(reg.run(\"add\", a=2, b=3))\nprint(reg.run(\"greet\", name=\"小王\"))\nprint(reg.run(\"nope\"))\nprint(reg.as_prompt().splitlines()[1])",
+    "expected": "5\n你好, 小王\n错误: 未注册的工具 nope\n- add: 两数相加",
+    "points": [
+      {
+        "id": "guard",
+        "text": "return f\"错误: 未注册的工具 {tool_name}\"",
+        "category": "agent_tool",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 名字不在表里返回错误文本",
+        "fill_type": "text"
+      },
+      {
+        "id": "run",
+        "text": "return self._tools[tool_name][\"fn\"](**kwargs)",
+        "category": "agent_tool",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 查表取函数后 **kwargs 解包调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "prompt",
+        "text": "return \"\\n\".join(lines)",
+        "category": "agent_tool",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 再实现一个把清单渲染成提示词的方法",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 名字不在表里返回错误文本",
+      "level_2": "📖 工具用 JSON Schema 声明名称/参数/必填项；模型发出调用后由代码执行，结果以 tool 角色回传",
+      "level_3": "👀 接近答案：`return f\"错误: 未注册的工具 {tool_name`、`return self._tools[tool_name][`、`return \"\\n\".join(lines)`",
+      "level_4": "📝 正确答案：`return f\"错误: 未注册的工具 {tool_name}\"`；`return self._tools[tool_name][\"fn\"](**kwargs)`；`return \"\\n\".join(lines)`"
+    },
+    "explanation": "注册表是工具分派的标配。未注册工具返回错误文本而不是抛异常，Agent 才能把错误当作观察继续推理。"
+  },
+  {
+    "id": "agent-tool-002",
+    "title": "Schema 参数校验",
+    "description": "按 JSON Schema 校验模型给出的工具参数",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "agent_tool",
+    "subcategory": "Agent 开发",
+    "full_code": "SCHEMA = {\n    \"type\": \"object\",\n    \"properties\": {\n        \"city\": {\"type\": \"string\"},\n        \"days\": {\"type\": \"integer\"},\n    },\n    \"required\": [\"city\"],\n}\n\nTYPE_MAP = {\"string\": str, \"integer\": int}\n\ndef validate(args, schema):\n    errors = []\n    for key in schema[\"required\"]:\n        if key not in args:\n            errors.append(f\"缺少必填参数 {key}\")\n    for key, spec in schema[\"properties\"].items():\n        if key in args and not isinstance(args[key], TYPE_MAP[spec[\"type\"]]):\n            errors.append(f\"{key} 应为 {spec['type']}，实际 {type(args[key]).__name__}\")\n    return errors\n\nprint(validate({\"days\": \"3\"}, SCHEMA))\nprint(validate({\"city\": \"北京\", \"days\": 3}, SCHEMA))",
+    "expected": "['缺少必填参数 city', 'days 应为 integer，实际 str']\n[]",
+    "points": [
+      {
+        "id": "req",
+        "text": "errors.append(f\"缺少必填参数 {key}\")",
+        "category": "agent_tool",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 先查 required 里缺了谁",
+        "fill_type": "text"
+      },
+      {
+        "id": "typechk",
+        "text": "if key in args and not isinstance(args[key], TYPE_MAP[spec[\"type\"]]):",
+        "category": "agent_tool",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 再用类型映射表比对参数类型",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 先查 required 里缺了谁",
+      "level_2": "📖 工具用 JSON Schema 声明名称/参数/必填项；模型发出调用后由代码执行，结果以 tool 角色回传",
+      "level_3": "👀 接近答案：`errors.append(f\"缺少必填参数 {key}\")`、`if key in args and not isinsta`",
+      "level_4": "📝 正确答案：`errors.append(f\"缺少必填参数 {key}\")`；`if key in args and not isinstance(args[key], TYPE_MAP[spec[\"type\"]]):`"
+    },
+    "explanation": "模型给出的参数可能缺字段或类型不对。执行前按 Schema 校验，能避免工具在半路崩溃。"
+  },
+  {
+    "id": "agent-tool-003",
+    "title": "参数解析容错",
+    "description": "兼容单引号与首尾杂质的工具参数解析器",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "agent_tool",
+    "subcategory": "Agent 开发",
+    "full_code": "import json\n\nclass ArgumentParser:\n    \"\"\"兼容单引号、首尾杂质的工具参数解析器。\"\"\"\n\n    def parse(self, raw):\n        try:\n            return json.loads(raw)\n        except json.JSONDecodeError:\n            return json.loads(self._repair(raw))\n\n    def _repair(self, raw):\n        cleaned = raw.strip().strip(\"`\")\n        return cleaned.replace(\"'\", '\"')\n\nparser = ArgumentParser()\ncases = ['{\"city\": \"北京\"}', \"  {'city': '上海'}  \", '{\"days\": 3}']\nfor raw in cases:\n    print(\"解析:\", parser.parse(raw))",
+    "expected": "解析: {'city': '北京'}\n解析: {'city': '上海'}\n解析: {'days': 3}",
+    "points": [
+      {
+        "id": "tryjson",
+        "text": "return json.loads(raw)",
+        "category": "agent_tool",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 先直接 json.loads",
+        "fill_type": "text"
+      },
+      {
+        "id": "fix",
+        "text": "return cleaned.replace(\"'\", '\"')",
+        "category": "agent_tool",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 失败时清理杂质、修复引号再试一次",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 先直接 json.loads",
+      "level_2": "📖 工具用 JSON Schema 声明名称/参数/必填项；模型发出调用后由代码执行，结果以 tool 角色回传",
+      "level_3": "👀 接近答案：`return json.loads(raw)`、`return cleaned.replace(\"'\", '\"`",
+      "level_4": "📝 正确答案：`return json.loads(raw)`；`return cleaned.replace(\"'\", '\"')`"
+    },
+    "explanation": "小模型常输出单引号 JSON 或带杂质的文本。先标准解析、失败再逐级修复，是最小代价的容错策略。"
+  },
+  {
+    "id": "agent-tool-004",
+    "title": "完整工具调用回合",
+    "description": "模型发起调用 → 代码执行 → 结果回传 → 最终回答",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "agent_tool",
+    "subcategory": "Agent 开发",
+    "full_code": "import json\n\ndef get_weather(city):\n    return f\"{city} 晴，25 度\"\n\nregistry = {\"get_weather\": get_weather}\nllm_replies = [\n    '{\"tool\": \"get_weather\", \"arguments\": {\"city\": \"北京\"}}',\n    \"北京今天晴，25 度，适合出行\",\n]\nmessages = [\n    {\"role\": \"system\", \"content\": \"你是天气助手\"},\n    {\"role\": \"user\", \"content\": \"北京天气怎么样\"},\n]\n\nfor round_no in range(5):\n    reply = llm_replies.pop(0)\n    if reply.startswith(\"{\"):\n        call = json.loads(reply)\n        result = registry[call[\"tool\"]](**call[\"arguments\"])\n        messages.append({\"role\": \"tool\", \"content\": result})\n        print(f\"第 {round_no} 轮: 执行工具 -> {result}\")\n    else:\n        print(f\"第 {round_no} 轮: 最终回答 -> {reply}\")\n        break\nprint(\"消息总数:\", len(messages))",
+    "expected": "第 0 轮: 执行工具 -> 北京 晴，25 度\n第 1 轮: 最终回答 -> 北京今天晴，25 度，适合出行\n消息总数: 3",
+    "points": [
+      {
+        "id": "dispatch",
+        "text": "result = registry[call[\"tool\"]](**call[\"arguments\"])",
+        "category": "agent_tool",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 解析模型要调用的工具与参数",
+        "fill_type": "text"
+      },
+      {
+        "id": "toolmsg",
+        "text": "{\"role\": \"tool\", \"content\": result}",
+        "category": "agent_tool",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 执行后结果以 tool 角色追加进消息",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 解析模型要调用的工具与参数",
+      "level_2": "📖 工具用 JSON Schema 声明名称/参数/必填项；模型发出调用后由代码执行，结果以 tool 角色回传",
+      "level_3": "👀 接近答案：`result = registry[call[\"tool\"]`、`{\"role\": \"tool\", \"content\": re`",
+      "level_4": "📝 正确答案：`result = registry[call[\"tool\"]](**call[\"arguments\"])`；`{\"role\": \"tool\", \"content\": result}`"
+    },
+    "explanation": "这就是 Function Calling 的最小闭环：模型出调用意图 → 代码执行 → 结果回传 → 模型基于结果给最终回答。"
+  },
+  {
+    "id": "agent-tool-005",
+    "title": "并行工具调用",
+    "description": "一次响应执行多个工具调用并汇总结果",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "agent_tool",
+    "subcategory": "Agent 开发",
+    "full_code": "def get_stock(symbol):\n    return {\"AAPL\": 180, \"GOOG\": 140}[symbol]\n\ndef get_news(symbol):\n    return f\"{symbol} 发布新品\"\n\nREGISTRY = {\"get_stock\": get_stock, \"get_news\": get_news}\n\ndef run_calls(calls):\n    results = []\n    for call in calls:\n        fn = REGISTRY[call[\"name\"]]\n        results.append({\"name\": call[\"name\"], \"result\": fn(**call[\"arguments\"])})\n    return results\n\ncalls = [\n    {\"name\": \"get_stock\", \"arguments\": {\"symbol\": \"AAPL\"}},\n    {\"name\": \"get_news\", \"arguments\": {\"symbol\": \"GOOG\"}},\n]\nfor item in run_calls(calls):\n    print(f\"{item['name']} -> {item['result']}\")",
+    "expected": "get_stock -> 180\nget_news -> GOOG 发布新品",
+    "points": [
+      {
+        "id": "lookup",
+        "text": "fn = REGISTRY[call[\"name\"]]",
+        "category": "agent_tool",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 遍历模型给出的调用列表",
+        "fill_type": "text"
+      },
+      {
+        "id": "collect",
+        "text": "results.append({\"name\": call[\"name\"], \"result\": fn(**call[\"arguments\"])})",
+        "category": "agent_tool",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 逐个查表执行，结果带名字收集",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 遍历模型给出的调用列表",
+      "level_2": "📖 工具用 JSON Schema 声明名称/参数/必填项；模型发出调用后由代码执行，结果以 tool 角色回传",
+      "level_3": "👀 接近答案：`fn = REGISTRY[call[\"name\"]]`、`results.append({\"name\": call[\"`",
+      "level_4": "📝 正确答案：`fn = REGISTRY[call[\"name\"]]`；`results.append({\"name\": call[\"name\"], \"result\": fn(**call[\"arguments\"])})`"
+    },
+    "explanation": "并行工具调用=一个调用列表。全部执行完一起回传，模型才能综合多方信息给出最终回答。"
+  },
+  {
+    "id": "agent-tool-006",
+    "title": "工具异常兜底",
+    "description": "工具报错不崩溃，把异常转成观察结果回传",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "agent_tool",
+    "subcategory": "Agent 开发",
+    "full_code": "def divide(a, b):\n    if b == 0:\n        raise ZeroDivisionError(\"除数不能为 0\")\n    return round(a / b, 2)\n\ndef safe_call(fn, **kwargs):\n    try:\n        return {\"ok\": True, \"result\": fn(**kwargs)}\n    except Exception as e:\n        return {\"ok\": False, \"error\": str(e)}\n\nfor c in ({\"a\": 10, \"b\": 2}, {\"a\": 1, \"b\": 0}):\n    out = safe_call(divide, **c)\n    if out[\"ok\"]:\n        print(\"结果:\", out[\"result\"])\n    else:\n        print(\"回传给模型:\", out[\"error\"])",
+    "expected": "结果: 5.0\n回传给模型: 除数不能为 0",
+    "points": [
+      {
+        "id": "raise",
+        "text": "raise ZeroDivisionError(\"除数不能为 0\")",
+        "category": "agent_tool",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 工具内部对非法输入抛明确异常",
+        "fill_type": "text"
+      },
+      {
+        "id": "wrap",
+        "text": "return {\"ok\": False, \"error\": str(e)}",
+        "category": "agent_tool",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 调用侧统一捕获并转成结构化结果",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 工具内部对非法输入抛明确异常",
+      "level_2": "📖 工具用 JSON Schema 声明名称/参数/必填项；模型发出调用后由代码执行，结果以 tool 角色回传",
+      "level_3": "👀 接近答案：`raise ZeroDivisionError(\"除数不能为`、`return {\"ok\": False, \"error\": `",
+      "level_4": "📝 正确答案：`raise ZeroDivisionError(\"除数不能为 0\")`；`return {\"ok\": False, \"error\": str(e)}`"
+    },
+    "explanation": "工具报错是 Agent 的常态。把异常转成结构化的错误观察回传，模型会自己调整参数或换工具。"
+  },
+  {
+    "id": "agent-tool-007",
+    "title": "工具结果截断",
+    "description": "超长工具输出截断进上下文并标注总长",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "agent_tool",
+    "subcategory": "Agent 开发",
+    "full_code": "class TruncatedResult:\n    \"\"\"超长工具输出截断进上下文，并注明被截断。\"\"\"\n\n    def __init__(self, max_chars=60):\n        self.max_chars = max_chars\n\n    def wrap(self, text):\n        if len(text) <= self.max_chars:\n            return {\"truncated\": False, \"text\": text}\n        kept = text[:self.max_chars]\n        return {\"truncated\": True, \"text\": f\"{kept}...(共 {len(text)} 字符)\"}\n\nlog = \" | \".join(f\"{i:02d}: healthy\" for i in range(1, 11))\ntr = TruncatedResult()\nout = tr.wrap(log)\nprint(\"是否截断:\", out[\"truncated\"])\nprint(\"进上下文:\", out[\"text\"][:55], \"...\")\nprint(\"短输出不受影响:\", tr.wrap(\"ok\")[\"truncated\"])",
+    "expected": "是否截断: True\n进上下文: 01: healthy | 02: healthy | 03: healthy | 04: healthy | ...\n短输出不受影响: False",
+    "points": [
+      {
+        "id": "guard",
+        "text": "if len(text) <= self.max_chars:",
+        "category": "agent_tool",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 先判断长度是否超限",
+        "fill_type": "text"
+      },
+      {
+        "id": "tail",
+        "text": "return {\"truncated\": True, \"text\": f\"{kept}...(共 {len(text)} 字符)\"}",
+        "category": "agent_tool",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 超限时截断并标注总长",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 先判断长度是否超限",
+      "level_2": "📖 工具用 JSON Schema 声明名称/参数/必填项；模型发出调用后由代码执行，结果以 tool 角色回传",
+      "level_3": "👀 接近答案：`if len(text) <= self.max_chars`、`return {\"truncated\": True, \"te`",
+      "level_4": "📝 正确答案：`if len(text) <= self.max_chars:`；`return {\"truncated\": True, \"text\": f\"{kept}...(共 {len(text)} 字符)\"}`"
+    },
+    "explanation": "工具可能返回巨量文本（日志/网页）。截断并注明被截断，既省 token 又不误导模型。"
+  },
+  {
+    "id": "agent-tool-008",
+    "title": "调用审计轨迹",
+    "description": "记录每次工具调用的参数与结果便于回放",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "agent_tool",
+    "subcategory": "Agent 开发",
+    "full_code": "class AuditTrail:\n    def __init__(self):\n        self.entries = []\n\n    def record(self, name, arguments, result):\n        self.entries.append({\"name\": name, \"arguments\": arguments, \"result\": result})\n\n    def report(self):\n        return \"\\n\".join(\n            f\"{i}. {e['name']}({e['arguments']}) -> {e['result']}\"\n            for i, e in enumerate(self.entries, 1)\n        )\n\ntrail = AuditTrail()\ndef add(a, b):\n    return a + b\n\nfor args in ({\"a\": 1, \"b\": 2}, {\"a\": 10, \"b\": 20}):\n    trail.record(\"add\", args, add(**args))\nprint(trail.report())",
+    "expected": "1. add({'a': 1, 'b': 2}) -> 3\n2. add({'a': 10, 'b': 20}) -> 30",
+    "points": [
+      {
+        "id": "record",
+        "text": "self.entries.append({\"name\": name, \"arguments\": arguments, \"result\": result})",
+        "category": "agent_tool",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 每次调用后记录名字、参数与结果",
+        "fill_type": "text"
+      },
+      {
+        "id": "report",
+        "text": "f\"{i}. {e['name']}({e['arguments']}) -> {e['result']}\"",
+        "category": "agent_tool",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 report 把轨迹导出成报告",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 每次调用后记录名字、参数与结果",
+      "level_2": "📖 工具用 JSON Schema 声明名称/参数/必填项；模型发出调用后由代码执行，结果以 tool 角色回传",
+      "level_3": "👀 接近答案：`self.entries.append({\"name\": n`、`f\"{i}. {e['name']}({e['argumen`",
+      "level_4": "📝 正确答案：`self.entries.append({\"name\": name, \"arguments\": arguments, \"result\": result})`；`f\"{i}. {e['name']}({e['arguments']}) -> {e['result']}\"`"
+    },
+    "explanation": "审计轨迹是排查 Agent 问题的黑匣子：每一个工具调用何时、以什么参数、返回了什么都可回放。"
+  },
+  {
+    "id": "agent-tool-009",
+    "title": "安全计算器工具",
+    "description": "绝不 eval 不可信文本：运算符表实现四则运算",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "agent_tool",
+    "subcategory": "Agent 开发",
+    "full_code": "import operator\n\nOPS = {\"+\": operator.add, \"-\": operator.sub, \"*\": operator.mul, \"/\": operator.truediv}\n\ndef calculate(expression):\n    \"\"\"只支持 `数字 运算符 数字`，绝不 eval 不可信文本。\"\"\"\n    left, op, right = expression.split()\n    if op not in OPS:\n        raise ValueError(f\"不支持的运算符 {op}\")\n    return OPS[op](float(left), float(right))\n\nfor expr in (\"3 + 4\", \"10 / 4\", \"2 ** 8\"):\n    try:\n        print(f\"{expr} = {calculate(expr)}\")\n    except (ValueError, KeyError) as e:\n        print(f\"{expr} -> 拒绝执行: {e}\")",
+    "expected": "3 + 4 = 7.0\n10 / 4 = 2.5\n2 ** 8 -> 拒绝执行: 不支持的运算符 **",
+    "points": [
+      {
+        "id": "lookup",
+        "text": "return OPS[op](float(left), float(right))",
+        "category": "agent_tool",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 用字典把运算符映射到函数",
+        "fill_type": "text"
+      },
+      {
+        "id": "reject",
+        "text": "except (ValueError, KeyError) as e:",
+        "category": "agent_tool",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 不在表里的运算符直接拒绝",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 用字典把运算符映射到函数",
+      "level_2": "📖 工具用 JSON Schema 声明名称/参数/必填项；模型发出调用后由代码执行，结果以 tool 角色回传",
+      "level_3": "👀 接近答案：`return OPS[op](float(left), fl`、`except (ValueError, KeyError) `",
+      "level_4": "📝 正确答案：`return OPS[op](float(left), float(right))`；`except (ValueError, KeyError) as e:`"
+    },
+    "explanation": "直接 eval 模型给的算式等于开放任意代码执行。查表分派是安全实现工具的通用范式。"
+  },
+  {
+    "id": "agent-tool-010",
+    "title": "工具结果缓存",
+    "description": "相同参数的工具调用直接命中缓存",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "agent_tool",
+    "subcategory": "Agent 开发",
+    "full_code": "class CachedTool:\n    def __init__(self, fn):\n        self.fn = fn\n        self.cache = {}\n        self.real_calls = 0\n\n    def __call__(self, **kwargs):\n        key = tuple(sorted(kwargs.items()))\n        if key in self.cache:\n            return self.cache[key], True\n        self.real_calls += 1\n        self.cache[key] = self.fn(**kwargs)\n        return self.cache[key], False\n\nweather = CachedTool(lambda city: f\"{city} 晴\")\n\nr1, hit1 = weather(city=\"北京\")\nr2, hit2 = weather(city=\"北京\")\nr3, hit3 = weather(city=\"上海\")\nprint(f\"北京: {r1} (命中={hit1})\")\nprint(f\"北京再次: {r2} (命中={hit2})\")\nprint(f\"上海: {r3} (命中={hit3}) | 实际调用: {weather.real_calls}\")",
+    "expected": "北京: 北京 晴 (命中=False)\n北京再次: 北京 晴 (命中=True)\n上海: 上海 晴 (命中=False) | 实际调用: 2",
+    "points": [
+      {
+        "id": "key",
+        "text": "key = tuple(sorted(kwargs.items()))",
+        "category": "agent_tool",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 参数排序后做成不可变缓存键",
+        "fill_type": "text"
+      },
+      {
+        "id": "hit",
+        "text": "if key in self.cache:",
+        "category": "agent_tool",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 命中直接返回，未命中才真实调用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 参数排序后做成不可变缓存键",
+      "level_2": "📖 工具用 JSON Schema 声明名称/参数/必填项；模型发出调用后由代码执行，结果以 tool 角色回传",
+      "level_3": "👀 接近答案：`key = tuple(sorted(kwargs.item`、`if key in self.cache:`",
+      "level_4": "📝 正确答案：`key = tuple(sorted(kwargs.items()))`；`if key in self.cache:`"
+    },
+    "explanation": "Agent 一轮可能重复调用同一工具。__call__ 让实例像函数一样使用，缓存能省真金白银的 token。"
+  },
+  {
+    "id": "agent-loop-001",
+    "title": "ReAct Agent",
+    "description": "实现完整的 思考-行动-观察 循环直到最终答案",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "agent_loop",
+    "subcategory": "Agent 开发",
+    "full_code": "import re\n\nTOOLS = {\n    \"search\": lambda q: f\"找到资料: {q} 是会用工具的 AI 程序\",\n    \"calculator\": lambda expr: \"42\",\n}\n\nllm_script = [\n    \"Thought: 我需要先搜索 Agent 的定义\\nAction: search[什么是 agent]\",\n    \"Thought: 资料够了\\nFinal Answer: Agent 是会用工具的 AI 程序\",\n]\n\nmessages = [\"用户问题: 什么是 agent\"]\nfor step in range(5):\n    reply = llm_script.pop(0)\n    final = re.search(r\"Final Answer: (.+)\", reply)\n    if final:\n        print(\"最终答案:\", final.group(1))\n        break\n    action = re.search(r\"Action: (\\w+)\\[(.+?)\\]\", reply)\n    name, arg = action.group(1), action.group(2)\n    observation = TOOLS[name](arg)\n    messages.append(f\"{reply}\\nObservation: {observation}\")\n    print(f\"第 {step + 1} 步: {name}({arg}) -> {observation}\")",
+    "expected": "第 1 步: search(什么是 agent) -> 找到资料: 什么是 agent 是会用工具的 AI 程序\n最终答案: Agent 是会用工具的 AI 程序",
+    "points": [
+      {
+        "id": "final",
+        "text": "final = re.search(r\"Final Answer: (.+)\", reply)",
+        "category": "agent_loop",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 先看是不是 Final Answer",
+        "fill_type": "text"
+      },
+      {
+        "id": "act",
+        "text": "action = re.search(r\"Action: (\\w+)\\[(.+?)\\]\", reply)",
+        "category": "agent_loop",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 用正则解析 Action 行并执行工具",
+        "fill_type": "text"
+      },
+      {
+        "id": "obs",
+        "text": "messages.append(f\"{reply}\\nObservation: {observation}\")",
+        "category": "agent_loop",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 把观察结果追加进上下文",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 先看是不是 Final Answer",
+      "level_2": "📖 Agent 循环：模型决策 → 执行工具 → 观察结果回填消息，直到无工具调用或达到最大步数",
+      "level_3": "👀 接近答案：`final = re.search(r\"Final Answ`、`action = re.search(r\"Action: (`、`messages.append(f\"{reply}\\nObs`",
+      "level_4": "📝 正确答案：`final = re.search(r\"Final Answer: (.+)\", reply)`；`action = re.search(r\"Action: (\\w+)\\[(.+?)\\]\", reply)`；`messages.append(f\"{reply}\\nObservation: {observation}\")`"
+    },
+    "explanation": "ReAct 是 Agent 的经典范式：Thought 决策、Action 调工具、Observation 回填，循环直到 Final Answer。"
+  },
+  {
+    "id": "agent-loop-002",
+    "title": "死循环检测",
+    "description": "检测 Agent 重复同一行动并强制重规划",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "agent_loop",
+    "subcategory": "Agent 开发",
+    "full_code": "class LoopGuard:\n    \"\"\"步数护栏 + 重复行动检测。\"\"\"\n\n    def __init__(self, max_steps=10):\n        self.max_steps = max_steps\n        self.history = []\n\n    def next_action(self, action):\n        if len(self.history) >= self.max_steps:\n            return \"放弃: 达到最大步数\"\n        if self.history and action == self.history[-1]:\n            print(f\"检测到重复行动: {action}，强制重规划\")\n            action = \"replan[]\"\n        self.history.append(action)\n        return action\n\nguard = LoopGuard(max_steps=6)\nqueue = [\"search[agent]\", \"search[agent]\", \"search[agent]\", \"calculate[2+2]\", \"finish[]\"]\nwhile queue:\n    print(\"执行:\", guard.next_action(queue.pop(0)))",
+    "expected": "执行: search[agent]\n检测到重复行动: search[agent]，强制重规划\n执行: replan[]\n执行: search[agent]\n执行: calculate[2+2]\n执行: finish[]",
+    "points": [
+      {
+        "id": "dup",
+        "text": "if self.history and action == self.history[-1]:",
+        "category": "agent_loop",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 和上一步行动做比对",
+        "fill_type": "text"
+      },
+      {
+        "id": "replan",
+        "text": "action = \"replan[]\"",
+        "category": "agent_loop",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 检测到重复就强制重规划",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 和上一步行动做比对",
+      "level_2": "📖 Agent 循环：模型决策 → 执行工具 → 观察结果回填消息，直到无工具调用或达到最大步数",
+      "level_3": "👀 接近答案：`if self.history and action == `、`action = \"replan[]\"`",
+      "level_4": "📝 正确答案：`if self.history and action == self.history[-1]:`；`action = \"replan[]\"`"
+    },
+    "explanation": "小模型容易陷入重复调用同一工具的死循环。重复检测+强制换策略是实用的自救手段。"
+  },
+  {
+    "id": "agent-loop-003",
+    "title": "任务队列执行",
+    "description": "按队列执行任务，失败的任务重新排队",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "agent_loop",
+    "subcategory": "Agent 开发",
+    "full_code": "class TaskRunner:\n    \"\"\"按队列执行任务，失败的任务重新排队一次。\"\"\"\n\n    def __init__(self, tasks):\n        self.pending = list(tasks)\n        self.done = []\n\n    def run_all(self, retries):\n        while self.pending:\n            task = self.pending.pop(0)\n            if retries.get(task, 0) > 0:\n                retries[task] -= 1\n                self.pending.append(task)\n                print(f\"失败，重新排队: {task}\")\n                continue\n            self.done.append(task)\n            print(f\"完成: {task}\")\n\nrunner = TaskRunner([\"收集资料\", \"撰写初稿\", \"校对格式\"])\nrunner.run_all({\"撰写初稿\": 1})\nprint(\"完成:\", runner.done)",
+    "expected": "完成: 收集资料\n失败，重新排队: 撰写初稿\n完成: 校对格式\n完成: 撰写初稿\n完成: ['收集资料', '校对格式', '撰写初稿']",
+    "points": [
+      {
+        "id": "pop",
+        "text": "task = self.pending.pop(0)",
+        "category": "agent_loop",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 pop(0) 取出队首任务",
+        "fill_type": "text"
+      },
+      {
+        "id": "requeue",
+        "text": "self.pending.append(task)",
+        "category": "agent_loop",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 失败的重新排队，成功的记入 done",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 pop(0) 取出队首任务",
+      "level_2": "📖 Agent 循环：模型决策 → 执行工具 → 观察结果回填消息，直到无工具调用或达到最大步数",
+      "level_3": "👀 接近答案：`task = self.pending.pop(0)`、`self.pending.append(task)`",
+      "level_4": "📝 正确答案：`task = self.pending.pop(0)`；`self.pending.append(task)`"
+    },
+    "explanation": "把目标拆成任务队列逐个执行；失败重新排队而不是丢弃，保证任务不丢。"
+  },
+  {
+    "id": "agent-loop-004",
+    "title": "Plan-and-Execute",
+    "description": "先规划后执行的两阶段 Agent",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "agent_loop",
+    "subcategory": "Agent 开发",
+    "full_code": "class PlanAndExecute:\n    def __init__(self, planner):\n        self.planner = planner\n        self.results = []\n\n    def run(self, goal):\n        plan = self.planner(goal)\n        print(f\"目标「{goal}」拆成 {len(plan)} 步:\")\n        for i, task in enumerate(plan, 1):\n            self.results.append(f\"{i}. {task}\")\n            print(f\"  执行 {i}: {task}\")\n        return self.results\n\nagent = PlanAndExecute(lambda g: [f\"{g}-调研\", f\"{g}-实现\", f\"{g}-验收\"])\nfor line in agent.run(\"搭建网站\"):\n    pass\nprint(\"执行记录:\", len(agent.results), \"条\")",
+    "expected": "目标「搭建网站」拆成 3 步:\n  执行 1: 搭建网站-调研\n  执行 2: 搭建网站-实现\n  执行 3: 搭建网站-验收\n执行记录: 3 条",
+    "points": [
+      {
+        "id": "plan",
+        "text": "plan = self.planner(goal)",
+        "category": "agent_loop",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 规划函数把目标拆成子任务",
+        "fill_type": "text"
+      },
+      {
+        "id": "exec",
+        "text": "self.results.append(f\"{i}. {task}\")",
+        "category": "agent_loop",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 执行阶段按序完成并记录",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 规划函数把目标拆成子任务",
+      "level_2": "📖 Agent 循环：模型决策 → 执行工具 → 观察结果回填消息，直到无工具调用或达到最大步数",
+      "level_3": "👀 接近答案：`plan = self.planner(goal)`、`self.results.append(f\"{i}. {ta`",
+      "level_4": "📝 正确答案：`plan = self.planner(goal)`；`self.results.append(f\"{i}. {task}\")`"
+    },
+    "explanation": "Plan-and-Execute 把『想』和『做』分开：先产出完整计划，再顺序执行，比边想边做更可控。"
+  },
+  {
+    "id": "agent-loop-005",
+    "title": "反思循环",
+    "description": "答案未通过校验时把失败原因作为反思输入重试",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "agent_loop",
+    "subcategory": "Agent 开发",
+    "full_code": "class ReflectiveSolver:\n    \"\"\"答案未通过校验时，把失败原因作为反思输入重试。\"\"\"\n\n    def __init__(self, max_attempts=5):\n        self.max_attempts = max_attempts\n\n    def attempt(self, n):\n        if n < 3:\n            return None, f\"第 {n} 次答案漏了边界条件\"\n        return \"42\", \"正确\"\n\n    def run(self):\n        answer, trace = None, []\n        for n in range(1, self.max_attempts + 1):\n            answer, feedback = self.attempt(n)\n            if answer:\n                trace.append(f\"第 {n} 次成功: {answer}\")\n                return trace\n            trace.append(f\"反思: {feedback}，带着原因重试\")\n        trace.append(\"重试耗尽\")\n        return trace\n\nfor line in ReflectiveSolver().run():\n    print(line)",
+    "expected": "反思: 第 1 次答案漏了边界条件，带着原因重试\n反思: 第 2 次答案漏了边界条件，带着原因重试\n第 3 次成功: 42",
+    "points": [
+      {
+        "id": "while",
+        "text": "for n in range(1, self.max_attempts + 1):",
+        "category": "agent_loop",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 用答案是否为 None 判断继续",
+        "fill_type": "text"
+      },
+      {
+        "id": "fb",
+        "text": "trace.append(f\"反思: {feedback}，带着原因重试\")",
+        "category": "agent_loop",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 每轮把失败原因记录为反思",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 用答案是否为 None 判断继续",
+      "level_2": "📖 Agent 循环：模型决策 → 执行工具 → 观察结果回填消息，直到无工具调用或达到最大步数",
+      "level_3": "👀 接近答案：`for n in range(1, self.max_att`、`trace.append(f\"反思: {feedback}，`",
+      "level_4": "📝 正确答案：`for n in range(1, self.max_attempts + 1):`；`trace.append(f\"反思: {feedback}，带着原因重试\")`"
+    },
+    "explanation": "Reflexion 模式的雏形：把上一次失败的原因喂回给模型，比盲目重试成功率高得多。"
+  },
+  {
+    "id": "agent-loop-006",
+    "title": "Agent 状态机",
+    "description": "用迁移表驱动 Agent 的状态流转",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "agent_loop",
+    "subcategory": "Agent 开发",
+    "full_code": "class AgentStateMachine:\n    TRANSITIONS = {\"IDLE\": \"THINKING\", \"THINKING\": \"ACTING\", \"ACTING\": \"DONE\"}\n\n    def __init__(self):\n        self.state = \"IDLE\"\n        self.path = [self.state]\n\n    def step(self):\n        if self.state == \"DONE\":\n            return False\n        self.state = self.TRANSITIONS[self.state]\n        self.path.append(self.state)\n        return True\n\nsm = AgentStateMachine()\nwhile sm.step():\n    pass\nprint(\" -> \".join(sm.path))",
+    "expected": "IDLE -> THINKING -> ACTING -> DONE",
+    "points": [
+      {
+        "id": "table",
+        "text": "TRANSITIONS = {\"IDLE\": \"THINKING\", \"THINKING\": \"ACTING\", \"ACTING\": \"DONE\"}",
+        "category": "agent_loop",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 用类常量定义状态迁移表",
+        "fill_type": "text"
+      },
+      {
+        "id": "walk",
+        "text": "self.state = self.TRANSITIONS[self.state]",
+        "category": "agent_loop",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 每步查表迁移，直到终态",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 用类常量定义状态迁移表",
+      "level_2": "📖 Agent 循环：模型决策 → 执行工具 → 观察结果回填消息，直到无工具调用或达到最大步数",
+      "level_3": "👀 接近答案：`TRANSITIONS = {\"IDLE\": \"THINKI`、`self.state = self.TRANSITIONS[`",
+      "level_4": "📝 正确答案：`TRANSITIONS = {\"IDLE\": \"THINKING\", \"THINKING\": \"ACTING\", \"ACTING\": \"DONE\"}`；`self.state = self.TRANSITIONS[self.state]`"
+    },
+    "explanation": "把控制流写成状态机迁移表，新增状态只改表不改代码，比 if-else 链清晰得多。"
+  },
+  {
+    "id": "agent-loop-007",
+    "title": "DAG 任务调度",
+    "description": "按依赖关系调度有向无环任务图",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "agent_loop",
+    "subcategory": "Agent 开发",
+    "full_code": "deps = {\n    \"下载\": [],\n    \"清洗\": [\"下载\"],\n    \"训练\": [\"清洗\"],\n    \"报告\": [\"训练\", \"下载\"],\n}\nfinished, rounds = [], 0\n\nwhile len(finished) < len(deps):\n    rounds += 1\n    for task, needs in deps.items():\n        if task in finished:\n            continue\n        if all(n in finished for n in needs):\n            finished.append(task)\n            print(f\"第 {rounds} 轮: {task} 就绪\")\n            break\n\nprint(\"总调度轮数:\", rounds)",
+    "expected": "第 1 轮: 下载 就绪\n第 2 轮: 清洗 就绪\n第 3 轮: 训练 就绪\n第 4 轮: 报告 就绪\n总调度轮数: 4",
+    "points": [
+      {
+        "id": "ready",
+        "text": "if all(n in finished for n in needs):",
+        "category": "agent_loop",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 每轮挑一个依赖已满足的任务",
+        "fill_type": "text"
+      },
+      {
+        "id": "sched",
+        "text": "while len(finished) < len(deps):",
+        "category": "agent_loop",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 所有任务完成才结束调度",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 每轮挑一个依赖已满足的任务",
+      "level_2": "📖 Agent 循环：模型决策 → 执行工具 → 观察结果回填消息，直到无工具调用或达到最大步数",
+      "level_3": "👀 接近答案：`if all(n in finished for n in `、`while len(finished) < len(deps`",
+      "level_4": "📝 正确答案：`if all(n in finished for n in needs):`；`while len(finished) < len(deps):`"
+    },
+    "explanation": "复杂任务的子任务之间有依赖。每轮扫描『依赖已就绪』的任务执行，就是最朴素的拓扑调度。"
+  },
+  {
+    "id": "agent-loop-008",
+    "title": "人类在环确认",
+    "description": "危险操作先请求人工批准再执行",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "agent_loop",
+    "subcategory": "Agent 开发",
+    "full_code": "class HumanInTheLoop:\n    def __init__(self, decisions):\n        self.decisions = list(decisions)\n        self.executed, self.denied = [], []\n\n    def review(self, name, dangerous):\n        if not dangerous:\n            self.executed.append(name)\n            return\n        decision = self.decisions.pop(0) if self.decisions else \"no\"\n        if decision == \"yes\":\n            self.executed.append(name)\n        else:\n            self.denied.append(name)\n\nhitl = HumanInTheLoop([\"no\", \"yes\"])\nhitl.review(\"删除生产表\", dangerous=True)\nhitl.review(\"查询日志\", dangerous=False)\nhitl.review(\"重启服务\", dangerous=True)\nprint(\"已执行:\", hitl.executed, \"| 已拒绝:\", hitl.denied)",
+    "expected": "已执行: ['查询日志', '重启服务'] | 已拒绝: ['删除生产表']",
+    "points": [
+      {
+        "id": "gate",
+        "text": "if not dangerous:",
+        "category": "agent_loop",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 危险操作走人工确认分支",
+        "fill_type": "text"
+      },
+      {
+        "id": "human",
+        "text": "decision = self.decisions.pop(0) if self.decisions else \"no\"",
+        "category": "agent_loop",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 未获批准的动作进入拒绝列表",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 危险操作走人工确认分支",
+      "level_2": "📖 Agent 循环：模型决策 → 执行工具 → 观察结果回填消息，直到无工具调用或达到最大步数",
+      "level_3": "👀 接近答案：`if not dangerous:`、`decision = self.decisions.pop(`",
+      "level_4": "📝 正确答案：`if not dangerous:`；`decision = self.decisions.pop(0) if self.decisions else \"no\"`"
+    },
+    "explanation": "删除/付款类工具必须人类在环：Agent 只准备动作，批准权在人，缺省拒绝是安全底线。"
+  },
+  {
+    "id": "agent-loop-009",
+    "title": "中断恢复",
+    "description": "把 Agent 状态序列化成快照以便断点续跑",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "agent_loop",
+    "subcategory": "Agent 开发",
+    "full_code": "import json\n\nclass CheckpointedAgent:\n    def __init__(self, task):\n        self.state = {\"task\": task, \"step\": 0, \"history\": []}\n\n    def advance(self, record):\n        self.state[\"step\"] += 1\n        self.state[\"history\"].append(record)\n\n    def snapshot(self):\n        return json.dumps(self.state, ensure_ascii=False)\n\n    @classmethod\n    def restore(cls, snapshot):\n        agent = cls.__new__(cls)\n        agent.state = json.loads(snapshot)\n        return agent\n\nagent = CheckpointedAgent(\"整理数据\")\nagent.advance(\"读取\")\nagent.snapshot_after = agent.snapshot()\nsnap = agent.snapshot()\nresumed = CheckpointedAgent.restore(snap)\nresumed.advance(\"去重\")\nprint(resumed.state[\"task\"], resumed.state[\"step\"], resumed.state[\"history\"])",
+    "expected": "整理数据 2 ['读取', '去重']",
+    "points": [
+      {
+        "id": "dump",
+        "text": "return json.dumps(self.state, ensure_ascii=False)",
+        "category": "agent_loop",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 状态字典序列化成 JSON 快照",
+        "fill_type": "text"
+      },
+      {
+        "id": "load",
+        "text": "agent.state = json.loads(snapshot)",
+        "category": "agent_loop",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 恢复实例后从上次的步数继续",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 状态字典序列化成 JSON 快照",
+      "level_2": "📖 Agent 循环：模型决策 → 执行工具 → 观察结果回填消息，直到无工具调用或达到最大步数",
+      "level_3": "👀 接近答案：`return json.dumps(self.state, `、`agent.state = json.loads(snaps`",
+      "level_4": "📝 正确答案：`return json.dumps(self.state, ensure_ascii=False)`；`agent.state = json.loads(snapshot)`"
+    },
+    "explanation": "长任务会中途失败。把步数与历史做成快照，重启后从断点继续，是 Agent 工程化的重要一步。"
+  },
+  {
+    "id": "agent-loop-010",
+    "title": "多重停止条件",
+    "description": "按优先级组合完成、步数、预算三类终止条件",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "agent_loop",
+    "subcategory": "Agent 开发",
+    "full_code": "def should_stop(steps, cost, done):\n    if done:\n        return \"任务完成\"\n    if steps >= 10:\n        return \"步数超限\"\n    if cost >= 5:\n        return \"预算耗尽\"\n    return None\n\nsteps = cost = 0\nfor _ in range(20):\n    steps += 1\n    cost += 1\n    reason = should_stop(steps, cost, done=False)\n    print(f\"step {steps}: {reason or '继续'}\")\n    if reason:\n        break",
+    "expected": "step 1: 继续\nstep 2: 继续\nstep 3: 继续\nstep 4: 继续\nstep 5: 预算耗尽",
+    "points": [
+      {
+        "id": "done",
+        "text": "if done:",
+        "category": "agent_loop",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 完成判断放最前",
+        "fill_type": "text"
+      },
+      {
+        "id": "cost",
+        "text": "if cost >= 5:",
+        "category": "agent_loop",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 步数、预算依次作为兜底",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 完成判断放最前",
+      "level_2": "📖 Agent 循环：模型决策 → 执行工具 → 观察结果回填消息，直到无工具调用或达到最大步数",
+      "level_3": "👀 接近答案：`if done:`、`if cost >= 5:`",
+      "level_4": "📝 正确答案：`if done:`；`if cost >= 5:`"
+    },
+    "explanation": "生产级 Agent 至少三重保险：完成标志、步数上限、成本预算。判断顺序就是优先级。"
+  },
+  {
+    "id": "agent-memory-001",
+    "title": "分层记忆",
+    "description": "实现短期窗口与长期事实的两级记忆",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "agent_memory",
+    "subcategory": "Agent 开发",
+    "full_code": "class Memory:\n    \"\"\"短期记忆是消息窗口，长期记忆是事实字典。\"\"\"\n\n    def __init__(self, window=4):\n        self.window = window\n        self.history = []\n        self.facts = {}\n\n    def add_turn(self, text):\n        self.history.append(text)\n        self.history = self.history[-self.window:]\n\n    def remember(self, key, value):\n        self.facts[key] = value\n\n    def recall(self, key):\n        return self.facts.get(key, \"这个我不记得了\")\n\nm = Memory(window=3)\nm.add_turn(\"问: 什么是 Agent\")\nm.add_turn(\"答: 会用工具的程序\")\nm.add_turn(\"问: 再举个例子\")\nm.remember(\"用户城市\", \"北京\")\nprint(\"窗口内:\", len(m.history), \"条 | 城市:\", m.recall(\"用户城市\"))\nprint(\"生日:\", m.recall(\"生日\"))",
+    "expected": "窗口内: 3 条 | 城市: 北京\n生日: 这个我不记得了",
+    "points": [
+      {
+        "id": "window",
+        "text": "self.history = self.history[-self.window:]",
+        "category": "agent_memory",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 短期历史超窗就裁剪",
+        "fill_type": "text"
+      },
+      {
+        "id": "get",
+        "text": "return self.facts.get(key, \"这个我不记得了\")",
+        "category": "agent_memory",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 长期事实查不到时返回兜底文案",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 短期历史超窗就裁剪",
+      "level_2": "📖 上下文有限：滑动窗口/摘要压缩/关键词或向量检索/切块，都是为了塞下最相关的信息",
+      "level_3": "👀 接近答案：`self.history = self.history[-s`、`return self.facts.get(key, \"这个`",
+      "level_4": "📝 正确答案：`self.history = self.history[-self.window:]`；`return self.facts.get(key, \"这个我不记得了\")`"
+    },
+    "explanation": "两层记忆各司其职：滑动窗口管近期上下文，事实字典管跨会话的长期信息。"
+  },
+  {
+    "id": "agent-memory-002",
+    "title": "摘要压缩历史",
+    "description": "历史超限时用摘要替换最旧的前缀",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "agent_memory",
+    "subcategory": "Agent 开发",
+    "full_code": "class SummarizingHistory:\n    def __init__(self, limit=4):\n        self.limit = limit\n        self.items = []\n\n    def append(self, text):\n        self.items.append(text)\n        if len(self.items) > self.limit:\n            drop = len(self.items) - (self.limit - 1)\n            summary = f\"（前 {drop} 条已摘要）\"\n            self.items = [summary] + self.items[drop:]\n\nh = SummarizingHistory(limit=4)\nfor t in (\"u1\", \"a1\", \"u2\", \"a2\", \"u3\", \"a3\"):\n    h.append(t)\nprint(\"条数:\", len(h.items), \"| 最新:\", h.items[-1], \"| 首条:\", h.items[0])",
+    "expected": "条数: 4 | 最新: a3 | 首条: （前 2 条已摘要）",
+    "points": [
+      {
+        "id": "drop",
+        "text": "drop = len(self.items) - (self.limit - 1)",
+        "category": "agent_memory",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 算出需要裁掉多少条",
+        "fill_type": "text"
+      },
+      {
+        "id": "splice",
+        "text": "self.items = [summary] + self.items[drop:]",
+        "category": "agent_memory",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 摘要条目拼在剩余历史前面",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 算出需要裁掉多少条",
+      "level_2": "📖 上下文有限：滑动窗口/摘要压缩/关键词或向量检索/切块，都是为了塞下最相关的信息",
+      "level_3": "👀 接近答案：`drop = len(self.items) - (self`、`self.items = [summary] + self.`",
+      "level_4": "📝 正确答案：`drop = len(self.items) - (self.limit - 1)`；`self.items = [summary] + self.items[drop:]`"
+    },
+    "explanation": "摘要压缩：老对话折叠成一条 summary，近期消息原样保留，兼顾上下文长度与信息量。"
+  },
+  {
+    "id": "agent-memory-003",
+    "title": "n-gram 词频向量",
+    "description": "不依赖任何库，把文本向量化成 n-gram 词频",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "agent_memory",
+    "subcategory": "Agent 开发",
+    "full_code": "class NGramVectorizer:\n    \"\"\"把文本向量化成字符 n-gram 词频，零依赖的检索基座。\"\"\"\n\n    def __init__(self, n=2):\n        self.n = n\n\n    def vectorize(self, text):\n        grams = {}\n        for i in range(len(text) - self.n + 1):\n            gram = text[i:i + self.n]\n            grams[gram] = grams.get(gram, 0) + 1\n        return grams\n\ntexts = [\"agent 会调用工具\", \"工具调用是 agent 的核心\"]\nvectorizer = NGramVectorizer(n=2)\nvectors = {t: vectorizer.vectorize(t) for t in texts}\nfor t, v in vectors.items():\n    print(f\"{t!r} -> 维度 {len(v)}, 总词频 {sum(v.values())}\")\nshared = set(vectors[texts[0]]) & set(vectors[texts[1]])\nprint(\"两段共享的 n-gram:\", len(shared))",
+    "expected": "'agent 会调用工具' -> 维度 10, 总词频 10\n'工具调用是 agent 的核心' -> 维度 14, 总词频 14\n两段共享的 n-gram: 7",
+    "points": [
+      {
+        "id": "slide",
+        "text": "gram = text[i:i + self.n]",
+        "category": "agent_memory",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 滑动窗口每次取 n 个字符",
+        "fill_type": "text"
+      },
+      {
+        "id": "count",
+        "text": "grams.get(gram, 0) + 1",
+        "category": "agent_memory",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 用字典累计每个片段的出现次数",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 滑动窗口每次取 n 个字符",
+      "level_2": "📖 上下文有限：滑动窗口/摘要压缩/关键词或向量检索/切块，都是为了塞下最相关的信息",
+      "level_3": "👀 接近答案：`gram = text[i:i + self.n]`、`grams.get(gram, 0) + 1`",
+      "level_4": "📝 正确答案：`gram = text[i:i + self.n]`；`grams.get(gram, 0) + 1`"
+    },
+    "explanation": "把文本变成 n-gram 计数向量，就能做轻量相似度检索——本地演示 RAG 的零依赖方案。"
+  },
+  {
+    "id": "agent-memory-004",
+    "title": "余弦相似度",
+    "description": "纯 Python 实现点积与余弦相似度",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "agent_memory",
+    "subcategory": "Agent 开发",
+    "full_code": "import math\n\ndef cosine(a, b):\n    dot = sum(x * y for x, y in zip(a, b))\n    norm = lambda v: math.sqrt(sum(x * x for x in v))\n    return round(dot / (norm(a) * norm(b)), 3)\n\nquery = [1, 0, 1]\ndocs = {\n    \"RAG 文档\": [1, 0, 1],\n    \"无关文档\": [0, 1, 0],\n    \"部分相关\": [1, 1, 0],\n}\nranked = sorted(docs.items(), key=lambda kv: cosine(query, kv[1]), reverse=True)\nfor name, score in ranked:\n    print(f\"{name}: {score}\")\nprint(\"选中的文档:\", ranked[0][0])",
+    "expected": "RAG 文档: [1, 0, 1]\n部分相关: [1, 1, 0]\n无关文档: [0, 1, 0]\n选中的文档: RAG 文档",
+    "points": [
+      {
+        "id": "dot",
+        "text": "dot = sum(x * y for x, y in zip(a, b))",
+        "category": "agent_memory",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 zip 逐位相乘再求和",
+        "fill_type": "text"
+      },
+      {
+        "id": "cos",
+        "text": "return round(dot / (norm(a) * norm(b)), 3)",
+        "category": "agent_memory",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 点积除以模长积，保留三位小数",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 zip 逐位相乘再求和",
+      "level_2": "📖 上下文有限：滑动窗口/摘要压缩/关键词或向量检索/切块，都是为了塞下最相关的信息",
+      "level_3": "👀 接近答案：`dot = sum(x * y for x, y in zi`、`return round(dot / (norm(a) * `",
+      "level_4": "📝 正确答案：`dot = sum(x * y for x, y in zip(a, b))`；`return round(dot / (norm(a) * norm(b)), 3)`"
+    },
+    "explanation": "余弦相似度衡量方向一致性：越接近 1 越相关。向量检索的每一步打分都是这个公式。"
+  },
+  {
+    "id": "agent-memory-005",
+    "title": "向量存储与检索",
+    "description": "实现 add/search Top-K 的迷你向量库",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "agent_memory",
+    "subcategory": "Agent 开发",
+    "full_code": "class VectorStore:\n    def __init__(self):\n        self.items = []\n\n    def add(self, text, vector):\n        self.items.append((text, vector))\n\n    def search(self, query, k=1):\n        scored = [(t, sum(x * y for x, y in zip(v, query))) for t, v in self.items]\n        scored.sort(key=lambda p: p[1], reverse=True)\n        return scored[:k]\n\nstore = VectorStore()\nstore.add(\"天气文档\", [1, 0, 0])\nstore.add(\"Agent 文档\", [0, 1, 1])\nstore.add(\"混合文档\", [1, 1, 0])\nfor text, score in store.search([1, 1, 0], k=2):\n    print(f\"{text} (score={score})\")",
+    "expected": "混合文档 (score=2)\n天气文档 (score=1)",
+    "points": [
+      {
+        "id": "score",
+        "text": "scored = [(t, sum(x * y for x, y in zip(v, query))) for t, v in self.items]",
+        "category": "agent_memory",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 对库中每条向量与查询算点积",
+        "fill_type": "text"
+      },
+      {
+        "id": "topk",
+        "text": "return scored[:k]",
+        "category": "agent_memory",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 按得分降序取前 K 条",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 对库中每条向量与查询算点积",
+      "level_2": "📖 上下文有限：滑动窗口/摘要压缩/关键词或向量检索/切块，都是为了塞下最相关的信息",
+      "level_3": "👀 接近答案：`scored = [(t, sum(x * y for x,`、`return scored[:k]`",
+      "level_4": "📝 正确答案：`scored = [(t, sum(x * y for x, y in zip(v, query))) for t, v in self.items]`；`return scored[:k]`"
+    },
+    "explanation": "向量库的核心就两步：入库存向量，检索算相似度排序。生产向量库只是把这步做到了亿级规模。"
+  },
+  {
+    "id": "agent-memory-006",
+    "title": "重叠切块",
+    "description": "按块大小与重叠度切分长文档",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "agent_memory",
+    "subcategory": "Agent 开发",
+    "full_code": "class Chunker:\n    \"\"\"按块大小与重叠度切分长文档。\"\"\"\n\n    def __init__(self, size=5, overlap=2):\n        self.size = size\n        self.overlap = overlap\n\n    def split(self, text):\n        stride = self.size - self.overlap\n        chunks = []\n        for i in range(0, max(1, len(text) - self.overlap), stride):\n            chunks.append(text[i:i + self.size])\n        return chunks\n\ndoc = \"Agent能够自主决策并调用工具完成多步任务\"\nchunker = Chunker(size=6, overlap=2)\nchunks = chunker.split(doc)\nfor i, c in enumerate(chunks, 1):\n    print(f\"块{i}: [{c}]\")\ncover = sum(len(c) - chunker.overlap for c in chunks[:-1]) + len(chunks[-1])\nprint(\"总字符覆盖:\", cover, \"/ 原文:\", len(doc))",
+    "expected": "块1: [Agent能]\n块2: [t能够自主决]\n块3: [主决策并调用]\n块4: [调用工具完成]\n块5: [完成多步任务]\n总字符覆盖: 22 / 原文: 22",
+    "points": [
+      {
+        "id": "stride",
+        "text": "stride = self.size - self.overlap",
+        "category": "agent_memory",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 步长比块大小小 overlap，让块之间重叠",
+        "fill_type": "text"
+      },
+      {
+        "id": "win",
+        "text": "chunks.append(text[i:i + self.size])",
+        "category": "agent_memory",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 每步截取一个窗口",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 步长比块大小小 overlap，让块之间重叠",
+      "level_2": "📖 上下文有限：滑动窗口/摘要压缩/关键词或向量检索/切块，都是为了塞下最相关的信息",
+      "level_3": "👀 接近答案：`stride = self.size - self.over`、`chunks.append(text[i:i + self.`",
+      "level_4": "📝 正确答案：`stride = self.size - self.overlap`；`chunks.append(text[i:i + self.size])`"
+    },
+    "explanation": "相邻块带重叠能避免关键信息恰好被切在边界上；size-overlap 就是滑动步长。"
+  },
+  {
+    "id": "agent-memory-007",
+    "title": "迷你 RAG 全流程",
+    "description": "切块、建索引、检索、拼提示词的完整闭环",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "agent_memory",
+    "subcategory": "Agent 开发",
+    "full_code": "class MiniRAG:\n    def __init__(self, size=12):\n        self.size = size\n        self.chunks = []\n\n    def ingest(self, doc):\n        for i in range(0, len(doc), self.size):\n            self.chunks.append(doc[i:i + self.size])\n\n    def retrieve(self, query_keywords, k=1):\n        def score(c):\n            return sum(1 for kw in query_keywords if kw in c)\n        ranked = sorted(self.chunks, key=score, reverse=True)\n        return ranked[:k]\n\nrag = MiniRAG(size=10)\nrag.ingest(\"Agent 是会使用工具的模型。它通过循环调用工具完成任务。上下文有限需要检索增强。\")\nanswer_chunk = rag.retrieve([\"Agent\", \"工具\"], k=1)[0]\nprint(\"检索命中:\", answer_chunk)",
+    "expected": "检索命中: Agent 是会使用",
+    "points": [
+      {
+        "id": "ingest",
+        "text": "self.chunks.append(doc[i:i + self.size])",
+        "category": "agent_memory",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 文档入库时切块",
+        "fill_type": "text"
+      },
+      {
+        "id": "retrieve",
+        "text": "return ranked[:k]",
+        "category": "agent_memory",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 检索按关键词命中数排序取 Top-K",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 文档入库时切块",
+      "level_2": "📖 上下文有限：滑动窗口/摘要压缩/关键词或向量检索/切块，都是为了塞下最相关的信息",
+      "level_3": "👀 接近答案：`self.chunks.append(doc[i:i + s`、`return ranked[:k]`",
+      "level_4": "📝 正确答案：`self.chunks.append(doc[i:i + self.size])`；`return ranked[:k]`"
+    },
+    "explanation": "RAG 最小闭环：切块入库 → 查询打分 → Top-K 塞进提示词。真实系统只是把打分换成向量相似度。"
+  },
+  {
+    "id": "agent-memory-008",
+    "title": "检索重排序",
+    "description": "初检召回 + 信号加权重排的两阶段检索管线",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "agent_memory",
+    "subcategory": "Agent 开发",
+    "full_code": "class RetrievalPipeline:\n    \"\"\"初检负责召回，重排负责把最相关的排到前面。\"\"\"\n\n    def __init__(self, corpus):\n        self.corpus = corpus\n\n    def initial_search(self, query, k=4):\n        return [c for c in self.corpus if query in c][:k]\n\n    def rerank(self, query, candidates):\n        def score(chunk):\n            s = chunk.count(query) * 2\n            if chunk.startswith(query):\n                s += 3\n            if query in chunk[:8]:\n                s += 1\n            return s\n        return sorted(candidates, key=score, reverse=True)\n\n    def query(self, q, k=4):\n        return self.rerank(q, self.initial_search(q, k))[:2]\n\ncorpus = [\"agent 工具调用详解\", \"工具调用入门\", \"agent 入门指南\",\n          \"agent 与 agent 框架\", \"无关内容\"]\npipeline = RetrievalPipeline(corpus)\nfor i, c in enumerate(pipeline.query(\"agent\"), 1):\n    print(f\"Top{i}: {c}\")",
+    "expected": "Top1: agent 与 agent 框架\nTop2: agent 工具调用详解",
+    "points": [
+      {
+        "id": "initial",
+        "text": "return [c for c in self.corpus if query in c][:k]",
+        "category": "agent_memory",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 初检用关键词过滤候选",
+        "fill_type": "text"
+      },
+      {
+        "id": "rerank",
+        "text": "return sorted(candidates, key=score, reverse=True)",
+        "category": "agent_memory",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 重排按命中次数与位置加权重排",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 初检用关键词过滤候选",
+      "level_2": "📖 上下文有限：滑动窗口/摘要压缩/关键词或向量检索/切块，都是为了塞下最相关的信息",
+      "level_3": "👀 接近答案：`return [c for c in self.corpus`、`return sorted(candidates, key=`",
+      "level_4": "📝 正确答案：`return [c for c in self.corpus if query in c][:k]`；`return sorted(candidates, key=score, reverse=True)`"
+    },
+    "explanation": "两阶段检索（召回+精排）是 RAG 的标准架构：初检追求不漏，重排追求最相关的排前面。"
+  },
+  {
+    "id": "agent-memory-009",
+    "title": "用户画像提取",
+    "description": "从对话中抽取事实并写进用户画像",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "agent_memory",
+    "subcategory": "Agent 开发",
+    "full_code": "class ProfileExtractor:\n    def __init__(self, candidates):\n        self.candidates = candidates\n        self.profile = {}\n\n    def scan(self, dialogue):\n        for key, values in self.candidates.items():\n            for value in values:\n                if any(value in text for _, text in dialogue):\n                    self.profile[key] = value\n\ndialogue = [\n    (\"user\", \"我叫小王，在北京工作\"),\n    (\"user\", \"我喜欢 Python\"),\n]\nex = ProfileExtractor({\"姓名\": [\"小王\"], \"城市\": [\"北京\", \"上海\"], \"语言\": [\"Python\", \"Go\"]})\nex.scan(dialogue)\nfor k, v in ex.profile.items():\n    print(f\"{k}: {v}\")",
+    "expected": "姓名: 小王\n城市: 北京\n语言: Python",
+    "points": [
+      {
+        "id": "match",
+        "text": "if any(value in text for _, text in dialogue):",
+        "category": "agent_memory",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 对每个字段遍历候选取值",
+        "fill_type": "text"
+      },
+      {
+        "id": "store",
+        "text": "self.profile[key] = value",
+        "category": "agent_memory",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 任一消息命中就写入画像",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 对每个字段遍历候选取值",
+      "level_2": "📖 上下文有限：滑动窗口/摘要压缩/关键词或向量检索/切块，都是为了塞下最相关的信息",
+      "level_3": "👀 接近答案：`if any(value in text for _, te`、`self.profile[key] = value`",
+      "level_4": "📝 正确答案：`if any(value in text for _, text in dialogue):`；`self.profile[key] = value`"
+    },
+    "explanation": "画像记忆让 Agent 拥有长期个性化能力：每轮从对话里抽取事实，越用越懂用户。"
+  },
+  {
+    "id": "agent-memory-010",
+    "title": "上下文打包器",
+    "description": "在 token 预算内装配 system、检索结果与历史",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "agent_memory",
+    "subcategory": "Agent 开发",
+    "full_code": "def pack(system, retrieved, history, budget=30):\n    est = lambda t: len(t) // 4 + 1\n    parts = [(\"system\", system)]\n    used = est(system)\n    for text in retrieved:\n        if used + est(text) > budget:\n            continue\n        parts.append((\"rag\", text))\n        used += est(text)\n    for text in history:\n        if used + est(text) > budget:\n            break\n        parts.append((\"history\", text))\n        used += est(text)\n    return parts, used\n\nparts, used = pack(\"你是助手\", [\"检索A\", \"检索B\"], [\"历史1\", \"历史2\", \"历史3\"])\nfor kind, text in parts:\n    print(f\"[{kind}] {text}\")\nprint(\"已用:\", used, \"/ 预算: 30\")",
+    "expected": "[system] 你是助手\n[rag] 检索A\n[rag] 检索B\n[history] 历史1\n[history] 历史2\n[history] 历史3\n已用: 7 / 预算: 30",
+    "points": [
+      {
+        "id": "budget",
+        "text": "if used + est(text) > budget:",
+        "category": "agent_memory",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 先放 system 再按预算装检索与历史",
+        "fill_type": "text"
+      },
+      {
+        "id": "order",
+        "text": "parts = [(\"system\", system)]",
+        "category": "agent_memory",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 每装一条就累计已用 token",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 先放 system 再按预算装检索与历史",
+      "level_2": "📖 上下文有限：滑动窗口/摘要压缩/关键词或向量检索/切块，都是为了塞下最相关的信息",
+      "level_3": "👀 接近答案：`if used + est(text) > budget:`、`parts = [(\"system\", system)]`",
+      "level_4": "📝 正确答案：`if used + est(text) > budget:`；`parts = [(\"system\", system)]`"
+    },
+    "explanation": "真实请求的上下文是『装』出来的：system 必进，检索与历史按预算从新到旧装配。"
+  },
+  {
+    "id": "agent-output-001",
+    "title": "结构化信息抽取",
+    "description": "从自然语言里抽取字段并校验序列化",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "agent_output",
+    "subcategory": "Agent 开发",
+    "full_code": "import json\n\nclass Extractor:\n    def __init__(self, fields):\n        self.fields = fields\n\n    def extract(self, text):\n        found = {}\n        for key, options in self.fields.items():\n            for opt in options:\n                if opt in text:\n                    found[key] = opt\n                    break\n        return found\n\nex = Extractor({\"city\": [\"北京\", \"上海\"], \"topic\": [\"天气\", \"机票\"]})\nresult = ex.extract(\"用户想查询北京明天的天气，预算 300 元\")\nprint(json.dumps(result, ensure_ascii=False))\nprint(\"字段完整性:\", len(result), \"/\", len(ex.fields))",
+    "expected": "{\"city\": \"北京\", \"topic\": \"天气\"}\n字段完整性: 2 / 2",
+    "points": [
+      {
+        "id": "match",
+        "text": "if opt in text:",
+        "category": "agent_output",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 遍历字段的候选取值",
+        "fill_type": "text"
+      },
+      {
+        "id": "dumps",
+        "text": "print(json.dumps(result, ensure_ascii=False))",
+        "category": "agent_output",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 命中就写入结果，最后序列化",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 遍历字段的候选取值",
+      "level_2": "📖 结构化输出：让模型输出 JSON，解析失败就截取/修复/重试，字段要做必填与类型校验",
+      "level_3": "👀 接近答案：`if opt in text:`、`print(json.dumps(result, ensur`",
+      "level_4": "📝 正确答案：`if opt in text:`；`print(json.dumps(result, ensure_ascii=False))`"
+    },
+    "explanation": "NL2API 的第一步：从自然语言抽出结构化字段。真实系统用模型抽取，思路与校验方式完全一致。"
+  },
+  {
+    "id": "agent-output-002",
+    "title": "Markdown 围栏修复",
+    "description": "容错解析：剥围栏、去杂质、再解析",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "agent_output",
+    "subcategory": "Agent 开发",
+    "full_code": "import json\n\nclass JsonOutputParser:\n    \"\"\"容错解析：剥 markdown 围栏、去杂质、再解析。\"\"\"\n\n    def parse(self, text):\n        return json.loads(self._clean(text))\n\n    def _clean(self, text):\n        text = text.strip()\n        if text.startswith(\"```\"):\n            text = text.strip(\"`\")\n            if text.startswith(\"json\"):\n                text = text[4:]\n        return text.strip()\n\ncases = [\n    '```json\\n{\"ok\": true}\\n```',\n    '{\"ok\": false}',\n    '```\\n{\"ok\": \"maybe\"}\\n```',\n]\nfor raw in cases:\n    print(\"解析成功:\", JsonOutputParser().parse(raw))",
+    "expected": "解析成功: {'ok': True}\n解析成功: {'ok': False}\n解析成功: {'ok': 'maybe'}",
+    "points": [
+      {
+        "id": "fence",
+        "text": "if text.startswith(\"```\"):",
+        "category": "agent_output",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 先剥掉 ``` 围栏",
+        "fill_type": "text"
+      },
+      {
+        "id": "strip",
+        "text": "text = text.strip(\"`\")",
+        "category": "agent_output",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 去掉语言标记后正常解析",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 先剥掉 ``` 围栏",
+      "level_2": "📖 结构化输出：让模型输出 JSON，解析失败就截取/修复/重试，字段要做必填与类型校验",
+      "level_3": "👀 接近答案：`if text.startswith(\"```\"):`、`text = text.strip(\"`\")`",
+      "level_4": "📝 正确答案：`if text.startswith(\"```\"):`；`text = text.strip(\"`\")`"
+    },
+    "explanation": "模型爱用 markdown 包 JSON。strip 围栏 → 去语言标记 → 解析，是解析器的前置清洗标准步骤。"
+  },
+  {
+    "id": "agent-output-003",
+    "title": "函数调用解析",
+    "description": "从模型文本中解析出要调用的函数与参数",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "agent_output",
+    "subcategory": "Agent 开发",
+    "full_code": "import json\nimport re\n\nreply = '调用 get_weather，参数 {\"city\": \"上海\"}'\n\ndef parse_call(reply, tools):\n    for name in tools:\n        if name in reply:\n            m = re.search(r\"\\{.*\\}\", reply)\n            args = json.loads(m.group(0)) if m else {}\n            return {\"name\": name, \"arguments\": args}\n    return None\n\ncall = parse_call(reply, [\"get_weather\", \"get_time\"])\nif call:\n    print(\"工具:\", call[\"name\"], \"| 参数:\", call[\"arguments\"])\nelse:\n    print(\"没有工具调用\")",
+    "expected": "工具: get_weather | 参数: {'city': '上海'}",
+    "points": [
+      {
+        "id": "detect",
+        "text": "if name in reply:",
+        "category": "agent_output",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 遍历工具表判断模型意图",
+        "fill_type": "text"
+      },
+      {
+        "id": "regex",
+        "text": "m = re.search(r\"\\{.*\\}\", reply)",
+        "category": "agent_output",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 正则抽出花括号 JSON 并解析",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 遍历工具表判断模型意图",
+      "level_2": "📖 结构化输出：让模型输出 JSON，解析失败就截取/修复/重试，字段要做必填与类型校验",
+      "level_3": "👀 接近答案：`if name in reply:`、`m = re.search(r\"\\{.*\\}\", reply`",
+      "level_4": "📝 正确答案：`if name in reply:`；`m = re.search(r\"\\{.*\\}\", reply)`"
+    },
+    "explanation": "不依赖原生协议时，函数调用解析=工具名匹配 + JSON 抠取。这是手搓 Agent 的必备小件。"
+  },
+  {
+    "id": "agent-output-004",
+    "title": "枚举与范围校验",
+    "description": "对结构化输出做枚举与数值范围双重校验",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "agent_output",
+    "subcategory": "Agent 开发",
+    "full_code": "SCHEMA = {\n    \"priority\": {\"enum\": [\"low\", \"medium\", \"high\"]},\n    \"size\": {\"min\": 1, \"max\": 10},\n}\n\ndef validate(data):\n    errors = []\n    if data.get(\"priority\") not in SCHEMA[\"priority\"][\"enum\"]:\n        errors.append(\"priority 非法\")\n    if not (SCHEMA[\"size\"][\"min\"] <= data.get(\"size\", 0) <= SCHEMA[\"size\"][\"max\"]):\n        errors.append(\"size 越界\")\n    return errors\n\nfor data in ({\"priority\": \"urgent\", \"size\": 5}, {\"priority\": \"low\", \"size\": 3}):\n    errors = validate(data)\n    print(data[\"priority\"], \"->\", \"校验通过\" if not errors else errors)",
+    "expected": "urgent -> ['priority 非法']\nlow -> 校验通过",
+    "points": [
+      {
+        "id": "enumchk",
+        "text": "if data.get(\"priority\") not in SCHEMA[\"priority\"][\"enum\"]:",
+        "category": "agent_output",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 枚举字段用 in 校验",
+        "fill_type": "text"
+      },
+      {
+        "id": "rangechk",
+        "text": "if not (SCHEMA[\"size\"][\"min\"] <= data.get(\"size\", 0) <= SCHEMA[\"size\"][\"max\"]):",
+        "category": "agent_output",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 数值字段用链式比较校验范围",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 枚举字段用 in 校验",
+      "level_2": "📖 结构化输出：让模型输出 JSON，解析失败就截取/修复/重试，字段要做必填与类型校验",
+      "level_3": "👀 接近答案：`if data.get(\"priority\") not in`、`if not (SCHEMA[\"size\"][\"min\"] `",
+      "level_4": "📝 正确答案：`if data.get(\"priority\") not in SCHEMA[\"priority\"][\"enum\"]:`；`if not (SCHEMA[\"size\"][\"min\"] <= data.get(\"size\", 0) <= SCHEMA[\"size\"][\"max\"]):`"
+    },
+    "explanation": "枚举防幻觉取值，范围防离谱数值。校验器返回错误列表而不是直接抛错，方便一次性反馈给模型重试。"
+  },
+  {
+    "id": "agent-output-005",
+    "title": "标记分段解析",
+    "description": "解析模型按 [标记] 分节的输出",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "agent_output",
+    "subcategory": "Agent 开发",
+    "full_code": "reply = \"\"\"[答案]\nAgent 是会自主调用工具的程序。\n[置信度]\n高\n[依据]\n来自 search 工具\"\"\"\n\nsections = {}\ncurrent = None\nfor line in reply.splitlines():\n    if line.startswith(\"[\") and line.endswith(\"]\"):\n        current = line[1:-1]\n        sections[current] = []\n    elif current:\n        sections[current].append(line)\n\nfor name, lines in sections.items():\n    print(f\"{name}: {' / '.join(lines)}\")",
+    "expected": "答案: Agent 是会自主调用工具的程序。\n置信度: 高\n依据: 来自 search 工具",
+    "points": [
+      {
+        "id": "marker",
+        "text": "if line.startswith(\"[\") and line.endswith(\"]\"):",
+        "category": "agent_output",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 遇到 [标记] 行就切换分节",
+        "fill_type": "text"
+      },
+      {
+        "id": "switch",
+        "text": "current = line[1:-1]",
+        "category": "agent_output",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 其余行归入当前分节",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 遇到 [标记] 行就切换分节",
+      "level_2": "📖 结构化输出：让模型输出 JSON，解析失败就截取/修复/重试，字段要做必填与类型校验",
+      "level_3": "👀 接近答案：`if line.startswith(\"[\") and li`、`current = line[1:-1]`",
+      "level_4": "📝 正确答案：`if line.startswith(\"[\") and line.endswith(\"]\"):`；`current = line[1:-1]`"
+    },
+    "explanation": "标记分段是比 JSON 更抗错的结构化协议：一行解析失败只影响本节，不会让整个输出报废。"
+  },
+  {
+    "id": "agent-multi-001",
+    "title": "流水线协作",
+    "description": "多个智能体按顺序串成流水线逐级加工",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "agent_multi",
+    "subcategory": "Agent 开发",
+    "full_code": "class Pipeline:\n    \"\"\"把多个智能体按顺序串成流水线。\"\"\"\n\n    def __init__(self, *agents):\n        self.agents = agents\n\n    def run(self, payload):\n        for agent in self.agents:\n            payload = agent(payload)\n            print(f\"  [{agent.__name__}] -> {payload}\")\n        return payload\n\ndef researcher(topic):\n    return f\"{topic} 要点: 自主决策 / 工具调用 / 循环迭代\"\n\ndef writer(material):\n    return \"短文: \" + material.split(\": \")[1].split(\" / \")[0]\n\ndef reviewer(text):\n    return text + \"（已审核）\"\n\npipeline = Pipeline(researcher, writer, reviewer)\nfinal = pipeline.run(\"Agent\")\nprint(\"最终产出:\", final)",
+    "expected": "[researcher] -> Agent 要点: 自主决策 / 工具调用 / 循环迭代\n  [writer] -> 短文: 自主决策\n  [reviewer] -> 短文: 自主决策（已审核）\n最终产出: 短文: 自主决策（已审核）",
+    "points": [
+      {
+        "id": "loop",
+        "text": "for agent in self.agents:",
+        "category": "agent_multi",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 流水线按顺序经过每个智能体",
+        "fill_type": "text"
+      },
+      {
+        "id": "down",
+        "text": "payload = agent(payload)",
+        "category": "agent_multi",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 上游输出作为下游输入逐级加工",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 流水线按顺序经过每个智能体",
+      "level_2": "📖 多智能体：按角色分工，通过 handoff 交接或按意图路由分发，最后聚合结果",
+      "level_3": "👀 接近答案：`for agent in self.agents:`、`payload = agent(payload)`",
+      "level_4": "📝 正确答案：`for agent in self.agents:`；`payload = agent(payload)`"
+    },
+    "explanation": "流水线是最稳的多智能体结构：职责单一、接口清晰，每一段都可以单独替换和测试。"
+  },
+  {
+    "id": "agent-multi-002",
+    "title": "意图路由器",
+    "description": "入口智能体按意图把请求分发给专家",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "agent_multi",
+    "subcategory": "Agent 开发",
+    "full_code": "class RouterAgent:\n    AGENTS = {\"technical\": \"技术客服\", \"billing\": \"账单客服\"}\n    RULES = {\"technical\": (\"报错\", \"崩溃\", \"故障\"), \"billing\": (\"发票\", \"退款\", \"账单\")}\n\n    def classify(self, text):\n        for intent, keywords in self.RULES.items():\n            if any(kw in text for kw in keywords):\n                return intent\n        return \"billing\"\n\n    def handle(self, text):\n        name = self.AGENTS[self.classify(text)]\n        return f\"{name} 处理: {text}\"\n\nrouter = RouterAgent()\nstats = {}\nfor query in (\"程序总是报错\", \"发票怎么开\", \"服务崩溃了\", \"账单有误\"):\n    answer = router.handle(query)\n    print(answer)\n    key = answer.split(\" 处理\")[0]\n    stats[key] = stats.get(key, 0) + 1\nprint(\"分发统计:\", stats)",
+    "expected": "技术客服 处理: 程序总是报错\n账单客服 处理: 发票怎么开\n技术客服 处理: 服务崩溃了\n账单客服 处理: 账单有误\n分发统计: {'技术客服': 2, '账单客服': 2}",
+    "points": [
+      {
+        "id": "cls",
+        "text": "if any(kw in text for kw in keywords):",
+        "category": "agent_multi",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 意图对应一组关键词",
+        "fill_type": "text"
+      },
+      {
+        "id": "chain",
+        "text": "name = self.AGENTS[self.classify(text)]",
+        "category": "agent_multi",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 任一关键词命中就路由过去",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 意图对应一组关键词",
+      "level_2": "📖 多智能体：按角色分工，通过 handoff 交接或按意图路由分发，最后聚合结果",
+      "level_3": "👀 接近答案：`if any(kw in text for kw in ke`、`name = self.AGENTS[self.classi`",
+      "level_4": "📝 正确答案：`if any(kw in text for kw in keywords):`；`name = self.AGENTS[self.classify(text)]`"
+    },
+    "explanation": "路由器是多智能体系统的入口：先分类意图再分发，各专家只处理自己擅长的事。"
+  },
+  {
+    "id": "agent-multi-003",
+    "title": "消息总线",
+    "description": "实现智能体间的定向发送与广播",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "agent_multi",
+    "subcategory": "Agent 开发",
+    "full_code": "class MessageBus:\n    def __init__(self):\n        self.inboxes = {}\n\n    def register(self, name):\n        self.inboxes[name] = []\n\n    def send(self, to, msg):\n        self.inboxes[to].append(f\"收到: {msg}\")\n\n    def broadcast(self, msg, *targets):\n        for t in targets:\n            self.send(t, msg)\n\nbus = MessageBus()\nbus.register(\"planner\")\nbus.register(\"coder\")\nbus.send(\"planner\", \"开始规划\")\nbus.broadcast(\"需求变更\", \"planner\", \"coder\")\nprint(bus.inboxes)",
+    "expected": "{'planner': ['收到: 开始规划', '收到: 需求变更'], 'coder': ['收到: 需求变更']}",
+    "points": [
+      {
+        "id": "send",
+        "text": "self.inboxes[to].append(f\"收到: {msg}\")",
+        "category": "agent_multi",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 每个智能体一个收件箱",
+        "fill_type": "text"
+      },
+      {
+        "id": "bc",
+        "text": "for t in targets:",
+        "category": "agent_multi",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 广播遍历目标逐个投递",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 每个智能体一个收件箱",
+      "level_2": "📖 多智能体：按角色分工，通过 handoff 交接或按意图路由分发，最后聚合结果",
+      "level_3": "👀 接近答案：`self.inboxes[to].append(f\"收到: `、`for t in targets:`",
+      "level_4": "📝 正确答案：`self.inboxes[to].append(f\"收到: {msg}\")`；`for t in targets:`"
+    },
+    "explanation": "消息总线解耦了智能体：发送者不需要知道谁在听。收件箱模型是协作框架（如 AutoGen）的基础。"
+  },
+  {
+    "id": "agent-multi-004",
+    "title": "辩论与裁判",
+    "description": "双方智能体轮流发言，裁判按票数裁定",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "agent_multi",
+    "subcategory": "Agent 开发",
+    "full_code": "class Debate:\n    \"\"\"正反方轮流发言，裁判按票数裁定。\"\"\"\n\n    def __init__(self, rounds=2):\n        self.rounds = rounds\n        self.transcript = []\n        self.votes = {}\n\n    def speech(self, side, r):\n        return f\"{side}第{r}轮: 坚持立场并反驳对方\"\n\n    def run(self):\n        for r in range(1, self.rounds + 1):\n            for side in (\"正方\", \"反方\"):\n                self.transcript.append((side, self.speech(side, r)))\n                self.votes[side] = self.votes.get(side, 0) + (2 if r == self.rounds else 1)\n\ndebate = Debate(rounds=2)\ndebate.run()\nverdict = max(debate.votes.items(), key=lambda kv: kv[1])[0]\nprint(\"发言数:\", len(debate.transcript), \"| 票数:\", debate.votes)\nprint(\"裁判裁定:\", verdict)",
+    "expected": "发言数: 4 | 票数: {'正方': 3, '反方': 3}\n裁判裁定: 正方",
+    "points": [
+      {
+        "id": "alt",
+        "text": "self.transcript.append((side, self.speech(side, r)))",
+        "category": "agent_multi",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 循环轮数让双方轮流发言",
+        "fill_type": "text"
+      },
+      {
+        "id": "judge",
+        "text": "verdict = max(debate.votes.items(), key=lambda kv: kv[1])[0]",
+        "category": "agent_multi",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 裁判统计各方票数取最高",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 循环轮数让双方轮流发言",
+      "level_2": "📖 多智能体：按角色分工，通过 handoff 交接或按意图路由分发，最后聚合结果",
+      "level_3": "👀 接近答案：`self.transcript.append((side, `、`verdict = max(debate.votes.ite`",
+      "level_4": "📝 正确答案：`self.transcript.append((side, self.speech(side, r)))`；`verdict = max(debate.votes.items(), key=lambda kv: kv[1])[0]`"
+    },
+    "explanation": "辩论式协作让智能体互相挑错。关键控制点：轮数上限与裁判规则，否则容易变成无限抬杠。"
+  },
+  {
+    "id": "agent-multi-005",
+    "title": "评审-修订循环",
+    "description": "写手与评审协作，未通过就按反馈修订",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "agent_multi",
+    "subcategory": "Agent 开发",
+    "full_code": "def reviewer(draft):\n    issues = []\n    if \"TODO\" in draft:\n        issues.append(\"有未完成标记\")\n    if len(draft) < 10:\n        issues.append(\"内容太短\")\n    return issues or [\"通过\"]\n\ndraft = \"初稿 TODO\"\nfor revision in range(1, 4):\n    feedback = reviewer(draft)\n    if feedback == [\"通过\"]:\n        print(f\"第 {revision} 轮送审: 通过\")\n        break\n    print(f\"第 {revision} 轮送审: {feedback}，修订\")\n    draft = draft + f\"，补充第{revision}段内容\"\n\nprint(\"最终稿:\", draft)",
+    "expected": "第 1 轮送审: ['有未完成标记', '内容太短']，修订\n第 2 轮送审: ['有未完成标记']，修订\n第 3 轮送审: ['有未完成标记']，修订\n最终稿: 初稿 TODO，补充第1段内容，补充第2段内容，补充第3段内容",
+    "points": [
+      {
+        "id": "fb",
+        "text": "feedback = reviewer(draft)",
+        "category": "agent_multi",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 评审返回问题列表",
+        "fill_type": "text"
+      },
+      {
+        "id": "revise",
+        "text": "draft = draft + f\"，补充第{revision}段内容\"",
+        "category": "agent_multi",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 未通过就按反馈修订再送审，直到通过",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 评审返回问题列表",
+      "level_2": "📖 多智能体：按角色分工，通过 handoff 交接或按意图路由分发，最后聚合结果",
+      "level_3": "👀 接近答案：`feedback = reviewer(draft)`、`draft = draft + f\"，补充第{revisio`",
+      "level_4": "📝 正确答案：`feedback = reviewer(draft)`；`draft = draft + f\"，补充第{revision}段内容\"`"
+    },
+    "explanation": "评审-修订循环是质量保障型协作：作者与批评者角色分离，轮数上限防止过度打磨。"
+  },
+  {
+    "id": "agent-multi-006",
+    "title": "共享黑板",
+    "description": "多智能体通过共享黑板读写协作状态",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "agent_multi",
+    "subcategory": "Agent 开发",
+    "full_code": "class Blackboard:\n    def __init__(self):\n        self._board = {}\n\n    def write(self, agent, key, value):\n        self._board[key] = {\"by\": agent, \"value\": value}\n\n    def read(self, key):\n        entry = self._board.get(key)\n        return None if entry is None else entry[\"value\"]\n\nboard = Blackboard()\nboard.write(\"researcher\", \"结论\", \"Agent 需要工具\")\nboard.write(\"writer\", \"草稿\", \"已根据结论撰写\")\nboard.write(\"writer\", \"结论\", \"被写手覆盖了\")\nfor key in (\"结论\", \"草稿\", \"不存在\"):\n    print(key, \"->\", board.read(key))",
+    "expected": "结论 -> 被写手覆盖了\n草稿 -> 已根据结论撰写\n不存在 -> None",
+    "points": [
+      {
+        "id": "write",
+        "text": "self._board[key] = {\"by\": agent, \"value\": value}",
+        "category": "agent_multi",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 写入时标注是哪个智能体写的",
+        "fill_type": "text"
+      },
+      {
+        "id": "read",
+        "text": "return None if entry is None else entry[\"value\"]",
+        "category": "agent_multi",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 读取不存在的键返回 None",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 写入时标注是哪个智能体写的",
+      "level_2": "📖 多智能体：按角色分工，通过 handoff 交接或按意图路由分发，最后聚合结果",
+      "level_3": "👀 接近答案：`self._board[key] = {\"by\": agen`、`return None if entry is None e`",
+      "level_4": "📝 正确答案：`self._board[key] = {\"by\": agent, \"value\": value}`；`return None if entry is None else entry[\"value\"]`"
+    },
+    "explanation": "黑板模式让智能体不必知道彼此，只围绕共享状态协作；记录作者则让整个协作过程可追溯。"
+  },
+  {
+    "id": "agent-ops-001",
+    "title": "指数退避重试",
+    "description": "请求失败后按指数间隔自动重试",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "agent_ops",
+    "subcategory": "Agent 开发",
+    "full_code": "class RetryWithBackoff:\n    \"\"\"指数退避：1s → 2s → 4s，重试耗尽明确放弃。\"\"\"\n\n    def __init__(self, failures):\n        self.failures = list(failures)\n\n    def call(self):\n        delays = (1, 2, 4)\n        for attempt, delay in enumerate(delays, 1):\n            outcome = self.failures.pop(0) if self.failures else \"成功\"\n            if outcome == \"成功\":\n                return f\"第 {attempt} 次成功，累计退避 {sum(delays[:attempt - 1])}s\"\n            print(f\"第 {attempt} 次失败: {outcome}，退避 {delay}s 后重试\")\n        return \"重试耗尽，放弃本次任务\"\n\nretry = RetryWithBackoff([\"限流\", \"超时\"])\nprint(retry.call())\nempty = RetryWithBackoff([])\nprint(empty.call())",
+    "expected": "第 1 次失败: 限流，退避 1s 后重试\n第 2 次失败: 超时，退避 2s 后重试\n第 3 次成功，累计退避 3s\n第 1 次成功，累计退避 0s",
+    "points": [
+      {
+        "id": "delays",
+        "text": "delays = (1, 2, 4)",
+        "category": "agent_ops",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 退避序列 1→2→4 指数增长",
+        "fill_type": "text"
+      },
+      {
+        "id": "giveup",
+        "text": "return \"重试耗尽，放弃本次任务\"",
+        "category": "agent_ops",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 成功立即返回，耗尽后明确放弃",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 退避序列 1→2→4 指数增长",
+      "level_2": "📖 生产要点：指数退避重试、按 token 单价核算成本、结构化日志便于回放轨迹",
+      "level_3": "👀 接近答案：`delays = (1, 2, 4)`、`return \"重试耗尽，放弃本次任务\"`",
+      "level_4": "📝 正确答案：`delays = (1, 2, 4)`；`return \"重试耗尽，放弃本次任务\"`"
+    },
+    "explanation": "限流与超时是大模型 API 的日常。指数退避+明确放弃是调用大模型 API 的标配。"
+  },
+  {
+    "id": "agent-ops-002",
+    "title": "成本账本",
+    "description": "按输入/输出 token 单价累计多轮调用成本并告警",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "agent_ops",
+    "subcategory": "Agent 开发",
+    "full_code": "class CostLedger:\n    PRICE = {\"input\": 0.001, \"output\": 0.002}  # 每千 token 单价\n\n    def __init__(self, budget=1.0):\n        self.total = 0.0\n        self.budget = budget\n\n    def add(self, input_tokens, output_tokens):\n        cost = (input_tokens + output_tokens) / 1000 * self.PRICE[\"input\"]\n        cost += output_tokens / 1000 * self.PRICE[\"output\"]\n        self.total += cost\n        return round(cost, 6)\n\n    @property\n    def over_budget(self):\n        return self.total > self.budget\n\nledger = CostLedger(budget=0.01)\nfor i, (inp, out) in enumerate([(1200, 500), (3000, 1500), (5000, 4000)], 1):\n    cost = ledger.add(inp, out)\n    print(f\"调用 {i}: 本次 {cost} 元 | 累计 {round(ledger.total, 4)} 元\")\nprint(\"超预算:\", ledger.over_budget)",
+    "expected": "调用 1: 本次 0.0027 元 | 累计 0.0027 元\n调用 2: 本次 0.0075 元 | 累计 0.0102 元\n调用 3: 本次 0.017 元 | 累计 0.0272 元\n超预算: True",
+    "points": [
+      {
+        "id": "calc",
+        "text": "cost = (input_tokens + output_tokens) / 1000 * self.PRICE[\"input\"]",
+        "category": "agent_ops",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 输入输出 token 分开计价再累加",
+        "fill_type": "text"
+      },
+      {
+        "id": "alarm",
+        "text": "return self.total > self.budget",
+        "category": "agent_ops",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 累计超过预算就告警",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 输入输出 token 分开计价再累加",
+      "level_2": "📖 生产要点：指数退避重试、按 token 单价核算成本、结构化日志便于回放轨迹",
+      "level_3": "👀 接近答案：`cost = (input_tokens + output_`、`return self.total > self.budge`",
+      "level_4": "📝 正确答案：`cost = (input_tokens + output_tokens) / 1000 * self.PRICE[\"input\"]`；`return self.total > self.budget`"
+    },
+    "explanation": "Agent 一轮任务可能产生几十次模型调用。账本类让每次调用的成本可累计、可告警。"
+  },
+  {
+    "id": "agent-ops-003",
+    "title": "轨迹报告",
+    "description": "记录 Agent 每一步并导出编号报告",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "beginner",
+    "category": "agent_ops",
+    "subcategory": "Agent 开发",
+    "full_code": "class Trace:\n    def __init__(self):\n        self.entries = []\n\n    def log(self, step, detail):\n        self.entries.append(f\"step{step}: {detail}\")\n\n    def report(self):\n        return \"\\n\".join(f\"{i}. {t}\" for i, t in enumerate(self.entries, 1))\n\ntrace = Trace()\ntrace.log(1, \"收到问题: 什么是 Agent\")\ntrace.log(2, \"决策: 调用工具 search\")\ntrace.log(3, \"工具返回: 2 条资料\")\ntrace.log(4, \"生成最终答案\")\nprint(trace.report())",
+    "expected": "1. step1: 收到问题: 什么是 Agent\n2. step2: 决策: 调用工具 search\n3. step3: 工具返回: 2 条资料\n4. step4: 生成最终答案",
+    "points": [
+      {
+        "id": "append",
+        "text": "self.entries.append(f\"step{step}: {detail}\")",
+        "category": "agent_ops",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 每步把细节追加进轨迹列表",
+        "fill_type": "text"
+      },
+      {
+        "id": "render",
+        "text": "\"\\n\".join(f\"{i}. {t}\" for i, t in enumerate(self.entries, 1))",
+        "category": "agent_ops",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 导出时按序号编成报告",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 每步把细节追加进轨迹列表",
+      "level_2": "📖 生产要点：指数退避重试、按 token 单价核算成本、结构化日志便于回放轨迹",
+      "level_3": "👀 接近答案：`self.entries.append(f\"step{ste`、`\"\\n\".join(f\"{i}. {t}\" for i, t`",
+      "level_4": "📝 正确答案：`self.entries.append(f\"step{step}: {detail}\")`；`\"\\n\".join(f\"{i}. {t}\" for i, t in enumerate(self.entries, 1))`"
+    },
+    "explanation": "轨迹是调试 Agent 的黑匣子：出问题时，一份带编号的步骤报告能直接定位是哪一步出错。"
+  }
+]

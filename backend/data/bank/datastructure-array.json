@@ -1,0 +1,392 @@
+[
+  {
+    "id": "ds-array-001",
+    "title": "动态数组与扩容",
+    "description": "实现容量翻倍的动态数组",
+    "exercise_type": "fill",
+    "tech_stack": "datastructure",
+    "weight": "medium",
+    "category": "ds_array",
+    "subcategory": "数组",
+    "full_code": "class DynamicArray:\n    \"\"\"动态数组：容量不够时按 2 倍扩容。\"\"\"\n\n    def __init__(self):\n        self._data = [None] * 2\n        self._size = 0\n\n    def append(self, value):\n        if self._size == len(self._data):\n            self._grow()\n        self._data[self._size] = value\n        self._size += 1\n\n    def _grow(self):\n        new_data = [None] * (len(self._data) * 2)\n        for i, v in enumerate(self._data):\n            new_data[i] = v\n        self._data = new_data\n        print(\"扩容到\", len(self._data))\n\n    def __len__(self):\n        return self._size\n\narr = DynamicArray()\nfor i in range(5):\n    arr.append(i)\nprint(\"元素数:\", len(arr))",
+    "expected": "扩容到 4\n扩容到 8\n元素数: 5",
+    "points": [
+      {
+        "id": "grow",
+        "text": "new_data = [None] * (len(self._data) * 2)",
+        "category": "ds_array",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 容量满时分配两倍的新数组",
+        "fill_type": "text"
+      },
+      {
+        "id": "copy",
+        "text": "new_data[i] = v",
+        "category": "ds_array",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 把旧元素逐个搬过去",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 容量满时分配两倍的新数组",
+      "level_2": "📖 数组：连续内存 O(1) 随机访问；双指针/滑动窗口/前缀和/差分是四大套路",
+      "level_3": "👀 接近答案：`new_data = [None] * (len(self._data) * 2`、`new_data[i] = v`",
+      "level_4": "📝 正确答案：`new_data = [None] * (len(self._data) * 2)`；`new_data[i] = v`"
+    },
+    "explanation": "Python list 的 append 均摊 O(1) 就是这么实现的：偶发扩容，均摊后每次追加代价极低。"
+  },
+  {
+    "id": "ds-array-002",
+    "title": "双指针原地反转",
+    "description": "相向双指针原地反转数组",
+    "exercise_type": "fill",
+    "tech_stack": "datastructure",
+    "weight": "beginner",
+    "category": "ds_array",
+    "subcategory": "数组",
+    "full_code": "def reverse_in_place(arr):\n    left, right = 0, len(arr) - 1\n    while left < right:\n        arr[left], arr[right] = arr[right], arr[left]\n        left += 1\n        right -= 1\n    return arr\n\nprint(reverse_in_place([1, 2, 3, 4, 5]))\nprint(reverse_in_place([\"a\", \"b\", \"c\"]))",
+    "expected": "[5, 4, 3, 2, 1]\n['c', 'b', 'a']",
+    "points": [
+      {
+        "id": "swap",
+        "text": "arr[left], arr[right] = arr[right], arr[left]",
+        "category": "ds_array",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 左右指针分别指向两端",
+        "fill_type": "text"
+      },
+      {
+        "id": "move",
+        "text": "left += 1",
+        "category": "ds_array",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 交换后向中间推进，相遇即结束",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 左右指针分别指向两端",
+      "level_2": "📖 数组：连续内存 O(1) 随机访问；双指针/滑动窗口/前缀和/差分是四大套路",
+      "level_3": "👀 接近答案：`arr[left], arr[right] = arr[right], arr[`、`left += 1`",
+      "level_4": "📝 正确答案：`arr[left], arr[right] = arr[right], arr[left]`；`left += 1`"
+    },
+    "explanation": "双指针原地反转只需遍历一半元素，空间 O(1)，是数组题最常用的套路。"
+  },
+  {
+    "id": "ds-array-003",
+    "title": "有序数组去重",
+    "description": "快慢指针原地去重",
+    "exercise_type": "fill",
+    "tech_stack": "datastructure",
+    "weight": "easy",
+    "category": "ds_array",
+    "subcategory": "数组",
+    "full_code": "def dedup_sorted(arr):\n    if not arr:\n        return []\n    slow = 0\n    for fast in range(1, len(arr)):\n        if arr[fast] != arr[slow]:\n            slow += 1\n            arr[slow] = arr[fast]\n    return arr[:slow + 1]\n\nprint(dedup_sorted([1, 1, 2, 3, 3, 3, 4]))",
+    "expected": "[1, 2, 3, 4]",
+    "points": [
+      {
+        "id": "slow",
+        "text": "slow += 1",
+        "category": "ds_array",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 慢指针守住去重结果末端",
+        "fill_type": "text"
+      },
+      {
+        "id": "cmp",
+        "text": "if arr[fast] != arr[slow]:",
+        "category": "ds_array",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 快指针遇到不同的值才展开新位置",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 慢指针守住去重结果末端",
+      "level_2": "📖 数组：连续内存 O(1) 随机访问；双指针/滑动窗口/前缀和/差分是四大套路",
+      "level_3": "👀 接近答案：`slow += 1`、`if arr[fast] != arr[slow]:`",
+      "level_4": "📝 正确答案：`slow += 1`；`if arr[fast] != arr[slow]:`"
+    },
+    "explanation": "快慢指针：fast 探路、slow 收集，原地完成去重且保序，无需额外空间。"
+  },
+  {
+    "id": "ds-array-004",
+    "title": "原地移除元素",
+    "description": "读写指针分离移除指定值",
+    "exercise_type": "fill",
+    "tech_stack": "datastructure",
+    "weight": "easy",
+    "category": "ds_array",
+    "subcategory": "数组",
+    "full_code": "def remove_val(arr, val):\n    write = 0\n    for read in range(len(arr)):\n        if arr[read] != val:\n            arr[write] = arr[read]\n            write += 1\n    return arr[:write]\n\nprint(remove_val([3, 1, 3, 2, 3], 3))",
+    "expected": "[1, 2]",
+    "points": [
+      {
+        "id": "keep",
+        "text": "arr[write] = arr[read]",
+        "category": "ds_array",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 读指针逐个扫描",
+        "fill_type": "text"
+      },
+      {
+        "id": "rw",
+        "text": "if arr[read] != val:",
+        "category": "ds_array",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 不等于目标值的元素写到写指针位置",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 读指针逐个扫描",
+      "level_2": "📖 数组：连续内存 O(1) 随机访问；双指针/滑动窗口/前缀和/差分是四大套路",
+      "level_3": "👀 接近答案：`arr[write] = arr[read]`、`if arr[read] != val:`",
+      "level_4": "📝 正确答案：`arr[write] = arr[read]`；`if arr[read] != val:`"
+    },
+    "explanation": "读写指针是原地修改数组的标准模式：读指针探路，写指针守结果。"
+  },
+  {
+    "id": "ds-array-005",
+    "title": "合并有序数组",
+    "description": "双指针归并两个有序数组",
+    "exercise_type": "fill",
+    "tech_stack": "datastructure",
+    "weight": "easy",
+    "category": "ds_array",
+    "subcategory": "数组",
+    "full_code": "def merge(a, b):\n    i = j = 0\n    merged = []\n    while i < len(a) and j < len(b):\n        if a[i] <= b[j]:\n            merged.append(a[i])\n            i += 1\n        else:\n            merged.append(b[j])\n            j += 1\n    merged.extend(a[i:])\n    merged.extend(b[j:])\n    return merged\n\nprint(merge([1, 3, 5], [2, 4, 6]))",
+    "expected": "[1, 2, 3, 4, 5, 6]",
+    "points": [
+      {
+        "id": "cmp",
+        "text": "if a[i] <= b[j]:",
+        "category": "ds_array",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 两个指针分别扫描两个数组",
+        "fill_type": "text"
+      },
+      {
+        "id": "tail",
+        "text": "merged.extend(a[i:])",
+        "category": "ds_array",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 每次取较小者放入结果",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 两个指针分别扫描两个数组",
+      "level_2": "📖 数组：连续内存 O(1) 随机访问；双指针/滑动窗口/前缀和/差分是四大套路",
+      "level_3": "👀 接近答案：`if a[i] <= b[j]:`、`merged.extend(a[i:])`",
+      "level_4": "📝 正确答案：`if a[i] <= b[j]:`；`merged.extend(a[i:])`"
+    },
+    "explanation": "归并思想：各扫各的、每次取最小。归并排序与合并有序链表都是这个模式。"
+  },
+  {
+    "id": "ds-array-006",
+    "title": "二分查找",
+    "description": "在有序数组中对数级查找",
+    "exercise_type": "fill",
+    "tech_stack": "datastructure",
+    "weight": "medium",
+    "category": "ds_array",
+    "subcategory": "数组",
+    "full_code": "def binary_search(arr, target):\n    lo, hi = 0, len(arr) - 1\n    while lo <= hi:\n        mid = (lo + hi) // 2\n        if arr[mid] == target:\n            return mid\n        if arr[mid] < target:\n            lo = mid + 1\n        else:\n            hi = mid - 1\n    return -1\n\nprint(binary_search([1, 3, 5, 7, 9], 7))\nprint(binary_search([1, 3, 5], 4))",
+    "expected": "3\n-1",
+    "points": [
+      {
+        "id": "mid",
+        "text": "mid = (lo + hi) // 2",
+        "category": "ds_array",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 循环条件 lo <= hi",
+        "fill_type": "text"
+      },
+      {
+        "id": "narrow",
+        "text": "lo = mid + 1",
+        "category": "ds_array",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 比目标小查右半，比目标大查左半",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 循环条件 lo <= hi",
+      "level_2": "📖 数组：连续内存 O(1) 随机访问；双指针/滑动窗口/前缀和/差分是四大套路",
+      "level_3": "👀 接近答案：`mid = (lo + hi) // 2`、`lo = mid + 1`",
+      "level_4": "📝 正确答案：`mid = (lo + hi) // 2`；`lo = mid + 1`"
+    },
+    "explanation": "二分查找 O(log n)：每次比较排除一半。注意循环条件与边界收缩要配套，否则死循环。"
+  },
+  {
+    "id": "ds-array-007",
+    "title": "轮转数组",
+    "description": "把数组向右轮转 k 位",
+    "exercise_type": "fill",
+    "tech_stack": "datastructure",
+    "weight": "easy",
+    "category": "ds_array",
+    "subcategory": "数组",
+    "full_code": "def rotate(arr, k):\n    n = len(arr)\n    k = k % n\n    return arr[-k:] + arr[:-k]\n\nprint(rotate([1, 2, 3, 4, 5], 2))\nprint(rotate([1, 2, 3], 7))",
+    "expected": "[4, 5, 1, 2, 3]\n[3, 1, 2]",
+    "points": [
+      {
+        "id": "mod",
+        "text": "k = k % n",
+        "category": "ds_array",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 k 先对 n 取模",
+        "fill_type": "text"
+      },
+      {
+        "id": "slice",
+        "text": "arr[-k:] + arr[:-k]",
+        "category": "ds_array",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 末尾 k 个拼到前面",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 k 先对 n 取模",
+      "level_2": "📖 数组：连续内存 O(1) 随机访问；双指针/滑动窗口/前缀和/差分是四大套路",
+      "level_3": "👀 接近答案：`k = k % n`、`arr[-k:] + arr[:-k]`",
+      "level_4": "📝 正确答案：`k = k % n`；`arr[-k:] + arr[:-k]`"
+    },
+    "explanation": "右轮转 k 位 = 末尾 k 个元素搬到开头。取模处理 k > n 的情况。"
+  },
+  {
+    "id": "ds-array-008",
+    "title": "前缀和",
+    "description": "预处理前缀和实现区间 O(1) 查询",
+    "exercise_type": "fill",
+    "tech_stack": "datastructure",
+    "weight": "medium",
+    "category": "ds_array",
+    "subcategory": "数组",
+    "full_code": "def prefix_sums(arr):\n    pre = [0]\n    for v in arr:\n        pre.append(pre[-1] + v)\n    return pre\n\ndef range_sum(pre, i, j):\n    return pre[j + 1] - pre[i]\n\npre = prefix_sums([2, 4, 6, 8])\nprint(range_sum(pre, 1, 3))",
+    "expected": "18",
+    "points": [
+      {
+        "id": "build",
+        "text": "pre.append(pre[-1] + v)",
+        "category": "ds_array",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 前缀和数组首位放 0 兜底",
+        "fill_type": "text"
+      },
+      {
+        "id": "query",
+        "text": "return pre[j + 1] - pre[i]",
+        "category": "ds_array",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 sum(i..j) = pre[j+1] - pre[i]",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 前缀和数组首位放 0 兜底",
+      "level_2": "📖 数组：连续内存 O(1) 随机访问；双指针/滑动窗口/前缀和/差分是四大套路",
+      "level_3": "👀 接近答案：`pre.append(pre[-1] + v)`、`return pre[j + 1] - pre[i]`",
+      "level_4": "📝 正确答案：`pre.append(pre[-1] + v)`；`return pre[j + 1] - pre[i]`"
+    },
+    "explanation": "前缀和用 O(n) 预处理换 O(1) 区间查询；首位补 0 让公式不用特判。"
+  },
+  {
+    "id": "ds-array-009",
+    "title": "差分数组",
+    "description": "差分标记批量区间加减",
+    "exercise_type": "fill",
+    "tech_stack": "datastructure",
+    "weight": "medium",
+    "category": "ds_array",
+    "subcategory": "数组",
+    "full_code": "def diff_update(diff, i, j, val):\n    diff[i] += val\n    diff[j + 1] -= val\n\ndiff = [0] * 6\ndiff_update(diff, 1, 3, 5)\ndiff_update(diff, 2, 4, 2)\narr = []\ntotal = 0\nfor d in diff:\n    total += d\n    arr.append(total)\nprint(arr)",
+    "expected": "[0, 5, 7, 7, 2, 0]",
+    "points": [
+      {
+        "id": "mark",
+        "text": "diff[i] += val",
+        "category": "ds_array",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 区间起点加、终点后一位减",
+        "fill_type": "text"
+      },
+      {
+        "id": "restore",
+        "text": "total += d",
+        "category": "ds_array",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 对差分做前缀和还原数组",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 区间起点加、终点后一位减",
+      "level_2": "📖 数组：连续内存 O(1) 随机访问；双指针/滑动窗口/前缀和/差分是四大套路",
+      "level_3": "👀 接近答案：`diff[i] += val`、`total += d`",
+      "level_4": "📝 正确答案：`diff[i] += val`；`total += d`"
+    },
+    "explanation": "差分数组是前缀和的逆运算：多次区间加减只需 O(1) 标记，最后一次前缀和还原。"
+  },
+  {
+    "id": "ds-array-010",
+    "title": "滑动窗口最大和",
+    "description": "定长窗口加新减旧 O(1) 滑动",
+    "exercise_type": "fill",
+    "tech_stack": "datastructure",
+    "weight": "medium",
+    "category": "ds_array",
+    "subcategory": "数组",
+    "full_code": "def max_window_sum(arr, k):\n    window = sum(arr[:k])\n    best = window\n    for i in range(k, len(arr)):\n        window += arr[i] - arr[i - k]\n        best = max(best, window)\n    return best\n\nprint(max_window_sum([2, 1, 5, 1, 3, 2], 3))",
+    "expected": "9",
+    "points": [
+      {
+        "id": "slide",
+        "text": "window += arr[i] - arr[i - k]",
+        "category": "ds_array",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 先算首个窗口的和",
+        "fill_type": "text"
+      },
+      {
+        "id": "best",
+        "text": "best = max(best, window)",
+        "category": "ds_array",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 每次滑动加新减旧，避免重复求和",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 先算首个窗口的和",
+      "level_2": "📖 数组：连续内存 O(1) 随机访问；双指针/滑动窗口/前缀和/差分是四大套路",
+      "level_3": "👀 接近答案：`window += arr[i] - arr[i - k]`、`best = max(best, window)`",
+      "level_4": "📝 正确答案：`window += arr[i] - arr[i - k]`；`best = max(best, window)`"
+    },
+    "explanation": "固定大小窗口：进一个出一个。把 O(k) 的重算降为 O(1) 的增量更新。"
+  }
+]

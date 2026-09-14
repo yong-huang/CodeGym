@@ -139,9 +139,9 @@ for ex in exercises:
     if not ex.get('explanation'): warn('expl', f'{tag} 缺解析')
 
     # ---- executable checks ----
-    runnable_py = ts == 'python' and et in ('fill', 'bugfix') and h.get('_am') != 'x'
+    runnable_py = ts in ('python', 'datastructure') and et in ('fill', 'bugfix') and h.get('_am') != 'x'
     is_fastapi_am = ts == 'python' and (ex.get('subcategory') == 'FastAPI')
-    if ts == 'python' and et in ('fill', 'bugfix') and not is_fastapi_am:
+    if ts in ('python', 'datastructure') and et in ('fill', 'bugfix') and not is_fastapi_am:
         py_n += 1
         exp = ex.get('expected') or ''
         if not exp:
@@ -182,7 +182,7 @@ db_only = [r for r in rows if r[0] not in bank_ids]
 print(f'DB 手工题: {len(db_only)} 道')
 for rid, title, et, ts, sub, fc, bc, val, exp, tcj, fpj in db_only:
     tag = f'[DB:{rid}]'
-    if et in ('fill', 'bugfix') and ts == 'python' and sub != 'FastAPI':
+    if et in ('fill', 'bugfix') and ts in ('python', 'datastructure') and sub != 'FastAPI':
         src = fc + (val or '')
         out, e_, rc = run_python(src)
         if rc != 0:

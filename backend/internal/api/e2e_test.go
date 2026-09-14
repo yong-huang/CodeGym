@@ -101,11 +101,11 @@ func TestE2E_BareAnswerKeysAccepted(t *testing.T) {
 	// The browser UI submits answers keyed by bare point id (no FILL_ prefix).
 	// These must be graded correctly, not treated as empty/missing.
 	var res struct {
-		Score         float64 `json:"score"`
-		Grade         string  `json:"grade"`
-		IsCorrect     bool    `json:"is_correct"`
-		WeakAnalysis  string  `json:"weak_analysis"`
-		FillResults []struct {
+		Score        float64 `json:"score"`
+		Grade        string  `json:"grade"`
+		IsCorrect    bool    `json:"is_correct"`
+		WeakAnalysis string  `json:"weak_analysis"`
+		FillResults  []struct {
 			PointID    string `json:"point_id"`
 			UserAnswer string `json:"user_answer"`
 			IsCorrect  bool   `json:"is_correct"`
@@ -236,7 +236,8 @@ func TestE2E_OpenShift(t *testing.T) {
 	}
 }
 
-func TestE2E_Categories(t *testing.T) {	ts := newTestServer(t)
+func TestE2E_Categories(t *testing.T) {
+	ts := newTestServer(t)
 	base := ts.URL + "/api/v1/admin"
 
 	// list includes 基础 and the default plan
@@ -372,8 +373,8 @@ func TestE2E_ExerciseListAndVariant(t *testing.T) {
 		PointCount   int    `json:"point_count"`
 	}
 	doJSON(t, "GET", base+"/exercises", nil, &list)
-	if len(list) != 856 {
-		t.Fatalf("expected 856 exercises (676 + 180 AWS), got %d", len(list))
+	if len(list) != 996 {
+		t.Fatalf("expected 996 exercises (816 + 180 AWS), got %d", len(list))
 	}
 	var ids []string
 	for _, ex := range list {
@@ -392,11 +393,17 @@ func TestE2E_ExerciseListAndVariant(t *testing.T) {
 	// 2. filter by tech stack
 	var pyList []map[string]any
 	doJSON(t, "GET", base+"/exercises?tech_stack=python", nil, &pyList)
-	if len(pyList) != 124 {
-		t.Errorf("expected 124 python exercises (54 基础 + 30 FastAPI + 20 协程 + 20 多线程), got %d", len(pyList))
+	if len(pyList) != 174 {
+		t.Errorf("expected 174 python exercises (54 基础 + 30 FastAPI + 20 协程 + 20 多线程 + 50 Agent 开发), got %d", len(pyList))
 	}
 
-// 3. variant masking + weight bounds
+	var dsList []map[string]any
+	doJSON(t, "GET", base+"/exercises?tech_stack=datastructure", nil, &dsList)
+	if len(dsList) != 60 {
+		t.Errorf("expected 60 datastructure exercises (6 子分类各 10 题), got %d", len(dsList))
+	}
+
+	// 3. variant masking + weight bounds
 	for _, lvl := range []string{"beginner", "easy", "medium", "hard", "expert"} {
 		var v struct {
 			ExerciseID  string `json:"exercise_id"`
@@ -503,7 +510,7 @@ func TestE2E_FillExerciseWrongAndHint(t *testing.T) {
 		IsCorrect bool    `json:"is_correct"`
 	}
 	doJSON(t, "POST", base+"/execute", map[string]any{
-		"exercise_id": "py-lc-001",
+		"exercise_id":  "py-lc-001",
 		"weight_level": "easy",
 		"fill_answers": map[string]string{"FILL_expr": "x*2", "FILL_iter": "numbers"},
 	}, &wrong)
@@ -519,7 +526,7 @@ func TestE2E_FillExerciseWrongAndHint(t *testing.T) {
 		Score float64 `json:"score"`
 	}
 	doJSON(t, "POST", base+"/execute", map[string]any{
-		"exercise_id": "py-lc-001",
+		"exercise_id":  "py-lc-001",
 		"weight_level": "easy",
 		"fill_answers": map[string]string{"FILL_expr": "x**2", "FILL_iter": "numbers"},
 		"hint_usage":   map[string]int{"expr": 2},
@@ -534,7 +541,7 @@ func TestE2E_FillExerciseWrongAndHint(t *testing.T) {
 		Score float64 `json:"score"`
 	}
 	doJSON(t, "POST", base+"/execute", map[string]any{
-		"exercise_id": "kubectl-getpods-005",
+		"exercise_id":  "kubectl-getpods-005",
 		"weight_level": "easy",
 		"fill_answers": map[string]string{"FILL_flag": "-A"},
 		"hint_usage":   map[string]int{"flag": 4},
@@ -557,7 +564,7 @@ func TestE2E_BugfixFlow(t *testing.T) {
 		Grade     string  `json:"grade"`
 	}
 	doJSON(t, "POST", base+"/execute", map[string]any{
-		"exercise_id": "py-factorial-bug-003",
+		"exercise_id":  "py-factorial-bug-003",
 		"weight_level": "hard",
 		"user_code":    correctFix,
 	}, &good)
@@ -576,7 +583,7 @@ func TestE2E_BugfixFlow(t *testing.T) {
 		Grade     string  `json:"grade"`
 	}
 	doJSON(t, "POST", base+"/execute", map[string]any{
-		"exercise_id": "py-factorial-bug-003",
+		"exercise_id":  "py-factorial-bug-003",
 		"weight_level": "hard",
 		"user_code":    buggyCode,
 	}, &bad)
@@ -615,7 +622,7 @@ func TestE2E_BugfixFlow(t *testing.T) {
 		ErrorMessage string `json:"error_message"`
 	}
 	doJSON(t, "POST", base+"/execute", map[string]any{
-		"exercise_id": "e2e-timeout-001",
+		"exercise_id":  "e2e-timeout-001",
 		"weight_level": "easy",
 		"fill_answers": map[string]string{"FILL_p1": "pass"},
 	}, &timeout)
@@ -638,7 +645,7 @@ func TestE2E_CommandAndConfigAnswerMatch(t *testing.T) {
 		Correct bool    `json:"is_correct"`
 	}
 	doJSON(t, "POST", base+"/execute", map[string]any{
-		"exercise_id": "kubectl-getpods-005",
+		"exercise_id":  "kubectl-getpods-005",
 		"weight_level": "easy",
 		"fill_answers": map[string]string{"FILL_flag": "--all-namespaces"},
 	}, &cmd)
@@ -651,7 +658,7 @@ func TestE2E_CommandAndConfigAnswerMatch(t *testing.T) {
 		Score float64 `json:"score"`
 	}
 	doJSON(t, "POST", base+"/execute", map[string]any{
-		"exercise_id": "kubectl-getpods-005",
+		"exercise_id":  "kubectl-getpods-005",
 		"weight_level": "easy",
 		"fill_answers": map[string]string{"FILL_flag": "-n default"},
 	}, &cmdBad)
@@ -665,7 +672,7 @@ func TestE2E_CommandAndConfigAnswerMatch(t *testing.T) {
 		Correct bool    `json:"is_correct"`
 	}
 	doJSON(t, "POST", base+"/execute", map[string]any{
-		"exercise_id": "k8s-nginx-pod-006",
+		"exercise_id":  "k8s-nginx-pod-006",
 		"weight_level": "medium",
 		"fill_answers": map[string]string{
 			"FILL_image": "nginx:1.25",
@@ -840,7 +847,9 @@ func TestE2E_GoFlow(t *testing.T) {
 	}
 
 	// Go basic bank (50 questions) executes in real via `go run`
-	var basics []struct{ ID string `json:"id"` }
+	var basics []struct {
+		ID string `json:"id"`
+	}
 	doJSON(t, "GET", base+"/exercises?tech_stack=go", nil, &basics)
 	nBasics := 0
 	for _, it := range basics {
@@ -868,8 +877,8 @@ func TestE2E_GoFlow(t *testing.T) {
 	// a basic bugfix exercise runs correctly
 	gofx := "package main\n\nimport \"fmt\"\n\nfunc main() {\n\ta, b := 1, 2\n\ta, b = b, a\n\tfmt.Println(a, b)\n}"
 	var fix2 struct {
-		Output    string  `json:"output"`
-		IsCorrect bool    `json:"is_correct"`
+		Output    string `json:"output"`
+		IsCorrect bool   `json:"is_correct"`
 	}
 	doJSON(t, "POST", base+"/execute", map[string]any{
 		"exercise_id":  "go-basics-048",
@@ -886,7 +895,9 @@ func TestE2E_K8sBasics(t *testing.T) {
 	base := ts.URL + "/api/v1"
 
 	// the bank contains exactly 50 k8s-basics questions
-	var list []struct{ ID string `json:"id"` }
+	var list []struct {
+		ID string `json:"id"`
+	}
 	doJSON(t, "GET", base+"/exercises?tech_stack=kubernetes", nil, &list)
 	k8sBasics := 0
 	for _, it := range list {
@@ -983,7 +994,9 @@ func TestE2E_K8sBasics(t *testing.T) {
 	}
 
 	// Prometheus bank: exactly 30 under devops, a promql + a config question answer correctly
-	var promList []struct{ ID string `json:"id"` }
+	var promList []struct {
+		ID string `json:"id"`
+	}
 	doJSON(t, "GET", base+"/exercises?tech_stack=devops", nil, &promList)
 	nProm := 0
 	for _, it := range promList {
@@ -1093,8 +1106,8 @@ func TestE2E_ExportImport(t *testing.T) {
 	if err := json.NewDecoder(resp.Body).Decode(&exported); err != nil {
 		t.Fatal(err)
 	}
-	if len(exported) != 856 {
-		t.Fatalf("export count = %d, want 856", len(exported))
+	if len(exported) != 996 {
+		t.Fatalf("export count = %d, want 996", len(exported))
 	}
 
 	// import: delete one exercise, then restore it from the exported blob
@@ -1132,14 +1145,14 @@ func TestE2E_AdminCRUD(t *testing.T) {
 
 	// create
 	ex := model.Exercise{
-		ID:           "e2e-new-001",
-		Title:        "E2E 测试训练",
-		Description:  "端到端测试创建",
-		ExerciseType: model.ExerciseTypeFill,
-		TechStack:    "python",
-		Weight:       "easy",
-		Category:     "e2e",
-		FullCode:     "print(42)",
+		ID:             "e2e-new-001",
+		Title:          "E2E 测试训练",
+		Description:    "端到端测试创建",
+		ExerciseType:   model.ExerciseTypeFill,
+		TechStack:      "python",
+		Weight:         "easy",
+		Category:       "e2e",
+		FullCode:       "print(42)",
 		ExpectedOutput: "42",
 		FillPoints: model.FillPointsConfig{
 			Points: []model.FillPoint{{
@@ -1158,7 +1171,9 @@ func TestE2E_AdminCRUD(t *testing.T) {
 	}
 
 	// it shows up in the list
-	var list []struct{ ID string `json:"id"` }
+	var list []struct {
+		ID string `json:"id"`
+	}
 	doJSON(t, "GET", ts.URL+"/api/v1/exercises", nil, &list)
 	if !containsIDs(list, "e2e-new-001") {
 		t.Error("created exercise not listed")
@@ -1169,7 +1184,7 @@ func TestE2E_AdminCRUD(t *testing.T) {
 		Score float64 `json:"score"`
 	}
 	doJSON(t, "POST", ts.URL+"/api/v1/execute", map[string]any{
-		"exercise_id": "e2e-new-001",
+		"exercise_id":  "e2e-new-001",
 		"weight_level": "easy",
 		"fill_answers": map[string]string{"FILL_p1": "42"},
 	}, &exec)
@@ -1211,7 +1226,9 @@ func TestE2E_AdminCRUD(t *testing.T) {
 
 	// delete
 	doJSON(t, "DELETE", base+"/exercises/e2e-new-001", nil, nil)
-	var list2 []struct{ ID string `json:"id"` }
+	var list2 []struct {
+		ID string `json:"id"`
+	}
 	doJSON(t, "GET", ts.URL+"/api/v1/exercises", nil, &list2)
 	if containsIDs(list2, "e2e-new-001") {
 		t.Error("deleted exercise still listed")
@@ -1251,7 +1268,9 @@ func contains(haystack []string, needle string) bool {
 	return false
 }
 
-func containsIDs(list []struct{ ID string `json:"id"` }, needle string) bool {
+func containsIDs(list []struct {
+	ID string `json:"id"`
+}, needle string) bool {
 	for _, item := range list {
 		if item.ID == needle {
 			return true

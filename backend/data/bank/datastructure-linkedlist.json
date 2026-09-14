@@ -1,0 +1,392 @@
+[
+  {
+    "id": "ds-linkedlist-001",
+    "title": "单链表实现",
+    "description": "节点 + 头指针 + 尾插",
+    "exercise_type": "fill",
+    "tech_stack": "datastructure",
+    "weight": "beginner",
+    "category": "ds_linkedlist",
+    "subcategory": "链表",
+    "full_code": "class Node:\n    def __init__(self, value):\n        self.value = value\n        self.next = None\n\nclass LinkedList:\n    def __init__(self):\n        self.head = None\n\n    def append(self, value):\n        node = Node(value)\n        if self.head is None:\n            self.head = node\n            return\n        cur = self.head\n        while cur.next:\n            cur = cur.next\n        cur.next = node\n\n    def display(self):\n        vals = []\n        cur = self.head\n        while cur:\n            vals.append(str(cur.value))\n            cur = cur.next\n        return \" -> \".join(vals)\n\nlst = LinkedList()\nfor v in (1, 2, 3):\n    lst.append(v)\nprint(lst.display())",
+    "expected": "1 -> 2 -> 3",
+    "points": [
+      {
+        "id": "link",
+        "text": "cur.next = node",
+        "category": "ds_linkedlist",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 空表时新节点直接当头",
+        "fill_type": "text"
+      },
+      {
+        "id": "walk",
+        "text": "cur = cur.next",
+        "category": "ds_linkedlist",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 否则走到表尾再接入",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 空表时新节点直接当头",
+      "level_2": "📖 链表：节点+指针；虚拟头节点、快慢指针、就地反转是高频套路",
+      "level_3": "👀 接近答案：`cur.next = node`、`cur = cur.next`",
+      "level_4": "📝 正确答案：`cur.next = node`；`cur = cur.next`"
+    },
+    "explanation": "链表访问靠指针逐个走：没有随机访问，但插入删除只需改指针。"
+  },
+  {
+    "id": "ds-linkedlist-002",
+    "title": "头插法建表",
+    "description": "每次在头部插入实现逆序",
+    "exercise_type": "fill",
+    "tech_stack": "datastructure",
+    "weight": "beginner",
+    "category": "ds_linkedlist",
+    "subcategory": "链表",
+    "full_code": "class Node:\n    def __init__(self, value):\n        self.value = value\n        self.next = None\n\nhead = None\nfor v in (1, 2, 3, 4):\n    node = Node(v)\n    node.next = head\n    head = node\n\nvals = []\ncur = head\nwhile cur:\n    vals.append(str(cur.value))\n    cur = cur.next\nprint(\" -> \".join(vals))",
+    "expected": "4 -> 3 -> 2 -> 1",
+    "points": [
+      {
+        "id": "headin",
+        "text": "node.next = head",
+        "category": "ds_linkedlist",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 新节点先接管旧头",
+        "fill_type": "text"
+      },
+      {
+        "id": "newhead",
+        "text": "head = node",
+        "category": "ds_linkedlist",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 再让 head 指向新节点",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 新节点先接管旧头",
+      "level_2": "📖 链表：节点+指针；虚拟头节点、快慢指针、就地反转是高频套路",
+      "level_3": "👀 接近答案：`node.next = head`、`head = node`",
+      "level_4": "📝 正确答案：`node.next = head`；`head = node`"
+    },
+    "explanation": "头插法：先接后断。顺序输入得到逆序链表——两行指针操作就是一次反转。"
+  },
+  {
+    "id": "ds-linkedlist-003",
+    "title": "反转链表",
+    "description": "迭代三指针就地反转",
+    "exercise_type": "fill",
+    "tech_stack": "datastructure",
+    "weight": "medium",
+    "category": "ds_linkedlist",
+    "subcategory": "链表",
+    "full_code": "class Node:\n    def __init__(self, value, next=None):\n        self.value = value\n        self.next = next\n\ndef build(values):\n    head = None\n    for v in reversed(values):\n        head = Node(v, head)\n    return head\n\ndef reverse(head):\n    prev = None\n    cur = head\n    while cur:\n        nxt = cur.next\n        cur.next = prev\n        prev = cur\n        cur = nxt\n    return prev\n\ndef to_list(head):\n    out = []\n    while head:\n        out.append(head.value)\n        head = head.next\n    return out\n\nprint(to_list(reverse(build([1, 2, 3, 4, 5]))))",
+    "expected": "[5, 4, 3, 2, 1]",
+    "points": [
+      {
+        "id": "save",
+        "text": "nxt = cur.next",
+        "category": "ds_linkedlist",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 三指针 prev/cur/nxt",
+        "fill_type": "text"
+      },
+      {
+        "id": "flip",
+        "text": "cur.next = prev",
+        "category": "ds_linkedlist",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 先把 next 存起来再掉头",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 三指针 prev/cur/nxt",
+      "level_2": "📖 链表：节点+指针；虚拟头节点、快慢指针、就地反转是高频套路",
+      "level_3": "👀 接近答案：`nxt = cur.next`、`cur.next = prev`",
+      "level_4": "📝 正确答案：`nxt = cur.next`；`cur.next = prev`"
+    },
+    "explanation": "反转链表的关键：改指向前必须先保存后继，否则链表断开找不到后面。"
+  },
+  {
+    "id": "ds-linkedlist-004",
+    "title": "中间节点",
+    "description": "快慢指针一次扫描找中点",
+    "exercise_type": "fill",
+    "tech_stack": "datastructure",
+    "weight": "easy",
+    "category": "ds_linkedlist",
+    "subcategory": "链表",
+    "full_code": "class Node:\n    def __init__(self, value, next=None):\n        self.value = value\n        self.next = next\n\ndef middle(head):\n    slow = fast = head\n    while fast and fast.next:\n        slow = slow.next\n        fast = fast.next.next\n    return slow\n\nhead = Node(1, Node(2, Node(3, Node(4, Node(5)))))\nprint(\"中间节点:\", middle(head).value)",
+    "expected": "中间节点: 3",
+    "points": [
+      {
+        "id": "twoptr",
+        "text": "slow = fast = head",
+        "category": "ds_linkedlist",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 慢指针一步快指针两步",
+        "fill_type": "text"
+      },
+      {
+        "id": "stride",
+        "text": "fast = fast.next.next",
+        "category": "ds_linkedlist",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 快指针到头时慢指针恰在中点",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 慢指针一步快指针两步",
+      "level_2": "📖 链表：节点+指针；虚拟头节点、快慢指针、就地反转是高频套路",
+      "level_3": "👀 接近答案：`slow = fast = head`、`fast = fast.next.next`",
+      "level_4": "📝 正确答案：`slow = fast = head`；`fast = fast.next.next`"
+    },
+    "explanation": "快慢指针不需要先数长度：fast 走两步 slow 走一步，fast 到尾时 slow 在中点。"
+  },
+  {
+    "id": "ds-linkedlist-005",
+    "title": "回文链表",
+    "description": "复制值到数组后与反转比较",
+    "exercise_type": "fill",
+    "tech_stack": "datastructure",
+    "weight": "easy",
+    "category": "ds_linkedlist",
+    "subcategory": "链表",
+    "full_code": "class Node:\n    def __init__(self, value, next=None):\n        self.value = value\n        self.next = next\n\ndef is_palindrome(head):\n    vals = []\n    cur = head\n    while cur:\n        vals.append(cur.value)\n        cur = cur.next\n    return vals == vals[::-1]\n\nhead = Node(1, Node(2, Node(2, Node(1))))\nprint(is_palindrome(head))\nhead2 = Node(1, Node(2))\nprint(is_palindrome(head2))",
+    "expected": "True\nFalse",
+    "points": [
+      {
+        "id": "copy",
+        "text": "vals.append(cur.value)",
+        "category": "ds_linkedlist",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 先线性扫描收集所有值",
+        "fill_type": "text"
+      },
+      {
+        "id": "cmp",
+        "text": "return vals == vals[::-1]",
+        "category": "ds_linkedlist",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 数组与其反转相等即为回文",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 先线性扫描收集所有值",
+      "level_2": "📖 链表：节点+指针；虚拟头节点、快慢指针、就地反转是高频套路",
+      "level_3": "👀 接近答案：`vals.append(cur.value)`、`return vals == vals[::-1]`",
+      "level_4": "📝 正确答案：`vals.append(cur.value)`；`return vals == vals[::-1]`"
+    },
+    "explanation": "入门解法 O(n) 空间；进阶做法是快慢指针找中点后反转后半段，空间降到 O(1)。"
+  },
+  {
+    "id": "ds-linkedlist-006",
+    "title": "合并有序链表",
+    "description": "虚拟头节点简化归并",
+    "exercise_type": "fill",
+    "tech_stack": "datastructure",
+    "weight": "medium",
+    "category": "ds_linkedlist",
+    "subcategory": "链表",
+    "full_code": "class Node:\n    def __init__(self, value, next=None):\n        self.value = value\n        self.next = next\n\ndef merge(a, b):\n    dummy = Node(0)\n    tail = dummy\n    while a and b:\n        if a.value <= b.value:\n            tail.next, a = a, a.next\n        else:\n            tail.next, b = b, b.next\n        tail = tail.next\n    tail.next = a or b\n    return dummy.next\n\ndef to_list(head):\n    out = []\n    while head:\n        out.append(head.value)\n        head = head.next\n    return out\n\na = Node(1, Node(3, Node(5)))\nb = Node(2, Node(4, Node(6)))\nprint(to_list(merge(a, b)))",
+    "expected": "[1, 2, 3, 4, 5, 6]",
+    "points": [
+      {
+        "id": "dummy",
+        "text": "dummy = Node(0)",
+        "category": "ds_linkedlist",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 虚拟头节点简化边界",
+        "fill_type": "text"
+      },
+      {
+        "id": "pick",
+        "text": "tail.next, a = a, a.next",
+        "category": "ds_linkedlist",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 每次摘下较小节点接到 tail",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 虚拟头节点简化边界",
+      "level_2": "📖 链表：节点+指针；虚拟头节点、快慢指针、就地反转是高频套路",
+      "level_3": "👀 接近答案：`dummy = Node(0)`、`tail.next, a = a, a.next`",
+      "level_4": "📝 正确答案：`dummy = Node(0)`；`tail.next, a = a, a.next`"
+    },
+    "explanation": "dummy 节点是链表题的利器：第一个真实节点不再需要特判，最后返回 dummy.next。"
+  },
+  {
+    "id": "ds-linkedlist-007",
+    "title": "删除倒数第 N 个",
+    "description": "快指针先走 n+1 步拉开窗口",
+    "exercise_type": "fill",
+    "tech_stack": "datastructure",
+    "weight": "medium",
+    "category": "ds_linkedlist",
+    "subcategory": "链表",
+    "full_code": "class Node:\n    def __init__(self, value, next=None):\n        self.value = value\n        self.next = next\n\ndef build(values):\n    dummy = Node(0)\n    cur = dummy\n    for v in values:\n        cur.next = Node(v)\n        cur = cur.next\n    return dummy.next\n\ndef remove_nth_from_end(head, n):\n    dummy = Node(0, head)\n    fast = slow = dummy\n    for _ in range(n + 1):\n        fast = fast.next\n    while fast:\n        fast = fast.next\n        slow = slow.next\n    slow.next = slow.next.next\n    return dummy.next\n\ndef to_list(head):\n    out = []\n    while head:\n        out.append(head.value)\n        head = head.next\n    return out\n\nprint(to_list(remove_nth_from_end(build([1, 2, 3, 4, 5]), 2)))",
+    "expected": "[1, 2, 3, 5]",
+    "points": [
+      {
+        "id": "gap",
+        "text": "for _ in range(n + 1):",
+        "category": "ds_linkedlist",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 快指针先走 n+1 步",
+        "fill_type": "text"
+      },
+      {
+        "id": "unlink",
+        "text": "slow.next = slow.next.next",
+        "category": "ds_linkedlist",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 快指针到尾时慢指针恰在待删节点前一个",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 快指针先走 n+1 步",
+      "level_2": "📖 链表：节点+指针；虚拟头节点、快慢指针、就地反转是高频套路",
+      "level_3": "👀 接近答案：`for _ in range(n + 1):`、`slow.next = slow.next.next`",
+      "level_4": "📝 正确答案：`for _ in range(n + 1):`；`slow.next = slow.next.next`"
+    },
+    "explanation": "一次扫描删除倒数第 N 个：间距锁定 + 虚拟头处理删头的边界情况。"
+  },
+  {
+    "id": "ds-linkedlist-008",
+    "title": "环检测",
+    "description": "Floyd 快慢指针判环",
+    "exercise_type": "fill",
+    "tech_stack": "datastructure",
+    "weight": "medium",
+    "category": "ds_linkedlist",
+    "subcategory": "链表",
+    "full_code": "class Node:\n    def __init__(self, value, next=None):\n        self.value = value\n        self.next = next\n\ndef has_cycle(head):\n    slow = fast = head\n    while fast and fast.next:\n        slow = slow.next\n        fast = fast.next.next\n        if slow is fast:\n            return True\n    return False\n\na = Node(1)\nb = Node(2)\nc = Node(3)\na.next, b.next, c.next = b, c, a\nprint(has_cycle(a))\nprint(has_cycle(Node(1)))",
+    "expected": "True\nFalse",
+    "points": [
+      {
+        "id": "meet",
+        "text": "if slow is fast:",
+        "category": "ds_linkedlist",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 慢一次快两次追逐",
+        "fill_type": "text"
+      },
+      {
+        "id": "exit",
+        "text": "return False",
+        "category": "ds_linkedlist",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 在环内快指针终将追上慢指针",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 慢一次快两次追逐",
+      "level_2": "📖 链表：节点+指针；虚拟头节点、快慢指针、就地反转是高频套路",
+      "level_3": "👀 接近答案：`if slow is fast:`、`return False`",
+      "level_4": "📝 正确答案：`if slow is fast:`；`return False`"
+    },
+    "explanation": "Floyd 判圈：有环时快指针必在环内追上慢指针；无环时 fast 先到 nil。"
+  },
+  {
+    "id": "ds-linkedlist-009",
+    "title": "双向链表",
+    "description": "prev 与 next 双向链接",
+    "exercise_type": "fill",
+    "tech_stack": "datastructure",
+    "weight": "easy",
+    "category": "ds_linkedlist",
+    "subcategory": "链表",
+    "full_code": "class DNode:\n    def __init__(self, value):\n        self.value = value\n        self.prev = None\n        self.next = None\n\nclass DoublyLinkedList:\n    def __init__(self):\n        self.head = None\n        self.tail = None\n\n    def append(self, value):\n        node = DNode(value)\n        if self.tail is None:\n            self.head = self.tail = node\n        else:\n            node.prev = self.tail\n            self.tail.next = node\n            self.tail = node\n\n    def forward(self):\n        vals, cur = [], self.head\n        while cur:\n            vals.append(str(cur.value))\n            cur = cur.next\n        return \" <-> \".join(vals)\n\ndll = DoublyLinkedList()\nfor v in (1, 2, 3):\n    dll.append(v)\nprint(dll.forward())",
+    "expected": "1 <-> 2 <-> 3",
+    "points": [
+      {
+        "id": "prevlink",
+        "text": "node.prev = self.tail",
+        "category": "ds_linkedlist",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 新节点 prev 接旧尾 next 接空",
+        "fill_type": "text"
+      },
+      {
+        "id": "tailmove",
+        "text": "self.tail = node",
+        "category": "ds_linkedlist",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 维护 head 与 tail 两个指针",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 新节点 prev 接旧尾 next 接空",
+      "level_2": "📖 链表：节点+指针；虚拟头节点、快慢指针、就地反转是高频套路",
+      "level_3": "👀 接近答案：`node.prev = self.tail`、`self.tail = node`",
+      "level_4": "📝 正确答案：`node.prev = self.tail`；`self.tail = node`"
+    },
+    "explanation": "双向链表每个节点两条指针：既能前进也能后退，删除已知节点只需 O(1)（LRU 缓存的基石）。"
+  },
+  {
+    "id": "ds-linkedlist-010",
+    "title": "链表两数相加",
+    "description": "逐位相加处理进位",
+    "exercise_type": "fill",
+    "tech_stack": "datastructure",
+    "weight": "medium",
+    "category": "ds_linkedlist",
+    "subcategory": "链表",
+    "full_code": "class Node:\n    def __init__(self, value, next=None):\n        self.value = value\n        self.next = next\n\ndef add_two(l1, l2):\n    dummy = Node(0)\n    cur, carry = dummy, 0\n    while l1 or l2 or carry:\n        total = carry\n        if l1:\n            total += l1.value\n            l1 = l1.next\n        if l2:\n            total += l2.value\n            l2 = l2.next\n        carry, digit = divmod(total, 10)\n        cur.next = Node(digit)\n        cur = cur.next\n    return dummy.next\n\ndef to_list(head):\n    out = []\n    while head:\n        out.append(head.value)\n        head = head.next\n    return out\n\na = Node(2, Node(4, Node(3)))\nb = Node(5, Node(6, Node(4)))\nprint(to_list(add_two(a, b)))",
+    "expected": "[7, 0, 8]",
+    "points": [
+      {
+        "id": "carry",
+        "text": "carry, digit = divmod(total, 10)",
+        "category": "ds_linkedlist",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 两链表逐位相加并处理进位",
+        "fill_type": "text"
+      },
+      {
+        "id": "cond",
+        "text": "while l1 or l2 or carry:",
+        "category": "ds_linkedlist",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 divmod 一次拿到本位与进位",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 两链表逐位相加并处理进位",
+      "level_2": "📖 链表：节点+指针；虚拟头节点、快慢指针、就地反转是高频套路",
+      "level_3": "👀 接近答案：`carry, digit = divmod(total, 10)`、`while l1 or l2 or carry:`",
+      "level_4": "📝 正确答案：`carry, digit = divmod(total, 10)`；`while l1 or l2 or carry:`"
+    },
+    "explanation": "342+465=807：位数逆序存储正好从低位加起。循环条件带上 carry，防止最后一位进位丢失。"
+  }
+]

@@ -1,5 +1,6 @@
 export const TECH_EMOJI: Record<string, string> = {
   python: '🐍',
+  datastructure: '🧱',
   javascript: '🟨',
   kubernetes: '☸️',
   docker: '🐳',

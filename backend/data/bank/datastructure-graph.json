@@ -1,0 +1,392 @@
+[
+  {
+    "id": "ds-graph-001",
+    "title": "邻接表建图",
+    "description": "字典 + 列表表示无向图",
+    "exercise_type": "fill",
+    "tech_stack": "datastructure",
+    "weight": "beginner",
+    "category": "ds_graph",
+    "subcategory": "图",
+    "full_code": "class Graph:\n    def __init__(self):\n        self.adj = {}\n\n    def add_edge(self, u, v):\n        self.adj.setdefault(u, []).append(v)\n        self.adj.setdefault(v, []).append(u)\n\n    def neighbors(self, u):\n        return self.adj.get(u, [])\n\ng = Graph()\ng.add_edge(\"A\", \"B\")\ng.add_edge(\"A\", \"C\")\ng.add_edge(\"B\", \"D\")\nprint(g.neighbors(\"A\"))\nprint(g.neighbors(\"D\"))",
+    "expected": "['B', 'C']\n['B']",
+    "points": [
+      {
+        "id": "both",
+        "text": "self.adj.setdefault(v, []).append(u)",
+        "category": "ds_graph",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 无向图边要存两个方向",
+        "fill_type": "text"
+      },
+      {
+        "id": "get",
+        "text": "return self.adj.get(u, [])",
+        "category": "ds_graph",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 setdefault 一行完成建键加边",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 无向图边要存两个方向",
+      "level_2": "📖 图=邻接表；BFS 求无权最短路，DFS 走到底，拓扑排序处理依赖，并查集管连通",
+      "level_3": "👀 接近答案：`self.adj.setdefault(v, []).append(u)`、`return self.adj.get(u, [])`",
+      "level_4": "📝 正确答案：`self.adj.setdefault(v, []).append(u)`；`return self.adj.get(u, [])`"
+    },
+    "explanation": "邻接表是图的默认表示：空间 O(V+E)，遍历邻居只看自己这一行。带权图把列表换成字典即可。"
+  },
+  {
+    "id": "ds-graph-002",
+    "title": "BFS 遍历",
+    "description": "队列驱动的广度优先搜索",
+    "exercise_type": "fill",
+    "tech_stack": "datastructure",
+    "weight": "beginner",
+    "category": "ds_graph",
+    "subcategory": "图",
+    "full_code": "from collections import deque\n\ngraph = {\"A\": [\"B\", \"C\"], \"B\": [\"A\", \"D\"], \"C\": [\"A\", \"E\"], \"D\": [\"B\"], \"E\": [\"C\"]}\n\ndef bfs(graph, start):\n    visited = {start}\n    order = []\n    queue = deque([start])\n    while queue:\n        node = queue.popleft()\n        order.append(node)\n        for nxt in graph[node]:\n            if nxt not in visited:\n                visited.add(nxt)\n                queue.append(nxt)\n    return order\n\nprint(bfs(graph, \"A\"))",
+    "expected": "['A', 'B', 'C', 'D', 'E']",
+    "points": [
+      {
+        "id": "visited",
+        "text": "visited = {start}",
+        "category": "ds_graph",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 起点先进队列并标记已访问",
+        "fill_type": "text"
+      },
+      {
+        "id": "dequeue",
+        "text": "node = queue.popleft()",
+        "category": "ds_graph",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 出队时把未访问邻居排队",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 起点先进队列并标记已访问",
+      "level_2": "📖 图=邻接表；BFS 求无权最短路，DFS 走到底，拓扑排序处理依赖，并查集管连通",
+      "level_3": "👀 接近答案：`visited = {start}`、`node = queue.popleft()`",
+      "level_4": "📝 正确答案：`visited = {start}`；`node = queue.popleft()`"
+    },
+    "explanation": "BFS 按距离逐层扩散：入队时立即标记（而不是出队时），能避免同一节点被重复入队。"
+  },
+  {
+    "id": "ds-graph-003",
+    "title": "DFS 遍历",
+    "description": "递归的深度优先搜索",
+    "exercise_type": "fill",
+    "tech_stack": "datastructure",
+    "weight": "beginner",
+    "category": "ds_graph",
+    "subcategory": "图",
+    "full_code": "graph = {\"A\": [\"B\", \"C\"], \"B\": [\"A\", \"D\"], \"C\": [\"A\", \"E\"], \"D\": [\"B\"], \"E\": [\"C\"]}\n\ndef dfs(graph, node, visited, order):\n    visited.add(node)\n    order.append(node)\n    for nxt in graph[node]:\n        if nxt not in visited:\n            dfs(graph, nxt, visited, order)\n    return order\n\nprint(dfs(graph, \"A\", set(), []))",
+    "expected": "['A', 'B', 'D', 'C', 'E']",
+    "points": [
+      {
+        "id": "visit",
+        "text": "visited.add(node)",
+        "category": "ds_graph",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 进入节点先标记再处理",
+        "fill_type": "text"
+      },
+      {
+        "id": "recurse",
+        "text": "if nxt not in visited:",
+        "category": "ds_graph",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 对每个未访问邻居递归",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 进入节点先标记再处理",
+      "level_2": "📖 图=邻接表；BFS 求无权最短路，DFS 走到底，拓扑排序处理依赖，并查集管连通",
+      "level_3": "👀 接近答案：`visited.add(node)`、`if nxt not in visited:`",
+      "level_4": "📝 正确答案：`visited.add(node)`；`if nxt not in visited:`"
+    },
+    "explanation": "DFS 沿一条路走到底再回头。递归深度受栈限制，大图要改成显式栈的迭代版本。"
+  },
+  {
+    "id": "ds-graph-004",
+    "title": "连通分量",
+    "description": "统计图中互不相连的块数",
+    "exercise_type": "fill",
+    "tech_stack": "datastructure",
+    "weight": "medium",
+    "category": "ds_graph",
+    "subcategory": "图",
+    "full_code": "graph = {\"A\": [\"B\"], \"B\": [\"A\"], \"C\": [\"D\"], \"D\": [\"C\"], \"E\": []}\n\ndef components(graph):\n    visited = set()\n    count = 0\n    for start in graph:\n        if start not in visited:\n            count += 1\n            stack = [start]\n            while stack:\n                node = stack.pop()\n                if node in visited:\n                    continue\n                visited.add(node)\n                stack.extend(graph[node])\n    return count\n\nprint(\"连通分量:\", components(graph))",
+    "expected": "连通分量: 3",
+    "points": [
+      {
+        "id": "scan",
+        "text": "for start in graph:",
+        "category": "ds_graph",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 外层循环保证覆盖所有块",
+        "fill_type": "text"
+      },
+      {
+        "id": "iterdfs",
+        "text": "stack.extend(graph[node])",
+        "category": "ds_graph",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 每次新启动遍历计数加一",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 外层循环保证覆盖所有块",
+      "level_2": "📖 图=邻接表；BFS 求无权最短路，DFS 走到底，拓扑排序处理依赖，并查集管连通",
+      "level_3": "👀 接近答案：`for start in graph:`、`stack.extend(graph[node])`",
+      "level_4": "📝 正确答案：`for start in graph:`；`stack.extend(graph[node])`"
+    },
+    "explanation": "连通分量=有几『团』节点互相可达。外层枚举起点、内层 flood fill 标记，是网格题的通用骨架。"
+  },
+  {
+    "id": "ds-graph-005",
+    "title": "BFS 最短路径",
+    "description": "无权图的最短路径",
+    "exercise_type": "fill",
+    "tech_stack": "datastructure",
+    "weight": "medium",
+    "category": "ds_graph",
+    "subcategory": "图",
+    "full_code": "from collections import deque\n\ngraph = {\"A\": [\"B\", \"C\"], \"B\": [\"D\"], \"C\": [\"D\"], \"D\": [\"E\"], \"E\": []}\n\ndef shortest_path(graph, start, end):\n    queue = deque([(start, [start])])\n    visited = {start}\n    while queue:\n        node, path = queue.popleft()\n        if node == end:\n            return path\n        for nxt in graph[node]:\n            if nxt not in visited:\n                visited.add(nxt)\n                queue.append((nxt, path + [nxt]))\n    return None\n\nprint(shortest_path(graph, \"A\", \"E\"))",
+    "expected": "['A', 'B', 'D', 'E']",
+    "points": [
+      {
+        "id": "pathqueue",
+        "text": "queue.append((nxt, path + [nxt]))",
+        "category": "ds_graph",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 队列元素带上走到当前的路径",
+        "fill_type": "text"
+      },
+      {
+        "id": "found",
+        "text": "if node == end:",
+        "category": "ds_graph",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 BFS 首次到达就是最少步数",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 队列元素带上走到当前的路径",
+      "level_2": "📖 图=邻接表；BFS 求无权最短路，DFS 走到底，拓扑排序处理依赖，并查集管连通",
+      "level_3": "👀 接近答案：`queue.append((nxt, path + [nxt]))`、`if node == end:`",
+      "level_4": "📝 正确答案：`queue.append((nxt, path + [nxt]))`；`if node == end:`"
+    },
+    "explanation": "无权图最短路=BFS：按层扩散保证了第一次到达就是最短。携带路径数组是直观但耗内存的写法。"
+  },
+  {
+    "id": "ds-graph-006",
+    "title": "拓扑排序",
+    "description": "Kahn 算法按依赖输出顺序",
+    "exercise_type": "fill",
+    "tech_stack": "datastructure",
+    "weight": "medium",
+    "category": "ds_graph",
+    "subcategory": "图",
+    "full_code": "from collections import deque\n\ngraph = {\"编码\": [\"测试\"], \"设计\": [\"编码\"], \"测试\": [\"上线\"], \"上线\": []}\n\ndef topo_sort(graph):\n    indegree = {node: 0 for node in graph}\n    for node in graph:\n        for nxt in graph[node]:\n            indegree[nxt] += 1\n    queue = deque([n for n, d in indegree.items() if d == 0])\n    order = []\n    while queue:\n        node = queue.popleft()\n        order.append(node)\n        for nxt in graph[node]:\n            indegree[nxt] -= 1\n            if indegree[nxt] == 0:\n                queue.append(nxt)\n    return order\n\nprint(topo_sort(graph))",
+    "expected": "['设计', '编码', '测试', '上线']",
+    "points": [
+      {
+        "id": "indeg",
+        "text": "indegree[nxt] += 1",
+        "category": "ds_graph",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 先统计所有节点入度",
+        "fill_type": "text"
+      },
+      {
+        "id": "zero",
+        "text": "if indegree[nxt] == 0:",
+        "category": "ds_graph",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 入度为 0 的节点可以安全输出",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 先统计所有节点入度",
+      "level_2": "📖 图=邻接表；BFS 求无权最短路，DFS 走到底，拓扑排序处理依赖，并查集管连通",
+      "level_3": "👀 接近答案：`indegree[nxt] += 1`、`if indegree[nxt] == 0:`",
+      "level_4": "📝 正确答案：`indegree[nxt] += 1`；`if indegree[nxt] == 0:`"
+    },
+    "explanation": "拓扑排序处理依赖关系（构建顺序、课程先修）。输出数量少于节点数=图中有环。"
+  },
+  {
+    "id": "ds-graph-007",
+    "title": "有向图环检测",
+    "description": "三色标记的 DFS 判环",
+    "exercise_type": "fill",
+    "tech_stack": "datastructure",
+    "weight": "medium",
+    "category": "ds_graph",
+    "subcategory": "图",
+    "full_code": "def has_cycle(graph):\n    WHITE, GRAY, BLACK = 0, 1, 2\n    color = {node: WHITE for node in graph}\n\n    def dfs(node):\n        color[node] = GRAY\n        for nxt in graph[node]:\n            if color[nxt] == GRAY:\n                return True\n            if color[nxt] == WHITE and dfs(nxt):\n                return True\n        color[node] = BLACK\n        return False\n\n    return any(color[node] == WHITE and dfs(node) for node in graph)\n\nacyclic = {\"a\": [\"b\"], \"b\": [\"c\"], \"c\": []}\ncyclic = {\"a\": [\"b\"], \"b\": [\"c\"], \"c\": [\"a\"]}\nprint(has_cycle(acyclic))\nprint(has_cycle(cyclic))",
+    "expected": "False\nTrue",
+    "points": [
+      {
+        "id": "gray",
+        "text": "if color[nxt] == GRAY:",
+        "category": "ds_graph",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 白色未访问、灰色在路径上、黑色已完成",
+        "fill_type": "text"
+      },
+      {
+        "id": "black",
+        "text": "color[node] = BLACK",
+        "category": "ds_graph",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "💡 碰到灰色节点即有环",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 白色未访问、灰色在路径上、黑色已完成",
+      "level_2": "📖 图=邻接表；BFS 求无权最短路，DFS 走到底，拓扑排序处理依赖，并查集管连通",
+      "level_3": "👀 接近答案：`if color[nxt] == GRAY:`、`color[node] = BLACK`",
+      "level_4": "📝 正确答案：`if color[nxt] == GRAY:`；`color[node] = BLACK`"
+    },
+    "explanation": "三色标记区分『走过的』与『正在走的』：只有回到灰色节点才是环，回头碰黑色不算。"
+  },
+  {
+    "id": "ds-graph-008",
+    "title": "并查集",
+    "description": "带路径压缩的 union-find",
+    "exercise_type": "fill",
+    "tech_stack": "datastructure",
+    "weight": "medium",
+    "category": "ds_graph",
+    "subcategory": "图",
+    "full_code": "class UnionFind:\n    def __init__(self):\n        self.parent = {}\n\n    def find(self, x):\n        self.parent.setdefault(x, x)\n        while self.parent[x] != x:\n            self.parent[x] = self.parent[self.parent[x]]\n            x = self.parent[x]\n        return x\n\n    def union(self, a, b):\n        root_a, root_b = self.find(a), self.find(b)\n        if root_a != root_b:\n            self.parent[root_a] = root_b\n\nuf = UnionFind()\nuf.union(1, 2)\nuf.union(2, 3)\nuf.union(4, 5)\nprint(uf.find(1) == uf.find(3), uf.find(1) == uf.find(4))",
+    "expected": "True False",
+    "points": [
+      {
+        "id": "compress",
+        "text": "self.parent[x] = self.parent[self.parent[x]]",
+        "category": "ds_graph",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 find 顺便做路径压缩",
+        "fill_type": "text"
+      },
+      {
+        "id": "merge",
+        "text": "self.parent[root_a] = root_b",
+        "category": "ds_graph",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 union 只在根不同时合并",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 find 顺便做路径压缩",
+      "level_2": "📖 图=邻接表；BFS 求无权最短路，DFS 走到底，拓扑排序处理依赖，并查集管连通",
+      "level_3": "👀 接近答案：`self.parent[x] = self.parent[self.parent`、`self.parent[root_a] = root_b`",
+      "level_4": "📝 正确答案：`self.parent[x] = self.parent[self.parent[x]]`；`self.parent[root_a] = root_b`"
+    },
+    "explanation": "并查集管连通性：find 判断是否同根，union 合并两块。近 O(1) 的均摊复杂度来自路径压缩。"
+  },
+  {
+    "id": "ds-graph-009",
+    "title": "岛屿数量",
+    "description": "网格上的沉岛 DFS",
+    "exercise_type": "fill",
+    "tech_stack": "datastructure",
+    "weight": "medium",
+    "category": "ds_graph",
+    "subcategory": "图",
+    "full_code": "grid = [\n    [\"1\", \"1\", \"0\", \"0\"],\n    [\"1\", \"1\", \"0\", \"1\"],\n    [\"0\", \"0\", \"1\", \"1\"],\n]\n\ndef num_islands(grid):\n    count = 0\n\n    def sink(r, c):\n        if 0 <= r < len(grid) and 0 <= c < len(grid[0]) and grid[r][c] == \"1\":\n            grid[r][c] = \"0\"\n            sink(r + 1, c)\n            sink(r - 1, c)\n            sink(r, c + 1)\n            sink(r, c - 1)\n\n    for r in range(len(grid)):\n        for c in range(len(grid[0])):\n            if grid[r][c] == \"1\":\n                count += 1\n                sink(r, c)\n    return count\n\nprint(num_islands(grid))",
+    "expected": "2",
+    "points": [
+      {
+        "id": "sink",
+        "text": "if 0 <= r < len(grid) and 0 <= c < len(grid[0]) and grid[r][c] == \"1\":",
+        "category": "ds_graph",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 网格上每个陆地启动一次 DFS",
+        "fill_type": "text"
+      },
+      {
+        "id": "zero",
+        "text": "grid[r][c] = \"0\"",
+        "category": "ds_graph",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 DFS 把整块陆地都沉成水",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 网格上每个陆地启动一次 DFS",
+      "level_2": "📖 图=邻接表；BFS 求无权最短路，DFS 走到底，拓扑排序处理依赖，并查集管连通",
+      "level_3": "👀 接近答案：`if 0 <= r < len(grid) and 0 <= c < len(g`、`grid[r][c] = \"0\"`",
+      "level_4": "📝 正确答案：`if 0 <= r < len(grid) and 0 <= c < len(grid[0]) and grid[r][c] == \"1\":`；`grid[r][c] = \"0\"`"
+    },
+    "explanation": "网格四连通问题：把二维网格看作图，每个陆地节点向上下左右连边。"
+  },
+  {
+    "id": "ds-graph-010",
+    "title": "Dijkstra 最短路",
+    "description": "带权图的单源最短路径",
+    "exercise_type": "fill",
+    "tech_stack": "datastructure",
+    "weight": "medium",
+    "category": "ds_graph",
+    "subcategory": "图",
+    "full_code": "graph = {\n    \"A\": {\"B\": 1, \"C\": 4},\n    \"B\": {\"C\": 2, \"D\": 5},\n    \"C\": {\"D\": 1},\n    \"D\": {},\n}\n\ndef dijkstra(graph, start):\n    dist = {node: float(\"inf\") for node in graph}\n    dist[start] = 0\n    unvisited = set(graph)\n    while unvisited:\n        current = min(unvisited, key=lambda n: dist[n])\n        if dist[current] == float(\"inf\"):\n            break\n        unvisited.remove(current)\n        for nxt, weight in graph[current].items():\n            candidate = dist[current] + weight\n            if candidate < dist[nxt]:\n                dist[nxt] = candidate\n    return dist\n\ndist = dijkstra(graph, \"A\")\nprint({k: v for k, v in sorted(dist.items())})",
+    "expected": "{'A': 0, 'B': 1, 'C': 3, 'D': 4}",
+    "points": [
+      {
+        "id": "pick",
+        "text": "current = min(unvisited, key=lambda n: dist[n])",
+        "category": "ds_graph",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 每轮锁定当前最近的未访问节点",
+        "fill_type": "text"
+      },
+      {
+        "id": "relax",
+        "text": "if candidate < dist[nxt]:",
+        "category": "ds_graph",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "💡 尝试用它松弛邻居的距离",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 每轮锁定当前最近的未访问节点",
+      "level_2": "📖 图=邻接表；BFS 求无权最短路，DFS 走到底，拓扑排序处理依赖，并查集管连通",
+      "level_3": "👀 接近答案：`current = min(unvisited, key=lambda n: d`、`if candidate < dist[nxt]:`",
+      "level_4": "📝 正确答案：`current = min(unvisited, key=lambda n: dist[n])`；`if candidate < dist[nxt]:`"
+    },
+    "explanation": "Dijkstra 贪心：已确定的最短距离不会再见变。线性取最小是 O(V²) 简版，生产用堆优化到 O(E log V)。"
+  }
+]

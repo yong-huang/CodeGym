@@ -5,6 +5,7 @@
 ## [Unreleased]
 
 ### Added
+- Python 进阶题库（90 题，6 个子分类各 15 题，全部真实执行判题）：装饰器（wraps/带参装饰器/叠加顺序/类装饰器/lru_cache/singledispatch/property/重试）、迭代器与生成器（iter·next/自定义可迭代与迭代器/yield/yield from/send/throw/close/islice/groupby）、描述符（__get__·__set__·__delete__/__set_name__/数据与非数据优先级/惰性缓存/classmethod 原理）、上下文管理器（__enter__·__exit__/异常抑制/contextmanager/suppress/closing/redirect_stdout/ExitStack）、元类与类机制（type() 动态建类/元类 __new__·__init__/__init_subclass__/MRO·super/__slots__/ABCMeta/__instancecheck__）、魔术方法（__repr__·__str__/__eq__·__hash__/__len__·__bool__/__getitem__·__contains__/__call__/__getattr__·__getattribute__/运算符重载/total_ordering/__missing__）
 - 数据结构系列题库（60 题，Python，6 个子分类各 10 题）：数组（双指针/二分/前缀和/差分/滑动窗口）、链表（反转/快慢指针/合并/环检测/两数相加）、栈与队列（括号匹配/逆波兰/最小栈/循环队列/单调栈与单调队列）、哈希表（手写哈希/两数之和/异位词分组/开放寻址/LRU 缓存）、树（遍历/BST 插入查找/验证/翻转/路径总和/最小堆/Trie）、图（邻接表/BFS/DFS/连通分量/最短路/拓扑排序/环检测/并查集/岛屿数量/Dijkstra），全部真实执行判题
 - Go 类型系统题库（30 题，Go 子分类「类型系统」）：零值与类型推断/iota/定义类型与别名/显式转换/rune 与字节/类型断言与 type switch/结构体方法集/嵌入与标签/接口隐式实现/nil 接口陷阱/any/error/接口组合/泛型约束/指针与引用语义，真实 `go run` 执行判题
 - Agentic AI 开发题库（50 题，Python 子分类「Agent 开发」）：消息与采样参数、工具 Schema/注册分派/异常兜底、Agent 循环与 ReAct 轨迹、滑动窗口/摘要/向量检索/RAG、结构化输出校验与重试、多智能体路由与 handoff、退避重试/成本核算/日志，全部真实执行判题

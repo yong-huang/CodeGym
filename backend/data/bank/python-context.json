@@ -1,0 +1,722 @@
+[
+  {
+    "id": "py-ctx-001",
+    "title": "with 语句初体验",
+    "description": "用 with 驱动类实现的上下文管理器，观察 __enter__/__exit__ 的调用顺序",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "beginner",
+    "category": "context_manager_protocol",
+    "subcategory": "上下文管理器",
+    "full_code": "class Greeter:\n    def __enter__(self):\n        print(\"enter\")\n        return self\n\n    def __exit__(self, exc_type, exc_val, exc_tb):\n        print(\"exit\")\n\nwith Greeter():\n    print(\"body\")",
+    "expected": "enter\nbody\nexit",
+    "points": [
+      {
+        "id": "with_statement",
+        "text": "with Greeter():",
+        "category": "with_statement",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "用 with 进入这个上下文管理器",
+        "fill_type": "text"
+      },
+      {
+        "id": "enter_method",
+        "text": "def __enter__(self):",
+        "category": "enter_method",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "进入 with 块时被调用的魔术方法",
+        "fill_type": "text"
+      },
+      {
+        "id": "exit_method",
+        "text": "def __exit__(self, exc_type, exc_val, exc_tb):",
+        "category": "exit_method",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "离开 with 块时被调用的魔术方法",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 with 块前后各要执行一段代码，它们分别写在类的哪个方法里？",
+      "level_2": "📖 类实现 `__enter__(self)` 与 `__exit__(self, exc_type, exc_val, exc_tb)` 即可被 with 驱动：进入时调前者，退出时调后者",
+      "level_3": "👀 `with Greeter():` 块会触发 `def __enter__` 与 `def __exit__`",
+      "level_4": "📝 正确答案：`with Greeter():`、`def __enter__(self):` 与 `def __exit__(self, exc_type, exc_val, exc_tb):`"
+    },
+    "explanation": "with 先调用 `__enter__`，再执行语句块，最后无论是否发生异常都调用 `__exit__`，这构成了上下文管理器协议。"
+  },
+  {
+    "id": "py-ctx-002",
+    "title": "__exit__ 抑制异常",
+    "description": "__exit__ 返回 True 时吞掉块内异常，程序继续向下执行",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "exit_suppress",
+    "subcategory": "上下文管理器",
+    "full_code": "class Suppressor:\n    def __enter__(self):\n        return self\n\n    def __exit__(self, exc_type, exc_val, exc_tb):\n        print(\"suppressed\")\n        return True\n\nwith Suppressor():\n    raise ValueError(\"boom\")\nprint(\"after\")",
+    "expected": "suppressed\nafter",
+    "points": [
+      {
+        "id": "suppress_return",
+        "text": "return True",
+        "category": "suppress_return",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "返回真值告诉解释器异常已处理",
+        "fill_type": "text"
+      },
+      {
+        "id": "raised_error",
+        "text": "raise ValueError(\"boom\")",
+        "category": "raised_error",
+        "min_weight": "easy",
+        "weight_score": 1.5,
+        "hint": "在 with 块内主动抛出异常",
+        "fill_type": "text"
+      },
+      {
+        "id": "after_print",
+        "text": "print(\"after\")",
+        "category": "after_print",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "异常被抑制后仍会执行的那行输出",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 块里抛出的 ValueError 为什么没有让程序崩溃？",
+      "level_2": "📖 `__exit__` 返回真值时表示异常已被处理，解释器不再向外抛出",
+      "level_3": "👀 `__exit__` 末尾的 `return True` 就是抑制开关",
+      "level_4": "📝 正确答案：`return True`、`raise ValueError(\"boom\")` 与 `print(\"after\")`"
+    },
+    "explanation": "`__exit__` 的返回值决定异常去留：返回 True 视为已处理并清除异常，返回 False/None 则继续传播。"
+  },
+  {
+    "id": "py-ctx-003",
+    "title": "__exit__ 的三个参数",
+    "description": "在 __exit__ 中读取 exc_type/exc_val 并选择放行异常",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "exit_arguments",
+    "subcategory": "上下文管理器",
+    "full_code": "class Watcher:\n    def __enter__(self):\n        return self\n\n    def __exit__(self, exc_type, exc_val, exc_tb):\n        print(\"type:\", exc_type.__name__)\n        print(\"value:\", exc_val)\n        return False\n\ntry:\n    with Watcher():\n        raise KeyError(\"missing\")\nexcept KeyError as e:\n    print(\"propagated:\", e)",
+    "expected": "type: KeyError\nvalue: 'missing'\npropagated: 'missing'",
+    "points": [
+      {
+        "id": "exit_return_false",
+        "text": "return False",
+        "category": "exit_return_false",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "放行异常，让它继续向外传播",
+        "fill_type": "text"
+      },
+      {
+        "id": "exc_type_name",
+        "text": "exc_type.__name__",
+        "category": "exc_type_name",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "异常类名从这里取",
+        "fill_type": "text"
+      },
+      {
+        "id": "raised_keyerror",
+        "text": "raise KeyError(\"missing\")",
+        "category": "raised_keyerror",
+        "min_weight": "easy",
+        "weight_score": 1.5,
+        "hint": "块内制造一个 KeyError 供 __exit__ 观察",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 出了异常，`__exit__` 如何知道异常的类型和内容？",
+      "level_2": "📖 三个参数依次是异常类、异常实例和 traceback；返回 False 会让异常继续传播",
+      "level_3": "👀 `exc_type.__name__` 打印类名，`return False` 放行",
+      "level_4": "📝 正确答案：`return False`、`exc_type.__name__` 与 `raise KeyError(\"missing\")`"
+    },
+    "explanation": "`exc_type` 是异常类，`exc_val` 是异常实例；返回 False（或 None）时原异常继续向上传播，被外层 try 捕获。"
+  },
+  {
+    "id": "py-ctx-004",
+    "title": "as 接收进入返回值",
+    "description": "用 as 变量接住 __enter__ 的返回值",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "beginner",
+    "category": "enter_return_value",
+    "subcategory": "上下文管理器",
+    "full_code": "class Counter:\n    def __init__(self):\n        self.value = 0\n\n    def __enter__(self):\n        self.value += 1\n        return self.value\n\n    def __exit__(self, exc_type, exc_val, exc_tb):\n        print(\"final:\", self.value)\n\nwith Counter() as count:\n    print(\"count:\", count)",
+    "expected": "count: 1\nfinal: 1",
+    "points": [
+      {
+        "id": "as_binding",
+        "text": "as count",
+        "category": "as_binding",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "把 __enter__ 的返回值绑定到变量 count",
+        "fill_type": "text"
+      },
+      {
+        "id": "enter_return",
+        "text": "return self.value",
+        "category": "enter_return",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "__enter__ 的返回值就是 as 拿到的东西",
+        "fill_type": "text"
+      },
+      {
+        "id": "state_increment",
+        "text": "self.value += 1",
+        "category": "state_increment",
+        "min_weight": "beginner",
+        "weight_score": 1.5,
+        "hint": "进入时先把计数加一",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 with 后面跟的变量从哪里拿到值？",
+      "level_2": "📖 `with C() as x` 会把 `__enter__` 的返回值绑定给 x",
+      "level_3": "👀 `return self.value` 交给 `as count`",
+      "level_4": "📝 正确答案：`as count`、`return self.value` 与 `self.value += 1`"
+    },
+    "explanation": "`as` 不是 new 一个对象，而是接收 `__enter__` 的返回值；返回 self 时 with 内外操作的就是同一个实例。"
+  },
+  {
+    "id": "py-ctx-005",
+    "title": "@contextmanager 生成器",
+    "description": "用 contextlib.contextmanager 把生成器函数变成上下文管理器",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "contextmanager_decorator",
+    "subcategory": "上下文管理器",
+    "full_code": "from contextlib import contextmanager\n\n@contextmanager\ndef stage(name):\n    print(\"start\", name)\n    try:\n        yield name.upper()\n    finally:\n        print(\"end\", name)\n\nwith stage(\"build\") as current:\n    print(\"running\", current)",
+    "expected": "start build\nrunning BUILD\nend build",
+    "points": [
+      {
+        "id": "contextmanager_decorator",
+        "text": "@contextmanager",
+        "category": "contextmanager_decorator",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "把生成器函数装饰成上下文管理器的装饰器",
+        "fill_type": "text"
+      },
+      {
+        "id": "finally_cleanup",
+        "text": "finally:",
+        "category": "finally_cleanup",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "保证清理代码一定执行",
+        "fill_type": "text"
+      },
+      {
+        "id": "yield_value",
+        "text": "yield name.upper()",
+        "category": "yield_value",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "yield 的值会作为 as 的目标",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 不想写类，如何用生成器实现一个上下文管理器？",
+      "level_2": "📖 `@contextmanager` 下，yield 之前相当于 `__enter__`，yield 之后（finally 中）相当于 `__exit__`",
+      "level_3": "👀 `@contextmanager` + `yield name.upper()` + `finally:`",
+      "level_4": "📝 正确答案：`@contextmanager`、`finally:` 与 `yield name.upper()`"
+    },
+    "explanation": "生成器只 yield 一次：yield 的值即 `__enter__` 的返回值；即使块内抛异常，finally 也保证清理代码执行。"
+  },
+  {
+    "id": "py-ctx-006",
+    "title": "return 也会触发清理",
+    "description": "with 块内提前 return 时 __exit__ 依然会被调用",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "cleanup_on_return",
+    "subcategory": "上下文管理器",
+    "full_code": "class Cleaner:\n    def __enter__(self):\n        print(\"open\")\n        return self\n\n    def __exit__(self, exc_type, exc_val, exc_tb):\n        print(\"close\")\n\ndef run():\n    with Cleaner():\n        print(\"inside\")\n        return \"result\"\n\nprint(run())",
+    "expected": "open\ninside\nclose\nresult",
+    "points": [
+      {
+        "id": "exit_print",
+        "text": "print(\"close\")",
+        "category": "exit_print",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "清理动作写在 __exit__ 里",
+        "fill_type": "text"
+      },
+      {
+        "id": "with_statement",
+        "text": "with Cleaner():",
+        "category": "with_statement",
+        "min_weight": "easy",
+        "weight_score": 1.5,
+        "hint": "进入 Cleaner 上下文",
+        "fill_type": "text"
+      },
+      {
+        "id": "early_return",
+        "text": "return \"result\"",
+        "category": "early_return",
+        "min_weight": "medium",
+        "weight_score": 2,
+        "hint": "在块内提前返回，观察清理是否仍执行",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 函数在 with 块里提前 return，close 还会打印吗？",
+      "level_2": "📖 return/break/continue 离开 with 块时同样触发 `__exit__`，清理不会跳过",
+      "level_3": "👀 `print(\"close\")` 在 `return \"result\"` 之前输出",
+      "level_4": "📝 正确答案：`print(\"close\")`、`with Cleaner():` 与 `return \"result\"`"
+    },
+    "explanation": "with 的退出路径不止正常结束：return、break、异常都会触发 `__exit__`，这正是资源清理可靠的原因。"
+  },
+  {
+    "id": "py-ctx-007",
+    "title": "一行多个管理器",
+    "description": "一行 with 书写多个管理器，观察进入与退出的顺序",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "nested_with",
+    "subcategory": "上下文管理器",
+    "full_code": "class Box:\n    def __init__(self, name):\n        self.name = name\n\n    def __enter__(self):\n        print(\"enter\", self.name)\n        return self.name\n\n    def __exit__(self, exc_type, exc_val, exc_tb):\n        print(\"exit\", self.name)\n\nwith Box(\"a\") as a, Box(\"b\") as b:\n    print(\"body\", a, b)",
+    "expected": "enter a\nenter b\nbody a b\nexit b\nexit a",
+    "points": [
+      {
+        "id": "enter_print",
+        "text": "print(\"enter\", self.name)",
+        "category": "enter_print",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "进入时打印名字",
+        "fill_type": "text"
+      },
+      {
+        "id": "exit_print",
+        "text": "print(\"exit\", self.name)",
+        "category": "exit_print",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "退出时打印名字",
+        "fill_type": "text"
+      },
+      {
+        "id": "multi_managers",
+        "text": "with Box(\"a\") as a, Box(\"b\") as b:",
+        "category": "multi_managers",
+        "min_weight": "medium",
+        "weight_score": 2,
+        "hint": "一行 with 同时管理两个 Box",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 两个管理器写在同一行 with 里，谁先进入、谁先退出？",
+      "level_2": "📖 多个管理器按从左到右进入，退出时按从右到左（LIFO）逆序",
+      "level_3": "👀 `with Box(\"a\") as a, Box(\"b\") as b:` 的打印顺序",
+      "level_4": "📝 正确答案：`print(\"enter\", self.name)`、`print(\"exit\", self.name)` 与 `with Box(\"a\") as a, Box(\"b\") as b:`"
+    },
+    "explanation": "多管理器等价于嵌套 with：先进入的后退出，所以 b 的清理先于 a 执行。"
+  },
+  {
+    "id": "py-ctx-008",
+    "title": "suppress 忽略异常",
+    "description": "contextlib.suppress 精确忽略指定类型的异常",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "contextlib_suppress",
+    "subcategory": "上下文管理器",
+    "full_code": "from contextlib import suppress\n\nvalues = {\"a\": 1}\nwith suppress(KeyError):\n    print(values[\"a\"])\n    print(values[\"b\"])\nprint(\"done\")",
+    "expected": "1\ndone",
+    "points": [
+      {
+        "id": "suppress_import",
+        "text": "from contextlib import suppress",
+        "category": "suppress_import",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "从标准库导入 suppress",
+        "fill_type": "text"
+      },
+      {
+        "id": "suppress_call",
+        "text": "with suppress(KeyError):",
+        "category": "suppress_call",
+        "min_weight": "easy",
+        "weight_score": 1.5,
+        "hint": "只忽略 KeyError 这一种异常",
+        "fill_type": "text"
+      },
+      {
+        "id": "missing_key",
+        "text": "print(values[\"b\"])",
+        "category": "missing_key",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "这行会触发被忽略的 KeyError",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 只缺少 b 键，怎样忽略这个 KeyError 又不吞掉别的异常？",
+      "level_2": "📖 `suppress(异常类)` 等价于只对指定异常返回 True 的 `__exit__`",
+      "level_3": "👀 `from contextlib import suppress` 后用 `with suppress(KeyError):`",
+      "level_4": "📝 正确答案：`from contextlib import suppress`、`with suppress(KeyError):` 与 `print(values[\"b\"])`"
+    },
+    "explanation": "suppress 是带过滤的异常抑制：只有列表中的异常会被吞掉，其他异常照常传播。"
+  },
+  {
+    "id": "py-ctx-009",
+    "title": "closing 自动关闭",
+    "description": "contextlib.closing 让任意带 close() 的对象支持 with",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "contextlib_closing",
+    "subcategory": "上下文管理器",
+    "full_code": "from contextlib import closing\n\nclass Connection:\n    def __init__(self, name):\n        self.name = name\n        self.open = True\n\n    def close(self):\n        self.open = False\n        print(\"closed\", self.name)\n\nconn = Connection(\"db\")\nwith closing(conn):\n    print(\"using\", conn.name)\nprint(\"open:\", conn.open)",
+    "expected": "using db\nclosed db\nopen: False",
+    "points": [
+      {
+        "id": "close_method",
+        "text": "def close(self):",
+        "category": "close_method",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "对象自带的关闭方法",
+        "fill_type": "text"
+      },
+      {
+        "id": "closing_call",
+        "text": "with closing(conn):",
+        "category": "closing_call",
+        "min_weight": "easy",
+        "weight_score": 1.5,
+        "hint": "退出 with 时自动调用 conn.close()",
+        "fill_type": "text"
+      },
+      {
+        "id": "closed_check",
+        "text": "print(\"open:\", conn.open)",
+        "category": "closed_check",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "检查对象是否已被关闭",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 Connection 不是上下文管理器，怎么用 with 自动调用它的 close？",
+      "level_2": "📖 `closing(obj)` 在退出时调用 `obj.close()`，不需要对象实现上下文协议",
+      "level_3": "👀 `with closing(conn):` 自动触发 `def close(self):`",
+      "level_4": "📝 正确答案：`def close(self):`、`with closing(conn):` 与 `print(\"open:\", conn.open)`"
+    },
+    "explanation": "closing 是适配器：把只有 close() 的老对象包装成上下文管理器，避免手动 try/finally。"
+  },
+  {
+    "id": "py-ctx-010",
+    "title": "redirect_stdout 捕获输出",
+    "description": "redirect_stdout 把块内 print 重定向到 StringIO 缓冲区",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "redirect_stdout",
+    "subcategory": "上下文管理器",
+    "full_code": "import io\nfrom contextlib import redirect_stdout\n\nbuffer = io.StringIO()\nwith redirect_stdout(buffer):\n    print(\"captured line\")\n    print(\"second line\")\nprint(\"got:\", buffer.getvalue().strip())",
+    "expected": "got: captured line\nsecond line",
+    "points": [
+      {
+        "id": "stringio_buffer",
+        "text": "io.StringIO()",
+        "category": "stringio_buffer",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "创建内存中的文本缓冲区",
+        "fill_type": "text"
+      },
+      {
+        "id": "redirect_call",
+        "text": "redirect_stdout(buffer)",
+        "category": "redirect_call",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "在块内把标准输出指向缓冲区",
+        "fill_type": "text"
+      },
+      {
+        "id": "getvalue_read",
+        "text": "buffer.getvalue()",
+        "category": "getvalue_read",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "取出缓冲区里的全部文本",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 想截获块内所有 print 的内容，该把它重定向到哪里？",
+      "level_2": "📖 `redirect_stdout(buffer)` 在块内替换 sys.stdout，退出后自动还原",
+      "level_3": "👀 `io.StringIO()` 接收输出，`buffer.getvalue()` 取回文本",
+      "level_4": "📝 正确答案：`io.StringIO()`、`redirect_stdout(buffer)` 与 `buffer.getvalue()`"
+    },
+    "explanation": "redirect_stdout 进入时替换 `sys.stdout`，退出时还原原对象，是测试 print 行为的常用手段。"
+  },
+  {
+    "id": "py-ctx-011",
+    "title": "ExitStack 动态清理",
+    "description": "ExitStack 动态注册多个清理回调，退出时按 LIFO 执行",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "hard",
+    "category": "exit_stack",
+    "subcategory": "上下文管理器",
+    "full_code": "from contextlib import ExitStack\n\ndef make(name):\n    print(\"open\", name)\n    def cleanup():\n        print(\"close\", name)\n    return cleanup\n\nwith ExitStack() as stack:\n    for name in [\"a\", \"b\", \"c\"]:\n        stack.callback(make(name))\n    print(\"body\")",
+    "expected": "open a\nopen b\nopen c\nbody\nclose c\nclose b\nclose a",
+    "points": [
+      {
+        "id": "body_print",
+        "text": "print(\"body\")",
+        "category": "body_print",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "语句块主体的输出",
+        "fill_type": "text"
+      },
+      {
+        "id": "callback_register",
+        "text": "stack.callback(make(name))",
+        "category": "callback_register",
+        "min_weight": "medium",
+        "weight_score": 2,
+        "hint": "把清理函数注册进栈里",
+        "fill_type": "text"
+      },
+      {
+        "id": "exitstack_with",
+        "text": "with ExitStack() as stack:",
+        "category": "exitstack_with",
+        "min_weight": "hard",
+        "weight_score": 2,
+        "hint": "用 ExitStack 承载不确定数量的清理",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 管理器数量在运行时由循环决定，怎么把它们都挂到 with 上？",
+      "level_2": "📖 `ExitStack.callback(fn)` 推入清理函数，退出时逆序全部调用",
+      "level_3": "👀 循环里 `stack.callback(make(name))`，退出时 close 逆序打印",
+      "level_4": "📝 正确答案：`print(\"body\")`、`stack.callback(make(name))` 与 `with ExitStack() as stack:`"
+    },
+    "explanation": "ExitStack 用栈保存回调，退出时 LIFO 执行，适合数量在运行时才确定的资源清理。"
+  },
+  {
+    "id": "py-ctx-012",
+    "title": "不可重入的状态陷阱",
+    "description": "有状态管理器重复进入时用忙标记拒绝嵌套使用",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "hard",
+    "category": "stateful_reentrancy",
+    "subcategory": "上下文管理器",
+    "full_code": "class Lock:\n    def __init__(self):\n        self.busy = False\n\n    def __enter__(self):\n        if self.busy:\n            raise RuntimeError(\"busy\")\n        self.busy = True\n        return self\n\n    def __exit__(self, exc_type, exc_val, exc_tb):\n        self.busy = False\n\nlock = Lock()\nwith lock:\n    try:\n        with lock:\n            print(\"inner\")\n    except RuntimeError as e:\n        print(\"blocked:\", e)\nprint(\"released:\", lock.busy)",
+    "expected": "blocked: busy\nreleased: False",
+    "points": [
+      {
+        "id": "busy_set",
+        "text": "self.busy = True",
+        "category": "busy_set",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "进入时把状态标记为占用",
+        "fill_type": "text"
+      },
+      {
+        "id": "busy_raise",
+        "text": "raise RuntimeError(\"busy\")",
+        "category": "busy_raise",
+        "min_weight": "hard",
+        "weight_score": 2,
+        "hint": "已经占用时拒绝第二次进入",
+        "fill_type": "text"
+      },
+      {
+        "id": "busy_catch",
+        "text": "except RuntimeError as e:",
+        "category": "busy_catch",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "捕获重入被拒绝的异常",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 同一个 Lock 再进一次时，`if self.busy:` 会走哪条分支？",
+      "level_2": "📖 busy 为 True 说明已在使用，`__enter__` 抛异常阻止重入；`__exit__` 再把状态复位",
+      "level_3": "👀 `self.busy = True` 占坑，`raise RuntimeError(\"busy\")` 拒绝第二次进入",
+      "level_4": "📝 正确答案：`self.busy = True`、`raise RuntimeError(\"busy\")` 与 `except RuntimeError as e:`"
+    },
+    "explanation": "非可重入管理器用布尔状态防止嵌套；若想支持重入，需要记录进入深度而不是单一标记。"
+  },
+  {
+    "id": "py-ctx-013",
+    "title": "with open 自动关闭",
+    "description": "with open 自动关闭文件，事后用 f.closed 验证",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "beginner",
+    "category": "file_with_open",
+    "subcategory": "上下文管理器",
+    "full_code": "import os\nimport tempfile\n\npath = os.path.join(tempfile.mkdtemp(), \"notes.txt\")\nwith open(path, \"w\", encoding=\"utf-8\") as f:\n    f.write(\"hello\\n\")\n    f.write(\"world\\n\")\n\nwith open(path, \"r\", encoding=\"utf-8\") as f:\n    lines = f.read().splitlines()\nprint(len(lines), lines[0], lines[1])\nprint(f.closed)\nos.remove(path)",
+    "expected": "2 hello world\nTrue",
+    "points": [
+      {
+        "id": "closed_check",
+        "text": "print(f.closed)",
+        "category": "closed_check",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "验证文件已在退出 with 时自动关闭",
+        "fill_type": "text"
+      },
+      {
+        "id": "write_mode",
+        "text": "with open(path, \"w\", encoding=\"utf-8\") as f:",
+        "category": "write_mode",
+        "min_weight": "beginner",
+        "weight_score": 1.5,
+        "hint": "写模式打开文件",
+        "fill_type": "text"
+      },
+      {
+        "id": "read_mode",
+        "text": "with open(path, \"r\", encoding=\"utf-8\") as f:",
+        "category": "read_mode",
+        "min_weight": "beginner",
+        "weight_score": 1.5,
+        "hint": "读模式打开文件",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 离开 with 块后，文件对象还需要手动 close 吗？",
+      "level_2": "📖 `with open(...) as f` 在退出时自动调用 `f.close()`，即使读取中途抛异常",
+      "level_3": "👀 写模式与读模式各用一个 `with open(...)`，最后 `print(f.closed)`",
+      "level_4": "📝 正确答案：`print(f.closed)`、`with open(path, \"w\", encoding=\"utf-8\") as f:` 与 `with open(path, \"r\", encoding=\"utf-8\") as f:`"
+    },
+    "explanation": "文件对象本身就是上下文管理器，退出时自动 close；即使块内抛异常也不会泄漏文件句柄。"
+  },
+  {
+    "id": "py-ctx-014",
+    "title": "__enter__ 抛异常",
+    "description": "__enter__ 抛出异常时 __exit__ 不会被调用",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "enter_exception",
+    "subcategory": "上下文管理器",
+    "full_code": "class Guard:\n    def __enter__(self):\n        print(\"enter\")\n        raise RuntimeError(\"boom\")\n\n    def __exit__(self, exc_type, exc_val, exc_tb):\n        print(\"exit\")\n\ntry:\n    with Guard():\n        print(\"body\")\nexcept RuntimeError as e:\n    print(\"caught:\", e)\nprint(\"done\")",
+    "expected": "enter\ncaught: boom\ndone",
+    "points": [
+      {
+        "id": "exit_print",
+        "text": "print(\"exit\")",
+        "category": "exit_print",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "这段代码最终没有机会执行",
+        "fill_type": "text"
+      },
+      {
+        "id": "enter_raise",
+        "text": "raise RuntimeError(\"boom\")",
+        "category": "enter_raise",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "在进入阶段就抛出异常",
+        "fill_type": "text"
+      },
+      {
+        "id": "caught_print",
+        "text": "print(\"caught:\", e)",
+        "category": "caught_print",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "外层捕获进入阶段的异常",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 还没真正进入 with 块就报错了，exit 会打印吗？",
+      "level_2": "📖 只有 `__enter__` 成功返回，解释器才会登记并稍后调用 `__exit__`",
+      "level_3": "👀 只看到 enter 与 caught，`print(\"exit\")` 不会执行",
+      "level_4": "📝 正确答案：`print(\"exit\")`、`raise RuntimeError(\"boom\")` 与 `print(\"caught:\", e)`"
+    },
+    "explanation": "`__enter__` 失败意味着资源并未建立，因此没有清理义务，`__exit__` 不会被调用，异常直接沿调用栈传播。"
+  },
+  {
+    "id": "py-ctx-015",
+    "title": "事务风格上下文管理器",
+    "description": "事务风格管理器：无异常提交，有异常回滚",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "expert",
+    "category": "transaction_context",
+    "subcategory": "上下文管理器",
+    "full_code": "class Transaction:\n    def __init__(self, name):\n        self.name = name\n        self.ops = []\n\n    def __enter__(self):\n        print(\"begin\", self.name)\n        return self\n\n    def __exit__(self, exc_type, exc_val, exc_tb):\n        if exc_type is None:\n            print(\"commit\", self.ops)\n        else:\n            print(\"rollback\", self.name, exc_type.__name__)\n        return False\n\nwith Transaction(\"t1\") as tx:\n    tx.ops.append(\"insert\")\n    tx.ops.append(\"update\")\nprint(\"after commit\")\n\ntry:\n    with Transaction(\"t2\") as tx:\n        tx.ops.append(\"delete\")\n        raise ValueError(\"conflict\")\nexcept ValueError:\n    pass\nprint(\"after rollback\")",
+    "expected": "begin t1\ncommit ['insert', 'update']\nafter commit\nbegin t2\nrollback t2 ValueError\nafter rollback",
+    "points": [
+      {
+        "id": "insert_op",
+        "text": "tx.ops.append(\"insert\")",
+        "category": "insert_op",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "事务内记录一步操作",
+        "fill_type": "text"
+      },
+      {
+        "id": "conflict_raise",
+        "text": "raise ValueError(\"conflict\")",
+        "category": "conflict_raise",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "制造冲突让第二个事务回滚",
+        "fill_type": "text"
+      },
+      {
+        "id": "commit_branch",
+        "text": "if exc_type is None:",
+        "category": "commit_branch",
+        "min_weight": "expert",
+        "weight_score": 2,
+        "hint": "用异常参数判断提交还是回滚",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 怎么在 `__exit__` 里判断这次事务该提交还是回滚？",
+      "level_2": "📖 `exc_type is None` 表示块内无异常，走提交分支；否则打印回滚并放行异常",
+      "level_3": "👀 `if exc_type is None:` 决定 commit 还是 rollback，`raise ValueError(\"conflict\")` 触发回滚",
+      "level_4": "📝 正确答案：`tx.ops.append(\"insert\")`、`raise ValueError(\"conflict\")` 与 `if exc_type is None:`"
+    },
+    "explanation": "事务语义依赖 `__exit__` 的异常参数：正常退出提交，异常退出回滚，再由返回值决定异常是否继续传播。"
+  }
+]

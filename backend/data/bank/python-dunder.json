@@ -1,0 +1,722 @@
+[
+  {
+    "id": "py-dunder-001",
+    "title": "print 与 repr 的差异",
+    "description": "区分 __str__ 与 __repr__ 的调用时机",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "beginner",
+    "category": "dunder_repr_str",
+    "subcategory": "魔术方法",
+    "full_code": "class Book:\n    def __init__(self, title):\n        self.title = title\n    def __str__(self):\n        return f\"Book({self.title})\"\n    def __repr__(self):\n        return f\"Book(title={self.title!r})\"\n\nb = Book(\"Python\")\nprint(str(b))\nprint(repr(b))\nprint(b)",
+    "expected": "Book(Python)\nBook(title='Python')\nBook(Python)",
+    "points": [
+      {
+        "id": "dunder_str",
+        "text": "def __str__(self):",
+        "category": "dunder_str",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "面向用户的字符串表示",
+        "fill_type": "text"
+      },
+      {
+        "id": "dunder_repr",
+        "text": "def __repr__(self):",
+        "category": "dunder_repr",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "面向开发者的调试表示",
+        "fill_type": "text"
+      },
+      {
+        "id": "repr_call",
+        "text": "print(repr(b))",
+        "category": "repr_call",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "显式调用 repr 观察差异",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 print 和 repr 各调用哪个魔术方法？",
+      "level_2": "📖 `str(obj)` 找 `__str__`，`repr(obj)` 找 `__repr__`；`print` 用的是 `str`",
+      "level_3": "👀 两个方法名都写在类里，最后三行分别用 `str`、`repr`、裸 `print` 输出",
+      "level_4": "📝 正确答案：`def __str__(self):`、`def __repr__(self):` 与 `print(repr(b))`"
+    },
+    "explanation": "`__str__` 面向终端用户、`__repr__` 面向开发者：`print`/f-string 走 `__str__`，容器打印与调试走 `__repr__`；未定义 `__str__` 时会回退到 `__repr__`。"
+  },
+  {
+    "id": "py-dunder-002",
+    "title": "重写 __eq__ 导致不可哈希",
+    "description": "验证重写 __eq__ 后 __hash__ 自动变为 None",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "dunder_eq_hash",
+    "subcategory": "魔术方法",
+    "full_code": "class Point:\n    def __init__(self, x, y):\n        self.x = x\n        self.y = y\n    def __eq__(self, other):\n        return (self.x, self.y) == (other.x, other.y)\n\np1 = Point(1, 2)\np2 = Point(1, 2)\nprint(p1 == p2)\nprint(Point.__hash__)\nprint(p1.__hash__ is None)",
+    "expected": "True\nNone\nTrue",
+    "points": [
+      {
+        "id": "dunder_eq",
+        "text": "def __eq__(self, other):",
+        "category": "dunder_eq",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "按坐标比较两个点",
+        "fill_type": "text"
+      },
+      {
+        "id": "eq_return",
+        "text": "return (self.x, self.y) == (other.x, other.y)",
+        "category": "eq_return",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "把两个字段打包成元组比较",
+        "fill_type": "text"
+      },
+      {
+        "id": "hash_lookup",
+        "text": "print(Point.__hash__)",
+        "category": "hash_lookup",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "查看类上 __hash__ 变成了什么",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 类里定义了 `__eq__`，对象的哈希能力会发生什么？",
+      "level_2": "📖 Python 认为相等的可变对象不该有稳定哈希，于是自动把 `__hash__` 置为 None",
+      "level_3": "👀 打印 `Point.__hash__`，再确认实例的 `__hash__` 也是 None",
+      "level_4": "📝 正确答案：`def __eq__(self, other):`、`return (self.x, self.y) == (other.x, other.y)` 与 `print(Point.__hash__)`"
+    },
+    "explanation": "自定义 `__eq__` 会让 Python 自动将 `__hash__` 置为 None，对象随即不可哈希（不能做 dict 键或 set 元素），除非再显式实现 `__hash__`。"
+  },
+  {
+    "id": "py-dunder-003",
+    "title": "__eq__ 与 __hash__ 配套",
+    "description": "同时实现 __eq__ 与 __hash__，让对象可作字典键",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "dunder_hash_dict_key",
+    "subcategory": "魔术方法",
+    "full_code": "class User:\n    def __init__(self, uid):\n        self.uid = uid\n    def __eq__(self, other):\n        return isinstance(other, User) and self.uid == other.uid\n    def __hash__(self):\n        return hash(self.uid)\n\nu1 = User(7)\nu2 = User(7)\nprint(u1 == u2)\nprint(hash(u1) == hash(u2))\nd = {u1: \"admin\"}\nprint(d[u2])",
+    "expected": "True\nTrue\nadmin",
+    "points": [
+      {
+        "id": "dunder_hash",
+        "text": "def __hash__(self):",
+        "category": "dunder_hash",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "显式恢复哈希能力",
+        "fill_type": "text"
+      },
+      {
+        "id": "return_hash",
+        "text": "return hash(self.uid)",
+        "category": "hash_return",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "用 uid 的哈希作为对象哈希",
+        "fill_type": "text"
+      },
+      {
+        "id": "dict_lookup",
+        "text": "print(d[u2])",
+        "category": "dict_lookup",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "用等价的另一个实例取字典值",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 想让 uid 相同的两个 User 共用一个字典键，需要实现哪些方法？",
+      "level_2": "📖 相等性交给 `__eq__`，哈希值交给 `__hash__`，两者必须保持一致",
+      "level_3": "👀 补上 `__hash__` 返回 `hash(self.uid)`，再用 u1 建字典、u2 取值",
+      "level_4": "📝 正确答案：`def __hash__(self):`、`return hash(self.uid)` 与 `print(d[u2])`"
+    },
+    "explanation": "dict 先用哈希定位桶、再用 `__eq__` 确认相等，二者缺一不可；`hash(self.uid)` 保证相等对象哈希一致，u2 才能命中 u1 的键。"
+  },
+  {
+    "id": "py-dunder-004",
+    "title": "__bool__ 优先于 __len__",
+    "description": "对比 __len__ 与 __bool__ 在真值判断中的优先级",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "dunder_len_bool",
+    "subcategory": "魔术方法",
+    "full_code": "class Box:\n    def __init__(self, items):\n        self.items = items\n    def __len__(self):\n        return len(self.items)\n    def __bool__(self):\n        return len(self.items) > 0\n\nempty = Box([])\nfull = Box([\"a\", \"b\"])\nprint(len(empty), len(full))\nprint(bool(empty), bool(full))",
+    "expected": "0 2\nFalse True",
+    "points": [
+      {
+        "id": "dunder_len",
+        "text": "def __len__(self):",
+        "category": "dunder_len",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "让 len() 返回元素个数",
+        "fill_type": "text"
+      },
+      {
+        "id": "dunder_bool",
+        "text": "def __bool__(self):",
+        "category": "dunder_bool",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "定义真值判断逻辑",
+        "fill_type": "text"
+      },
+      {
+        "id": "bool_return",
+        "text": "return len(self.items) > 0",
+        "category": "bool_return",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "空盒为假、非空为真",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 对象同时有 `__len__` 和 `__bool__` 时，`bool()` 听谁的？",
+      "level_2": "📖 `bool()` 优先调用 `__bool__`，没有它才退回 `len() != 0`",
+      "level_3": "👀 `__len__` 直接返回列表长度，`__bool__` 返回 `len(self.items) > 0`",
+      "level_4": "📝 正确答案：`def __len__(self):`、`def __bool__(self):` 与 `return len(self.items) > 0`"
+    },
+    "explanation": "`len()` 走 `__len__`；真值判断优先 `__bool__`，缺失时退化为 `__len__` 是否为 0，可借此表达「空即假」而无需关心长度数值。"
+  },
+  {
+    "id": "py-dunder-005",
+    "title": "__getitem__ 支持索引与切片",
+    "description": "用 __getitem__ 让自定义对象支持索引与切片",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "dunder_getitem",
+    "subcategory": "魔术方法",
+    "full_code": "class Playlist:\n    def __init__(self, songs):\n        self.songs = songs\n    def __getitem__(self, index):\n        return self.songs[index]\n\np = Playlist([\"a\", \"b\", \"c\", \"d\"])\nprint(p[0])\nprint(p[-1])\nprint(p[1:3])",
+    "expected": "a\nd\n['b', 'c']",
+    "points": [
+      {
+        "id": "dunder_getitem",
+        "text": "def __getitem__(self, index):",
+        "category": "dunder_getitem",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "下标访问的入口方法",
+        "fill_type": "text"
+      },
+      {
+        "id": "return_item",
+        "text": "return self.songs[index]",
+        "category": "getitem_return",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "把 index 原样透传给内部列表",
+        "fill_type": "text"
+      },
+      {
+        "id": "slice_call",
+        "text": "print(p[1:3])",
+        "category": "slice_call",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "切片也会走同一个方法",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 怎样让自定义对象像列表一样支持 `p[0]` 和 `p[1:3]`？",
+      "level_2": "📖 实现 `__getitem__`；切片会以 `slice` 对象作为 index 传入，透传给列表即可",
+      "level_3": "👀 方法体一行：`return self.songs[index]`，最后用切片语句验证",
+      "level_4": "📝 正确答案：`def __getitem__(self, index):`、`return self.songs[index]` 与 `print(p[1:3])`"
+    },
+    "explanation": "`obj[key]` 等价于 `type(obj).__getitem__(obj, key)`；索引、负数、切片都以 index 参数传入，委托给内部列表最省事。"
+  },
+  {
+    "id": "py-dunder-006",
+    "title": "__contains__ 自定义 in",
+    "description": "实现 __contains__ 定制 in 运算符",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "dunder_contains",
+    "subcategory": "魔术方法",
+    "full_code": "class Team:\n    def __init__(self, members):\n        self.members = members\n    def __contains__(self, name):\n        return name in self.members\n\nt = Team([\"Alice\", \"Bob\"])\nprint(\"Bob\" in t)\nprint(\"Cara\" in t)",
+    "expected": "True\nFalse",
+    "points": [
+      {
+        "id": "dunder_contains",
+        "text": "def __contains__(self, name):",
+        "category": "dunder_contains",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "in 运算符对应的魔术方法",
+        "fill_type": "text"
+      },
+      {
+        "id": "contains_return",
+        "text": "return name in self.members",
+        "category": "contains_return",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "复用列表自带的 in",
+        "fill_type": "text"
+      },
+      {
+        "id": "in_call",
+        "text": "print(\"Bob\" in t)",
+        "category": "in_operator",
+        "min_weight": "easy",
+        "weight_score": 1.5,
+        "hint": "验证成员判断结果",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 `in` 运算符背后调用哪个魔术方法？",
+      "level_2": "📖 `x in obj` 先找 `__contains__`，返回布尔值即可",
+      "level_3": "👀 方法体直接 `return name in self.members`，把判断委托给内部列表",
+      "level_4": "📝 正确答案：`def __contains__(self, name):`、`return name in self.members` 与 `print(\"Bob\" in t)`"
+    },
+    "explanation": "`in` 优先调用 `__contains__`，没有它才退化为迭代查找；重写后可以自定义「包含」的语义（大小写、别名、区间等）。"
+  },
+  {
+    "id": "py-dunder-007",
+    "title": "__call__ 让实例可调用",
+    "description": "用 __call__ 让实例像函数一样被调用",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "dunder_call",
+    "subcategory": "魔术方法",
+    "full_code": "class Adder:\n    def __init__(self, base):\n        self.base = base\n    def __call__(self, x):\n        return self.base + x\n\nadd5 = Adder(5)\nprint(add5(3))\nprint(callable(add5))",
+    "expected": "8\nTrue",
+    "points": [
+      {
+        "id": "dunder_call",
+        "text": "def __call__(self, x):",
+        "category": "dunder_call",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "加括号调用实例时执行的代码",
+        "fill_type": "text"
+      },
+      {
+        "id": "call_instance",
+        "text": "print(add5(3))",
+        "category": "call_instance",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "像函数一样调用实例",
+        "fill_type": "text"
+      },
+      {
+        "id": "callable_check",
+        "text": "print(callable(add5))",
+        "category": "callable_check",
+        "min_weight": "easy",
+        "weight_score": 1.5,
+        "hint": "验证实例已成为可调用对象",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 怎样让实例像函数一样写 `add5(3)`？",
+      "level_2": "📖 实现 `__call__`，调用实例时就会执行它",
+      "level_3": "👀 `__call__` 里返回 `self.base + x`，最后用 `callable()` 确认",
+      "level_4": "📝 正确答案：`def __call__(self, x):`、`print(add5(3))` 与 `print(callable(add5))`"
+    },
+    "explanation": "实现 `__call__` 后实例成为 callable，能把「状态 + 行为」打包传递，常用于装饰器、回调和策略对象。"
+  },
+  {
+    "id": "py-dunder-008",
+    "title": "__getattr__ 惰性属性",
+    "description": "仅在属性不存在时用 __getattr__ 返回兜底值",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "dunder_getattr",
+    "subcategory": "魔术方法",
+    "full_code": "class Config:\n    def __init__(self):\n        self.debug = True\n    def __getattr__(self, name):\n        print(f\"lazy: {name}\")\n        return name.upper()\n\nc = Config()\nprint(c.debug)\nprint(c.host)",
+    "expected": "True\nlazy: host\nHOST",
+    "points": [
+      {
+        "id": "dunder_getattr",
+        "text": "def __getattr__(self, name):",
+        "category": "dunder_getattr",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "属性查找失败后的兜底方法",
+        "fill_type": "text"
+      },
+      {
+        "id": "lazy_print",
+        "text": "print(f\"lazy: {name}\")",
+        "category": "lazy_attribute",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "只对不存在的属性打印，观察触发时机",
+        "fill_type": "text"
+      },
+      {
+        "id": "lazy_return",
+        "text": "return name.upper()",
+        "category": "lazy_return",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "按属性名动态计算返回值",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 访问不存在的属性时，怎样返回一个动态计算的默认值？",
+      "level_2": "📖 `__getattr__` 仅在常规查找失败后触发，适合做惰性/兜底属性",
+      "level_3": "👀 已存在的 `debug` 不触发打印；访问 `host` 时才打印并返回大写属性名",
+      "level_4": "📝 正确答案：`def __getattr__(self, name):`、`print(f\"lazy: {name}\")` 与 `return name.upper()`"
+    },
+    "explanation": "`__getattr__` 是属性查找的最后一道兜底：已存在的属性不会触发它，只有查找失败才调用，因此可安全实现惰性配置与动态代理。"
+  },
+  {
+    "id": "py-dunder-009",
+    "title": "__getattr__ 与 __getattribute__",
+    "description": "厘清 __getattribute__ 全量拦截与 __getattr__ 兜底的差异",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "hard",
+    "category": "dunder_getattribute",
+    "subcategory": "魔术方法",
+    "full_code": "class Tracked:\n    def __init__(self):\n        self.value = 10\n    def __getattribute__(self, name):\n        print(f\"access: {name}\")\n        return object.__getattribute__(self, name)\n    def __getattr__(self, name):\n        return \"fallback\"\n\nt = Tracked()\nprint(t.value)\nprint(t.other)",
+    "expected": "access: value\n10\naccess: other\nfallback",
+    "points": [
+      {
+        "id": "dunder_getattribute",
+        "text": "def __getattribute__(self, name):",
+        "category": "dunder_getattribute",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "每一次属性访问都会经过它",
+        "fill_type": "text"
+      },
+      {
+        "id": "dunder_getattr",
+        "text": "def __getattr__(self, name):",
+        "category": "dunder_getattr",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "只处理常规查找失败的情况",
+        "fill_type": "text"
+      },
+      {
+        "id": "object_getattribute",
+        "text": "return object.__getattribute__(self, name)",
+        "category": "object_getattribute",
+        "min_weight": "hard",
+        "weight_score": 2,
+        "hint": "委托父类实现取值，避免无限递归",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 想拦截「每一次」属性访问，应该用哪个方法？",
+      "level_2": "📖 `__getattribute__` 对所有属性访问生效，必须调用 `object.__getattribute__` 才能拿到真实值，否则无限递归",
+      "level_3": "👀 `value` 和 `other` 都触发打印；只有 `other` 查找失败后才轮到 `__getattr__` 返回 fallback",
+      "level_4": "📝 正确答案：`def __getattribute__(self, name):`、`def __getattr__(self, name):` 与 `return object.__getattribute__(self, name)`"
+    },
+    "explanation": "访问顺序是 `__getattribute__` → 失败后 `__getattr__`；重写前者必须委托 `object.__getattribute__` 避免递归，后者只处理「找不到」的情况。"
+  },
+  {
+    "id": "py-dunder-010",
+    "title": "__setattr__ 拦截赋值",
+    "description": "用 __setattr__ 与 __delattr__ 记录并拦截属性变更",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "dunder_setattr",
+    "subcategory": "魔术方法",
+    "full_code": "class Locked:\n    def __setattr__(self, name, value):\n        print(f\"set: {name}={value}\")\n        object.__setattr__(self, name, value)\n    def __delattr__(self, name):\n        print(f\"del: {name}\")\n        object.__delattr__(self, name)\n\nobj = Locked()\nobj.count = 3\nprint(obj.count)\ndel obj.count\nprint(hasattr(obj, \"count\"))",
+    "expected": "set: count=3\n3\ndel: count\nFalse",
+    "points": [
+      {
+        "id": "dunder_setattr",
+        "text": "def __setattr__(self, name, value):",
+        "category": "dunder_setattr",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "拦截所有属性赋值",
+        "fill_type": "text"
+      },
+      {
+        "id": "setattr_delegate",
+        "text": "object.__setattr__(self, name, value)",
+        "category": "setattr_delegate",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "真正写入实例字典，避免递归",
+        "fill_type": "text"
+      },
+      {
+        "id": "delattr_call",
+        "text": "del obj.count",
+        "category": "delattr_call",
+        "min_weight": "easy",
+        "weight_score": 1.5,
+        "hint": "触发 __delattr__ 观察日志",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 想记录每次属性赋值和删除，该重写哪些方法？",
+      "level_2": "📖 `__setattr__` 拦截 `obj.x = v`，`__delattr__` 拦截 `del obj.x`；真正落盘要调用 `object.__setattr__`",
+      "level_3": "👀 两个方法都先 print 再委托给 object 的对应实现",
+      "level_4": "📝 正确答案：`def __setattr__(self, name, value):`、`object.__setattr__(self, name, value)` 与 `del obj.count`"
+    },
+    "explanation": "属性赋值/删除的入口是 `__setattr__`/`__delattr__`；拦截后若还要真正写入 `__dict__`，必须委托 `object.__setattr__`，否则会无限递归。"
+  },
+  {
+    "id": "py-dunder-011",
+    "title": "__add__ 与 __radd__",
+    "description": "分别实现正向与反向加法，支持 int + Vector",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "dunder_add_radd",
+    "subcategory": "魔术方法",
+    "full_code": "class Vector:\n    def __init__(self, x):\n        self.x = x\n    def __add__(self, other):\n        return Vector(self.x + other.x)\n    def __radd__(self, other):\n        return Vector(other + self.x)\n    def __repr__(self):\n        return f\"Vector({self.x})\"\n\nprint(Vector(1) + Vector(2))\nprint(2 + Vector(3))",
+    "expected": "Vector(3)\nVector(5)",
+    "points": [
+      {
+        "id": "dunder_add",
+        "text": "def __add__(self, other):",
+        "category": "dunder_add",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "左操作数为 Vector 时的加法",
+        "fill_type": "text"
+      },
+      {
+        "id": "dunder_radd",
+        "text": "def __radd__(self, other):",
+        "category": "dunder_radd",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "Vector 在右侧时的反向加法",
+        "fill_type": "text"
+      },
+      {
+        "id": "radd_call",
+        "text": "print(2 + Vector(3))",
+        "category": "radd_call",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "int 不认识 Vector，Python 回头调用 __radd__",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 `Vector + Vector` 和 `2 + Vector` 分别调用哪个方法？",
+      "level_2": "📖 左操作数实现 `__add__`；左操作数不认识右操作数时（如 `2 + v`），Python 会回头调用右操作数的 `__radd__`",
+      "level_3": "👀 两个方法都返回新的 `Vector(...)`，`__radd__` 里注意 `other` 在左侧",
+      "level_4": "📝 正确答案：`def __add__(self, other):`、`def __radd__(self, other):` 与 `print(2 + Vector(3))`"
+    },
+    "explanation": "二元运算符先试左操作数的 `__add__`，返回 NotImplemented 时再试右操作数的 `__radd__`；`__radd__` 用于支持 `int + Vector` 这类混合运算。"
+  },
+  {
+    "id": "py-dunder-012",
+    "title": "__iadd__ 就地累加",
+    "description": "用 __iadd__ 实现就地修改并返回 self",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "hard",
+    "category": "dunder_iadd",
+    "subcategory": "魔术方法",
+    "full_code": "class Counter:\n    def __init__(self, n):\n        self.n = n\n    def __iadd__(self, other):\n        self.n += other\n        return self\n    def __repr__(self):\n        return f\"Counter({self.n})\"\n\nc = Counter(1)\nalias = c\nc += 5\nprint(c)\nprint(alias is c)",
+    "expected": "Counter(6)\nTrue",
+    "points": [
+      {
+        "id": "dunder_iadd",
+        "text": "def __iadd__(self, other):",
+        "category": "dunder_iadd",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "+= 运算符对应的魔术方法",
+        "fill_type": "text"
+      },
+      {
+        "id": "iadd_return",
+        "text": "return self",
+        "category": "iadd_return",
+        "min_weight": "hard",
+        "weight_score": 2,
+        "hint": "返回自身表示就地修改",
+        "fill_type": "text"
+      },
+      {
+        "id": "alias_check",
+        "text": "print(alias is c)",
+        "category": "alias_check",
+        "min_weight": "hard",
+        "weight_score": 2,
+        "hint": "验证别名看到的仍是同一个对象",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 `c += 5` 如何做到修改原对象而不是新建对象？",
+      "level_2": "📖 实现 `__iadd__` 就地修改并返回 `self`；没有它时 `+=` 会退化为 `c = c + 5`",
+      "level_3": "👀 `self.n += other` 之后必须 `return self`，最后用别名判断验证身份",
+      "level_4": "📝 正确答案：`def __iadd__(self, other):`、`return self` 与 `print(alias is c)`"
+    },
+    "explanation": "`+=` 优先调用 `__iadd__`：返回 `self` 表示就地修改，所有别名都能看到变化；若返回新对象，语义就等价于 `c = c + 5`。"
+  },
+  {
+    "id": "py-dunder-013",
+    "title": "total_ordering 补全比较",
+    "description": "用 functools.total_ordering 从 __eq__ 与 __lt__ 推导其余比较",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "expert",
+    "category": "dunder_total_ordering",
+    "subcategory": "魔术方法",
+    "full_code": "from functools import total_ordering\n\n@total_ordering\nclass Version:\n    def __init__(self, major, minor):\n        self.major = major\n        self.minor = minor\n    def __eq__(self, other):\n        return (self.major, self.minor) == (other.major, other.minor)\n    def __lt__(self, other):\n        return (self.major, self.minor) < (other.major, other.minor)\n\nv1 = Version(1, 2)\nv2 = Version(2, 0)\nprint(v1 < v2)\nprint(v1 <= v2)\nprint(v1 > v2)\nprint(v2 >= v1)",
+    "expected": "True\nTrue\nFalse\nTrue",
+    "points": [
+      {
+        "id": "dunder_lt",
+        "text": "def __lt__(self, other):",
+        "category": "dunder_lt",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "唯一需要手写的排序方法",
+        "fill_type": "text"
+      },
+      {
+        "id": "dunder_eq",
+        "text": "def __eq__(self, other):",
+        "category": "dunder_eq",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "相等比较仍然必须自己写",
+        "fill_type": "text"
+      },
+      {
+        "id": "total_ordering_dec",
+        "text": "@total_ordering",
+        "category": "total_ordering_decorator",
+        "min_weight": "expert",
+        "weight_score": 2,
+        "hint": "类装饰器自动补出 <= > >=",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 只实现 `__eq__` 和 `__lt__`，怎样免费获得 `<=`、`>`、`>=`？",
+      "level_2": "📖 用 `functools.total_ordering` 装饰类，它会依据 `__eq__` 与 `__lt__` 自动补全其余比较方法",
+      "level_3": "👀 类定义上一行写 `@total_ordering`，类里补 `__eq__` 与 `__lt__`",
+      "level_4": "📝 正确答案：`def __lt__(self, other):`、`def __eq__(self, other):` 与 `@total_ordering`"
+    },
+    "explanation": "`@total_ordering` 从 `__eq__` + `__lt__`（或 `__le__` 等）推导出剩余比较运算符，代价是推导出的方法稍慢，但代码量大幅减少。"
+  },
+  {
+    "id": "py-dunder-014",
+    "title": "__iter__ 自定义迭代",
+    "description": "实现 __iter__ 生成器，让对象可直接被 for 遍历",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "beginner",
+    "category": "dunder_iter",
+    "subcategory": "魔术方法",
+    "full_code": "class Countdown:\n    def __init__(self, start):\n        self.start = start\n    def __iter__(self):\n        n = self.start\n        while n > 0:\n            yield n\n            n -= 1\n\nfor x in Countdown(3):\n    print(x)",
+    "expected": "3\n2\n1",
+    "points": [
+      {
+        "id": "dunder_iter",
+        "text": "def __iter__(self):",
+        "category": "dunder_iter",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "for 循环入口方法",
+        "fill_type": "text"
+      },
+      {
+        "id": "yield_value",
+        "text": "yield n",
+        "category": "generator_yield",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "逐个产出并保留局部状态",
+        "fill_type": "text"
+      },
+      {
+        "id": "for_loop",
+        "text": "for x in Countdown(3):",
+        "category": "for_loop",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "直接迭代自定义对象",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 `for x in obj` 背后调用了什么？",
+      "level_2": "📖 `for` 需要 `__iter__`；用 `yield` 写生成器函数最简洁，每次迭代产出一个值",
+      "level_3": "👀 `__iter__` 内先 `n = self.start`，`while n > 0` 中 `yield n` 再自减",
+      "level_4": "📝 正确答案：`def __iter__(self):`、`yield n` 与 `for x in Countdown(3):`"
+    },
+    "explanation": "`for` 先调用 `__iter__` 拿到迭代器；生成器函数天然返回迭代器，`yield` 逐个产出且自动保留局部变量状态。"
+  },
+  {
+    "id": "py-dunder-015",
+    "title": "__missing__ 字典默认值",
+    "description": "子类化 dict 并用 __missing__ 提供缺省值",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "beginner",
+    "category": "dunder_missing",
+    "subcategory": "魔术方法",
+    "full_code": "class DefaultDict(dict):\n    def __missing__(self, key):\n        return 0\n\nd = DefaultDict()\nd[\"a\"] = 1\nprint(d[\"a\"])\nprint(d[\"b\"])\nprint(\"b\" in d)",
+    "expected": "1\n0\nFalse",
+    "points": [
+      {
+        "id": "dict_subclass",
+        "text": "class DefaultDict(dict):",
+        "category": "dict_subclass",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "继承内置 dict",
+        "fill_type": "text"
+      },
+      {
+        "id": "dunder_missing",
+        "text": "def __missing__(self, key):",
+        "category": "dunder_missing",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "缺键时被调用的钩子",
+        "fill_type": "text"
+      },
+      {
+        "id": "missing_probe",
+        "text": "print(\"b\" in d)",
+        "category": "missing_lookup",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "确认 __missing__ 不会插入键",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 字典取不存在的键会 KeyError，怎样让它返回默认值 0？",
+      "level_2": "📖 子类化 `dict` 并实现 `__missing__`，`d[k]` 缺键时会调用它",
+      "level_3": "👀 `class DefaultDict(dict):` 中定义 `__missing__` 返回 0；注意 `in` 判断不受影响",
+      "level_4": "📝 正确答案：`class DefaultDict(dict):`、`def __missing__(self, key):` 与 `print(\"b\" in d)`"
+    },
+    "explanation": "`__missing__` 只在 `dict.__getitem__` 找不到键时被调用，且不会插入该键，所以 `\"b\" in d` 仍为 False；标准库 `defaultdict` 正基于它实现。"
+  }
+]

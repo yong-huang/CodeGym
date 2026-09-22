@@ -1,0 +1,713 @@
+[
+  {
+    "id": "py-meta-001",
+    "title": "type() 动态创建类",
+    "description": "用 type(name, bases, dict) 三参数形式在运行时创建类",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "beginner",
+    "category": "dynamic_class",
+    "subcategory": "元类与类机制",
+    "full_code": "attrs = {\"kind\": \"dynamic\"}\nFoo = type(\"Foo\", (), attrs)\n\n\ndef hello(self):\n    return \"hi from \" + self.__class__.__name__\n\n\nFoo.hello = hello\nobj = Foo()\nprint(Foo.__name__)\nprint(obj.kind)\nprint(obj.hello())",
+    "expected": "Foo\ndynamic\nhi from Foo",
+    "points": [
+      {
+        "id": "type_three_args",
+        "text": "type(\"Foo\", (), attrs)",
+        "category": "dynamic_class",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "三参数形式：类名、基类元组、属性字典",
+        "fill_type": "text"
+      },
+      {
+        "id": "dynamic_method",
+        "text": "Foo.hello = hello",
+        "category": "dynamic_class",
+        "min_weight": "beginner",
+        "weight_score": 1.5,
+        "hint": "把普通函数挂到类上即成为实例方法",
+        "fill_type": "text"
+      },
+      {
+        "id": "read_class_attr",
+        "text": "print(obj.kind)",
+        "category": "attribute_lookup",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "实例读取类属性",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 不写 class 语句，怎么凭空造一个类？",
+      "level_2": "📖 `type(name, bases, namespace)` 三参数形式就是动态建类；属性字典决定类成员",
+      "level_3": "👀 `Foo = type(\"Foo\", (), attrs)` 之后再把 `hello` 挂上去",
+      "level_4": "📝 正确答案：`type(\"Foo\", (), attrs)` 与 `Foo.hello = hello`"
+    },
+    "explanation": "type 是所有类的默认元类，调用它即完成「类也是对象」的创建过程；函数赋给类属性后，实例调用时自动绑定 self。"
+  },
+  {
+    "id": "py-meta-002",
+    "title": "类也是对象",
+    "description": "验证实例的类型是类，而类的类型是元类 type",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "beginner",
+    "category": "metaclass_type",
+    "subcategory": "元类与类机制",
+    "full_code": "class Foo:\n    pass\n\n\nobj = Foo()\nprint(type(Foo).__name__)\nprint(type(obj) is Foo)\nprint(type(type) is type)",
+    "expected": "type\nTrue\nTrue",
+    "points": [
+      {
+        "id": "class_type_name",
+        "text": "print(type(Foo).__name__)",
+        "category": "metaclass_type",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "类对象的类型名是什么",
+        "fill_type": "text"
+      },
+      {
+        "id": "obj_type_is_class",
+        "text": "print(type(obj) is Foo)",
+        "category": "metaclass_type",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "实例的类型就是它的类",
+        "fill_type": "text"
+      },
+      {
+        "id": "type_self_instance",
+        "text": "print(type(type) is type)",
+        "category": "metaclass_type",
+        "min_weight": "beginner",
+        "weight_score": 1.5,
+        "hint": "type 是自身的实例",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 类本身有没有类型？是谁创建了类？",
+      "level_2": "📖 实例 ← 类 ← 元类：`type(obj)` 是类，`type(Foo)` 是 `type`",
+      "level_3": "👀 依次打印 `type(Foo).__name__`、`type(obj) is Foo`、`type(type) is type`",
+      "level_4": "📝 正确答案：`print(type(Foo).__name__)` 与 `print(type(type) is type)`"
+    },
+    "explanation": "描述类的「类」叫元类，默认元类就是 type；type 还能自举——它本身也是 type 的实例。"
+  },
+  {
+    "id": "py-meta-003",
+    "title": "元类 __new__ 注入属性",
+    "description": "自定义元类重写 __new__，给新建的类自动加上属性",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "metaclass_new",
+    "subcategory": "元类与类机制",
+    "full_code": "class Meta(type):\n    def __new__(mcls, name, bases, namespace):\n        namespace[\"version\"] = 1\n        return super().__new__(mcls, name, bases, namespace)\n\n\nclass Foo(metaclass=Meta):\n    pass\n\n\nprint(Foo.version)\nprint(type(Foo).__name__)",
+    "expected": "1\nMeta",
+    "points": [
+      {
+        "id": "inject_attr",
+        "text": "namespace[\"version\"] = 1",
+        "category": "metaclass_new",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "向命名空间字典写入属性即等于定义类属性",
+        "fill_type": "text"
+      },
+      {
+        "id": "meta_super_new",
+        "text": "super().__new__(mcls, name, bases, namespace)",
+        "category": "metaclass_new",
+        "min_weight": "easy",
+        "weight_score": 2,
+        "hint": "委托父元类真正创建类对象",
+        "fill_type": "text"
+      },
+      {
+        "id": "metaclass_kwarg",
+        "text": "class Foo(metaclass=Meta):",
+        "category": "metaclass_new",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "用 metaclass= 关键字指定元类",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 想让每个用该元类创建的类都自动带 version 属性，写在哪一步？",
+      "level_2": "📖 元类也是类，`__new__(mcls, name, bases, namespace)` 在类对象诞生前拿到命名空间",
+      "level_3": "👀 先 `namespace[\"version\"] = 1` 再 `super().__new__(...)`",
+      "level_4": "📝 正确答案：`namespace[\"version\"] = 1` 与 `super().__new__(mcls, name, bases, namespace)`"
+    },
+    "explanation": "类创建时元类 __new__ 先收到命名空间字典，改它就是改类属性；但必须调用 super().__new__ 返回真正的类对象。"
+  },
+  {
+    "id": "py-meta-004",
+    "title": "__new__ 与 __init__ 的时机",
+    "description": "观察元类 __new__ 与 __init__ 对类的调用顺序",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "metaclass_lifecycle",
+    "subcategory": "元类与类机制",
+    "full_code": "class Meta(type):\n    def __new__(mcls, name, bases, namespace):\n        cls = super().__new__(mcls, name, bases, namespace)\n        print(\"new\", name)\n        return cls\n\n    def __init__(cls, name, bases, namespace):\n        super().__init__(name, bases, namespace)\n        print(\"init\", name)\n\n\nclass Foo(metaclass=Meta):\n    pass\n\n\nprint(\"after\", Foo.__name__)",
+    "expected": "new Foo\ninit Foo\nafter Foo",
+    "points": [
+      {
+        "id": "print_new",
+        "text": "print(\"new\", name)",
+        "category": "metaclass_lifecycle",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "类对象创建时最先执行",
+        "fill_type": "text"
+      },
+      {
+        "id": "print_init",
+        "text": "print(\"init\", name)",
+        "category": "metaclass_lifecycle",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "类对象创建完成之后执行",
+        "fill_type": "text"
+      },
+      {
+        "id": "meta_init_super",
+        "text": "super().__init__(name, bases, namespace)",
+        "category": "metaclass_lifecycle",
+        "min_weight": "easy",
+        "weight_score": 1.5,
+        "hint": "初始化同样要委托父元类",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 元类创建类时，先 __new__ 还是先 __init__？",
+      "level_2": "📖 与普通实例化同构：`__new__` 返回类对象，`__init__` 随后初始化它",
+      "level_3": "👀 两次打印分别在 `__new__` 与 `__init__` 里",
+      "level_4": "📝 正确答案：`print(\"new\", name)` 与 `print(\"init\", name)`"
+    },
+    "explanation": "解析 class 语句时 type.__call__ 先调元类 __new__ 造出类对象，再调 __init__ 初始化，顺序与普通对象实例化一致。"
+  },
+  {
+    "id": "py-meta-005",
+    "title": "__init_subclass__ 注册子类",
+    "description": "用父类钩子自动登记每个子类，无需元类",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "init_subclass",
+    "subcategory": "元类与类机制",
+    "full_code": "registry = []\n\n\nclass Base:\n    def __init_subclass__(cls, **kwargs):\n        super().__init_subclass__(**kwargs)\n        registry.append(cls.__name__)\n\n\nclass A(Base):\n    pass\n\n\nclass B(Base):\n    pass\n\n\nprint(registry)",
+    "expected": "['A', 'B']",
+    "points": [
+      {
+        "id": "hook_def",
+        "text": "def __init_subclass__(cls, **kwargs):",
+        "category": "init_subclass",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "父类定义这个钩子，每个子类创建时自动触发",
+        "fill_type": "text"
+      },
+      {
+        "id": "register_append",
+        "text": "registry.append(cls.__name__)",
+        "category": "init_subclass",
+        "min_weight": "easy",
+        "weight_score": 1.5,
+        "hint": "把子类名记录进注册表",
+        "fill_type": "text"
+      },
+      {
+        "id": "subclass_b",
+        "text": "class B(Base):",
+        "category": "init_subclass",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "第二个子类同样被自动注册",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 子类一被定义就自动登记，有没有比元类更轻的钩子？",
+      "level_2": "📖 父类实现 `__init_subclass__`，解释器在创建子类时都会调用它",
+      "level_3": "👀 钩子内部执行 `registry.append(cls.__name__)`",
+      "level_4": "📝 正确答案：`def __init_subclass__(cls, **kwargs):` 与 `registry.append(cls.__name__)`"
+    },
+    "explanation": "__init_subclass__ 定义在父类上、隐式为类方法，等价于简化版元类钩子，常用于插件自动注册。"
+  },
+  {
+    "id": "py-meta-006",
+    "title": "__set_name__ 收集字段名",
+    "description": "描述符通过 __set_name__ 感知自己被绑定的属性名",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "set_name",
+    "subcategory": "元类与类机制",
+    "full_code": "class Field:\n    def __set_name__(self, owner, name):\n        owner.fields.append(name)\n\n\nclass Model:\n    fields = []\n    title = Field()\n    count = Field()\n\n\nprint(Model.fields)",
+    "expected": "['title', 'count']",
+    "points": [
+      {
+        "id": "set_name_def",
+        "text": "def __set_name__(self, owner, name):",
+        "category": "set_name",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "描述符被绑为类属性时收到 owner 与 name",
+        "fill_type": "text"
+      },
+      {
+        "id": "append_name",
+        "text": "owner.fields.append(name)",
+        "category": "set_name",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "把属性名登记到所属类上",
+        "fill_type": "text"
+      },
+      {
+        "id": "print_fields",
+        "text": "print(Model.fields)",
+        "category": "set_name",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "查看收集结果",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 描述符怎么知道自己被赋给了哪个属性名？",
+      "level_2": "📖 类创建完成时，解释器对每个类属性调用其 `__set_name__(owner, name)`",
+      "level_3": "👀 钩子里 `owner.fields.append(name)`，最后 `print(Model.fields)`",
+      "level_4": "📝 正确答案：`def __set_name__(self, owner, name):` 与 `owner.fields.append(name)`"
+    },
+    "explanation": "__set_name__ 在类定义完成后按属性定义顺序自动触发，是 Django ORM 等框架收集字段名与所属类的关键机制。"
+  },
+  {
+    "id": "py-meta-007",
+    "title": "多继承与 MRO",
+    "description": "用 __mro__ 查看 C3 线性化后的方法查找顺序",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "mro",
+    "subcategory": "元类与类机制",
+    "full_code": "class A:\n    pass\n\n\nclass B(A):\n    pass\n\n\nclass C(A):\n    pass\n\n\nclass D(B, C):\n    pass\n\n\nprint([c.__name__ for c in D.__mro__])",
+    "expected": "['D', 'B', 'C', 'A', 'object']",
+    "points": [
+      {
+        "id": "diamond_bases",
+        "text": "class D(B, C):",
+        "category": "mro",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "钻石继承：D 同时继承 B 与 C",
+        "fill_type": "text"
+      },
+      {
+        "id": "mro_names",
+        "text": "print([c.__name__ for c in D.__mro__])",
+        "category": "mro",
+        "min_weight": "medium",
+        "weight_score": 2,
+        "hint": "按 MRO 顺序打印每个类的名字",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 D 同时继承 B、C，找方法时的先后顺序是什么？",
+      "level_2": "📖 `__mro__` 是 C3 线性化算出的元组：自身 → 按声明顺序的基类 → object",
+      "level_3": "👀 用列表推导打印 `D.__mro__` 中每个类的 `__name__`",
+      "level_4": "📝 正确答案：`print([c.__name__ for c in D.__mro__])`"
+    },
+    "explanation": "C3 线性化保证局部优先与单调性，结果为 D → B → C → A → object；B、C 谁在前由基类声明顺序决定。"
+  },
+  {
+    "id": "py-meta-008",
+    "title": "super() 沿 MRO 前进",
+    "description": "super() 不是父类代理，而是 MRO 上的下一个实现",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "super_mro",
+    "subcategory": "元类与类机制",
+    "full_code": "class A:\n    def who(self):\n        return \"A\"\n\n\nclass B(A):\n    def who(self):\n        return \"B -> \" + super().who()\n\n\nprint(B().who())",
+    "expected": "B -> A",
+    "points": [
+      {
+        "id": "subclass_decl",
+        "text": "class B(A):",
+        "category": "super_mro",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "让 B 继承 A",
+        "fill_type": "text"
+      },
+      {
+        "id": "super_who",
+        "text": "super().who()",
+        "category": "super_mro",
+        "min_weight": "easy",
+        "weight_score": 1.5,
+        "hint": "沿 MRO 找下一个 who 实现",
+        "fill_type": "text"
+      },
+      {
+        "id": "print_who",
+        "text": "print(B().who())",
+        "category": "super_mro",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "触发整条调用链",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 子类想复用父类实现，怎么在 MRO 上继续往后找？",
+      "level_2": "📖 `super()` 返回绑定当前实例的代理，从当前类的下一个 MRO 条目继续查找",
+      "level_3": "👀 把 `super().who()` 的结果拼在 `\"B -> \"` 后面",
+      "level_4": "📝 正确答案：`super().who()` 与 `print(B().who())`"
+    },
+    "explanation": "super() 依赖编译期注入的 __class__ 单元定位自己在 MRO 中的位置，多继承下会继续向后推进而不是简单找父类。"
+  },
+  {
+    "id": "py-meta-009",
+    "title": "类属性与实例属性",
+    "description": "实例属性遮蔽类属性，修改类属性影响所有实例",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "beginner",
+    "category": "attribute_lookup",
+    "subcategory": "元类与类机制",
+    "full_code": "class Config:\n    mode = \"default\"\n\n\na = Config()\nb = Config()\na.mode = \"custom\"\nConfig.mode = \"global\"\nprint(a.mode)\nprint(b.mode)\nprint(Config.mode)",
+    "expected": "custom\nglobal\nglobal",
+    "points": [
+      {
+        "id": "instance_shadow",
+        "text": "a.mode = \"custom\"",
+        "category": "attribute_lookup",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "给实例写同名属性会遮蔽类属性",
+        "fill_type": "text"
+      },
+      {
+        "id": "class_assign",
+        "text": "Config.mode = \"global\"",
+        "category": "attribute_lookup",
+        "min_weight": "beginner",
+        "weight_score": 1.5,
+        "hint": "改类属性是全局效果",
+        "fill_type": "text"
+      },
+      {
+        "id": "b_read",
+        "text": "print(b.mode)",
+        "category": "attribute_lookup",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "b 没有自己的 mode，回落到类属性",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 实例读属性失败后去哪儿找？给实例赋同名值又会怎样？",
+      "level_2": "📖 查找顺序：实例 `__dict__` → 类 `__dict__` → 基类；实例赋值只写自己的字典",
+      "level_3": "👀 先 `a.mode = \"custom\"`，再 `Config.mode = \"global\"`，最后打印三处",
+      "level_4": "📝 正确答案：`a.mode = \"custom\"` 与 `print(b.mode)`"
+    },
+    "explanation": "实例属性优先级最高；类属性是所有实例共享的默认值，对未被实例属性遮蔽的实例立即生效。"
+  },
+  {
+    "id": "py-meta-010",
+    "title": "__slots__ 拒绝新属性",
+    "description": "用 __slots__ 声明固定属性，越界赋值抛 AttributeError",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "slots",
+    "subcategory": "元类与类机制",
+    "full_code": "class Point:\n    __slots__ = (\"x\", \"y\")\n\n    def __init__(self, x, y):\n        self.x = x\n        self.y = y\n\n\np = Point(1, 2)\nprint(p.x + p.y)\ntry:\n    p.z = 3\nexcept AttributeError as e:\n    print(type(e).__name__)",
+    "expected": "3\nAttributeError",
+    "points": [
+      {
+        "id": "slots_decl",
+        "text": "__slots__ = (\"x\", \"y\")",
+        "category": "slots",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "声明允许存在的属性名",
+        "fill_type": "text"
+      },
+      {
+        "id": "illegal_assign",
+        "text": "p.z = 3",
+        "category": "slots",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "z 不在 __slots__ 中，赋值失败",
+        "fill_type": "text"
+      },
+      {
+        "id": "catch_name",
+        "text": "print(type(e).__name__)",
+        "category": "slots",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "打印捕获到的异常类型名",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 怎样让实例只能拥有 x、y 两个属性？",
+      "level_2": "📖 `__slots__` 用槽位描述符替代 `__dict__`，未声明的属性赋值直接报错",
+      "level_3": "👀 try 里执行 `p.z = 3`，except 里打印异常类型名",
+      "level_4": "📝 正确答案：`__slots__ = (\"x\", \"y\")` 与 `p.z = 3`"
+    },
+    "explanation": "__slots__ 在类创建时把每个名字变成槽位描述符，实例不再有 __dict__，拼错属性名会立刻暴露。"
+  },
+  {
+    "id": "py-meta-011",
+    "title": "__slots__ 与 __dict__ 对比",
+    "description": "槽类实例没有 __dict__，普通类实例则有",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "slots_dict",
+    "subcategory": "元类与类机制",
+    "full_code": "class WithSlots:\n    __slots__ = (\"a\",)\n\n\nclass WithoutSlots:\n    pass\n\n\ns = WithSlots()\nd = WithoutSlots()\nd.b = 2\nprint(hasattr(s, \"__dict__\"))\nprint(hasattr(d, \"__dict__\"))\nprint(d.b)",
+    "expected": "False\nTrue\n2",
+    "points": [
+      {
+        "id": "slots_one",
+        "text": "__slots__ = (\"a\",)",
+        "category": "slots_dict",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "单槽位声明也要写成元组",
+        "fill_type": "text"
+      },
+      {
+        "id": "slots_no_dict",
+        "text": "print(hasattr(s, \"__dict__\"))",
+        "category": "slots_dict",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "槽类实例没有属性字典",
+        "fill_type": "text"
+      },
+      {
+        "id": "normal_has_dict",
+        "text": "print(hasattr(d, \"__dict__\"))",
+        "category": "slots_dict",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "普通类实例仍然有属性字典",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 用 __slots__ 的实例还能随便塞属性吗？它的 `__dict__` 在哪？",
+      "level_2": "📖 `__slots__` 用固定槽位替代 `__dict__`，省内存但失去动态属性",
+      "level_3": "👀 对比两次 `hasattr(..., \"__dict__\")` 的输出",
+      "level_4": "📝 正确答案：`print(hasattr(s, \"__dict__\"))` 与 `print(hasattr(d, \"__dict__\"))`"
+    },
+    "explanation": "没有 __dict__ 的槽类实例内存更紧凑，代价是不能动态添加属性，也兼容不了依赖 __dict__ 的机制。"
+  },
+  {
+    "id": "py-meta-012",
+    "title": "抽象类不可实例化",
+    "description": "ABC 与 @abstractmethod 约束子类必须实现接口",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "abstract_class",
+    "subcategory": "元类与类机制",
+    "full_code": "import abc\n\n\nclass Shape(abc.ABC):\n    @abc.abstractmethod\n    def area(self):\n        pass\n\n\nclass Square(Shape):\n    def __init__(self, side):\n        self.side = side\n\n    def area(self):\n        return self.side ** 2\n\n\nprint(Square(3).area())\ntry:\n    Shape()\nexcept TypeError as e:\n    print(type(e).__name__)",
+    "expected": "9\nTypeError",
+    "points": [
+      {
+        "id": "abstract_decorator",
+        "text": "@abc.abstractmethod",
+        "category": "abstract_class",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "给方法打上抽象标记",
+        "fill_type": "text"
+      },
+      {
+        "id": "abc_base",
+        "text": "class Shape(abc.ABC):",
+        "category": "abstract_class",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "以 ABC 为基类获得抽象语义",
+        "fill_type": "text"
+      },
+      {
+        "id": "abstract_error",
+        "text": "print(type(e).__name__)",
+        "category": "abstract_class",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "实例化抽象类抛 TypeError",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 声明接口但禁止直接实例化基类，用什么？",
+      "level_2": "📖 `abc.ABC` 的元类是 `ABCMeta`，含未实现抽象方法的类实例化时抛 TypeError",
+      "level_3": "👀 `@abc.abstractmethod` 之后在 try 里调用 `Shape()`",
+      "level_4": "📝 正确答案：`@abc.abstractmethod` 与 `class Shape(abc.ABC):`"
+    },
+    "explanation": "ABCMeta 会收集抽象方法集合；子类只有全部重写后才能实例化，否则同样报 TypeError。"
+  },
+  {
+    "id": "py-meta-013",
+    "title": "自定义 isinstance 行为",
+    "description": "元类实现 __instancecheck__，按「会叫」判定鸭子类型",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "hard",
+    "category": "isinstance_hook",
+    "subcategory": "元类与类机制",
+    "full_code": "class Quacker(type):\n    def __instancecheck__(cls, instance):\n        return hasattr(instance, \"quack\")\n\n\nclass Quackable(metaclass=Quacker):\n    pass\n\n\nclass Duck:\n    def quack(self):\n        return \"quack\"\n\n\nclass Seal:\n    def quack(self):\n        return \"ow\"\n\n\nprint(isinstance(Duck(), Quackable))\nprint(isinstance(Seal(), Quackable))\nprint(isinstance(42, Quackable))",
+    "expected": "True\nTrue\nFalse",
+    "points": [
+      {
+        "id": "instancecheck_def",
+        "text": "def __instancecheck__(cls, instance):",
+        "category": "isinstance_hook",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "在元类上定义 isinstance 的钩子",
+        "fill_type": "text"
+      },
+      {
+        "id": "duck_check",
+        "text": "return hasattr(instance, \"quack\")",
+        "category": "isinstance_hook",
+        "min_weight": "hard",
+        "weight_score": 2,
+        "hint": "按能力而非继承关系判定",
+        "fill_type": "text"
+      },
+      {
+        "id": "quackable_class",
+        "text": "class Quackable(metaclass=Quacker):",
+        "category": "isinstance_hook",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "空标记类，行为全靠元类",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 想让 isinstance 不看继承、只看「有没有 quack」，改哪里？",
+      "level_2": "📖 `isinstance(obj, C)` 实际调用 `type(C).__instancecheck__(C, obj)`",
+      "level_3": "👀 元类里 `return hasattr(instance, \"quack\")`，标记类为空类体",
+      "level_4": "📝 正确答案：`def __instancecheck__(cls, instance):` 与 `return hasattr(instance, \"quack\")`"
+    },
+    "explanation": "把 __instancecheck__ 放在元类上就接管了该类的 isinstance 语义；控制 issubclass 的对应钩子是 __subclasshook__。"
+  },
+  {
+    "id": "py-meta-014",
+    "title": "元类冲突",
+    "description": "两个不同元类的父类组合会触发 metaclass conflict",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "hard",
+    "category": "metaclass_conflict",
+    "subcategory": "元类与类机制",
+    "full_code": "class MetaA(type):\n    pass\n\n\nclass MetaB(type):\n    pass\n\n\nclass A(metaclass=MetaA):\n    pass\n\n\nclass B(metaclass=MetaB):\n    pass\n\n\ntry:\n    class C(A, B):\n        pass\nexcept TypeError as e:\n    print(type(e).__name__)\n    print(\"metaclass conflict\" in str(e))",
+    "expected": "TypeError\nTrue",
+    "points": [
+      {
+        "id": "conflict_class",
+        "text": "class C(A, B):",
+        "category": "metaclass_conflict",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "同时继承两个元类互不兼容的父类",
+        "fill_type": "text"
+      },
+      {
+        "id": "catch_type_error",
+        "text": "except TypeError as e:",
+        "category": "metaclass_conflict",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "冲突在类定义那一刻抛出",
+        "fill_type": "text"
+      },
+      {
+        "id": "message_check",
+        "text": "print(\"metaclass conflict\" in str(e))",
+        "category": "metaclass_conflict",
+        "min_weight": "hard",
+        "weight_score": 2,
+        "hint": "确认异常信息包含冲突关键字",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 A、B 来自不同元类，class C(A, B) 会发生什么？",
+      "level_2": "📖 新类元类必须是所有基类元类的子类；MetaA 与 MetaB 互不相关 → TypeError",
+      "level_3": "👀 try 包裹类定义，except 捕获后检查异常消息",
+      "level_4": "📝 正确答案：`class C(A, B):` 与 `\"metaclass conflict\" in str(e)`"
+    },
+    "explanation": "解释器取所有基类元类中「最派生」的那个；候选之间没有子类关系时立刻抛 TypeError: metaclass conflict。"
+  },
+  {
+    "id": "py-meta-015",
+    "title": "类装饰器等价元类",
+    "description": "用类装饰器在类创建后注入 __repr__，达到元类的增强效果",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "expert",
+    "category": "class_decorator",
+    "subcategory": "元类与类机制",
+    "full_code": "def add_repr(cls):\n    def __repr__(self):\n        return f\"{type(self).__name__}({self.value})\"\n\n    cls.__repr__ = __repr__\n    return cls\n\n\n@add_repr\nclass Money:\n    def __init__(self, value):\n        self.value = value\n\n\nprint(repr(Money(7)))\nprint(type(Money).__name__)",
+    "expected": "Money(7)\ntype",
+    "points": [
+      {
+        "id": "decorator_syntax",
+        "text": "@add_repr",
+        "category": "class_decorator",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "装饰器语法糖：类定义完立即被包裹",
+        "fill_type": "text"
+      },
+      {
+        "id": "inject_repr",
+        "text": "cls.__repr__ = __repr__",
+        "category": "class_decorator",
+        "min_weight": "expert",
+        "weight_score": 2,
+        "hint": "把新函数挂进类命名空间",
+        "fill_type": "text"
+      },
+      {
+        "id": "return_class",
+        "text": "return cls",
+        "category": "class_decorator",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "装饰器必须返回类本身",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 不想写元类，如何在类创建后给它加方法？",
+      "level_2": "📖 类装饰器 = 接收类的可调用对象、返回增强后的类；`@add_repr` 等价 `Money = add_repr(Money)`",
+      "level_3": "👀 在 `add_repr` 里 `cls.__repr__ = __repr__` 之后 `return cls`",
+      "level_4": "📝 正确答案：`cls.__repr__ = __repr__` 与 `return cls`"
+    },
+    "explanation": "类装饰器运行在类对象建好之后，能改属性、登记注册表、包装方法；比元类简单，但拿不到创建前的命名空间。"
+  }
+]

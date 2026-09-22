@@ -1,0 +1,723 @@
+[
+  {
+    "id": "py-desc-001",
+    "title": "只实现 __get__",
+    "description": "只实现 __get__ 的非数据描述符：访问时返回固定值",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "beginner",
+    "category": "non_data_descriptor",
+    "subcategory": "描述符",
+    "full_code": "class NonData:\n    def __get__(self, obj, objtype=None):\n        return \"from descriptor\"\n\nclass Model:\n    field = NonData()\n\nm = Model()\nprint(m.field)\nprint(Model.field)",
+    "expected": "from descriptor\nfrom descriptor",
+    "points": [
+      {
+        "id": "get_method",
+        "text": "def __get__(self, obj, objtype=None):",
+        "category": "descriptor_protocol",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "定义访问钩子：__get__(self, obj, objtype=None)",
+        "fill_type": "text"
+      },
+      {
+        "id": "descriptor_attr",
+        "text": "field = NonData()",
+        "category": "class_attribute",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "把描述符实例挂到类属性上",
+        "fill_type": "text"
+      },
+      {
+        "id": "class_access",
+        "text": "print(Model.field)",
+        "category": "descriptor_protocol",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "通过类访问时 obj 为 None，也会调用 __get__",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 想让 `m.field` 访问时自动走一段逻辑，该实现哪个方法？",
+      "level_2": "📖 只实现 `__get__` 的是非数据描述符：访问属性时调用 `__get__(self, obj, objtype)`",
+      "level_3": "👀 `class NonData:` 里定义 `__get__`，再把 `NonData()` 赋给类属性 `field`",
+      "level_4": "📝 正确答案：`def __get__(self, obj, objtype=None):`、`field = NonData()` 与 `print(Model.field)`"
+    },
+    "explanation": "只实现 `__get__` 的是非数据描述符：实例和类访问该属性都会调用它，其中 `objtype` 是宿主类。"
+  },
+  {
+    "id": "py-desc-002",
+    "title": "数据描述符读写",
+    "description": "实现 __get__ 与 __set__，读写都经过描述符",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "beginner",
+    "category": "data_descriptor",
+    "subcategory": "描述符",
+    "full_code": "class Celsius:\n    def __get__(self, obj, objtype=None):\n        print(\"get\")\n        return obj._value\n\n    def __set__(self, obj, value):\n        print(\"set\")\n        obj._value = value\n\nclass Weather:\n    temp = Celsius()\n\nw = Weather()\nw.temp = 25\nprint(w.temp)",
+    "expected": "set\nget\n25",
+    "points": [
+      {
+        "id": "set_method",
+        "text": "def __set__(self, obj, value):",
+        "category": "descriptor_set",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "赋值要经过 __set__(self, obj, value)",
+        "fill_type": "text"
+      },
+      {
+        "id": "assign_call",
+        "text": "w.temp = 25",
+        "category": "descriptor_assignment",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "赋值触发 __set__，打印 set",
+        "fill_type": "text"
+      },
+      {
+        "id": "access_print",
+        "text": "print(w.temp)",
+        "category": "descriptor_access",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "读取触发 __get__，打印 get 与值",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 赋值 `w.temp = 25` 时想被拦截，需要哪个方法？",
+      "level_2": "📖 同时实现 `__get__` 和 `__set__` 即数据描述符，读写都会经过它",
+      "level_3": "👀 `def __set__(self, obj, value):` 中把值存进 `obj._value`",
+      "level_4": "📝 正确答案：`def __set__(self, obj, value):`、`w.temp = 25` 与 `print(w.temp)`"
+    },
+    "explanation": "数据描述符 = `__get__` + `__set__`/`__delete__`：读写属性时解释器优先走描述符方法。"
+  },
+  {
+    "id": "py-desc-003",
+    "title": "__set_name__ 记录属性名",
+    "description": "用 __set_name__ 让描述符自动记录属性名",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "beginner",
+    "category": "set_name_hook",
+    "subcategory": "描述符",
+    "full_code": "class Named:\n    def __set_name__(self, owner, name):\n        self.name = name\n\n    def __get__(self, obj, objtype=None):\n        return self.name\n\nclass Model:\n    username = Named()\n\nm = Model()\nprint(m.username)",
+    "expected": "username",
+    "points": [
+      {
+        "id": "set_name_method",
+        "text": "def __set_name__(self, owner, name):",
+        "category": "set_name_hook",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "类创建时解释器会调用 __set_name__(owner, name)",
+        "fill_type": "text"
+      },
+      {
+        "id": "record_name",
+        "text": "self.name = name",
+        "category": "set_name_hook",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "把属性名存到描述符自己身上",
+        "fill_type": "text"
+      },
+      {
+        "id": "class_attr",
+        "text": "username = Named()",
+        "category": "class_attribute",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "描述符实例必须作为类属性定义",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 描述符怎么知道自己被赋给了哪个属性名？",
+      "level_2": "📖 类创建时解释器会对每个描述符属性调用 `__set_name__(owner, name)`",
+      "level_3": "👀 `def __set_name__(self, owner, name):` → `self.name = name`",
+      "level_4": "📝 正确答案：`def __set_name__(self, owner, name):`、`self.name = name` 与 `username = Named()`"
+    },
+    "explanation": "类体执行完毕后，解释器对每个描述符调用 `__set_name__(owner, name)`，描述符由此记录自身属性名。"
+  },
+  {
+    "id": "py-desc-004",
+    "title": "property 与手写描述符",
+    "description": "对比手写数据描述符与内置 property",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "property_protocol",
+    "subcategory": "描述符",
+    "full_code": "class Positive:\n    def __init__(self):\n        self.value = 0\n\n    def __get__(self, obj, objtype=None):\n        return self.value\n\n    def __set__(self, obj, value):\n        self.value = value\n\nclass Box:\n    size = Positive()\n\nclass Box2:\n    def __init__(self):\n        self._size = 0\n\n    def get_size(self):\n        return self._size\n\n    def set_size(self, value):\n        self._size = value\n\n    size = property(get_size, set_size)\n\nb = Box()\nb.size = 5\nc = Box2()\nc.size = 7\nprint(b.size, c.size)",
+    "expected": "5 7",
+    "points": [
+      {
+        "id": "property_call",
+        "text": "size = property(get_size, set_size)",
+        "category": "property_protocol",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "property 接收 getter 与 setter，构造数据描述符",
+        "fill_type": "text"
+      },
+      {
+        "id": "get_dunder",
+        "text": "def __get__(self, obj, objtype=None):",
+        "category": "descriptor_protocol",
+        "min_weight": "easy",
+        "weight_score": 1.5,
+        "hint": "手写描述符的读取钩子",
+        "fill_type": "text"
+      },
+      {
+        "id": "assign_box",
+        "text": "b.size = 5",
+        "category": "descriptor_assignment",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "给 Box 实例赋值，走 Positive.__set__",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 `property` 的底层是什么？",
+      "level_2": "📖 `property` 本质是内置的数据描述符，`fget/fset` 分别对应 `__get__/__set__`",
+      "level_3": "👀 手写描述符 `Positive`，再用 `property(get_size, set_size)` 造出对等属性",
+      "level_4": "📝 正确答案：`size = property(get_size, set_size)`、`def __get__(self, obj, objtype=None):` 与 `b.size = 5`"
+    },
+    "explanation": "`property` 是 C 实现的数据描述符，`fget/fset` 充当 `__get__/__set__`；手写描述符可完全等价。"
+  },
+  {
+    "id": "py-desc-005",
+    "title": "函数也是描述符",
+    "description": "函数是非数据描述符：理解方法绑定的本质",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "function_binding",
+    "subcategory": "描述符",
+    "full_code": "class Greeter:\n    def hello(self):\n        return \"hello\"\n\ng = Greeter()\nbound = g.hello\nprint(bound.__self__ is g)\nprint(bound.__func__ is Greeter.hello)\nprint(hasattr(Greeter.hello, \"__get__\"))",
+    "expected": "True\nTrue\nTrue",
+    "points": [
+      {
+        "id": "bind_method",
+        "text": "bound = g.hello",
+        "category": "function_binding",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "实例访问函数属性会触发函数的 __get__，得到绑定方法",
+        "fill_type": "text"
+      },
+      {
+        "id": "self_check",
+        "text": "print(bound.__self__ is g)",
+        "category": "function_binding",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "__self__ 指向绑定的实例",
+        "fill_type": "text"
+      },
+      {
+        "id": "func_check",
+        "text": "print(bound.__func__ is Greeter.hello)",
+        "category": "function_binding",
+        "min_weight": "easy",
+        "weight_score": 1.5,
+        "hint": "__func__ 指向原始函数对象",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 为什么 `g.hello` 不是函数而是绑定的方法？",
+      "level_2": "📖 函数对象实现了 `__get__`，属于非数据描述符：实例访问时返回绑定方法",
+      "level_3": "👀 `bound = g.hello` 后看 `__self__` 与 `__func__`",
+      "level_4": "📝 正确答案：`bound = g.hello`、`print(bound.__self__ is g)` 与 `print(bound.__func__ is Greeter.hello)`"
+    },
+    "explanation": "函数实现了 `__get__`，属于非数据描述符；实例访问返回绑定方法（`__self__` 为实例、`__func__` 为原函数）。"
+  },
+  {
+    "id": "py-desc-006",
+    "title": "数据描述符优先级",
+    "description": "验证数据描述符优先于实例 __dict__",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "lookup_priority",
+    "subcategory": "描述符",
+    "full_code": "class Data:\n    def __get__(self, obj, objtype=None):\n        return \"descriptor\"\n\n    def __set__(self, obj, value):\n        obj.__dict__[\"shadow\"] = value\n\nclass Model:\n    shadow = Data()\n\nm = Model()\nm.shadow = \"instance\"\nprint(m.__dict__[\"shadow\"])\nprint(m.shadow)",
+    "expected": "instance\ndescriptor",
+    "points": [
+      {
+        "id": "assign_call",
+        "text": "m.shadow = \"instance\"",
+        "category": "descriptor_assignment",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "赋值先经过 __set__，再写入实例字典",
+        "fill_type": "text"
+      },
+      {
+        "id": "dict_read",
+        "text": "print(m.__dict__[\"shadow\"])",
+        "category": "lookup_priority",
+        "min_weight": "easy",
+        "weight_score": 1.5,
+        "hint": "直接读实例字典，能看到原件确实写进去了",
+        "fill_type": "text"
+      },
+      {
+        "id": "attr_read",
+        "text": "print(m.shadow)",
+        "category": "lookup_priority",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "普通访问仍由数据描述符优先返回",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 实例 `__dict__` 和类上的数据描述符，谁优先？",
+      "level_2": "📖 数据描述符（有 `__set__`）优先于实例字典；直接写 `obj.__dict__` 可绕过它",
+      "level_3": "👀 先 `m.shadow = \"instance\"`，再分别读 `m.__dict__[\"shadow\"]` 与 `m.shadow`",
+      "level_4": "📝 正确答案：`m.shadow = \"instance\"`、`print(m.__dict__[\"shadow\"])` 与 `print(m.shadow)`"
+    },
+    "explanation": "查找属性时数据描述符优先于实例 `__dict__`；直接操作 `obj.__dict__` 可绕过描述符写入。"
+  },
+  {
+    "id": "py-desc-007",
+    "title": "实例属性遮蔽",
+    "description": "验证非数据描述符会被实例属性遮蔽",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "easy",
+    "category": "attribute_shadowing",
+    "subcategory": "描述符",
+    "full_code": "class NonData:\n    def __get__(self, obj, objtype=None):\n        return \"descriptor\"\n\nclass Model:\n    value = NonData()\n\nm = Model()\nprint(m.value)\nm.__dict__[\"value\"] = \"instance\"\nprint(m.value)",
+    "expected": "descriptor\ninstance",
+    "points": [
+      {
+        "id": "descriptor_attr",
+        "text": "value = NonData()",
+        "category": "class_attribute",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "把非数据描述符挂到类属性",
+        "fill_type": "text"
+      },
+      {
+        "id": "inject_dict",
+        "text": "m.__dict__[\"value\"] = \"instance\"",
+        "category": "attribute_shadowing",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "手动往实例字典塞入同名属性",
+        "fill_type": "text"
+      },
+      {
+        "id": "second_read",
+        "text": "print(m.value)",
+        "category": "attribute_shadowing",
+        "min_weight": "easy",
+        "weight_score": 1.5,
+        "hint": "第二次读取会被实例属性遮蔽，这里指定第 2 处出现",
+        "fill_type": "text",
+        "occurrence": 1
+      }
+    ],
+    "hints": {
+      "level_1": "💡 非数据描述符遇到同名实例属性会怎样？",
+      "level_2": "📖 只有 `__get__` 的描述符优先级低于实例字典，实例属性会遮蔽它",
+      "level_3": "👀 先读一次，再往 `m.__dict__[\"value\"]` 写入后重读",
+      "level_4": "📝 正确答案：`value = NonData()`、`m.__dict__[\"value\"] = \"instance\"` 与第二处 `print(m.value)`"
+    },
+    "explanation": "非数据描述符优先级低于实例 `__dict__`：一旦实例有同名属性，描述符就被遮蔽。"
+  },
+  {
+    "id": "py-desc-008",
+    "title": "__delete__ 删除钩子",
+    "description": "为描述符实现 __delete__ 删除钩子",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "delete_hook",
+    "subcategory": "描述符",
+    "full_code": "class Tracked:\n    def __init__(self):\n        self.exists = False\n\n    def __get__(self, obj, objtype=None):\n        return self.exists\n\n    def __set__(self, obj, value):\n        self.exists = value\n\n    def __delete__(self, obj):\n        self.exists = False\n        print(\"deleted\")\n\nclass Model:\n    flag = Tracked()\n\nm = Model()\nm.flag = True\nprint(m.flag)\ndel m.flag\nprint(m.flag)",
+    "expected": "True\ndeleted\nFalse",
+    "points": [
+      {
+        "id": "flag_assign",
+        "text": "m.flag = True",
+        "category": "descriptor_assignment",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "赋值触发 __set__，状态变为 True",
+        "fill_type": "text"
+      },
+      {
+        "id": "delete_hook",
+        "text": "def __delete__(self, obj):",
+        "category": "delete_hook",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "del 语句会调用 __delete__(self, obj)",
+        "fill_type": "text"
+      },
+      {
+        "id": "delete_call",
+        "text": "del m.flag",
+        "category": "delete_hook",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "执行删除，打印 deleted 并复位状态",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 `del m.flag` 会触发描述符的哪个钩子？",
+      "level_2": "📖 实现 `__delete__(self, obj)` 即可拦截 `del` 操作",
+      "level_3": "👀 `def __delete__(self, obj):` 中把状态复位并打印 deleted",
+      "level_4": "📝 正确答案：`m.flag = True`、`def __delete__(self, obj):` 与 `del m.flag`"
+    },
+    "explanation": "`del obj.attr` 会调用描述符的 `__delete__(self, obj)`，可用于清理或复位内部状态。"
+  },
+  {
+    "id": "py-desc-009",
+    "title": "类型校验描述符",
+    "description": "用描述符统一做类型与取值校验",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "validation_descriptor",
+    "subcategory": "描述符",
+    "full_code": "class PositiveNumber:\n    def __set_name__(self, owner, name):\n        self.name = name\n\n    def __set__(self, obj, value):\n        if not isinstance(value, int):\n            raise TypeError(f\"{self.name} must be int\")\n        if value <= 0:\n            raise ValueError(f\"{self.name} must be positive\")\n        obj.__dict__[self.name] = value\n\n    def __get__(self, obj, objtype=None):\n        return obj.__dict__[self.name]\n\nclass Product:\n    price = PositiveNumber()\n\np = Product()\np.price = 100\nprint(p.price)\ntry:\n    p.price = \"free\"\nexcept TypeError as e:\n    print(e)\ntry:\n    p.price = 0\nexcept ValueError as e:\n    print(e)",
+    "expected": "100\nprice must be int\nprice must be positive",
+    "points": [
+      {
+        "id": "valid_assign",
+        "text": "p.price = 100",
+        "category": "validation_descriptor",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "合法赋值通过校验并存入实例字典",
+        "fill_type": "text"
+      },
+      {
+        "id": "type_check",
+        "text": "isinstance(value, int)",
+        "category": "type_validation",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "先用 isinstance 做类型检查",
+        "fill_type": "text"
+      },
+      {
+        "id": "range_check",
+        "text": "raise ValueError(f\"{self.name} must be positive\")",
+        "category": "value_validation",
+        "min_weight": "medium",
+        "weight_score": 2,
+        "hint": "数值必须为正，否则抛 ValueError",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 怎样用描述符统一做属性校验？",
+      "level_2": "📖 在 `__set__` 里做 `isinstance` 检查，不合格就抛 `TypeError` 或 `ValueError`",
+      "level_3": "👀 `p.price = 100` 正常；`p.price = \"free\"` 与 `p.price = 0` 分别触发异常",
+      "level_4": "📝 正确答案：`p.price = 100`、`isinstance(value, int)` 与 `raise ValueError(f\"{self.name} must be positive\")`"
+    },
+    "explanation": "把校验逻辑放进 `__set__`，非法赋值立即抛异常，读路径由 `__get__` 返回已存值。"
+  },
+  {
+    "id": "py-desc-010",
+    "title": "惰性缓存描述符",
+    "description": "实现只计算一次的惰性缓存描述符",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "lazy_cache",
+    "subcategory": "描述符",
+    "full_code": "class Lazy:\n    def __init__(self, func):\n        self.func = func\n\n    def __set_name__(self, owner, name):\n        self.name = name\n\n    def __get__(self, obj, objtype=None):\n        if obj is None:\n            return self\n        if self.name not in obj.__dict__:\n            obj.__dict__[self.name] = self.func(obj)\n        return obj.__dict__[self.name]\n\nclass Data:\n    def __init__(self):\n        self.calls = 0\n\n    @Lazy\n    def total(self):\n        self.calls += 1\n        return 42\n\nd = Data()\nprint(d.total)\nprint(d.total)\nprint(d.calls)",
+    "expected": "42\n42\n1",
+    "points": [
+      {
+        "id": "lazy_decorator",
+        "text": "@Lazy",
+        "category": "decorator_descriptor",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "用描述符类作为装饰器，把函数包成描述符",
+        "fill_type": "text"
+      },
+      {
+        "id": "cache_miss",
+        "text": "if self.name not in obj.__dict__:",
+        "category": "lazy_cache",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "实例字典里没有结果时才计算",
+        "fill_type": "text"
+      },
+      {
+        "id": "cache_store",
+        "text": "obj.__dict__[self.name] = self.func(obj)",
+        "category": "lazy_cache",
+        "min_weight": "medium",
+        "weight_score": 2,
+        "hint": "计算结果写回实例字典，后续访问直接命中",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 怎样让计算型属性只算一次？",
+      "level_2": "📖 首次 `__get__` 把结果写回实例 `__dict__`，之后命中缓存直接返回",
+      "level_3": "👀 用 `@Lazy` 装饰 `total`，`__get__` 中判断 `self.name not in obj.__dict__`",
+      "level_4": "📝 正确答案：`@Lazy`、`if self.name not in obj.__dict__:` 与 `obj.__dict__[self.name] = self.func(obj)`"
+    },
+    "explanation": "惰性缓存描述符：首次访问计算并写入实例 `__dict__`，后续访问命中缓存，只计算一次。"
+  },
+  {
+    "id": "py-desc-011",
+    "title": "共享状态还是独立状态",
+    "description": "理解描述符状态共享与每实例独立的差别",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "descriptor_state",
+    "subcategory": "描述符",
+    "full_code": "class Shared:\n    def __set__(self, obj, value):\n        self.value = value\n\n    def __get__(self, obj, objtype=None):\n        return self.value\n\nclass PerInstance:\n    def __set_name__(self, owner, name):\n        self.name = name\n\n    def __set__(self, obj, value):\n        obj.__dict__[self.name] = value\n\n    def __get__(self, obj, objtype=None):\n        return obj.__dict__[self.name]\n\nclass A:\n    x = Shared()\n\nclass B:\n    y = PerInstance()\n\na1, a2 = A(), A()\na1.x = 1\na2.x = 2\nprint(a1.x)\nb1, b2 = B(), B()\nb1.y = 1\nb2.y = 2\nprint(b1.y, b2.y)",
+    "expected": "2\n1 2",
+    "points": [
+      {
+        "id": "shared_write",
+        "text": "self.value = value",
+        "category": "descriptor_state",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "值存在描述符实例上，会被所有宿主实例共享",
+        "fill_type": "text"
+      },
+      {
+        "id": "per_instance_write",
+        "text": "obj.__dict__[self.name] = value",
+        "category": "descriptor_state",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "值存进宿主实例字典，才能每实例独立",
+        "fill_type": "text"
+      },
+      {
+        "id": "independent_read",
+        "text": "print(b1.y, b2.y)",
+        "category": "descriptor_state",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "独立存储后两个实例互不干扰",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 描述符实例是类属性，把值存它身上会怎样？",
+      "level_2": "📖 描述符实例被所有实例共享；要每实例独立，值必须存进 `obj.__dict__`",
+      "level_3": "👀 `Shared` 存 `self.value`，`PerInstance` 存 `obj.__dict__[self.name]`",
+      "level_4": "📝 正确答案：`self.value = value`、`obj.__dict__[self.name] = value` 与 `print(b1.y, b2.y)`"
+    },
+    "explanation": "描述符实例本身是类属性，在它身上存值会被所有宿主实例共享；存进 `obj.__dict__` 才真正每实例独立。"
+  },
+  {
+    "id": "py-desc-012",
+    "title": "classmethod 与 staticmethod",
+    "description": "观察 classmethod 与 staticmethod 的 __get__ 行为",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "medium",
+    "category": "classmethod_staticmethod",
+    "subcategory": "描述符",
+    "full_code": "class MyClass:\n    @classmethod\n    def cm(cls):\n        return cls.__name__\n\n    @staticmethod\n    def sm():\n        return \"static\"\n\nprint(MyClass.cm())\nprint(MyClass.sm())\nprint(type(MyClass.__dict__[\"cm\"]).__name__)\nprint(type(MyClass.__dict__[\"sm\"]).__name__)",
+    "expected": "MyClass\nstatic\nclassmethod\nstaticmethod",
+    "points": [
+      {
+        "id": "classmethod_decorator",
+        "text": "@classmethod",
+        "category": "classmethod_staticmethod",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "classmethod 的 __get__ 把类绑定为第一个参数",
+        "fill_type": "text"
+      },
+      {
+        "id": "staticmethod_decorator",
+        "text": "@staticmethod",
+        "category": "classmethod_staticmethod",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "staticmethod 的 __get__ 直接返回原函数",
+        "fill_type": "text"
+      },
+      {
+        "id": "classmethod_type",
+        "text": "print(type(MyClass.__dict__[\"cm\"]).__name__)",
+        "category": "classmethod_staticmethod",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "类字典里存的是 classmethod 描述符对象",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 `classmethod` / `staticmethod` 放在类字典里是什么对象？",
+      "level_2": "📖 它们本身是实现了 `__get__` 的对象：`classmethod` 绑定类，`staticmethod` 返回原函数",
+      "level_3": "👀 `type(MyClass.__dict__[\"cm\"]).__name__` 会是什么？",
+      "level_4": "📝 正确答案：`@classmethod`、`@staticmethod` 与 `print(type(MyClass.__dict__[\"cm\"]).__name__)`"
+    },
+    "explanation": "`classmethod`/`staticmethod` 对象都实现 `__get__`，前者把类绑定为第一个参数，后者直接返回原函数。"
+  },
+  {
+    "id": "py-desc-013",
+    "title": "描述符必须挂类上",
+    "description": "验证描述符只有定义在类上才生效",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "hard",
+    "category": "instance_placement",
+    "subcategory": "描述符",
+    "full_code": "class Descriptor:\n    def __get__(self, obj, objtype=None):\n        return \"descriptor ran\"\n\nclass Model:\n    pass\n\nm = Model()\nm.attr = Descriptor()\nprint(type(m.attr).__name__)\ndel m.attr\nModel.attr = Descriptor()\nprint(m.attr)",
+    "expected": "Descriptor\ndescriptor ran",
+    "points": [
+      {
+        "id": "instance_placement",
+        "text": "m.attr = Descriptor()",
+        "category": "instance_placement",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "挂在实例字典上的描述符只是普通对象",
+        "fill_type": "text"
+      },
+      {
+        "id": "type_inspect",
+        "text": "type(m.attr).__name__",
+        "category": "instance_placement",
+        "min_weight": "hard",
+        "weight_score": 2,
+        "hint": "读到的就是描述符对象本身，__get__ 未被触发",
+        "fill_type": "text"
+      },
+      {
+        "id": "class_placement",
+        "text": "Model.attr = Descriptor()",
+        "category": "class_placement",
+        "min_weight": "hard",
+        "weight_score": 2,
+        "hint": "移到类属性后，访问才会经过 __get__",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 把描述符实例赋给 `m.attr` 而不是类属性，会触发 `__get__` 吗？",
+      "level_2": "📖 描述符协议只在类型（类）查属性时生效，实例字典里的对象不会被识别",
+      "level_3": "👀 先 `m.attr = Descriptor()` 看类型名，再 `del` 后挂到 `Model.attr`",
+      "level_4": "📝 正确答案：`m.attr = Descriptor()`、`type(m.attr).__name__` 与 `Model.attr = Descriptor()`"
+    },
+    "explanation": "描述符协议只在类属性查找时生效；挂在实例 `__dict__` 上的对象只是普通属性，不会触发 `__get__`。"
+  },
+  {
+    "id": "py-desc-014",
+    "title": "只读属性描述符",
+    "description": "实现会拒绝赋值的只读属性描述符",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "hard",
+    "category": "readonly_descriptor",
+    "subcategory": "描述符",
+    "full_code": "class ReadOnly:\n    def __get__(self, obj, objtype=None):\n        return \"immutable\"\n\n    def __set__(self, obj, value):\n        raise AttributeError(\"read-only attribute\")\n\nclass Config:\n    version = ReadOnly()\n\nc = Config()\nprint(c.version)\ntry:\n    c.version = \"2.0\"\nexcept AttributeError as e:\n    print(e)",
+    "expected": "immutable\nread-only attribute",
+    "points": [
+      {
+        "id": "read_value",
+        "text": "print(c.version)",
+        "category": "readonly_descriptor",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "读取正常，返回描述符提供的值",
+        "fill_type": "text"
+      },
+      {
+        "id": "raise_error",
+        "text": "raise AttributeError(\"read-only attribute\")",
+        "category": "readonly_descriptor",
+        "min_weight": "hard",
+        "weight_score": 2,
+        "hint": "__set__ 中抛 AttributeError 即只读",
+        "fill_type": "text"
+      },
+      {
+        "id": "assign_attempt",
+        "text": "c.version = \"2.0\"",
+        "category": "readonly_descriptor",
+        "min_weight": "hard",
+        "weight_score": 2,
+        "hint": "写入被拦截，异常信息被打印",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 怎样用描述符实现只读属性？",
+      "level_2": "📖 有 `__set__` 的描述符会拦截赋值，在其中抛 `AttributeError` 即为只读",
+      "level_3": "👀 `raise AttributeError(\"read-only attribute\")`，读 `c.version` 正常，写 `c.version = \"2.0\"` 报错",
+      "level_4": "📝 正确答案：`print(c.version)`、`raise AttributeError(\"read-only attribute\")` 与 `c.version = \"2.0\"`"
+    },
+    "explanation": "只读描述符：实现 `__set__` 并抛 `AttributeError`，属性便被固定为只读。"
+  },
+  {
+    "id": "py-desc-015",
+    "title": "__set_name__ 收集字段",
+    "description": "用 __set_name__ 收集字段顺序，模拟轻量 ORM",
+    "exercise_type": "fill",
+    "tech_stack": "python",
+    "weight": "expert",
+    "category": "orm_fields",
+    "subcategory": "描述符",
+    "full_code": "class Field:\n    def __set_name__(self, owner, name):\n        self.name = name\n        if not hasattr(owner, \"_fields\"):\n            owner._fields = []\n        owner._fields.append(name)\n\n    def __get__(self, obj, objtype=None):\n        if obj is None:\n            return self\n        return obj.__dict__.get(self.name, \"\")\n\n    def __set__(self, obj, value):\n        obj.__dict__[self.name] = value\n\nclass User:\n    name = Field()\n    email = Field()\n    age = Field()\n\nu = User()\nu.name = \"Alice\"\nu.email = \"alice@example.com\"\nu.age = 30\nprint(User._fields)\nprint(u.name, u.email, u.age)",
+    "expected": "['name', 'email', 'age']\nAlice alice@example.com 30",
+    "points": [
+      {
+        "id": "collect_field",
+        "text": "owner._fields.append(name)",
+        "category": "orm_fields",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "按 __set_name__ 的调用顺序把字段名追加进列表",
+        "fill_type": "text"
+      },
+      {
+        "id": "init_fields",
+        "text": "if not hasattr(owner, \"_fields\"):",
+        "category": "orm_fields",
+        "min_weight": "expert",
+        "weight_score": 2,
+        "hint": "首次调用时在宿主类上初始化字段列表",
+        "fill_type": "text"
+      },
+      {
+        "id": "print_fields",
+        "text": "print(User._fields)",
+        "category": "orm_fields",
+        "min_weight": "expert",
+        "weight_score": 2,
+        "hint": "输出收集到的字段名，顺序即声明顺序",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 怎么在类创建时按声明顺序收集所有字段？",
+      "level_2": "📖 每个 `Field` 的 `__set_name__` 都会被调用，按顺序把字段名追加到 `owner._fields`",
+      "level_3": "👀 `if not hasattr(owner, \"_fields\"):` 首次建列表，随后 `owner._fields.append(name)`",
+      "level_4": "📝 正确答案：`owner._fields.append(name)`、`if not hasattr(owner, \"_fields\"):` 与 `print(User._fields)`"
+    },
+    "explanation": "利用 `__set_name__` 的回调顺序收集字段声明顺序，是轻量 ORM/表单框架的常见做法。"
+  }
+]

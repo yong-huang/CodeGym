@@ -373,8 +373,8 @@ func TestE2E_ExerciseListAndVariant(t *testing.T) {
 		PointCount   int    `json:"point_count"`
 	}
 	doJSON(t, "GET", base+"/exercises", nil, &list)
-	if len(list) != 996 {
-		t.Fatalf("expected 996 exercises (816 + 180 AWS), got %d", len(list))
+	if len(list) != 1086 {
+		t.Fatalf("expected 1086 exercises (816 + 180 AWS + 90 Python 进阶), got %d", len(list))
 	}
 	var ids []string
 	for _, ex := range list {
@@ -393,8 +393,8 @@ func TestE2E_ExerciseListAndVariant(t *testing.T) {
 	// 2. filter by tech stack
 	var pyList []map[string]any
 	doJSON(t, "GET", base+"/exercises?tech_stack=python", nil, &pyList)
-	if len(pyList) != 174 {
-		t.Errorf("expected 174 python exercises (54 基础 + 30 FastAPI + 20 协程 + 20 多线程 + 50 Agent 开发), got %d", len(pyList))
+	if len(pyList) != 264 {
+		t.Errorf("expected 264 python exercises (54 基础 + 30 FastAPI + 20 协程 + 20 多线程 + 90 进阶 + 50 Agent 开发), got %d", len(pyList))
 	}
 
 	var dsList []map[string]any
@@ -1106,8 +1106,8 @@ func TestE2E_ExportImport(t *testing.T) {
 	if err := json.NewDecoder(resp.Body).Decode(&exported); err != nil {
 		t.Fatal(err)
 	}
-	if len(exported) != 996 {
-		t.Fatalf("export count = %d, want 996", len(exported))
+	if len(exported) != 1086 {
+		t.Fatalf("export count = %d, want 1086", len(exported))
 	}
 
 	// import: delete one exercise, then restore it from the exported blob

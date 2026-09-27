@@ -1,0 +1,1735 @@
+[
+  {
+    "id": "os-ops-001",
+    "title": "查看服务状态并设为开机自启",
+    "description": "查看 openstack-nova-api 的运行状态并设置开机自启，同时按服务过滤查看 nova-compute 日志",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "easy",
+    "category": "service_management",
+    "subcategory": "运维",
+    "full_code": "systemctl status openstack-nova-api\nsystemctl enable openstack-nova-api\njournalctl -u openstack-nova-compute -n 50",
+    "expected": "",
+    "points": [
+      {
+        "id": "status_1",
+        "text": "systemctl",
+        "category": "command_service",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "查看单个服务运行状态的 systemctl 子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "status_2",
+        "text": "status",
+        "category": "command_service",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "查看单个服务运行状态的 systemctl 子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "status_3",
+        "text": "openstack-nova-api",
+        "category": "command_service",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "查看单个服务运行状态的 systemctl 子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "enable_1",
+        "text": "enable",
+        "category": "command_service",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "让服务开机自启的 systemctl 子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "journalctl_1",
+        "text": "journalctl",
+        "category": "command_log",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "用 -u 按 unit 过滤日志，-n 只看最近若干行",
+        "fill_type": "text"
+      },
+      {
+        "id": "journalctl_2",
+        "text": "-u",
+        "category": "command_log",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "用 -u 按 unit 过滤日志，-n 只看最近若干行",
+        "fill_type": "text"
+      },
+      {
+        "id": "journalctl_3",
+        "text": "openstack-nova-compute",
+        "category": "command_log",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "用 -u 按 unit 过滤日志，-n 只看最近若干行",
+        "fill_type": "text"
+      },
+      {
+        "id": "journalctl_4",
+        "text": "-n",
+        "category": "command_log",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "用 -u 按 unit 过滤日志，-n 只看最近若干行",
+        "fill_type": "text",
+        "occurrence": 3
+      },
+      {
+        "id": "journalctl_5",
+        "text": "50",
+        "category": "command_log",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "用 -u 按 unit 过滤日志，-n 只看最近若干行",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 服务是否在跑、是否开机自启、它的日志在哪看？",
+      "level_2": "📖 systemctl 的 status/enable 子命令，journalctl 用 -u 指定 unit",
+      "level_3": "👀 `systemctl status openstack-nova-api`、`systemctl enable openstack-nova-api`、`journalctl -u openstack-nova-compute -n 50`",
+      "level_4": "📝 正确答案：`systemctl`、`status`、`openstack-nova-api`、`enable`、`journalctl`、`-u`、`openstack-nova-compute`、`-n`、`50`"
+    },
+    "explanation": "systemctl status 查看服务运行状态与最近日志，systemctl enable 设置开机自启；journalctl -u 按 systemd unit 过滤日志，-n 50 显示最后 50 行，-f 可实时跟踪。RHEL/CentOS 的 unit 名为 openstack-nova-api / openstack-nova-compute，Ubuntu 下为 nova-api / nova-compute。"
+  },
+  {
+    "id": "os-ops-002",
+    "title": "服务与端点巡检",
+    "description": "列出 Keystone 中注册的所有服务与 nova 的端点，并检查计算服务的 State/Status",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "easy",
+    "category": "service_inspection",
+    "subcategory": "运维",
+    "full_code": "openstack service list --long\nopenstack endpoint list --service nova\nopenstack compute service list --long",
+    "expected": "",
+    "points": [
+      {
+        "id": "service_list_1",
+        "text": "service",
+        "category": "service_inspection",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "查看服务目录的 openstack 命令，--long 显示更多字段",
+        "fill_type": "text"
+      },
+      {
+        "id": "service_list_2",
+        "text": "list",
+        "category": "service_inspection",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "查看服务目录的 openstack 命令，--long 显示更多字段",
+        "fill_type": "text"
+      },
+      {
+        "id": "service_list_3",
+        "text": "--long",
+        "category": "service_inspection",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "查看服务目录的 openstack 命令，--long 显示更多字段",
+        "fill_type": "text"
+      },
+      {
+        "id": "endpoint_list_1",
+        "text": "endpoint",
+        "category": "service_inspection",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "查看端点用 endpoint list，--service 过滤 nova",
+        "fill_type": "text"
+      },
+      {
+        "id": "endpoint_list_2",
+        "text": "--service",
+        "category": "service_inspection",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "查看端点用 endpoint list，--service 过滤 nova",
+        "fill_type": "text"
+      },
+      {
+        "id": "endpoint_list_3",
+        "text": "nova",
+        "category": "service_inspection",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "查看端点用 endpoint list，--service 过滤 nova",
+        "fill_type": "text"
+      },
+      {
+        "id": "compute_service_1",
+        "text": "compute",
+        "category": "service_inspection",
+        "min_weight": "easy",
+        "weight_score": 1.0,
+        "hint": "查看计算服务状态，--long 显示禁用原因等更多字段",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 云里注册了哪些服务、nova 的端点是什么、计算服务是否都 up？",
+      "level_2": "📖 service list 看服务目录，endpoint list 看端点，compute service list 看计算服务 State/Status",
+      "level_3": "👀 `openstack service list --long`、`openstack endpoint list --service nova`、`openstack compute service list --long`",
+      "level_4": "📝 正确答案：`service`、`list`、`--long`、`endpoint`、`--service`、`nova`、`compute`"
+    },
+    "explanation": "service list --long 列出 Keystone 中注册的所有服务及类型（含描述等更多字段），endpoint list --service nova 查看该服务的 public/internal/admin 端点；compute service list --long 会额外显示禁用原因等字段，State=down 通常说明对应节点上的服务异常或心跳超时。"
+  },
+  {
+    "id": "os-ops-003",
+    "title": "网络代理巡检",
+    "description": "按主机过滤并查看 Neutron agent 的存活状态",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "beginner",
+    "category": "network_agent",
+    "subcategory": "运维",
+    "full_code": "openstack network agent list --host network-01\nopenstack network agent list --long",
+    "expected": "",
+    "points": [
+      {
+        "id": "by_host_1",
+        "text": "network",
+        "category": "network_agent",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "network agent list 用 --host 过滤某台主机",
+        "fill_type": "text"
+      },
+      {
+        "id": "by_host_2",
+        "text": "agent",
+        "category": "network_agent",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "network agent list 用 --host 过滤某台主机",
+        "fill_type": "text"
+      },
+      {
+        "id": "by_host_3",
+        "text": "list",
+        "category": "network_agent",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "network agent list 用 --host 过滤某台主机",
+        "fill_type": "text"
+      },
+      {
+        "id": "by_host_4",
+        "text": "--host",
+        "category": "network_agent",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "network agent list 用 --host 过滤某台主机",
+        "fill_type": "text"
+      },
+      {
+        "id": "by_host_5",
+        "text": "network-01",
+        "category": "network_agent",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "network agent list 用 --host 过滤某台主机",
+        "fill_type": "text"
+      },
+      {
+        "id": "long_1",
+        "text": "--long",
+        "category": "network_agent",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "加 --long 显示更多字段",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 某节点上的 Neutron 代理是否都存活？",
+      "level_2": "📖 network agent list 支持 --host 过滤主机、--long 显示更多字段",
+      "level_3": "👀 `openstack network agent list --host network-01`、`openstack network agent list --long`",
+      "level_4": "📝 正确答案：`network`、`agent`、`list`、`--host`、`network-01`、`--long`"
+    },
+    "explanation": "network agent list 显示 DHCP/L3/Open vSwitch/Metadata 等代理的 Agent Type、Host、Availability Zone 与 Alive 状态，Alive 为 :-) 表示心跳正常、XXX 表示心跳丢失；按 --host 过滤可快速定位某计算或网络节点上的代理是否掉线。"
+  },
+  {
+    "id": "os-ops-004",
+    "title": "计算资源巡检",
+    "description": "查看各计算节点的资源用量列与集群整体统计",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "easy",
+    "category": "hypervisor_inspection",
+    "subcategory": "运维",
+    "full_code": "openstack hypervisor list --long\nopenstack hypervisor stats show",
+    "expected": "",
+    "points": [
+      {
+        "id": "list_long_1",
+        "text": "hypervisor",
+        "category": "hypervisor_inspection",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "hypervisor list 加 --long 显示 vCPU/内存/磁盘用量列",
+        "fill_type": "text"
+      },
+      {
+        "id": "list_long_2",
+        "text": "list",
+        "category": "hypervisor_inspection",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "hypervisor list 加 --long 显示 vCPU/内存/磁盘用量列",
+        "fill_type": "text"
+      },
+      {
+        "id": "list_long_3",
+        "text": "--long",
+        "category": "hypervisor_inspection",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "hypervisor list 加 --long 显示 vCPU/内存/磁盘用量列",
+        "fill_type": "text"
+      },
+      {
+        "id": "stats_show_1",
+        "text": "stats",
+        "category": "hypervisor_inspection",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "查看所有 hypervisor 的汇总统计",
+        "fill_type": "text"
+      },
+      {
+        "id": "stats_show_2",
+        "text": "show",
+        "category": "hypervisor_inspection",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "查看所有 hypervisor 的汇总统计",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 每台计算节点的 vCPU/内存/磁盘用了多少，集群整体还剩多少？",
+      "level_2": "📖 hypervisor list --long 显示单节点用量列，hypervisor stats show 汇总集群总量",
+      "level_3": "👀 `openstack hypervisor list --long`、`openstack hypervisor stats show`",
+      "level_4": "📝 正确答案：`hypervisor`、`list`、`--long`、`stats`、`show`"
+    },
+    "explanation": "hypervisor list --long 在默认列之外增加 vCPUs、Memory MB、Disk GB 的 Total/Used 列；hypervisor stats show 汇总所有已启用 hypervisor 的 vCPU、内存、磁盘总量与已用量、运行实例数，是容量巡检与扩容判断的入口。"
+  },
+  {
+    "id": "os-ops-005",
+    "title": "故障节点实例疏散",
+    "description": "计算节点故障后，确认其上的实例并疏散到目标节点",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "hard",
+    "category": "evacuation",
+    "subcategory": "运维",
+    "full_code": "openstack server list --host compute-02 --all-projects --long\nopenstack server evacuate --host compute-03 web-01\nopenstack server list --name web-01 --long",
+    "expected": "",
+    "points": [
+      {
+        "id": "list_failed_host_1",
+        "text": "server",
+        "category": "evacuation",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "先列出故障节点上的全部实例（管理员需 --all-projects）",
+        "fill_type": "text"
+      },
+      {
+        "id": "list_failed_host_2",
+        "text": "list",
+        "category": "evacuation",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "先列出故障节点上的全部实例（管理员需 --all-projects）",
+        "fill_type": "text"
+      },
+      {
+        "id": "list_failed_host_3",
+        "text": "--host",
+        "category": "evacuation",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "先列出故障节点上的全部实例（管理员需 --all-projects）",
+        "fill_type": "text"
+      },
+      {
+        "id": "list_failed_host_4",
+        "text": "compute-02",
+        "category": "evacuation",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "先列出故障节点上的全部实例（管理员需 --all-projects）",
+        "fill_type": "text"
+      },
+      {
+        "id": "list_failed_host_5",
+        "text": "--all-projects",
+        "category": "evacuation",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "先列出故障节点上的全部实例（管理员需 --all-projects）",
+        "fill_type": "text"
+      },
+      {
+        "id": "list_failed_host_6",
+        "text": "--long",
+        "category": "evacuation",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "先列出故障节点上的全部实例（管理员需 --all-projects）",
+        "fill_type": "text"
+      },
+      {
+        "id": "evacuate_1",
+        "text": "evacuate",
+        "category": "evacuation",
+        "min_weight": "hard",
+        "weight_score": 0.7,
+        "hint": "evacuate 把实例重建到目标主机，目标主机用 --host 指定",
+        "fill_type": "text"
+      },
+      {
+        "id": "evacuate_2",
+        "text": "compute-03",
+        "category": "evacuation",
+        "min_weight": "hard",
+        "weight_score": 0.7,
+        "hint": "evacuate 把实例重建到目标主机，目标主机用 --host 指定",
+        "fill_type": "text"
+      },
+      {
+        "id": "evacuate_3",
+        "text": "web-01",
+        "category": "evacuation",
+        "min_weight": "hard",
+        "weight_score": 0.7,
+        "hint": "evacuate 把实例重建到目标主机，目标主机用 --host 指定",
+        "fill_type": "text"
+      },
+      {
+        "id": "verify_1",
+        "text": "--name",
+        "category": "evacuation",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "疏散后按名称确认实例状态与所在主机",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 节点挂了，怎么把它上面的实例迁到别的主机？",
+      "level_2": "📖 先列出故障节点上的实例，再用 server evacuate 指定目标主机重建",
+      "level_3": "👀 `openstack server list --host compute-02 --all-projects`、`openstack server evacuate --host compute-03 web-01`",
+      "level_4": "📝 正确答案：`server`、`list`、`--host`、`compute-02`、`--all-projects`、`--long`、`evacuate`、`compute-03`、`web-01`、`--name`"
+    },
+    "explanation": "evacuate 用于原计算节点已故障（服务 down 或节点被强制下线）的场景：它会在目标主机上用原镜像/卷重建实例，保留实例 ID、名称、IP 等，需要管理员权限；根盘在共享存储上时磁盘数据可保留，否则只保证实例重新可用。目标主机可省略，由调度器选择；执行前应先确认实例确实没有在故障节点上运行。"
+  },
+  {
+    "id": "os-ops-006",
+    "title": "维护窗口下线计算节点",
+    "description": "维护前禁用计算节点服务停止新实例调度，维护完成后重新启用",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "medium",
+    "category": "maintenance_window",
+    "subcategory": "运维",
+    "full_code": "openstack compute service set --disable compute-05 nova-compute\nopenstack server list --host compute-05 --all-projects\nopenstack compute service set --enable compute-05 nova-compute",
+    "expected": "",
+    "points": [
+      {
+        "id": "disable_1",
+        "text": "compute",
+        "category": "maintenance_window",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "把节点上的 nova-compute 置为 disabled，阻止新实例调度",
+        "fill_type": "text"
+      },
+      {
+        "id": "disable_2",
+        "text": "service",
+        "category": "maintenance_window",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "把节点上的 nova-compute 置为 disabled，阻止新实例调度",
+        "fill_type": "text"
+      },
+      {
+        "id": "disable_3",
+        "text": "set",
+        "category": "maintenance_window",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "把节点上的 nova-compute 置为 disabled，阻止新实例调度",
+        "fill_type": "text"
+      },
+      {
+        "id": "disable_4",
+        "text": "--disable",
+        "category": "maintenance_window",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "把节点上的 nova-compute 置为 disabled，阻止新实例调度",
+        "fill_type": "text"
+      },
+      {
+        "id": "disable_5",
+        "text": "compute-05",
+        "category": "maintenance_window",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "把节点上的 nova-compute 置为 disabled，阻止新实例调度",
+        "fill_type": "text"
+      },
+      {
+        "id": "disable_6",
+        "text": "nova-compute",
+        "category": "maintenance_window",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "把节点上的 nova-compute 置为 disabled，阻止新实例调度",
+        "fill_type": "text"
+      },
+      {
+        "id": "list_instances_1",
+        "text": "server",
+        "category": "maintenance_window",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "确认该节点上还有哪些实例还在运行",
+        "fill_type": "text"
+      },
+      {
+        "id": "list_instances_2",
+        "text": "list",
+        "category": "maintenance_window",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "确认该节点上还有哪些实例还在运行",
+        "fill_type": "text"
+      },
+      {
+        "id": "list_instances_3",
+        "text": "--host",
+        "category": "maintenance_window",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "确认该节点上还有哪些实例还在运行",
+        "fill_type": "text"
+      },
+      {
+        "id": "list_instances_4",
+        "text": "--all-projects",
+        "category": "maintenance_window",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "确认该节点上还有哪些实例还在运行",
+        "fill_type": "text"
+      },
+      {
+        "id": "enable_1",
+        "text": "--enable",
+        "category": "maintenance_window",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "维护完成后把服务重新置为 enabled",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 节点要关机维护，怎么让它不再被调度器选中？",
+      "level_2": "📖 compute service set 的 --disable/--enable 控制节点的调度开关",
+      "level_3": "👀 `openstack compute service set --disable compute-05 nova-compute`，维护完成后 `--enable compute-05 nova-compute`",
+      "level_4": "📝 正确答案：`compute`、`service`、`set`、`--disable`、`compute-05`、`nova-compute`、`server`、`list`、`--host`、`--all-projects`、`--enable`"
+    },
+    "explanation": "compute service set --disable 把服务 Status 置为 disabled，调度器不再向该节点派发新实例，但已有实例继续运行，适合维护窗口；维护完成、服务恢复后再用 --enable 恢复调度。若维护需要重启物理机，应先 disable 并迁移或疏散实例。"
+  },
+  {
+    "id": "os-ops-007",
+    "title": "维护窗口禁用网络代理",
+    "description": "维护网络节点前先确认 agent，再禁用其管理状态",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "medium",
+    "category": "maintenance_window",
+    "subcategory": "运维",
+    "full_code": "openstack network agent list --host network-01 --long\nopenstack network agent set --disable 9f7c2a41-5b3e-4d8f-a6c1-2e7b8d9f0a3c",
+    "expected": "",
+    "points": [
+      {
+        "id": "list_agent_1",
+        "text": "network",
+        "category": "maintenance_window",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "先按主机确认 agent 及其状态",
+        "fill_type": "text"
+      },
+      {
+        "id": "list_agent_2",
+        "text": "agent",
+        "category": "maintenance_window",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "先按主机确认 agent 及其状态",
+        "fill_type": "text"
+      },
+      {
+        "id": "list_agent_3",
+        "text": "list",
+        "category": "maintenance_window",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "先按主机确认 agent 及其状态",
+        "fill_type": "text"
+      },
+      {
+        "id": "list_agent_4",
+        "text": "--host",
+        "category": "maintenance_window",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "先按主机确认 agent 及其状态",
+        "fill_type": "text"
+      },
+      {
+        "id": "list_agent_5",
+        "text": "network-01",
+        "category": "maintenance_window",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "先按主机确认 agent 及其状态",
+        "fill_type": "text"
+      },
+      {
+        "id": "list_agent_6",
+        "text": "--long",
+        "category": "maintenance_window",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "先按主机确认 agent 及其状态",
+        "fill_type": "text"
+      },
+      {
+        "id": "disable_agent_1",
+        "text": "set",
+        "category": "maintenance_window",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "network agent set --disable 把 agent 管理状态置为 down，参数只接受 agent ID",
+        "fill_type": "text"
+      },
+      {
+        "id": "disable_agent_2",
+        "text": "--disable",
+        "category": "maintenance_window",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "network agent set --disable 把 agent 管理状态置为 down，参数只接受 agent ID",
+        "fill_type": "text"
+      },
+      {
+        "id": "disable_agent_3",
+        "text": "9f7c2a41-5b3e-4d8f-a6c1-2e7b8d9f0a3c",
+        "category": "maintenance_window",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "network agent set --disable 把 agent 管理状态置为 down，参数只接受 agent ID",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 要下线网络节点，怎么让它的代理停止接管新资源？",
+      "level_2": "📖 先 list 确认 agent，再用 network agent set --disable <agent-id> 关闭",
+      "level_3": "👀 `openstack network agent list --host network-01`、`openstack network agent set --disable <agent-id>`",
+      "level_4": "📝 正确答案：`network`、`agent`、`list`、`--host`、`network-01`、`--long`、`set`、`--disable`、`9f7c2a41-5b3e-4d8f-a6c1-2e7b8d9f0a3c`"
+    },
+    "explanation": "network agent set --disable 把 agent 的 admin_state_up 置为 False，该 agent 不再被调度接管新的网络/路由资源（已有资源继续工作）；参数只接受 agent ID，可用 network agent list 查询。维护完成后用 --enable 恢复。"
+  },
+  {
+    "id": "os-ops-008",
+    "title": "消息队列集群排障",
+    "description": "查看 RabbitMQ 集群状态与队列堆积、消费者数量",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "medium",
+    "category": "message_queue",
+    "subcategory": "运维",
+    "full_code": "rabbitmqctl cluster_status\nrabbitmqctl list_queues name messages consumers",
+    "expected": "",
+    "points": [
+      {
+        "id": "cluster_status",
+        "text": "rabbitmqctl cluster_status",
+        "category": "message_queue",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "查看集群节点与分区状态",
+        "fill_type": "text"
+      },
+      {
+        "id": "list_queues_1",
+        "text": "rabbitmqctl",
+        "category": "message_queue",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "按列列出队列名、消息数与消费者数",
+        "fill_type": "text",
+        "occurrence": 1
+      },
+      {
+        "id": "list_queues_2",
+        "text": "list_queues",
+        "category": "message_queue",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "按列列出队列名、消息数与消费者数",
+        "fill_type": "text"
+      },
+      {
+        "id": "list_queues_3",
+        "text": "name",
+        "category": "message_queue",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "按列列出队列名、消息数与消费者数",
+        "fill_type": "text"
+      },
+      {
+        "id": "list_queues_4",
+        "text": "messages",
+        "category": "message_queue",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "按列列出队列名、消息数与消费者数",
+        "fill_type": "text"
+      },
+      {
+        "id": "list_queues_5",
+        "text": "consumers",
+        "category": "message_queue",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "按列列出队列名、消息数与消费者数",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 消息队列集群节点是否都活着，队列有没有堆积？",
+      "level_2": "📖 cluster_status 看节点与分区，list_queues 按列看消息数和消费者数",
+      "level_3": "👀 `rabbitmqctl cluster_status`、`rabbitmqctl list_queues name messages consumers`",
+      "level_4": "📝 正确答案：`rabbitmqctl cluster_status`、`rabbitmqctl`、`list_queues`、`name`、`messages`、`consumers`"
+    },
+    "explanation": "cluster_status 显示 RabbitMQ 集群节点列表、运行状态与 partitions；list_queues 按指定列输出每个队列的消息数与消费者数，messages 持续增长而 consumers 为 0 常见于 nova/cinder 等服务异常导致消费停滞，是消息队列排障的关键指标。"
+  },
+  {
+    "id": "os-ops-009",
+    "title": "数据库巡检与全量备份恢复",
+    "description": "检查 MariaDB Galera 集群状态，并完成一次全库逻辑备份与恢复",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "hard",
+    "category": "database_inspection",
+    "subcategory": "运维",
+    "full_code": "mysql -uroot -p -e \"SHOW STATUS LIKE 'wsrep_cluster_size';\"\nmysql -uroot -p -e \"SHOW STATUS LIKE 'wsrep_local_state_comment';\"\nmysqldump -uroot -p --all-databases --single-transaction --routines --triggers > /backup/openstack-all.sql\nmysql -uroot -p < /backup/openstack-all.sql",
+    "expected": "",
+    "points": [
+      {
+        "id": "cluster_size_1",
+        "text": "'wsrep_cluster_size'",
+        "category": "database_inspection",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "查询 Galera 集群在线节点数的状态变量",
+        "fill_type": "text"
+      },
+      {
+        "id": "local_state_1",
+        "text": "'wsrep_local_state_comment'",
+        "category": "database_inspection",
+        "min_weight": "hard",
+        "weight_score": 1.5,
+        "hint": "本节点同步状态，正常为 Synced",
+        "fill_type": "text"
+      },
+      {
+        "id": "dump_1",
+        "text": "mysqldump",
+        "category": "database_backup",
+        "min_weight": "hard",
+        "weight_score": 0.5,
+        "hint": "全库逻辑备份，--single-transaction 保证一致性且不锁表，--routines --triggers 一并导出存储过程与触发器",
+        "fill_type": "text"
+      },
+      {
+        "id": "dump_2",
+        "text": "-uroot",
+        "category": "database_backup",
+        "min_weight": "hard",
+        "weight_score": 0.5,
+        "hint": "全库逻辑备份，--single-transaction 保证一致性且不锁表，--routines --triggers 一并导出存储过程与触发器",
+        "fill_type": "text",
+        "occurrence": 2
+      },
+      {
+        "id": "dump_3",
+        "text": "-p",
+        "category": "database_backup",
+        "min_weight": "hard",
+        "weight_score": 0.5,
+        "hint": "全库逻辑备份，--single-transaction 保证一致性且不锁表，--routines --triggers 一并导出存储过程与触发器",
+        "fill_type": "text",
+        "occurrence": 2
+      },
+      {
+        "id": "dump_4",
+        "text": "--all-databases",
+        "category": "database_backup",
+        "min_weight": "hard",
+        "weight_score": 0.5,
+        "hint": "全库逻辑备份，--single-transaction 保证一致性且不锁表，--routines --triggers 一并导出存储过程与触发器",
+        "fill_type": "text"
+      },
+      {
+        "id": "dump_5",
+        "text": "--single-transaction",
+        "category": "database_backup",
+        "min_weight": "hard",
+        "weight_score": 0.5,
+        "hint": "全库逻辑备份，--single-transaction 保证一致性且不锁表，--routines --triggers 一并导出存储过程与触发器",
+        "fill_type": "text"
+      },
+      {
+        "id": "dump_6",
+        "text": "--routines",
+        "category": "database_backup",
+        "min_weight": "hard",
+        "weight_score": 0.5,
+        "hint": "全库逻辑备份，--single-transaction 保证一致性且不锁表，--routines --triggers 一并导出存储过程与触发器",
+        "fill_type": "text"
+      },
+      {
+        "id": "dump_7",
+        "text": "--triggers",
+        "category": "database_backup",
+        "min_weight": "hard",
+        "weight_score": 0.5,
+        "hint": "全库逻辑备份，--single-transaction 保证一致性且不锁表，--routines --triggers 一并导出存储过程与触发器",
+        "fill_type": "text"
+      },
+      {
+        "id": "dump_8",
+        "text": "/backup/openstack-all.sql",
+        "category": "database_backup",
+        "min_weight": "hard",
+        "weight_score": 0.5,
+        "hint": "全库逻辑备份，--single-transaction 保证一致性且不锁表，--routines --triggers 一并导出存储过程与触发器",
+        "fill_type": "text"
+      },
+      {
+        "id": "restore_1",
+        "text": "mysql",
+        "category": "database_backup",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "恢复即把备份 SQL 文件读回 MySQL 客户端",
+        "fill_type": "text",
+        "occurrence": 3
+      }
+    ],
+    "hints": {
+      "level_1": "💡 数据库集群是否健康？备份和恢复怎么做？",
+      "level_2": "📖 Galera 用 wsrep_* 状态变量判断集群，备份用 mysqldump --all-databases",
+      "level_3": "👀 `SHOW STATUS LIKE 'wsrep_cluster_size';`、`mysqldump -uroot -p --all-databases --single-transaction --routines --triggers > 备份文件`",
+      "level_4": "📝 正确答案：`'wsrep_cluster_size'`、`'wsrep_local_state_comment'`、`mysqldump`、`-uroot`、`-p`、`--all-databases`、`--single-transaction`、`--routines`、`--triggers`、`/backup/openstack-all.sql`、`mysql`"
+    },
+    "explanation": "wsrep_cluster_size 显示 Galera 集群当前在线节点数，应与部署规模一致；wsrep_local_state_comment 为 Synced 表示本节点数据同步正常（Donor/Joiner 表示正在 SST 全量同步）。mysqldump --all-databases --single-transaction 在一致性快照下导出且不锁表，--routines/--triggers 一并导出存储过程与触发器；恢复时用 mysql 客户端重定向读入 SQL 文件，生产环境恢复前应先停上层服务并备份现有数据。"
+  },
+  {
+    "id": "os-ops-010",
+    "title": "各服务数据库迁移维护",
+    "description": "检查 nova 数据库版本，并执行 nova/cinder/glance 的数据库迁移",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "hard",
+    "category": "db_maintenance",
+    "subcategory": "运维",
+    "full_code": "nova-manage db version\nnova-manage db sync\ncinder-manage db sync\nglance-manage db_sync",
+    "expected": "",
+    "points": [
+      {
+        "id": "db_version_1",
+        "text": "nova-manage",
+        "category": "db_maintenance",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "查看数据库当前迁移版本",
+        "fill_type": "text"
+      },
+      {
+        "id": "db_version_2",
+        "text": "db",
+        "category": "db_maintenance",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "查看数据库当前迁移版本",
+        "fill_type": "text"
+      },
+      {
+        "id": "db_version_3",
+        "text": "version",
+        "category": "db_maintenance",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "查看数据库当前迁移版本",
+        "fill_type": "text"
+      },
+      {
+        "id": "db_sync_1",
+        "text": "sync",
+        "category": "db_maintenance",
+        "min_weight": "hard",
+        "weight_score": 2.0,
+        "hint": "把 nova 数据库结构升级到代码对应的版本",
+        "fill_type": "text"
+      },
+      {
+        "id": "cinder_db_sync_1",
+        "text": "cinder-manage",
+        "category": "db_maintenance",
+        "min_weight": "hard",
+        "weight_score": 1.5,
+        "hint": "cinder 的数据库迁移命令同样是 db sync",
+        "fill_type": "text"
+      },
+      {
+        "id": "glance_db_sync",
+        "text": "glance-manage db_sync",
+        "category": "db_maintenance",
+        "min_weight": "hard",
+        "weight_score": 1.5,
+        "hint": "glance 的迁移子命令写作 db_sync（下划线）",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 升级 OpenStack 后，各服务的数据库表结构怎么更新？",
+      "level_2": "📖 用各项目自带的 *-manage：先 version 看版本，再 sync 应用迁移",
+      "level_3": "👀 `nova-manage db version`、`nova-manage db sync`、`cinder-manage db sync`、`glance-manage db_sync`",
+      "level_4": "📝 正确答案：`nova-manage`、`db`、`version`、`sync`、`cinder-manage`、`glance-manage db_sync`"
+    },
+    "explanation": "nova-manage db version 输出数据库当前 Alembic 版本，db sync 把表结构升级到代码对应版本；cinder-manage db sync、glance-manage db_sync 同理。升级维护窗口应先 mysqldump 备份，再逐服务 db sync，最后重启对应服务。注意 cinder-manage 没有 volume list 子命令，查卷请用 openstack volume list，清理残留卷可用 cinder-manage volume delete。"
+  },
+  {
+    "id": "os-ops-011",
+    "title": "API 500 报错排查",
+    "description": "用 --debug 复现请求，并在服务日志中定位 500 的堆栈",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "expert",
+    "category": "api_troubleshooting",
+    "subcategory": "运维",
+    "full_code": "openstack --debug server create --image cirros --flavor m1.tiny debug-vm\ngrep -i \"traceback\" /var/log/nova/nova-api.log\ngrep -i \"500 Internal Server Error\" /var/log/nova/nova-conductor.log",
+    "expected": "",
+    "points": [
+      {
+        "id": "debug_flag",
+        "text": "openstack --debug",
+        "category": "api_troubleshooting",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "openstack 客户端的全局调试开关",
+        "fill_type": "text"
+      },
+      {
+        "id": "api_log_1",
+        "text": "grep",
+        "category": "api_troubleshooting",
+        "min_weight": "expert",
+        "weight_score": 0.5,
+        "hint": "在 nova-api 日志中搜索异常堆栈",
+        "fill_type": "text"
+      },
+      {
+        "id": "api_log_2",
+        "text": "-i",
+        "category": "api_troubleshooting",
+        "min_weight": "expert",
+        "weight_score": 0.5,
+        "hint": "在 nova-api 日志中搜索异常堆栈",
+        "fill_type": "text",
+        "occurrence": 1
+      },
+      {
+        "id": "api_log_3",
+        "text": "\"traceback\"",
+        "category": "api_troubleshooting",
+        "min_weight": "expert",
+        "weight_score": 0.5,
+        "hint": "在 nova-api 日志中搜索异常堆栈",
+        "fill_type": "text"
+      },
+      {
+        "id": "api_log_4",
+        "text": "/var/log/nova/nova-api.log",
+        "category": "api_troubleshooting",
+        "min_weight": "expert",
+        "weight_score": 0.5,
+        "hint": "在 nova-api 日志中搜索异常堆栈",
+        "fill_type": "text"
+      },
+      {
+        "id": "conductor_log_1",
+        "text": "\"500 Internal Server Error\"",
+        "category": "api_troubleshooting",
+        "min_weight": "hard",
+        "weight_score": 0.8,
+        "hint": "500 的真正原因常出现在 nova-conductor 日志",
+        "fill_type": "text"
+      },
+      {
+        "id": "conductor_log_2",
+        "text": "/var/log/nova/nova-conductor.log",
+        "category": "api_troubleshooting",
+        "min_weight": "hard",
+        "weight_score": 0.8,
+        "hint": "500 的真正原因常出现在 nova-conductor 日志",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 API 报 500 时，怎样拿到完整请求和堆栈？",
+      "level_2": "📖 命令前加全局 --debug 看 HTTP 交互，再到对应服务日志里搜 traceback",
+      "level_3": "👀 `openstack --debug server create ...`，然后 `grep -i \"traceback\" /var/log/nova/nova-api.log`",
+      "level_4": "📝 正确答案：`openstack --debug`、`grep`、`-i`、`\"traceback\"`、`/var/log/nova/nova-api.log`、`\"500 Internal Server Error\"`、`/var/log/nova/nova-conductor.log`"
+    },
+    "explanation": "--debug 是 openstack 客户端的全局开关，会打印每次 HTTP 请求与响应（含等价的 curl 命令），便于确认请求参数与返回码；客户端看到 500 只说明服务端异常，真正原因要到 nova-api/nova-conductor 等服务的日志里搜索 Traceback 定位，再逐层排查数据库、消息队列或后端存储。"
+  },
+  {
+    "id": "os-ops-012",
+    "title": "Placement 资源巡检",
+    "description": "查看资源提供者及其资源类用量",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "medium",
+    "category": "placement_inspection",
+    "subcategory": "运维",
+    "full_code": "openstack resource provider list --name compute-02\nopenstack resource provider usage show 51b7f2c4-9d3e-4a5f-8b6c-7e8d9f0a1b2c",
+    "expected": "",
+    "points": [
+      {
+        "id": "rp_list_1",
+        "text": "resource",
+        "category": "placement_inspection",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "resource provider list 可用 --name 过滤（需 placement API 1.14+）",
+        "fill_type": "text"
+      },
+      {
+        "id": "rp_list_2",
+        "text": "provider",
+        "category": "placement_inspection",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "resource provider list 可用 --name 过滤（需 placement API 1.14+）",
+        "fill_type": "text"
+      },
+      {
+        "id": "rp_list_3",
+        "text": "list",
+        "category": "placement_inspection",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "resource provider list 可用 --name 过滤（需 placement API 1.14+）",
+        "fill_type": "text"
+      },
+      {
+        "id": "rp_list_4",
+        "text": "--name",
+        "category": "placement_inspection",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "resource provider list 可用 --name 过滤（需 placement API 1.14+）",
+        "fill_type": "text"
+      },
+      {
+        "id": "rp_list_5",
+        "text": "compute-02",
+        "category": "placement_inspection",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "resource provider list 可用 --name 过滤（需 placement API 1.14+）",
+        "fill_type": "text"
+      },
+      {
+        "id": "usage_show_1",
+        "text": "usage",
+        "category": "placement_inspection",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "按 provider UUID 查看各资源类的 used/total",
+        "fill_type": "text"
+      },
+      {
+        "id": "usage_show_2",
+        "text": "show",
+        "category": "placement_inspection",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "按 provider UUID 查看各资源类的 used/total",
+        "fill_type": "text"
+      },
+      {
+        "id": "usage_show_3",
+        "text": "51b7f2c4-9d3e-4a5f-8b6c-7e8d9f0a1b2c",
+        "category": "placement_inspection",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "按 provider UUID 查看各资源类的 used/total",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 Placement 里有哪些资源提供者？某台计算节点的资源用了多少？",
+      "level_2": "📖 resource provider list 按名称过滤，usage show 按 UUID 查看使用量",
+      "level_3": "👀 `openstack resource provider list --name compute-02`、`openstack resource provider usage show <provider-uuid>`",
+      "level_4": "📝 正确答案：`resource`、`provider`、`list`、`--name`、`compute-02`、`usage`、`show`、`51b7f2c4-9d3e-4a5f-8b6c-7e8d9f0a1b2c`"
+    },
+    "explanation": "Placement 维护每个资源提供者（通常是计算节点）的 inventory 与 allocation。resource provider list 显示主机的 UUID 与 name，--name 过滤需要 placement API 1.14+；usage show 按 UUID 列出该提供者各资源类（VCPU/MEMORY_MB/DISK_GB）的 used/total，是排查“调度器说资源不足”的第一站。"
+  },
+  {
+    "id": "os-ops-013",
+    "title": "Pacemaker 高可用集群巡检",
+    "description": "查看 Pacemaker 集群整体状态与资源失败计数",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "easy",
+    "category": "ha_inspection",
+    "subcategory": "运维",
+    "full_code": "pcs status\npcs resource failcount show",
+    "expected": "",
+    "points": [
+      {
+        "id": "pcs_status",
+        "text": "pcs status",
+        "category": "ha_inspection",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "查看集群与资源整体状态",
+        "fill_type": "text"
+      },
+      {
+        "id": "failcount_1",
+        "text": "pcs",
+        "category": "ha_inspection",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "查看各资源的失败计数",
+        "fill_type": "text",
+        "occurrence": 1
+      },
+      {
+        "id": "failcount_2",
+        "text": "resource",
+        "category": "ha_inspection",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "查看各资源的失败计数",
+        "fill_type": "text"
+      },
+      {
+        "id": "failcount_3",
+        "text": "failcount",
+        "category": "ha_inspection",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "查看各资源的失败计数",
+        "fill_type": "text"
+      },
+      {
+        "id": "failcount_4",
+        "text": "show",
+        "category": "ha_inspection",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "查看各资源的失败计数",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 控制节点的高可用集群现在是否正常？",
+      "level_2": "📖 pcs status 看整体，resource failcount show 看资源失败次数",
+      "level_3": "👀 `pcs status`、`pcs resource failcount show`",
+      "level_4": "📝 正确答案：`pcs status`、`pcs`、`resource`、`failcount`、`show`"
+    },
+    "explanation": "pcs status 输出集群名称、节点在线情况、资源运行位置、Failed Actions 与 daemon 状态，是 HA 巡检入口；failcount 高的资源会被 Pacemaker 迁移或停止，可用 pcs resource failcount show 查看，处理完故障后用 pcs resource cleanup 清空计数恢复资源。"
+  },
+  {
+    "id": "os-ops-014",
+    "title": "nova.conf 日志与调试配置",
+    "description": "打开 nova 调试日志并指定日志目录",
+    "exercise_type": "config",
+    "tech_stack": "openstack",
+    "weight": "beginner",
+    "category": "nova_conf_logging",
+    "subcategory": "运维",
+    "full_code": "[DEFAULT]\ndebug = true\nverbose = true\nlog_dir = /var/log/nova",
+    "expected": "",
+    "points": [
+      {
+        "id": "default_section",
+        "text": "[DEFAULT]",
+        "category": "nova_conf_logging",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "nova 全局默认配置段",
+        "fill_type": "text"
+      },
+      {
+        "id": "debug_1",
+        "text": "debug",
+        "category": "nova_conf_logging",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "输出 DEBUG 级别日志，排障时临时打开",
+        "fill_type": "text"
+      },
+      {
+        "id": "debug_2",
+        "text": "true",
+        "category": "nova_conf_logging",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "输出 DEBUG 级别日志，排障时临时打开",
+        "fill_type": "text"
+      },
+      {
+        "id": "verbose_1",
+        "text": "verbose",
+        "category": "nova_conf_logging",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "输出更详细的信息级别日志",
+        "fill_type": "text"
+      },
+      {
+        "id": "log_dir_1",
+        "text": "log_dir",
+        "category": "nova_conf_logging",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "nova 各服务日志文件所在目录",
+        "fill_type": "text"
+      },
+      {
+        "id": "log_dir_2",
+        "text": "/var/log/nova",
+        "category": "nova_conf_logging",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "nova 各服务日志文件所在目录",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 排查问题时怎样让 nova 输出更详细的日志？",
+      "level_2": "📖 [DEFAULT] 里的 debug/verbose 控制日志级别，log_dir 指定日志目录",
+      "level_3": "👀 `[DEFAULT]` 下 `debug = true`、`verbose = true`、`log_dir = /var/log/nova`",
+      "level_4": "📝 正确答案：`[DEFAULT]`、`debug`、`true`、`verbose`、`log_dir`、`/var/log/nova`"
+    },
+    "explanation": "debug=true 输出 DEBUG 级别日志，verbose=true 输出更详细的信息级别日志，两者常一起设置（生产环境排障时临时打开，定位后应关闭以免日志暴涨）；log_dir 指定日志目录，nova-api、nova-compute 等会分别写 nova-api.log、nova-compute.log。"
+  },
+  {
+    "id": "os-ops-015",
+    "title": "nova.conf 消息队列心跳与重连",
+    "description": "调整 nova 与 RabbitMQ 之间的心跳超时和断线重连参数",
+    "exercise_type": "config",
+    "tech_stack": "openstack",
+    "weight": "medium",
+    "category": "nova_conf_messaging",
+    "subcategory": "运维",
+    "full_code": "[oslo_messaging_rabbit]\nheartbeat_timeout_threshold = 60\nheartbeat_rate = 2\nrabbit_retry_interval = 2",
+    "expected": "",
+    "points": [
+      {
+        "id": "rabbit_section",
+        "text": "[oslo_messaging_rabbit]",
+        "category": "nova_conf_messaging",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "oslo.messaging 的 RabbitMQ 专属配置段",
+        "fill_type": "text"
+      },
+      {
+        "id": "heartbeat_threshold_1",
+        "text": "heartbeat_timeout_threshold",
+        "category": "nova_conf_messaging",
+        "min_weight": "medium",
+        "weight_score": 0.8,
+        "hint": "多少秒没有心跳就认为连接不可用（0 表示关闭心跳检测）",
+        "fill_type": "text"
+      },
+      {
+        "id": "heartbeat_threshold_2",
+        "text": "60",
+        "category": "nova_conf_messaging",
+        "min_weight": "medium",
+        "weight_score": 0.8,
+        "hint": "多少秒没有心跳就认为连接不可用（0 表示关闭心跳检测）",
+        "fill_type": "text"
+      },
+      {
+        "id": "heartbeat_rate_1",
+        "text": "heartbeat_rate",
+        "category": "nova_conf_messaging",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "在超时窗口内检测心跳的次数",
+        "fill_type": "text"
+      },
+      {
+        "id": "heartbeat_rate_2",
+        "text": "2",
+        "category": "nova_conf_messaging",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "在超时窗口内检测心跳的次数",
+        "fill_type": "text"
+      },
+      {
+        "id": "retry_interval_1",
+        "text": "rabbit_retry_interval",
+        "category": "nova_conf_messaging",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "断线后的重连间隔（秒），可配合 rabbit_retry_backoff 退避",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 网络抖动后 nova 与 RabbitMQ 断连很久才恢复，应该调哪些参数？",
+      "level_2": "📖 [oslo_messaging_rabbit] 的 heartbeat_timeout_threshold 控制心跳超时，rabbit_retry_interval 控制重连间隔",
+      "level_3": "👀 `heartbeat_timeout_threshold = 60`、`heartbeat_rate = 2`、`rabbit_retry_interval = 2`",
+      "level_4": "📝 正确答案：`[oslo_messaging_rabbit]`、`heartbeat_timeout_threshold`、`60`、`heartbeat_rate`、`2`、`rabbit_retry_interval`"
+    },
+    "explanation": "heartbeat_timeout_threshold 是判定 RabbitMQ 连接心跳超时的秒数（0 表示关闭心跳检测），heartbeat_rate 表示在超时窗口内检测心跳的次数；rabbit_retry_interval 是断线后重连的间隔秒数，可用 rabbit_retry_backoff 做指数退避。心跳丢失会被 oslo.messaging 视为连接故障，合理调小阈值可以更快发现并恢复。"
+  },
+  {
+    "id": "os-ops-016",
+    "title": "haproxy.cfg 负载均衡与健康检查",
+    "description": "为 nova-api 配置 HAProxy 监听 VIP，并对后端控制节点做健康检查",
+    "exercise_type": "config",
+    "tech_stack": "openstack",
+    "weight": "medium",
+    "category": "haproxy_conf",
+    "subcategory": "运维",
+    "full_code": "listen nova_api_cluster\n    bind 10.0.0.10:8774\n    balance source\n    option httpchk GET /healthcheck\n    server controller-01 10.0.0.11:8774 check\n    server controller-02 10.0.0.12:8774 check",
+    "expected": "",
+    "points": [
+      {
+        "id": "listen",
+        "text": "listen nova_api_cluster",
+        "category": "haproxy_conf",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "用 listen 段定义一组 VIP 与后端服务",
+        "fill_type": "text"
+      },
+      {
+        "id": "bind",
+        "text": "bind 10.0.0.10:8774",
+        "category": "haproxy_conf",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "绑定控制节点的 VIP 与 nova-api 端口",
+        "fill_type": "text"
+      },
+      {
+        "id": "httpchk_1",
+        "text": "option",
+        "category": "haproxy_conf",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "HTTP 健康检查请求的 URL",
+        "fill_type": "text"
+      },
+      {
+        "id": "httpchk_2",
+        "text": "httpchk",
+        "category": "haproxy_conf",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "HTTP 健康检查请求的 URL",
+        "fill_type": "text"
+      },
+      {
+        "id": "httpchk_3",
+        "text": "GET",
+        "category": "haproxy_conf",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "HTTP 健康检查请求的 URL",
+        "fill_type": "text"
+      },
+      {
+        "id": "httpchk_4",
+        "text": "/healthcheck",
+        "category": "haproxy_conf",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "HTTP 健康检查请求的 URL",
+        "fill_type": "text"
+      },
+      {
+        "id": "backend_check_1",
+        "text": "server",
+        "category": "haproxy_conf",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "后端 server 行末尾的 check 开启健康检查",
+        "fill_type": "text"
+      },
+      {
+        "id": "backend_check_2",
+        "text": "controller-01",
+        "category": "haproxy_conf",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "后端 server 行末尾的 check 开启健康检查",
+        "fill_type": "text"
+      },
+      {
+        "id": "backend_check_3",
+        "text": "10.0.0.11:8774",
+        "category": "haproxy_conf",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "后端 server 行末尾的 check 开启健康检查",
+        "fill_type": "text"
+      },
+      {
+        "id": "backend_check_4",
+        "text": "check",
+        "category": "haproxy_conf",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "后端 server 行末尾的 check 开启健康检查",
+        "fill_type": "text",
+        "occurrence": 1
+      }
+    ],
+    "hints": {
+      "level_1": "💡 多个控制节点的 nova-api 怎么通过一个 VIP 对外服务？",
+      "level_2": "📖 haproxy.cfg 的 listen 段：bind VIP:端口，server 后端行末尾加 check 开启健康检查",
+      "level_3": "👀 `listen nova_api_cluster` + `bind 10.0.0.10:8774` + `server controller-01 10.0.0.11:8774 check`",
+      "level_4": "📝 正确答案：`listen nova_api_cluster`、`bind 10.0.0.10:8774`、`option`、`httpchk`、`GET`、`/healthcheck`、`server`、`controller-01`、`10.0.0.11:8774`、`check`"
+    },
+    "explanation": "HAProxy 用 listen 段定义 nova-api 的 VIP 与后端：bind 绑定虚拟 IP 与端口 8774，balance source 按源地址保持会话，server 行末尾的 check 让 HAProxy 周期探测后端；option httpchk GET /healthcheck 指定 HTTP 健康检查 URL，nova-api、cinder-api 等均提供 /healthcheck 端点，后端异常时会被自动摘除。"
+  },
+  {
+    "id": "os-ops-017",
+    "title": "keepalived.conf 配置 VIP",
+    "description": "用 keepalived 为控制节点提供虚拟 IP 与主备切换",
+    "exercise_type": "config",
+    "tech_stack": "openstack",
+    "weight": "medium",
+    "category": "keepalived_conf",
+    "subcategory": "运维",
+    "full_code": "vrrp_instance VI_1 {\n    state MASTER\n    interface eth0\n    virtual_router_id 51\n    priority 100\n    virtual_ipaddress {\n        10.0.0.10/24\n    }\n}",
+    "expected": "",
+    "points": [
+      {
+        "id": "instance_1",
+        "text": "vrrp_instance",
+        "category": "keepalived_conf",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "一个 VRRP 实例一个块，实例名两侧一致即可",
+        "fill_type": "text"
+      },
+      {
+        "id": "instance_2",
+        "text": "VI_1",
+        "category": "keepalived_conf",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "一个 VRRP 实例一个块，实例名两侧一致即可",
+        "fill_type": "text"
+      },
+      {
+        "id": "state",
+        "text": "state MASTER",
+        "category": "keepalived_conf",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "本节点的初始角色",
+        "fill_type": "text"
+      },
+      {
+        "id": "priority",
+        "text": "priority 100",
+        "category": "keepalived_conf",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "优先级高的节点抢占成为 MASTER",
+        "fill_type": "text"
+      },
+      {
+        "id": "vip",
+        "text": "10.0.0.10/24",
+        "category": "keepalived_conf",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "虚拟 IP 地址，写在 virtual_ipaddress 块内",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 两台控制节点怎么共享一个 VIP 并自动主备切换？",
+      "level_2": "📖 keepalived.conf 用 vrrp_instance 定义实例：state、priority、virtual_ipaddress",
+      "level_3": "👀 `state MASTER`、`priority 100`、`virtual_ipaddress { 10.0.0.10/24 }`",
+      "level_4": "📝 正确答案：`vrrp_instance`、`VI_1`、`state MASTER`、`priority 100`、`10.0.0.10/24`"
+    },
+    "explanation": "keepalived 通过 VRRP 在控制节点间漂移 VIP：同组实例的 virtual_router_id 必须一致，priority 高的节点成为 MASTER 持有 10.0.0.10，另一节点配 state BACKUP 且 priority 更低；VIP 漂走后 HAProxy 监听的地址也随之切换，实现 API 高可用。"
+  },
+  {
+    "id": "os-ops-018",
+    "title": "wsrep.cnf 配置 Galera 集群",
+    "description": "配置 MariaDB Galera 的集群名称、成员地址与 SST 方式",
+    "exercise_type": "config",
+    "tech_stack": "openstack",
+    "weight": "hard",
+    "category": "galera_conf",
+    "subcategory": "运维",
+    "full_code": "[mysqld]\nwsrep_on = ON\nwsrep_cluster_name = openstack-galera\nwsrep_cluster_address = gcomm://controller-01,controller-02,controller-03\nwsrep_sst_method = mariabackup",
+    "expected": "",
+    "points": [
+      {
+        "id": "mysqld_section",
+        "text": "[mysqld]",
+        "category": "galera_conf",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "wsrep 参数写在 mysqld 配置段下",
+        "fill_type": "text"
+      },
+      {
+        "id": "cluster_name_1",
+        "text": "wsrep_cluster_name",
+        "category": "galera_conf",
+        "min_weight": "medium",
+        "weight_score": 0.8,
+        "hint": "集群名，成员必须一致",
+        "fill_type": "text"
+      },
+      {
+        "id": "cluster_name_2",
+        "text": "openstack-galera",
+        "category": "galera_conf",
+        "min_weight": "medium",
+        "weight_score": 0.8,
+        "hint": "集群名，成员必须一致",
+        "fill_type": "text"
+      },
+      {
+        "id": "cluster_address_1",
+        "text": "wsrep_cluster_address",
+        "category": "galera_conf",
+        "min_weight": "hard",
+        "weight_score": 1.0,
+        "hint": "集群现有成员地址，gcomm:// 协议头后跟节点列表",
+        "fill_type": "text"
+      },
+      {
+        "id": "cluster_address_2",
+        "text": "gcomm://controller-01,controller-02,controller-03",
+        "category": "galera_conf",
+        "min_weight": "hard",
+        "weight_score": 1.0,
+        "hint": "集群现有成员地址，gcomm:// 协议头后跟节点列表",
+        "fill_type": "text"
+      },
+      {
+        "id": "sst_method_1",
+        "text": "wsrep_sst_method",
+        "category": "galera_conf",
+        "min_weight": "medium",
+        "weight_score": 0.8,
+        "hint": "新节点加入时的全量同步方式",
+        "fill_type": "text"
+      },
+      {
+        "id": "sst_method_2",
+        "text": "mariabackup",
+        "category": "galera_conf",
+        "min_weight": "medium",
+        "weight_score": 0.8,
+        "hint": "新节点加入时的全量同步方式",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 MariaDB Galera 用什么配置把三个控制节点组成一个集群？",
+      "level_2": "📖 wsrep.cnf（/etc/my.cnf.d/）里开启 wsrep_on，配置集群名与 gcomm:// 地址，指定 SST 方式",
+      "level_3": "👀 `wsrep_cluster_name = openstack-galera`、`wsrep_cluster_address = gcomm://controller-01,controller-02,controller-03`",
+      "level_4": "📝 正确答案：`[mysqld]`、`wsrep_cluster_name`、`openstack-galera`、`wsrep_cluster_address`、`gcomm://controller-01,controller-02,controller-03`、`wsrep_sst_method`、`mariabackup`"
+    },
+    "explanation": "Galera 通过 wsrep_* 参数把 MariaDB 组成多主同步集群：wsrep_on 开启复制，wsrep_cluster_name 相同的节点属于同一集群，wsrep_cluster_address 给出集群成员（引导首个节点时可用 gcomm:// 空地址），wsrep_sst_method 指定新节点加入时的状态转移方式（MariaDB 10.x 推荐 mariabackup）。配置完成后可用 SHOW STATUS LIKE 'wsrep_cluster_size' 验证。"
+  },
+  {
+    "id": "os-ops-019",
+    "title": "rabbitmq.conf 基础配置",
+    "description": "配置 RabbitMQ 集群名、AMQP 监听端口与心跳",
+    "exercise_type": "config",
+    "tech_stack": "openstack",
+    "weight": "easy",
+    "category": "rabbitmq_conf",
+    "subcategory": "运维",
+    "full_code": "cluster_name = openstack-rabbit\nlisteners.tcp.default = 5672\nheartbeat = 60",
+    "expected": "",
+    "points": [
+      {
+        "id": "cluster_name_1",
+        "text": "cluster_name",
+        "category": "rabbitmq_conf",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "集群名相同的节点才会组成一个集群",
+        "fill_type": "text"
+      },
+      {
+        "id": "cluster_name_2",
+        "text": "openstack-rabbit",
+        "category": "rabbitmq_conf",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "集群名相同的节点才会组成一个集群",
+        "fill_type": "text"
+      },
+      {
+        "id": "listeners_1",
+        "text": "listeners.tcp.default",
+        "category": "rabbitmq_conf",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "AMQP 默认监听端口 5672",
+        "fill_type": "text"
+      },
+      {
+        "id": "listeners_2",
+        "text": "5672",
+        "category": "rabbitmq_conf",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "AMQP 默认监听端口 5672",
+        "fill_type": "text"
+      },
+      {
+        "id": "heartbeat_1",
+        "text": "heartbeat",
+        "category": "rabbitmq_conf",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "服务端建议的 AMQP 心跳秒数",
+        "fill_type": "text"
+      },
+      {
+        "id": "heartbeat_2",
+        "text": "60",
+        "category": "rabbitmq_conf",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "服务端建议的 AMQP 心跳秒数",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 rabbitmq.conf 里怎么指定集群名、监听端口和心跳？",
+      "level_2": "📖 rabbitmq.conf 是 key = value 格式：cluster_name、listeners.tcp.default、heartbeat",
+      "level_3": "👀 `cluster_name = openstack-rabbit`、`listeners.tcp.default = 5672`、`heartbeat = 60`",
+      "level_4": "📝 正确答案：`cluster_name`、`openstack-rabbit`、`listeners.tcp.default`、`5672`、`heartbeat`、`60`"
+    },
+    "explanation": "RabbitMQ 3.7+ 使用 /etc/rabbitmq/rabbitmq.conf（sysctl 风格键值对）：cluster_name 定义集群名（同名节点才会组集群），listeners.tcp.default 配置 AMQP 监听端口，heartbeat 是服务端建议的 AMQP 心跳秒数（客户端可协商，0 表示关闭）。注意与旧版 rabbitmq.config 的 Erlang 语法不同。"
+  },
+  {
+    "id": "os-ops-020",
+    "title": "nova.conf 服务心跳与上报周期",
+    "description": "调整计算服务的上报周期与判定 down 的超时时间",
+    "exercise_type": "config",
+    "tech_stack": "openstack",
+    "weight": "beginner",
+    "category": "nova_conf_service",
+    "subcategory": "运维",
+    "full_code": "[DEFAULT]\nservice_down_time = 60\nreport_interval = 10",
+    "expected": "",
+    "points": [
+      {
+        "id": "default_section",
+        "text": "[DEFAULT]",
+        "category": "nova_conf_service",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "全局默认配置段",
+        "fill_type": "text"
+      },
+      {
+        "id": "down_time_1",
+        "text": "service_down_time",
+        "category": "nova_conf_service",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "多久没有上报就判定服务 down（秒）",
+        "fill_type": "text"
+      },
+      {
+        "id": "down_time_2",
+        "text": "60",
+        "category": "nova_conf_service",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "多久没有上报就判定服务 down（秒）",
+        "fill_type": "text"
+      },
+      {
+        "id": "report_interval_1",
+        "text": "report_interval",
+        "category": "nova_conf_service",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "计算服务的状态上报周期（秒），应小于 service_down_time",
+        "fill_type": "text"
+      },
+      {
+        "id": "report_interval_2",
+        "text": "10",
+        "category": "nova_conf_service",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "计算服务的状态上报周期（秒），应小于 service_down_time",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 计算服务多久不上报就算 down？上报间隔怎么调？",
+      "level_2": "📖 [DEFAULT] 的 service_down_time 是判定 down 的超时，report_interval 是上报周期",
+      "level_3": "👀 `service_down_time = 60`、`report_interval = 10`",
+      "level_4": "📝 正确答案：`[DEFAULT]`、`service_down_time`、`60`、`report_interval`、`10`"
+    },
+    "explanation": "各 nova 服务周期上报状态，最后一次上报超过 service_down_time（默认 60 秒）就会被标记为 down，在 openstack compute service list 中显示 State=down；report_interval（默认 10 秒）是计算节点等服务的上报周期，应明显小于 service_down_time，避免网络抖动导致误判。"
+  }
+]

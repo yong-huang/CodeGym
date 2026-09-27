@@ -1,0 +1,1622 @@
+[
+  {
+    "id": "playwright-001",
+    "title": "测试文件基本结构",
+    "description": "用 test 与 page 夹具编写并断言标题的第一个 Playwright 测试",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "beginner",
+    "category": "pw_structure",
+    "subcategory": "playwright",
+    "full_code": "import { test, expect } from '@playwright/test';\n\ntest('home page loads', async ({ page }) => {\n  await page.goto('https://example.com');\n  await expect(page).toHaveTitle(/Example/);\n});",
+    "expected": "",
+    "points": [
+      {
+        "id": "import_basic",
+        "text": "import { test, expect } from '@playwright/test';",
+        "category": "pw_structure",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "文件顶部导入 test 与 expect 的整行",
+        "fill_type": "text"
+      },
+      {
+        "id": "test_async",
+        "text": "test('home page loads', async ({ page }) => {",
+        "category": "pw_structure",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "声明用例并接收页面夹具的函数头",
+        "fill_type": "text"
+      },
+      {
+        "id": "title_assert",
+        "text": "await expect(page).toHaveTitle(/Example/);",
+        "category": "pw_assert",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "对页面标题做断言的调用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 每个测试都由 test() 声明，回调是 async 并解构出内置的 page 夹具。",
+      "level_2": "📖 页面级断言直接对 page 调用 toHaveTitle，参数可以传字符串或正则。",
+      "level_3": "👀 共 3 空：① 导入 test 与 expect 的语句；② 声明用例并接收页面夹具的函数头；③ 标题断言调用。",
+      "level_4": "📝 正确答案：`import { test, expect } from '@playwright/test';`、`test('home page loads', async ({ page }) => {`、`await expect(page).toHaveTitle(/Example/);`"
+    },
+    "explanation": "test() 的回调解构出内置的 page 夹具，用例体按顺序 await 执行；toHaveTitle 会等到标题满足正则为止。"
+  },
+  {
+    "id": "playwright-002",
+    "title": "导航到目标地址",
+    "description": "用 page.goto 打开登录页并断言当前 URL",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "beginner",
+    "category": "pw_navigation",
+    "subcategory": "playwright",
+    "full_code": "import { test, expect } from '@playwright/test';\n\ntest('open login page', async ({ page }) => {\n  await page.goto('https://example.com/login');\n  await expect(page).toHaveURL(/login/);\n});",
+    "expected": "",
+    "points": [
+      {
+        "id": "import_test",
+        "text": "import { test, expect } from '@playwright/test';",
+        "category": "pw_structure",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "文件顶部导入 test 与 expect 的整行",
+        "fill_type": "text"
+      },
+      {
+        "id": "goto_login",
+        "text": "await page.goto('https://example.com/login')",
+        "category": "pw_navigation",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "带完整地址的导航调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "url_assert",
+        "text": "await expect(page).toHaveURL(/login/)",
+        "category": "pw_assert",
+        "min_weight": "easy",
+        "weight_score": 1.5,
+        "hint": "断言当前地址匹配正则的调用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 浏览页面从 page.goto 开始，跳转结果可以用 toHaveURL 校验。",
+      "level_2": "📖 goto 接收字符串地址并返回 Promise，一般直接 await；toHaveURL 既接受字符串也接受正则。",
+      "level_3": "👀 共 3 空：① 导入语句；② 打开登录页的导航调用；③ 地址断言调用。",
+      "level_4": "📝 正确答案：`import { test, expect } from '@playwright/test';`、`await page.goto('https://example.com/login')`、`await expect(page).toHaveURL(/login/)`"
+    },
+    "explanation": "goto 会等待页面 load 事件完成；toHaveURL 支持正则匹配，适合校验跳转结果。"
+  },
+  {
+    "id": "playwright-003",
+    "title": "按角色定位按钮",
+    "description": "用 getByRole 找到提交按钮并断言可见",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "easy",
+    "category": "pw_locator",
+    "subcategory": "playwright",
+    "full_code": "import { test, expect } from '@playwright/test';\n\ntest('submit button', async ({ page }) => {\n  await page.goto('/checkout');\n  const submit = page.getByRole('button', { name: '提交' });\n  await expect(submit).toBeVisible();\n});",
+    "expected": "",
+    "points": [
+      {
+        "id": "goto",
+        "text": "await page.goto('/checkout')",
+        "category": "pw_navigation",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "打开相对地址的导航调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "role_locator",
+        "text": "page.getByRole('button', { name: '提交' })",
+        "category": "pw_locator",
+        "min_weight": "easy",
+        "weight_score": 1.5,
+        "hint": "按可访问性角色和名字定位",
+        "fill_type": "text"
+      },
+      {
+        "id": "visible_assert",
+        "text": "await expect(submit).toBeVisible()",
+        "category": "pw_assert",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "断言元素可见的 expect 调用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 Playwright 推荐用角色定位器，断言用 web-first 的 expect。",
+      "level_2": "📖 getByRole 接受角色与 name 选项；expect(locator).toBeVisible() 会自动等待。",
+      "level_3": "👀 共 3 空：① 导航调用；② 按角色定位按钮；③ 可见性断言。",
+      "level_4": "📝 正确答案：`await page.goto('/checkout')`、`page.getByRole('button', { name: '提交' })`、`await expect(submit).toBeVisible()`"
+    },
+    "explanation": "getByRole 基于 ARIA 角色定位，可读性和稳定性都优于 CSS；Playwright 的 expect 断言自带自动重试等待。"
+  },
+  {
+    "id": "playwright-004",
+    "title": "按测试 ID 定位",
+    "description": "用 getByTestId 点击提交按钮并断言状态文本",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "easy",
+    "category": "pw_locator",
+    "subcategory": "playwright",
+    "full_code": "import { test, expect } from '@playwright/test';\n\ntest('submit form', async ({ page }) => {\n  await page.goto('/checkout');\n  await page.getByTestId('submit').click();\n  await expect(page.getByTestId('status')).toHaveText('已提交');\n});",
+    "expected": "",
+    "points": [
+      {
+        "id": "goto_checkout",
+        "text": "await page.goto('/checkout')",
+        "category": "pw_navigation",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "打开结算页的导航调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "testid_click",
+        "text": "await page.getByTestId('submit').click()",
+        "category": "pw_locator",
+        "min_weight": "easy",
+        "weight_score": 1.5,
+        "hint": "先用测试 ID 定位再点击的调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "testid_assert",
+        "text": "await expect(page.getByTestId('status')).toHaveText('已提交')",
+        "category": "pw_assert",
+        "min_weight": "easy",
+        "weight_score": 1.5,
+        "hint": "断言状态元素文本的调用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 给元素加 data-testid 后用 getByTestId 定位，代码最短也不怕样式改动。",
+      "level_2": "📖 getByTestId 默认读取 data-testid 属性；点击和文本断言都会自动等待元素就绪。",
+      "level_3": "👀 共 3 空：① 导航调用；② 按测试 ID 点击；③ 按测试 ID 断言文本。",
+      "level_4": "📝 正确答案：`await page.goto('/checkout')`、`await page.getByTestId('submit').click()`、`await expect(page.getByTestId('status')).toHaveText('已提交')`"
+    },
+    "explanation": "getByTestId 默认读取 data-testid 属性，是官方推荐的自定义定位方式之一，比 CSS 选择器更抗重构。"
+  },
+  {
+    "id": "playwright-005",
+    "title": "按文本定位元素",
+    "description": "用 getByText 找到欢迎语并断言其文本",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "beginner",
+    "category": "pw_locator",
+    "subcategory": "playwright",
+    "full_code": "import { test, expect } from '@playwright/test';\n\ntest('welcome message', async ({ page }) => {\n  await page.goto('/');\n  const welcome = page.getByText('欢迎回来');\n  await expect(welcome).toHaveText(/欢迎/);\n});",
+    "expected": "",
+    "points": [
+      {
+        "id": "goto_root",
+        "text": "await page.goto('/')",
+        "category": "pw_navigation",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "打开站点根路径的导航调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "text_locator",
+        "text": "page.getByText('欢迎回来')",
+        "category": "pw_locator",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "按可见文本定位欢迎语的调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "text_assert",
+        "text": "await expect(welcome).toHaveText(/欢迎/)",
+        "category": "pw_assert",
+        "min_weight": "easy",
+        "weight_score": 1.5,
+        "hint": "断言欢迎语文本匹配正则的调用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 页面上有稳定文案时，可以直接按文本定位。",
+      "level_2": "📖 getByText 匹配元素的可见文本，支持字符串与正则；配合 toHaveText 可校验内容。",
+      "level_3": "👀 共 3 空：① 打开首页的导航调用；② 按文本定位；③ 文本断言调用。",
+      "level_4": "📝 正确答案：`await page.goto('/')`、`page.getByText('欢迎回来')`、`await expect(welcome).toHaveText(/欢迎/)`"
+    },
+    "explanation": "getByText 匹配元素可见文本，默认忽略大小写与首尾空白；配合 toHaveText 可校验完整内容。"
+  },
+  {
+    "id": "playwright-006",
+    "title": "填写搜索输入框",
+    "description": "用 locator 定位搜索框并填入关键字",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "beginner",
+    "category": "pw_action",
+    "subcategory": "playwright",
+    "full_code": "import { test, expect } from '@playwright/test';\n\ntest('search box', async ({ page }) => {\n  await page.goto('/search');\n  await page.locator('#search').fill('playwright');\n  await expect(page.locator('#search')).toHaveValue('playwright');\n});",
+    "expected": "",
+    "points": [
+      {
+        "id": "goto_search",
+        "text": "await page.goto('/search')",
+        "category": "pw_navigation",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "打开搜索页的导航调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "fill_call",
+        "text": "await page.locator('#search').fill('playwright')",
+        "category": "pw_action",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "定位搜索框并填入关键字的调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "value_assert",
+        "text": "await expect(page.locator('#search')).toHaveValue('playwright')",
+        "category": "pw_assert",
+        "min_weight": "easy",
+        "weight_score": 1.5,
+        "hint": "断言输入框当前值的调用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 输入框可以用 CSS 选择器先定位，再调用 fill 写入内容。",
+      "level_2": "📖 fill 会先清空输入框；toHaveValue 用于断言表单控件的当前值。",
+      "level_3": "👀 共 3 空：① 导航调用；② 定位并填写的调用；③ 输入值断言调用。",
+      "level_4": "📝 正确答案：`await page.goto('/search')`、`await page.locator('#search').fill('playwright')`、`await expect(page.locator('#search')).toHaveValue('playwright')`"
+    },
+    "explanation": "locator 返回惰性定位符，每次操作才解析；fill 会先清空再输入，并等待元素可编辑。"
+  },
+  {
+    "id": "playwright-007",
+    "title": "断言元素可见",
+    "description": "用 toBeVisible 校验首页横幅已显示",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "beginner",
+    "category": "pw_assert",
+    "subcategory": "playwright",
+    "full_code": "import { test, expect } from '@playwright/test';\n\ntest('hero banner', async ({ page }) => {\n  await page.goto('/');\n  const banner = page.locator('.hero');\n  await expect(banner).toBeVisible();\n});",
+    "expected": "",
+    "points": [
+      {
+        "id": "goto_root",
+        "text": "await page.goto('/')",
+        "category": "pw_navigation",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "打开首页的导航调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "hero_locator",
+        "text": "page.locator('.hero')",
+        "category": "pw_locator",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "用 CSS 类定位横幅的调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "visible_assert",
+        "text": "await expect(banner).toBeVisible()",
+        "category": "pw_assert",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "断言横幅可见的调用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 元素是否显示不要用硬等待，交给可见性断言自动轮询。",
+      "level_2": "📖 toBeVisible 检查元素存在且可见，默认在超时时间内反复重试。",
+      "level_3": "👀 共 3 空：① 导航调用；② 定位横幅；③ 可见性断言。",
+      "level_4": "📝 正确答案：`await page.goto('/')`、`page.locator('.hero')`、`await expect(banner).toBeVisible()`"
+    },
+    "explanation": "toBeVisible 是 web-first 断言，默认在超时内轮询重试，避免了硬等待。"
+  },
+  {
+    "id": "playwright-008",
+    "title": "断言页面标题",
+    "description": "打开关于页并用 toHaveTitle 校验标题",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "easy",
+    "category": "pw_assert",
+    "subcategory": "playwright",
+    "full_code": "import { test, expect } from '@playwright/test';\n\ntest('about title', async ({ page }) => {\n  await page.goto('/about');\n  await expect(page).toHaveTitle('关于我们');\n});",
+    "expected": "",
+    "points": [
+      {
+        "id": "import_test",
+        "text": "import { test, expect } from '@playwright/test';",
+        "category": "pw_structure",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "文件顶部导入 test 与 expect 的整行",
+        "fill_type": "text"
+      },
+      {
+        "id": "goto_about",
+        "text": "await page.goto('/about')",
+        "category": "pw_navigation",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "打开关于页的导航调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "title_assert",
+        "text": "await expect(page).toHaveTitle('关于我们')",
+        "category": "pw_assert",
+        "min_weight": "easy",
+        "weight_score": 1.5,
+        "hint": "断言标题完全等于目标文本的调用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 页面标题属于 page 级断言，不需要先定位元素。",
+      "level_2": "📖 toHaveTitle 接受字符串或正则，字符串时要求完全相等。",
+      "level_3": "👀 共 3 空：① 导入语句；② 导航调用；③ 标题断言调用。",
+      "level_4": "📝 正确答案：`import { test, expect } from '@playwright/test';`、`await page.goto('/about')`、`await expect(page).toHaveTitle('关于我们')`"
+    },
+    "explanation": "toHaveTitle 接受字符串或正则，字符串要求完全相等，适合校验静态页面标题。"
+  },
+  {
+    "id": "playwright-009",
+    "title": "断言元素文本",
+    "description": "用 toHaveText 校验购物车合计金额",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "easy",
+    "category": "pw_assert",
+    "subcategory": "playwright",
+    "full_code": "import { test, expect } from '@playwright/test';\n\ntest('cart total', async ({ page }) => {\n  await page.goto('/cart');\n  const total = page.getByTestId('total');\n  await expect(total).toHaveText('￥99.00');\n});",
+    "expected": "",
+    "points": [
+      {
+        "id": "goto_cart",
+        "text": "await page.goto('/cart')",
+        "category": "pw_navigation",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "打开购物车页的导航调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "total_locator",
+        "text": "page.getByTestId('total')",
+        "category": "pw_locator",
+        "min_weight": "easy",
+        "weight_score": 1.5,
+        "hint": "按测试 ID 定位合计元素的调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "total_assert",
+        "text": "await expect(total).toHaveText('￥99.00')",
+        "category": "pw_assert",
+        "min_weight": "easy",
+        "weight_score": 1.5,
+        "hint": "断言合计元素文本的调用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 先用定位器拿到元素，再断言它的文本内容。",
+      "level_2": "📖 toHaveText 对定位符的文本做断言，字符串是完全匹配，可传正则做模糊匹配。",
+      "level_3": "👀 共 3 空：① 导航调用；② 定位合计元素；③ 文本断言调用。",
+      "level_4": "📝 正确答案：`await page.goto('/cart')`、`page.getByTestId('total')`、`await expect(total).toHaveText('￥99.00')`"
+    },
+    "explanation": "toHaveText 对定位符当前文本做断言，字符串为完全匹配，可传正则做模糊匹配。"
+  },
+  {
+    "id": "playwright-010",
+    "title": "断言元素数量",
+    "description": "用 toHaveCount 校验待办列表恰好三条",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "medium",
+    "category": "pw_assert",
+    "subcategory": "playwright",
+    "full_code": "import { test, expect } from '@playwright/test';\n\ntest('todo count', async ({ page }) => {\n  await page.goto('/todos');\n  const items = page.getByRole('listitem');\n  await expect(items).toHaveCount(3);\n});",
+    "expected": "",
+    "points": [
+      {
+        "id": "goto_todos",
+        "text": "await page.goto('/todos')",
+        "category": "pw_navigation",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "打开待办页的导航调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "items_locator",
+        "text": "page.getByRole('listitem')",
+        "category": "pw_locator",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "按列表项角色批量定位的调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "count_assert",
+        "text": "await expect(items).toHaveCount(3)",
+        "category": "pw_assert",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "断言匹配元素个数的调用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 列表条数用计数断言，不要自己写循环数元素。",
+      "level_2": "📖 toHaveCount 断言定位符匹配到的元素个数，会自动等待列表渲染稳定。",
+      "level_3": "👀 共 3 空：① 导航调用；② 批量定位列表项；③ 数量断言调用。",
+      "level_4": "📝 正确答案：`await page.goto('/todos')`、`page.getByRole('listitem')`、`await expect(items).toHaveCount(3)`"
+    },
+    "explanation": "toHaveCount 断言定位符匹配的元素个数，自动等待列表渲染完成。"
+  },
+  {
+    "id": "playwright-011",
+    "title": "按标签与占位符定位",
+    "description": "用 getByLabel 与 getByPlaceholder 填写登录表单",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "medium",
+    "category": "pw_locator",
+    "subcategory": "playwright",
+    "full_code": "import { test, expect } from '@playwright/test';\n\ntest('login form', async ({ page }) => {\n  await page.goto('/login');\n  await page.getByLabel('用户名').fill('alice');\n  await page.getByPlaceholder('请输入密码').fill('s3cret');\n  await expect(page.getByRole('button', { name: '登录' })).toBeEnabled();\n});",
+    "expected": "",
+    "points": [
+      {
+        "id": "goto_login",
+        "text": "await page.goto('/login')",
+        "category": "pw_navigation",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "打开登录页的导航调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "label_fill",
+        "text": "await page.getByLabel('用户名').fill('alice')",
+        "category": "pw_locator",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "按标签定位用户名并填入的调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "placeholder_fill",
+        "text": "await page.getByPlaceholder('请输入密码').fill('s3cret')",
+        "category": "pw_locator",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "按占位符定位密码框并填入的调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "enabled_assert",
+        "text": "await expect(page.getByRole('button', { name: '登录' })).toBeEnabled()",
+        "category": "pw_assert",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "断言登录按钮可用的调用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 表单控件优先按与它关联的标签或占位符来定位。",
+      "level_2": "📖 getByLabel 匹配 label 文本，getByPlaceholder 匹配 placeholder；toBeEnabled 校验可用状态。",
+      "level_3": "👀 共 4 空：① 导航调用；② 按标签填写用户名；③ 按占位符填写密码；④ 按钮可用性断言。",
+      "level_4": "📝 正确答案：`await page.goto('/login')`、`await page.getByLabel('用户名').fill('alice')`、`await page.getByPlaceholder('请输入密码').fill('s3cret')`、`await expect(page.getByRole('button', { name: '登录' })).toBeEnabled()`"
+    },
+    "explanation": "getByLabel 关联 label 与表单控件，getByPlaceholder 匹配占位符文本，两者都比 CSS 更贴近语义。"
+  },
+  {
+    "id": "playwright-012",
+    "title": "断言页面地址",
+    "description": "登录跳转后用 toHaveURL 校验地址变化",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "medium",
+    "category": "pw_assert",
+    "subcategory": "playwright",
+    "full_code": "import { test, expect } from '@playwright/test';\n\ntest('redirect after login', async ({ page }) => {\n  await page.goto('/login');\n  await page.getByRole('button', { name: '登录' }).click();\n  await expect(page).toHaveURL(/dashboard/);\n});",
+    "expected": "",
+    "points": [
+      {
+        "id": "goto_login",
+        "text": "await page.goto('/login')",
+        "category": "pw_navigation",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "打开登录页的导航调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "login_click",
+        "text": "await page.getByRole('button', { name: '登录' }).click()",
+        "category": "pw_action",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "定位登录按钮并点击的调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "url_assert",
+        "text": "await expect(page).toHaveURL(/dashboard/)",
+        "category": "pw_assert",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "断言跳转后地址匹配正则的调用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 点击导致路由变化后，用地址断言确认跳转目标。",
+      "level_2": "📖 click 触发导航；toHaveURL 支持正则，适合匹配带参数的路径。",
+      "level_3": "👀 共 3 空：① 导航调用；② 点击登录按钮；③ 地址断言调用。",
+      "level_4": "📝 正确答案：`await page.goto('/login')`、`await page.getByRole('button', { name: '登录' }).click()`、`await expect(page).toHaveURL(/dashboard/)`"
+    },
+    "explanation": "toHaveURL 同样支持正则，用来断言路由跳转是否发生在正确的页面。"
+  },
+  {
+    "id": "playwright-013",
+    "title": "拦截接口返回假数据",
+    "description": "用 page.route 配合 fulfill 伪造用户列表接口",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "hard",
+    "category": "pw_network",
+    "subcategory": "playwright",
+    "full_code": "import { test, expect } from '@playwright/test';\n\ntest('mock user list', async ({ page }) => {\n  await page.route('**/api/users', async (route) => {\n    await route.fulfill({\n      status: 200,\n      contentType: 'application/json',\n      body: JSON.stringify([{ id: 1, name: 'Alice' }]),\n    });\n  });\n  await page.goto('/users');\n  await expect(page.getByText('Alice')).toBeVisible();\n});",
+    "expected": "",
+    "points": [
+      {
+        "id": "route_call",
+        "text": "await page.route('**/api/users', async (route) => {",
+        "category": "pw_network",
+        "min_weight": "hard",
+        "weight_score": 2,
+        "hint": "注册用户列表接口拦截的调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "fulfill_call",
+        "text": "await route.fulfill({",
+        "category": "pw_network",
+        "min_weight": "hard",
+        "weight_score": 1.5,
+        "hint": "在处理器里合成响应的调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "fulfill_status",
+        "text": "status: 200,",
+        "category": "pw_network",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "合成响应中的状态码字段",
+        "fill_type": "text"
+      },
+      {
+        "id": "fulfill_body",
+        "text": "body: JSON.stringify([{ id: 1, name: 'Alice' }]),",
+        "category": "pw_network",
+        "min_weight": "hard",
+        "weight_score": 1.5,
+        "hint": "合成响应中的响应体字段整行",
+        "fill_type": "text"
+      },
+      {
+        "id": "alice_assert",
+        "text": "await expect(page.getByText('Alice')).toBeVisible()",
+        "category": "pw_assert",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "断言页面出现 Alice 文本的调用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 拦截网络请求可以在没有真实后端时稳定测试页面。",
+      "level_2": "📖 page.route 接收 URL 模式和处理器，处理器里用 route.fulfill 直接合成响应。",
+      "level_3": "👀 共 5 空：① 注册接口拦截；② 合成响应调用；③ 状态码字段；④ 响应体字段；⑤ 页面文本断言。",
+      "level_4": "📝 正确答案：`await page.route('**/api/users', async (route) => {`、`await route.fulfill({`、`status: 200,`、`body: JSON.stringify([{ id: 1, name: 'Alice' }]),`、`await expect(page.getByText('Alice')).toBeVisible()`"
+    },
+    "explanation": "fulfill 直接合成响应，无需真实后端即可稳定测试依赖接口的页面。"
+  },
+  {
+    "id": "playwright-014",
+    "title": "拦截图片并放行接口",
+    "description": "用 abort 阻断图片请求、continue 放行数据接口",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "hard",
+    "category": "pw_network",
+    "subcategory": "playwright",
+    "full_code": "import { test, expect } from '@playwright/test';\n\ntest('block images', async ({ page }) => {\n  await page.route('**/*.png', (route) => route.abort());\n  await page.route('**/api/data', (route) => route.continue());\n  await page.goto('/dashboard');\n  await expect(page.getByText('数据加载完成')).toBeVisible();\n});",
+    "expected": "",
+    "points": [
+      {
+        "id": "abort_route",
+        "text": "await page.route('**/*.png', (route) => route.abort())",
+        "category": "pw_network",
+        "min_weight": "hard",
+        "weight_score": 2,
+        "hint": "拦截 PNG 并让它失败的调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "continue_route",
+        "text": "await page.route('**/api/data', (route) => route.continue())",
+        "category": "pw_network",
+        "min_weight": "hard",
+        "weight_score": 2,
+        "hint": "拦截数据接口并原样放行的调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "goto_dash",
+        "text": "await page.goto('/dashboard')",
+        "category": "pw_navigation",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "打开仪表盘页的导航调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "done_assert",
+        "text": "await expect(page.getByText('数据加载完成')).toBeVisible()",
+        "category": "pw_assert",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "断言加载完成文案可见的调用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 同一个路由处理器里可以按需阻断或放行请求。",
+      "level_2": "📖 route.abort 让请求直接失败，route.continue 让请求照常发出。",
+      "level_3": "👀 共 4 空：① 阻断图片的拦截调用；② 放行接口的拦截调用；③ 导航调用；④ 文案断言调用。",
+      "level_4": "📝 正确答案：`await page.route('**/*.png', (route) => route.abort())`、`await page.route('**/api/data', (route) => route.continue())`、`await page.goto('/dashboard')`、`await expect(page.getByText('数据加载完成')).toBeVisible()`"
+    },
+    "explanation": "abort 让请求直接失败可用于屏蔽资源，continue 放行未修改的请求，常与 abort 组合使用。"
+  },
+  {
+    "id": "playwright-015",
+    "title": "复用登录状态",
+    "description": "用 test.use 加载已保存的 storageState 跳过登录",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "hard",
+    "category": "pw_auth",
+    "subcategory": "playwright",
+    "full_code": "import { test, expect } from '@playwright/test';\n\ntest.use({ storageState: 'auth.json' });\n\ntest('profile page', async ({ page }) => {\n  await page.goto('/profile');\n  await expect(page.getByRole('heading', { name: '个人中心' })).toBeVisible();\n});",
+    "expected": "",
+    "points": [
+      {
+        "id": "use_storage",
+        "text": "test.use({ storageState: 'auth.json' })",
+        "category": "pw_auth",
+        "min_weight": "hard",
+        "weight_score": 2,
+        "hint": "在文件级覆盖会话状态的调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "goto_profile",
+        "text": "await page.goto('/profile')",
+        "category": "pw_navigation",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "打开个人中心页的导航调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "heading_assert",
+        "text": "await expect(page.getByRole('heading', { name: '个人中心' })).toBeVisible()",
+        "category": "pw_assert",
+        "min_weight": "hard",
+        "weight_score": 1.5,
+        "hint": "按标题角色断言可见的调用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 先把登录后的会话保存成文件，后续用例直接复用即可跳过登录流程。",
+      "level_2": "📖 test.use 在文件级别覆盖选项，storageState 指向保存了 cookie 与 localStorage 的 JSON 文件。",
+      "level_3": "👀 共 3 空：① 覆盖会话状态的调用；② 导航调用；③ 标题元素可见性断言。",
+      "level_4": "📝 正确答案：`test.use({ storageState: 'auth.json' })`、`await page.goto('/profile')`、`await expect(page.getByRole('heading', { name: '个人中心' })).toBeVisible()`"
+    },
+    "explanation": "test.use 在文件级别覆盖夹具选项，storageState 指向登录后导出的会话文件。"
+  },
+  {
+    "id": "playwright-016",
+    "title": "用 beforeEach 准备数据",
+    "description": "在每个用例前通过 request 夹具创建待办数据",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "medium",
+    "category": "pw_hooks",
+    "subcategory": "playwright",
+    "full_code": "import { test, expect } from '@playwright/test';\n\ntest.beforeEach(async ({ request }) => {\n  await request.post('/api/todos', { data: { title: '写测试' } });\n});\n\ntest('seeded todo visible', async ({ page }) => {\n  await page.goto('/todos');\n  await expect(page.getByText('写测试')).toBeVisible();\n});",
+    "expected": "",
+    "points": [
+      {
+        "id": "before_each",
+        "text": "test.beforeEach(async ({ request }) => {",
+        "category": "pw_hooks",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "声明每个用例前置钩子的函数头",
+        "fill_type": "text"
+      },
+      {
+        "id": "seed_post",
+        "text": "await request.post('/api/todos', { data: { title: '写测试' } })",
+        "category": "pw_hooks",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "用请求夹具创建待办数据的调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "goto_todos",
+        "text": "await page.goto('/todos')",
+        "category": "pw_navigation",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "打开待办页的导航调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "seeded_assert",
+        "text": "await expect(page.getByText('写测试')).toBeVisible()",
+        "category": "pw_assert",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "断言新数据出现在页面上的调用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 每个用例都依赖同一份数据时，把它放到 beforeEach 里准备。",
+      "level_2": "📖 beforeEach 在所有用例之前执行，request 夹具可以直接调用后端接口造数据。",
+      "level_3": "👀 共 4 空：① 前置钩子函数头；② 用接口创建数据的调用；③ 导航调用；④ 页面文案断言。",
+      "level_4": "📝 正确答案：`test.beforeEach(async ({ request }) => {`、`await request.post('/api/todos', { data: { title: '写测试' } })`、`await page.goto('/todos')`、`await expect(page.getByText('写测试')).toBeVisible()`"
+    },
+    "explanation": "beforeEach 保证每个用例从干净且已知的数据状态开始，request 夹具复用 baseURL 等配置。"
+  },
+  {
+    "id": "playwright-017",
+    "title": "用 test.step 拆分步骤",
+    "description": "把加入购物车与查看订单拆成两个命名步骤",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "medium",
+    "category": "pw_step",
+    "subcategory": "playwright",
+    "full_code": "import { test, expect } from '@playwright/test';\n\ntest('checkout flow', async ({ page }) => {\n  await test.step('加入购物车', async () => {\n    await page.goto('/products');\n    await page.getByRole('button', { name: '加入购物车' }).click();\n  });\n\n  await test.step('查看订单', async () => {\n    await page.goto('/cart');\n    await expect(page.getByText('1 件商品')).toBeVisible();\n  });\n});",
+    "expected": "",
+    "points": [
+      {
+        "id": "step_add",
+        "text": "await test.step('加入购物车', async () => {",
+        "category": "pw_step",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "声明加入购物车步骤的函数头",
+        "fill_type": "text"
+      },
+      {
+        "id": "goto_products",
+        "text": "await page.goto('/products')",
+        "category": "pw_navigation",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "打开商品页的导航调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "step_view",
+        "text": "await test.step('查看订单', async () => {",
+        "category": "pw_step",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "声明查看订单步骤的函数头",
+        "fill_type": "text"
+      },
+      {
+        "id": "cart_assert",
+        "text": "await expect(page.getByText('1 件商品')).toBeVisible()",
+        "category": "pw_assert",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "断言商品数文案可见的调用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 长流程用命名步骤包起来，报告里会按步骤分组显示。",
+      "level_2": "📖 test.step 接收步骤名和 async 回调，嵌套的 await 调用都算在该步骤内。",
+      "level_3": "👀 共 4 空：① 第一步的函数头；② 打开商品页；③ 第二步的函数头；④ 商品文案断言。",
+      "level_4": "📝 正确答案：`await test.step('加入购物车', async () => {`、`await page.goto('/products')`、`await test.step('查看订单', async () => {`、`await expect(page.getByText('1 件商品')).toBeVisible()`"
+    },
+    "explanation": "test.step 给一段操作命名，报告里按步骤分组展示，失败定位更快。"
+  },
+  {
+    "id": "playwright-018",
+    "title": "软断言收集全部失败",
+    "description": "用 expect.soft 让多条断言都执行完再汇总",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "hard",
+    "category": "pw_assert",
+    "subcategory": "playwright",
+    "full_code": "import { test, expect } from '@playwright/test';\n\ntest('dashboard widgets', async ({ page }) => {\n  await page.goto('/dashboard');\n  await expect.soft(page.getByTestId('sales')).toBeVisible();\n  await expect.soft(page.getByTestId('users')).toHaveText('128');\n  await expect(page.getByTestId('orders')).toBeVisible();\n});",
+    "expected": "",
+    "points": [
+      {
+        "id": "goto_dash",
+        "text": "await page.goto('/dashboard')",
+        "category": "pw_navigation",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "打开仪表盘页的导航调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "soft_visible",
+        "text": "await expect.soft(page.getByTestId('sales')).toBeVisible()",
+        "category": "pw_assert",
+        "min_weight": "hard",
+        "weight_score": 2,
+        "hint": "第一条不会中断用例的可见性断言",
+        "fill_type": "text"
+      },
+      {
+        "id": "soft_text",
+        "text": "await expect.soft(page.getByTestId('users')).toHaveText('128')",
+        "category": "pw_assert",
+        "min_weight": "hard",
+        "weight_score": 2,
+        "hint": "第二条软断言，校验文本内容",
+        "fill_type": "text"
+      },
+      {
+        "id": "hard_assert",
+        "text": "await expect(page.getByTestId('orders')).toBeVisible()",
+        "category": "pw_assert",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "最后一条普通（非软）断言调用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 想一次校验多个指标、不让第一条失败挡住后面，就用软断言。",
+      "level_2": "📖 expect.soft 失败不抛异常而是记录下来，测试结束时统一报告。",
+      "level_3": "👀 共 4 空：① 导航调用；② 第一条软断言；③ 第二条软断言；④ 最后一条普通断言。",
+      "level_4": "📝 正确答案：`await page.goto('/dashboard')`、`await expect.soft(page.getByTestId('sales')).toBeVisible()`、`await expect.soft(page.getByTestId('users')).toHaveText('128')`、`await expect(page.getByTestId('orders')).toBeVisible()`"
+    },
+    "explanation": "expect.soft 失败不立即中断测试，全部跑完后统一报告，适合一次校验多个指标。"
+  },
+  {
+    "id": "playwright-019",
+    "title": "用 API 请求上下文断言接口",
+    "description": "用 request 夹具直接请求接口并校验返回数据",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "expert",
+    "category": "pw_api",
+    "subcategory": "playwright",
+    "full_code": "import { test, expect } from '@playwright/test';\n\ntest('users api', async ({ request }) => {\n  const response = await request.get('/api/users');\n  expect(response.ok()).toBeTruthy();\n  const users = await response.json();\n  expect(users).toHaveLength(2);\n});",
+    "expected": "",
+    "points": [
+      {
+        "id": "request_fixture",
+        "text": "test('users api', async ({ request }) => {",
+        "category": "pw_api",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "声明用例并从内置对象解构请求夹具",
+        "fill_type": "text"
+      },
+      {
+        "id": "request_get",
+        "text": "const response = await request.get('/api/users')",
+        "category": "pw_api",
+        "min_weight": "expert",
+        "weight_score": 2,
+        "hint": "发起 GET 请求并接收响应的整行",
+        "fill_type": "text"
+      },
+      {
+        "id": "ok_assert",
+        "text": "expect(response.ok()).toBeTruthy()",
+        "category": "pw_api",
+        "min_weight": "expert",
+        "weight_score": 1.5,
+        "hint": "判断响应状态是否成功的断言",
+        "fill_type": "text"
+      },
+      {
+        "id": "json_parse",
+        "text": "const users = await response.json()",
+        "category": "pw_api",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "把响应解析为 JSON 的赋值行",
+        "fill_type": "text"
+      },
+      {
+        "id": "length_assert",
+        "text": "expect(users).toHaveLength(2)",
+        "category": "pw_api",
+        "min_weight": "expert",
+        "weight_score": 2,
+        "hint": "断言数组长度的通用匹配器调用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 不需要打开浏览器就能测接口，测试里直接解构 request 夹具。",
+      "level_2": "📖 request.get 返回 APIResponse，ok() 判断状态码是否 2xx，json() 解析响应体。",
+      "level_3": "👀 共 5 空：① 用例函数头并解构请求夹具；② 发起 GET 请求；③ 状态成功断言；④ 解析 JSON；⑤ 数组长度断言。",
+      "level_4": "📝 正确答案：`test('users api', async ({ request }) => {`、`const response = await request.get('/api/users')`、`expect(response.ok()).toBeTruthy()`、`const users = await response.json()`、`expect(users).toHaveLength(2)`"
+    },
+    "explanation": "request 夹具基于 APIRequestContext，无需打开页面即可发请求；response.ok() 判断状态码是否为 2xx。"
+  },
+  {
+    "id": "playwright-020",
+    "title": "处理 iframe 内表单",
+    "description": "用 frameLocator 在支付 iframe 中填写卡号",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "medium",
+    "category": "pw_frame",
+    "subcategory": "playwright",
+    "full_code": "import { test, expect } from '@playwright/test';\n\ntest('payment iframe', async ({ page }) => {\n  await page.goto('/checkout');\n  const frame = page.frameLocator('#payment-frame');\n  await frame.getByLabel('卡号').fill('4111111111111111');\n  await expect(frame.getByText('支付成功')).toBeVisible();\n});",
+    "expected": "",
+    "points": [
+      {
+        "id": "goto_checkout",
+        "text": "await page.goto('/checkout')",
+        "category": "pw_navigation",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "打开结算页的导航调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "frame_locator",
+        "text": "const frame = page.frameLocator('#payment-frame')",
+        "category": "pw_frame",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "创建 iframe 定位作用域的赋值行",
+        "fill_type": "text"
+      },
+      {
+        "id": "frame_fill",
+        "text": "await frame.getByLabel('卡号').fill('4111111111111111')",
+        "category": "pw_frame",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "在框架作用域内填卡号的调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "frame_assert",
+        "text": "await expect(frame.getByText('支付成功')).toBeVisible()",
+        "category": "pw_frame",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "在框架作用域内断言文案可见的调用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 iframe 里的元素要先拿到框架作用域，再做定位。",
+      "level_2": "📖 frameLocator 返回作用域对象，后续 getByLabel、getByText 都在框架内查找。",
+      "level_3": "👀 共 4 空：① 导航调用；② 创建框架作用域；③ 框架内填卡号；④ 框架内文案断言。",
+      "level_4": "📝 正确答案：`await page.goto('/checkout')`、`const frame = page.frameLocator('#payment-frame')`、`await frame.getByLabel('卡号').fill('4111111111111111')`、`await expect(frame.getByText('支付成功')).toBeVisible()`"
+    },
+    "explanation": "frameLocator 返回 iframe 内部的定位作用域，后续定位与断言都相对该框架进行。"
+  },
+  {
+    "id": "playwright-021",
+    "title": "等待下载事件",
+    "description": "用 waitForEvent 捕获下载并校验建议文件名",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "expert",
+    "category": "pw_download",
+    "subcategory": "playwright",
+    "full_code": "import { test, expect } from '@playwright/test';\n\ntest('download report', async ({ page }) => {\n  await page.goto('/reports');\n  const downloadPromise = page.waitForEvent('download');\n  await page.getByRole('button', { name: '导出' }).click();\n  const download = await downloadPromise;\n  expect(download.suggestedFilename()).toBe('report.csv');\n});",
+    "expected": "",
+    "points": [
+      {
+        "id": "goto_reports",
+        "text": "await page.goto('/reports')",
+        "category": "pw_navigation",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "打开报表页的导航调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "wait_event",
+        "text": "const downloadPromise = page.waitForEvent('download')",
+        "category": "pw_download",
+        "min_weight": "expert",
+        "weight_score": 2,
+        "hint": "提前注册下载事件监听的赋值行",
+        "fill_type": "text"
+      },
+      {
+        "id": "export_click",
+        "text": "await page.getByRole('button', { name: '导出' }).click()",
+        "category": "pw_action",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "点击导出按钮的调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "await_download",
+        "text": "const download = await downloadPromise",
+        "category": "pw_download",
+        "min_weight": "expert",
+        "weight_score": 2,
+        "hint": "等待监听结果并取回下载对象的赋值行",
+        "fill_type": "text"
+      },
+      {
+        "id": "filename_assert",
+        "text": "expect(download.suggestedFilename()).toBe('report.csv')",
+        "category": "pw_download",
+        "min_weight": "expert",
+        "weight_score": 2,
+        "hint": "断言建议文件名相等的调用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 下载是异步事件，要先挂监听再触发操作，否则可能漏掉事件。",
+      "level_2": "📖 page.waitForEvent 返回 Promise，先存入变量，点击后再 await 取回 Download 对象。",
+      "level_3": "👀 共 5 空：① 导航调用；② 注册下载事件；③ 点击导出；④ 等待事件结果；⑤ 文件名断言。",
+      "level_4": "📝 正确答案：`await page.goto('/reports')`、`const downloadPromise = page.waitForEvent('download')`、`await page.getByRole('button', { name: '导出' }).click()`、`const download = await downloadPromise`、`expect(download.suggestedFilename()).toBe('report.csv')`"
+    },
+    "explanation": "先创建 waitForEvent 的 Promise 再触发下载，避免事件在等待前就发生造成漏接。"
+  },
+  {
+    "id": "playwright-022",
+    "title": "配置测试目录与 baseURL",
+    "description": "用 defineConfig 指定 testDir 与 use.baseURL",
+    "exercise_type": "config",
+    "tech_stack": "testing",
+    "weight": "medium",
+    "category": "pw_config",
+    "subcategory": "playwright",
+    "full_code": "import { defineConfig } from '@playwright/test';\n\nexport default defineConfig({\n  testDir: './tests',\n  use: {\n    baseURL: 'http://localhost:3000',\n  },\n});",
+    "expected": "",
+    "points": [
+      {
+        "id": "config_import",
+        "text": "import { defineConfig } from '@playwright/test';",
+        "category": "pw_config",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "从测试包导入配置函数的整行",
+        "fill_type": "text"
+      },
+      {
+        "id": "define_config",
+        "text": "export default defineConfig({",
+        "category": "pw_config",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "导出默认配置对象的开头",
+        "fill_type": "text"
+      },
+      {
+        "id": "test_dir",
+        "text": "testDir: './tests',",
+        "category": "pw_config",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "指定用例目录的配置项",
+        "fill_type": "text"
+      },
+      {
+        "id": "base_url",
+        "text": "baseURL: 'http://localhost:3000',",
+        "category": "pw_config",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "指定基准地址的配置项",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 配置文件默认导出配置对象，测试目录和公共地址都写在里面。",
+      "level_2": "📖 testDir 告诉 Playwright 去哪里收集用例；use.baseURL 让测试里的相对地址自动拼接。",
+      "level_3": "👀 共 4 空：① 导入配置函数；② 导出配置对象的开头；③ 用例目录配置项；④ 基准地址配置项。",
+      "level_4": "📝 正确答案：`import { defineConfig } from '@playwright/test';`、`export default defineConfig({`、`testDir: './tests',`、`baseURL: 'http://localhost:3000',`"
+    },
+    "explanation": "baseURL 让测试里的相对地址自动拼接，testDir 告诉 Playwright 去哪里收集用例。"
+  },
+  {
+    "id": "playwright-023",
+    "title": "配置多浏览器项目",
+    "description": "在 projects 中配置 chromium、firefox、webkit",
+    "exercise_type": "config",
+    "tech_stack": "testing",
+    "weight": "medium",
+    "category": "pw_config",
+    "subcategory": "playwright",
+    "full_code": "import { defineConfig, devices } from '@playwright/test';\n\nexport default defineConfig({\n  projects: [\n    { name: 'chromium', use: { ...devices['Desktop Chrome'] } },\n    { name: 'firefox', use: { ...devices['Desktop Firefox'] } },\n    { name: 'webkit', use: { ...devices['Desktop Safari'] } },\n  ],\n});",
+    "expected": "",
+    "points": [
+      {
+        "id": "devices_import",
+        "text": "import { defineConfig, devices } from '@playwright/test';",
+        "category": "pw_config",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "从测试包导入配置函数与设备库的整行",
+        "fill_type": "text"
+      },
+      {
+        "id": "projects_key",
+        "text": "projects: [",
+        "category": "pw_config",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "声明多项目数组的配置键",
+        "fill_type": "text"
+      },
+      {
+        "id": "chromium_pj",
+        "text": "{ name: 'chromium', use: { ...devices['Desktop Chrome'] } },",
+        "category": "pw_config",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "配置 chromium 项目的整行",
+        "fill_type": "text"
+      },
+      {
+        "id": "firefox_pj",
+        "text": "{ name: 'firefox', use: { ...devices['Desktop Firefox'] } },",
+        "category": "pw_config",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "配置 firefox 项目的整行",
+        "fill_type": "text"
+      },
+      {
+        "id": "webkit_pj",
+        "text": "{ name: 'webkit', use: { ...devices['Desktop Safari'] } },",
+        "category": "pw_config",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "配置 webkit 项目的整行",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 一套用例想在三种浏览器里都跑，用 projects 声明多个项目。",
+      "level_2": "📖 projects 数组里每项可带 name 与 use，devices 提供官方设备描述符来展开默认选项。",
+      "level_3": "👀 共 5 空：① 导入配置函数与设备库；② 多项目配置键；③ 第一个浏览器项目；④ 第二个浏览器项目；⑤ 第三个浏览器项目。",
+      "level_4": "📝 正确答案：`import { defineConfig, devices } from '@playwright/test';`、`projects: [`、`{ name: 'chromium', use: { ...devices['Desktop Chrome'] } },`、`{ name: 'firefox', use: { ...devices['Desktop Firefox'] } },`、`{ name: 'webkit', use: { ...devices['Desktop Safari'] } },`"
+    },
+    "explanation": "projects 里每个条目可独立覆盖 use，devices 提供官方设备描述符；三个项目会并行跑同一套用例。"
+  },
+  {
+    "id": "playwright-024",
+    "title": "配置重试与并发",
+    "description": "设置失败重试次数与并行 worker 数量",
+    "exercise_type": "config",
+    "tech_stack": "testing",
+    "weight": "hard",
+    "category": "pw_config",
+    "subcategory": "playwright",
+    "full_code": "import { defineConfig } from '@playwright/test';\n\nexport default defineConfig({\n  retries: 2,\n  workers: 4,\n});",
+    "expected": "",
+    "points": [
+      {
+        "id": "config_import",
+        "text": "import { defineConfig } from '@playwright/test';",
+        "category": "pw_config",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "从测试包导入配置函数的整行",
+        "fill_type": "text"
+      },
+      {
+        "id": "define_config",
+        "text": "export default defineConfig({",
+        "category": "pw_config",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "导出默认配置对象的开头",
+        "fill_type": "text"
+      },
+      {
+        "id": "retries_opt",
+        "text": "retries: 2,",
+        "category": "pw_config",
+        "min_weight": "hard",
+        "weight_score": 2,
+        "hint": "设置失败重试次数的配置项",
+        "fill_type": "text"
+      },
+      {
+        "id": "workers_opt",
+        "text": "workers: 4,",
+        "category": "pw_config",
+        "min_weight": "hard",
+        "weight_score": 2,
+        "hint": "设置并行进程数的配置项",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 不稳定用例靠重试兜底，跑得快慢由并行度决定，两者都写在顶层配置。",
+      "level_2": "📖 retries 是失败重跑的次数，workers 是同时运行的进程数。",
+      "level_3": "👀 共 4 空：① 导入配置函数；② 导出配置对象的开头；③ 重试次数配置项；④ 并行度配置项。",
+      "level_4": "📝 正确答案：`import { defineConfig } from '@playwright/test';`、`export default defineConfig({`、`retries: 2,`、`workers: 4,`"
+    },
+    "explanation": "retries 在本地默认 0、CI 常用 2，workers 控制并行进程数，两者都在顶层配置。"
+  },
+  {
+    "id": "playwright-025",
+    "title": "失败时留存 trace 与截图",
+    "description": "配置 trace 与 screenshot 仅在失败时保存",
+    "exercise_type": "config",
+    "tech_stack": "testing",
+    "weight": "medium",
+    "category": "pw_config",
+    "subcategory": "playwright",
+    "full_code": "import { defineConfig } from '@playwright/test';\n\nexport default defineConfig({\n  use: {\n    trace: 'on-first-retry',\n    screenshot: 'only-on-failure',\n  },\n});",
+    "expected": "",
+    "points": [
+      {
+        "id": "define_config",
+        "text": "export default defineConfig({",
+        "category": "pw_config",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "导出默认配置对象的开头",
+        "fill_type": "text"
+      },
+      {
+        "id": "use_block",
+        "text": "use: {",
+        "category": "pw_config",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "即将写入公共运行选项的配置块",
+        "fill_type": "text"
+      },
+      {
+        "id": "trace_opt",
+        "text": "trace: 'on-first-retry',",
+        "category": "pw_config",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "指定轨迹记录时机的配置项",
+        "fill_type": "text"
+      },
+      {
+        "id": "screenshot_opt",
+        "text": "screenshot: 'only-on-failure',",
+        "category": "pw_config",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "指定截图时机的配置项",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 排查失败要留下现场，轨迹和截图都只在需要时才保存最省事。",
+      "level_2": "📖 在 use 里配置 trace 与 screenshot，取值决定记录时机。",
+      "level_3": "👀 共 4 空：① 导出配置对象的开头；② 公共运行选项块；③ 轨迹记录时机配置项；④ 截图时机配置项。",
+      "level_4": "📝 正确答案：`export default defineConfig({`、`use: {`、`trace: 'on-first-retry',`、`screenshot: 'only-on-failure',`"
+    },
+    "explanation": "trace 记录完整执行轨迹，screenshot 在失败时自动截图，二者配合 show-report 方便复现问题。"
+  },
+  {
+    "id": "playwright-026",
+    "title": "运行全部测试",
+    "description": "用 playwright 命令执行整个测试套件",
+    "exercise_type": "command",
+    "tech_stack": "testing",
+    "weight": "easy",
+    "category": "pw_cli",
+    "subcategory": "playwright",
+    "full_code": "npx playwright test",
+    "expected": "",
+    "points": [
+      {
+        "id": "npx_prefix",
+        "text": "npx",
+        "category": "pw_cli",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "调用本地包运行器的前缀",
+        "fill_type": "text"
+      },
+      {
+        "id": "playwright_cmd",
+        "text": "playwright",
+        "category": "pw_cli",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "测试工具的命令名",
+        "fill_type": "text"
+      },
+      {
+        "id": "test_subcmd",
+        "text": "test",
+        "category": "pw_cli",
+        "min_weight": "easy",
+        "weight_score": 1.5,
+        "hint": "运行全部用例的子命令",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 命令行工具通过 npx 调用本地安装的版本。",
+      "level_2": "📖 不带任何参数的 test 子命令会按配置收集并运行全部用例。",
+      "level_3": "👀 共 3 空：① 命令运行器前缀；② 工具命令名；③ 运行全部用例的子命令。",
+      "level_4": "📝 正确答案：`npx`、`playwright`、`test`"
+    },
+    "explanation": "npx 直接调用本地安装的 playwright，test 子命令按配置收集并运行所有用例。"
+  },
+  {
+    "id": "playwright-027",
+    "title": "只运行 chromium 项目",
+    "description": "用 --project 参数限定只跑 chromium 项目",
+    "exercise_type": "command",
+    "tech_stack": "testing",
+    "weight": "medium",
+    "category": "pw_cli",
+    "subcategory": "playwright",
+    "full_code": "npx playwright test --project=chromium",
+    "expected": "",
+    "points": [
+      {
+        "id": "npx_prefix",
+        "text": "npx",
+        "category": "pw_cli",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "调用本地包运行器的前缀",
+        "fill_type": "text"
+      },
+      {
+        "id": "playwright_cmd",
+        "text": "playwright",
+        "category": "pw_cli",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "测试工具的命令名",
+        "fill_type": "text"
+      },
+      {
+        "id": "test_subcmd",
+        "text": "test",
+        "category": "pw_cli",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "运行用例的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "project_flag",
+        "text": "--project=chromium",
+        "category": "pw_cli",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "按项目名筛选的命令行参数",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 配置文件里定义了多个项目时，可以用参数只跑其中一个。",
+      "level_2": "📖 --project 的值要匹配 projects 里的 name。",
+      "level_3": "👀 共 4 空：① 命令运行器前缀；② 工具命令名；③ 运行用例的子命令；④ 项目筛选参数。",
+      "level_4": "📝 正确答案：`npx`、`playwright`、`test`、`--project=chromium`"
+    },
+    "explanation": "--project 按配置中的项目名过滤，适合在本地快速分批验证某个浏览器。"
+  },
+  {
+    "id": "playwright-028",
+    "title": "录制操作生成代码",
+    "description": "用 codegen 打开录制器并生成测试代码",
+    "exercise_type": "command",
+    "tech_stack": "testing",
+    "weight": "easy",
+    "category": "pw_cli",
+    "subcategory": "playwright",
+    "full_code": "npx playwright codegen https://example.com",
+    "expected": "",
+    "points": [
+      {
+        "id": "npx_prefix",
+        "text": "npx",
+        "category": "pw_cli",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "调用本地包运行器的前缀",
+        "fill_type": "text"
+      },
+      {
+        "id": "playwright_cmd",
+        "text": "playwright",
+        "category": "pw_cli",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "测试工具的命令名",
+        "fill_type": "text"
+      },
+      {
+        "id": "codegen_subcmd",
+        "text": "codegen",
+        "category": "pw_cli",
+        "min_weight": "easy",
+        "weight_score": 1.5,
+        "hint": "打开录制器的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "target_url",
+        "text": "https://example.com",
+        "category": "pw_cli",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "录制时打开的初始网址",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 想快速得到可用的定位代码，可以让录制器边操作边生成。",
+      "level_2": "📖 codegen 后面可以跟一个网址，录制器会先打开它再开始录制。",
+      "level_3": "👀 共 4 空：① 命令运行器前缀；② 工具命令名；③ 打开录制器的子命令；④ 起始网址参数。",
+      "level_4": "📝 正确答案：`npx`、`playwright`、`codegen`、`https://example.com`"
+    },
+    "explanation": "codegen 打开浏览器并记录操作，实时生成带推荐定位符的代码，是写用例的快捷入口。"
+  },
+  {
+    "id": "playwright-029",
+    "title": "查看 HTML 报告",
+    "description": "用 show-report 打开上一次测试的 HTML 报告",
+    "exercise_type": "command",
+    "tech_stack": "testing",
+    "weight": "easy",
+    "category": "pw_cli",
+    "subcategory": "playwright",
+    "full_code": "npx playwright show-report",
+    "expected": "",
+    "points": [
+      {
+        "id": "npx_prefix",
+        "text": "npx",
+        "category": "pw_cli",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "调用本地包运行器的前缀",
+        "fill_type": "text"
+      },
+      {
+        "id": "playwright_cmd",
+        "text": "playwright",
+        "category": "pw_cli",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "测试工具的命令名",
+        "fill_type": "text"
+      },
+      {
+        "id": "show_report_subcmd",
+        "text": "show-report",
+        "category": "pw_cli",
+        "min_weight": "easy",
+        "weight_score": 1.5,
+        "hint": "打开报告的子命令",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 测试跑完后想可视化查看结果，有一个专门的子命令。",
+      "level_2": "📖 show-report 会启动本地服务器展示上一次运行生成的 HTML 报告。",
+      "level_3": "👀 共 3 空：① 命令运行器前缀；② 工具命令名；③ 打开报告的子命令。",
+      "level_4": "📝 正确答案：`npx`、`playwright`、`show-report`"
+    },
+    "explanation": "show-report 读取 test-results 里的报告数据并启动本地静态服务器展示。"
+  },
+  {
+    "id": "playwright-030",
+    "title": "安装浏览器与系统依赖",
+    "description": "用 install --with-deps 安装浏览器和系统依赖",
+    "exercise_type": "command",
+    "tech_stack": "testing",
+    "weight": "easy",
+    "category": "pw_cli",
+    "subcategory": "playwright",
+    "full_code": "npx playwright install --with-deps",
+    "expected": "",
+    "points": [
+      {
+        "id": "npx_prefix",
+        "text": "npx",
+        "category": "pw_cli",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "调用本地包运行器的前缀",
+        "fill_type": "text"
+      },
+      {
+        "id": "playwright_cmd",
+        "text": "playwright",
+        "category": "pw_cli",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "测试工具的命令名",
+        "fill_type": "text"
+      },
+      {
+        "id": "install_subcmd",
+        "text": "install",
+        "category": "pw_cli",
+        "min_weight": "easy",
+        "weight_score": 1.5,
+        "hint": "安装浏览器的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "with_deps_flag",
+        "text": "--with-deps",
+        "category": "pw_cli",
+        "min_weight": "easy",
+        "weight_score": 1.5,
+        "hint": "连带安装系统依赖的参数",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 新环境第一次跑测试前要下载浏览器，CI 上还缺系统库。",
+      "level_2": "📖 install 下载浏览器二进制，配合 --with-deps 一起补齐系统依赖。",
+      "level_3": "👀 共 4 空：① 命令运行器前缀；② 工具命令名；③ 安装子命令；④ 连带依赖的参数。",
+      "level_4": "📝 正确答案：`npx`、`playwright`、`install`、`--with-deps`"
+    },
+    "explanation": "--with-deps 在安装浏览器二进制的同时用系统包管理器补齐依赖库，常用于 CI 首次准备。"
+  }
+]

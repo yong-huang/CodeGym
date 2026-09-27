@@ -1,0 +1,1775 @@
+[
+  {
+    "id": "unittest-001",
+    "title": "第一个测试用例",
+    "description": "继承 TestCase 并用 assertEqual 断言加法结果",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "beginner",
+    "category": "unittest_case",
+    "subcategory": "unittest",
+    "full_code": "import unittest\n\nfrom calc import add\n\n\nclass TestAdd(unittest.TestCase):\n    def test_add(self):\n        self.assertEqual(add(1, 2), 3)\n\n\nif __name__ == \"__main__\":\n    unittest.main()",
+    "expected": "",
+    "points": [
+      {
+        "id": "case_base",
+        "text": "unittest.TestCase",
+        "category": "unittest_case",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "测试类要继承的基类",
+        "fill_type": "text"
+      },
+      {
+        "id": "assert_equal",
+        "text": "self.assertEqual(add(1, 2), 3)",
+        "category": "unittest_assert",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "断言两个值相等的方法调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "main_call",
+        "text": "unittest.main()",
+        "category": "unittest_case",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "直接运行本文件时的入口调用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 每个测试用例是一个继承 TestCase 的类，断言用 self.assertXxx 方法完成。",
+      "level_2": "📖 方法名以 test_ 开头才会被自动收集，文件底部用 unittest.main() 作为直接运行的入口。",
+      "level_3": "👀 共 3 空：① 测试类继承的基类；② 相等断言的完整调用；③ 脚本入口调用。",
+      "level_4": "📝 正确答案：`unittest.TestCase`、`self.assertEqual(add(1, 2), 3)`、`unittest.main()`"
+    },
+    "explanation": "unittest 通过反射收集 TestCase 子类中的 test_* 方法，assertEqual 失败时抛出 AssertionError 并记为 failure。"
+  },
+  {
+    "id": "unittest-002",
+    "title": "真假断言",
+    "description": "用 assertTrue 与 assertFalse 判断奇偶性",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "beginner",
+    "category": "unittest_assert",
+    "subcategory": "unittest",
+    "full_code": "import unittest\n\n\ndef is_even(n):\n    return n % 2 == 0\n\n\nclass TestParity(unittest.TestCase):\n    def test_even(self):\n        self.assertTrue(is_even(4))\n\n    def test_odd(self):\n        self.assertFalse(is_even(5))\n\n\nif __name__ == \"__main__\":\n    unittest.main()",
+    "expected": "",
+    "points": [
+      {
+        "id": "case_base",
+        "text": "unittest.TestCase",
+        "category": "unittest_case",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "测试类继承的基类",
+        "fill_type": "text"
+      },
+      {
+        "id": "assert_true",
+        "text": "self.assertTrue(is_even(4))",
+        "category": "unittest_assert",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "结果为真时的断言调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "assert_false",
+        "text": "self.assertFalse(is_even(5))",
+        "category": "unittest_assert",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "结果为假时的断言调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "main_call",
+        "text": "unittest.main()",
+        "category": "unittest_case",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "脚本入口调用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 真值断言用 assertTrue，假值断言用 assertFalse，括号里放待判断的表达式。",
+      "level_2": "📖 两个断言分别写在 test_even 与 test_odd 方法里，最后照例调用 unittest.main()。",
+      "level_3": "👀 共 4 空：① 测试类基类；② 真值断言调用；③ 假值断言调用；④ 脚本入口调用。",
+      "level_4": "📝 正确答案：`unittest.TestCase`、`self.assertTrue(is_even(4))`、`self.assertFalse(is_even(5))`、`unittest.main()`"
+    },
+    "explanation": "assertTrue/assertFalse 把表达式结果与布尔真值比较，失败消息中会带回原始表达式便于定位。"
+  },
+  {
+    "id": "unittest-003",
+    "title": "断言异常抛出",
+    "description": "用 assertRaises 上下文管理器验证除零错误",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "medium",
+    "category": "unittest_assert",
+    "subcategory": "unittest",
+    "full_code": "import unittest\n\n\ndef divide(a, b):\n    return a / b\n\n\nclass TestDivide(unittest.TestCase):\n    def test_divide_by_zero(self):\n        with self.assertRaises(ZeroDivisionError):\n            divide(1, 0)\n\n\nif __name__ == \"__main__\":\n    unittest.main()",
+    "expected": "",
+    "points": [
+      {
+        "id": "case_base",
+        "text": "unittest.TestCase",
+        "category": "unittest_case",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "测试类继承的基类",
+        "fill_type": "text"
+      },
+      {
+        "id": "raises_ctx",
+        "text": "with self.assertRaises(ZeroDivisionError):",
+        "category": "unittest_assert",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "以 with 语法包住会抛异常的代码",
+        "fill_type": "text"
+      },
+      {
+        "id": "call_divide",
+        "text": "divide(1, 0)",
+        "category": "unittest_assert",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "触发除零错误的被调函数",
+        "fill_type": "text"
+      },
+      {
+        "id": "main_call",
+        "text": "unittest.main()",
+        "category": "unittest_case",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "脚本入口调用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 想让断言检查某段代码会抛异常，用 assertRaises 把它包起来。",
+      "level_2": "📖 with self.assertRaises(异常类型): 后面缩进写触发异常的调用，只有真的抛出该类型异常才算通过。",
+      "level_3": "👀 共 4 空：① 测试类基类；② with 形式的异常断言；③ 触发 ZeroDivisionError 的被调函数；④ 脚本入口调用。",
+      "level_4": "📝 正确答案：`unittest.TestCase`、`with self.assertRaises(ZeroDivisionError):`、`divide(1, 0)`、`unittest.main()`"
+    },
+    "explanation": "assertRaises 作为上下文管理器时，块内未抛异常或抛了别的类型都会让用例失败。"
+  },
+  {
+    "id": "unittest-004",
+    "title": "浮点近似断言",
+    "description": "用 assertAlmostEqual 按小数位比较浮点数",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "easy",
+    "category": "unittest_assert",
+    "subcategory": "unittest",
+    "full_code": "import unittest\n\n\nclass TestFloat(unittest.TestCase):\n    def test_pi(self):\n        self.assertAlmostEqual(22 / 7, 3.14159, places=3)\n\n\nif __name__ == \"__main__\":\n    unittest.main()",
+    "expected": "",
+    "points": [
+      {
+        "id": "case_base",
+        "text": "unittest.TestCase",
+        "category": "unittest_case",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "测试类继承的基类",
+        "fill_type": "text"
+      },
+      {
+        "id": "almost_equal",
+        "text": "self.assertAlmostEqual(22 / 7, 3.14159, places=3)",
+        "category": "unittest_assert",
+        "min_weight": "easy",
+        "weight_score": 1.5,
+        "hint": "带 places 参数的近似相等断言",
+        "fill_type": "text"
+      },
+      {
+        "id": "main_call",
+        "text": "unittest.main()",
+        "category": "unittest_case",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "脚本入口调用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 浮点数不要用 assertEqual 直接比，选一个按精度比较的断言方法。",
+      "level_2": "📖 assertAlmostEqual 的 places 参数决定比较到小数点后第几位。",
+      "level_3": "👀 共 3 空：① 测试类基类；② 带 places 参数的近似断言；③ 脚本入口调用。",
+      "level_4": "📝 正确答案：`unittest.TestCase`、`self.assertAlmostEqual(22 / 7, 3.14159, places=3)`、`unittest.main()`"
+    },
+    "explanation": "assertAlmostEqual 默认比较到小数点后 7 位，可用 places 调整位数或用 delta 指定绝对误差。"
+  },
+  {
+    "id": "unittest-005",
+    "title": "成员关系断言",
+    "description": "用 assertIn 与 assertNotIn 检查子串",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "easy",
+    "category": "unittest_assert",
+    "subcategory": "unittest",
+    "full_code": "import unittest\n\n\nclass TestMembership(unittest.TestCase):\n    def test_in(self):\n        self.assertIn(\"py\", \"python\")\n\n    def test_not_in(self):\n        self.assertNotIn(\"java\", \"python\")\n\n\nif __name__ == \"__main__\":\n    unittest.main()",
+    "expected": "",
+    "points": [
+      {
+        "id": "assert_in",
+        "text": "self.assertIn(\"py\", \"python\")",
+        "category": "unittest_assert",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "检查子串存在的断言调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "assert_not_in",
+        "text": "self.assertNotIn(\"java\", \"python\")",
+        "category": "unittest_assert",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "检查子串不存在的断言调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "main_call",
+        "text": "unittest.main()",
+        "category": "unittest_case",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "脚本入口调用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 检查一个元素或子串是否在容器里，用成员关系断言而不是手工 if 判断。",
+      "level_2": "📖 存在用 assertIn，不存在用 assertNotIn，都是被查元素在前、容器在后。",
+      "level_3": "👀 共 3 空：① 存在性断言调用；② 不存在性断言调用；③ 脚本入口调用。",
+      "level_4": "📝 正确答案：`self.assertIn(\"py\", \"python\")`、`self.assertNotIn(\"java\", \"python\")`、`unittest.main()`"
+    },
+    "explanation": "assertIn/assertNotIn 内部调用成员检查，失败信息会直接给出被查元素与容器内容。"
+  },
+  {
+    "id": "unittest-006",
+    "title": "空值断言",
+    "description": "用 assertIsNone 验证未找到时返回 None",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "beginner",
+    "category": "unittest_assert",
+    "subcategory": "unittest",
+    "full_code": "import unittest\n\n\ndef find(seq, target):\n    if target in seq:\n        return seq.index(target)\n    return None\n\n\nclass TestFind(unittest.TestCase):\n    def test_missing(self):\n        self.assertIsNone(find([1, 2], 3))\n\n\nif __name__ == \"__main__\":\n    unittest.main()",
+    "expected": "",
+    "points": [
+      {
+        "id": "return_none",
+        "text": "return None",
+        "category": "unittest_assert",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "未命中分支提前返回的空值",
+        "fill_type": "text"
+      },
+      {
+        "id": "case_base",
+        "text": "unittest.TestCase",
+        "category": "unittest_case",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "测试类继承的基类",
+        "fill_type": "text"
+      },
+      {
+        "id": "assert_none",
+        "text": "self.assertIsNone(find([1, 2], 3))",
+        "category": "unittest_assert",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "判断结果为 None 的断言调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "main_call",
+        "text": "unittest.main()",
+        "category": "unittest_case",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "脚本入口调用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 判断结果是不是 None，用专门的空值断言而不是 assertEqual(x, None)。",
+      "level_2": "📖 函数在目标不存在时提前返回 None，测试方法里用 assertIsNone 包住调用。",
+      "level_3": "👀 共 4 空：① 未命中分支的返回值；② 测试类基类；③ 空值断言调用；④ 脚本入口调用。",
+      "level_4": "📝 正确答案：`return None`、`unittest.TestCase`、`self.assertIsNone(find([1, 2], 3))`、`unittest.main()`"
+    },
+    "explanation": "assertIsNone 用 is 语义判断，比 assertEqual(x, None) 更明确也更安全。"
+  },
+  {
+    "id": "unittest-007",
+    "title": "用例级夹具",
+    "description": "用 setUp 与 tearDown 准备和清理每个用例",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "easy",
+    "category": "unittest_lifecycle",
+    "subcategory": "unittest",
+    "full_code": "import unittest\n\n\nclass TestList(unittest.TestCase):\n    def setUp(self):\n        self.items = []\n\n    def tearDown(self):\n        self.items.clear()\n\n    def test_append(self):\n        self.items.append(1)\n        self.assertEqual(len(self.items), 1)\n\n\nif __name__ == \"__main__\":\n    unittest.main()",
+    "expected": "",
+    "points": [
+      {
+        "id": "set_up_def",
+        "text": "def setUp(self):",
+        "category": "unittest_lifecycle",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "每个用例执行前调用的钩子定义",
+        "fill_type": "text"
+      },
+      {
+        "id": "init_list",
+        "text": "self.items = []",
+        "category": "unittest_lifecycle",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "在钩子里初始化空列表",
+        "fill_type": "text"
+      },
+      {
+        "id": "tear_down_def",
+        "text": "def tearDown(self):",
+        "category": "unittest_lifecycle",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "每个用例执行后调用的钩子定义",
+        "fill_type": "text"
+      },
+      {
+        "id": "clear_list",
+        "text": "self.items.clear()",
+        "category": "unittest_lifecycle",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "在钩子里清空列表",
+        "fill_type": "text"
+      },
+      {
+        "id": "assert_len",
+        "text": "self.assertEqual(len(self.items), 1)",
+        "category": "unittest_assert",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "验证追加后长度的相等断言",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 每个测试方法执行前后都要准备和清理时，用两个生命周期钩子方法。",
+      "level_2": "📖 setUp 在每个用例前调用，tearDown 在每个用例后调用，方法名大小写固定。",
+      "level_3": "👀 共 5 空：① 前置钩子定义；② 初始化空列表；③ 后置钩子定义；④ 清空列表；⑤ 长度相等断言。",
+      "level_4": "📝 正确答案：`def setUp(self):`、`self.items = []`、`def tearDown(self):`、`self.items.clear()`、`self.assertEqual(len(self.items), 1)`"
+    },
+    "explanation": "setUp/tearDown 对每个 test_* 方法各执行一次，保证用例之间互不影响。"
+  },
+  {
+    "id": "unittest-008",
+    "title": "类级夹具",
+    "description": "用 setUpClass 与 tearDownClass 共享一次性资源",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "medium",
+    "category": "unittest_lifecycle",
+    "subcategory": "unittest",
+    "full_code": "import unittest\n\n\nclass TestDatabase(unittest.TestCase):\n    @classmethod\n    def setUpClass(cls):\n        cls.conn = {\"open\": True}\n\n    @classmethod\n    def tearDownClass(cls):\n        cls.conn[\"open\"] = False\n\n    def test_connection(self):\n        self.assertTrue(self.conn[\"open\"])\n\n\nif __name__ == \"__main__\":\n    unittest.main()",
+    "expected": "",
+    "points": [
+      {
+        "id": "set_up_class",
+        "text": "def setUpClass(cls):",
+        "category": "unittest_lifecycle",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "整个类开始前只执行一次的钩子定义",
+        "fill_type": "text"
+      },
+      {
+        "id": "open_conn",
+        "text": "cls.conn = {\"open\": True}",
+        "category": "unittest_lifecycle",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "在类钩子里建立共享连接字典",
+        "fill_type": "text"
+      },
+      {
+        "id": "tear_down_class",
+        "text": "def tearDownClass(cls):",
+        "category": "unittest_lifecycle",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "整个类结束后只执行一次的钩子定义",
+        "fill_type": "text"
+      },
+      {
+        "id": "close_conn",
+        "text": "cls.conn[\"open\"] = False",
+        "category": "unittest_lifecycle",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "在类钩子里把连接状态改为关闭",
+        "fill_type": "text"
+      },
+      {
+        "id": "assert_conn",
+        "text": "self.assertTrue(self.conn[\"open\"])",
+        "category": "unittest_assert",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "校验连接仍处于打开状态",
+        "fill_type": "text"
+      },
+      {
+        "id": "main_call",
+        "text": "unittest.main()",
+        "category": "unittest_case",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "脚本入口调用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 整个测试类共享一次的重资源，交给类级别的前后钩子处理。",
+      "level_2": "📖 setUpClass 与 tearDownClass 要用 @classmethod 装饰，第一个参数是 cls。",
+      "level_3": "👀 共 6 空：① 类前置钩子定义；② 建立共享连接字典；③ 类后置钩子定义；④ 关闭连接的赋值；⑤ 连接状态断言；⑥ 脚本入口调用。",
+      "level_4": "📝 正确答案：`def setUpClass(cls):`、`cls.conn = {\"open\": True}`、`def tearDownClass(cls):`、`cls.conn[\"open\"] = False`、`self.assertTrue(self.conn[\"open\"])`、`unittest.main()`"
+    },
+    "explanation": "类级钩子在整个类开始与结束时各执行一次，适合数据库连接、临时目录这类昂贵资源。"
+  },
+  {
+    "id": "unittest-009",
+    "title": "参数化子测试",
+    "description": "用 subTest 标记一组输入中的失败项",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "medium",
+    "category": "unittest_case",
+    "subcategory": "unittest",
+    "full_code": "import unittest\n\n\ndef square(n):\n    return n * n\n\n\nclass TestSquare(unittest.TestCase):\n    def test_many(self):\n        for n, expected in [(1, 1), (2, 4), (3, 9)]:\n            with self.subTest(n=n):\n                self.assertEqual(square(n), expected)\n\n\nif __name__ == \"__main__\":\n    unittest.main()",
+    "expected": "",
+    "points": [
+      {
+        "id": "loop_inputs",
+        "text": "for n, expected in [(1, 1), (2, 4), (3, 9)]:",
+        "category": "unittest_case",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "遍历输入与期望值的 for 语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "sub_test",
+        "text": "with self.subTest(n=n):",
+        "category": "unittest_case",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "带参数的子测试上下文",
+        "fill_type": "text"
+      },
+      {
+        "id": "assert_square",
+        "text": "self.assertEqual(square(n), expected)",
+        "category": "unittest_assert",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "对平方结果做相等断言",
+        "fill_type": "text"
+      },
+      {
+        "id": "main_call",
+        "text": "unittest.main()",
+        "category": "unittest_case",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "脚本入口调用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 一组输入想逐个跑同一个断言，用子测试把失败定位到具体数据。",
+      "level_2": "📖 在循环里用 with self.subTest(参数=值): 包住断言，某一组失败只标记一个子测试。",
+      "level_3": "👀 共 4 空：① 遍历输入与期望的 for 语句；② 带参数的子测试上下文；③ 平方结果断言；④ 脚本入口调用。",
+      "level_4": "📝 正确答案：`for n, expected in [(1, 1), (2, 4), (3, 9)]:`、`with self.subTest(n=n):`、`self.assertEqual(square(n), expected)`、`unittest.main()`"
+    },
+    "explanation": "subTest 让一个测试方法内的多组数据各自独立报告结果，一组失败不会中断其余数据。"
+  },
+  {
+    "id": "unittest-010",
+    "title": "无条件跳过",
+    "description": "用 @unittest.skip 跳过未完成的测试",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "easy",
+    "category": "unittest_skip",
+    "subcategory": "unittest",
+    "full_code": "import unittest\n\n\nclass TestFeature(unittest.TestCase):\n    @unittest.skip(\"not implemented yet\")\n    def test_future(self):\n        self.assertEqual(1, 2)\n\n\nif __name__ == \"__main__\":\n    unittest.main()",
+    "expected": "",
+    "points": [
+      {
+        "id": "skip_deco",
+        "text": "@unittest.skip(\"not implemented yet\")",
+        "category": "unittest_skip",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "无条件跳过的装饰器及原因",
+        "fill_type": "text"
+      },
+      {
+        "id": "test_def",
+        "text": "def test_future(self):",
+        "category": "unittest_case",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "被装饰的测试方法定义",
+        "fill_type": "text"
+      },
+      {
+        "id": "assert_eq",
+        "text": "self.assertEqual(1, 2)",
+        "category": "unittest_assert",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "被跳过而不会执行的断言",
+        "fill_type": "text"
+      },
+      {
+        "id": "main_call",
+        "text": "unittest.main()",
+        "category": "unittest_case",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "脚本入口调用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 暂时不跑的用例不要删除，用装饰器标记跳过并写明原因。",
+      "level_2": "📖 @unittest.skip(原因字符串) 加在 test_ 方法上，运行时该用例记为 skipped。",
+      "level_3": "👀 共 4 空：① 无条件跳过装饰器；② 被装饰的测试方法定义；③ 永远不会执行的断言；④ 脚本入口调用。",
+      "level_4": "📝 正确答案：`@unittest.skip(\"not implemented yet\")`、`def test_future(self):`、`self.assertEqual(1, 2)`、`unittest.main()`"
+    },
+    "explanation": "skip 装饰器接受一个原因字符串，跳过数量与原因会显示在测试报告里。"
+  },
+  {
+    "id": "unittest-011",
+    "title": "条件跳过",
+    "description": "用 @unittest.skipIf 按平台条件跳过",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "easy",
+    "category": "unittest_skip",
+    "subcategory": "unittest",
+    "full_code": "import sys\nimport unittest\n\n\nclass TestWindowsOnly(unittest.TestCase):\n    @unittest.skipIf(sys.platform != \"win32\", \"windows only\")\n    def test_registry(self):\n        self.assertTrue(True)\n\n\nif __name__ == \"__main__\":\n    unittest.main()",
+    "expected": "",
+    "points": [
+      {
+        "id": "skip_if_deco",
+        "text": "@unittest.skipIf(sys.platform != \"win32\", \"windows only\")",
+        "category": "unittest_skip",
+        "min_weight": "easy",
+        "weight_score": 1.5,
+        "hint": "带平台条件的跳过装饰器",
+        "fill_type": "text"
+      },
+      {
+        "id": "test_def",
+        "text": "def test_registry(self):",
+        "category": "unittest_case",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "被装饰的测试方法定义",
+        "fill_type": "text"
+      },
+      {
+        "id": "assert_true",
+        "text": "self.assertTrue(True)",
+        "category": "unittest_assert",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "条件不满足时仍会执行的断言",
+        "fill_type": "text"
+      },
+      {
+        "id": "main_call",
+        "text": "unittest.main()",
+        "category": "unittest_case",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "脚本入口调用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 只在某个条件成立时才跳过，用带条件的 skip 装饰器。",
+      "level_2": "📖 @unittest.skipIf(条件, 原因) 在条件为真时跳过，这里用 sys.platform 判断系统。",
+      "level_3": "👀 共 4 空：① 条件跳过装饰器；② 被装饰的测试方法定义；③ 恒真断言；④ 脚本入口调用。",
+      "level_4": "📝 正确答案：`@unittest.skipIf(sys.platform != \"win32\", \"windows only\")`、`def test_registry(self):`、`self.assertTrue(True)`、`unittest.main()`"
+    },
+    "explanation": "skipIf 适合平台或依赖版本不满足时跳过，条件为假则测试照常执行。"
+  },
+  {
+    "id": "unittest-012",
+    "title": "预期失败",
+    "description": "用 @unittest.expectedFailure 标记已知缺陷",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "medium",
+    "category": "unittest_skip",
+    "subcategory": "unittest",
+    "full_code": "import unittest\n\n\ndef broken_add(a, b):\n    return a - b\n\n\nclass TestKnownBug(unittest.TestCase):\n    @unittest.expectedFailure\n    def test_broken(self):\n        self.assertEqual(broken_add(2, 3), 5)\n\n\nif __name__ == \"__main__\":\n    unittest.main()",
+    "expected": "",
+    "points": [
+      {
+        "id": "expected_failure_deco",
+        "text": "@unittest.expectedFailure",
+        "category": "unittest_skip",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "预期失败装饰器",
+        "fill_type": "text"
+      },
+      {
+        "id": "test_def",
+        "text": "def test_broken(self):",
+        "category": "unittest_case",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "被装饰的测试方法定义",
+        "fill_type": "text"
+      },
+      {
+        "id": "assert_broken",
+        "text": "self.assertEqual(broken_add(2, 3), 5)",
+        "category": "unittest_assert",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "与错误实现相悖的断言",
+        "fill_type": "text"
+      },
+      {
+        "id": "main_call",
+        "text": "unittest.main()",
+        "category": "unittest_case",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "脚本入口调用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 已知有缺陷、暂时不修的用例，可以标记为预期失败而不让整个套件报红。",
+      "level_2": "📖 @unittest.expectedFailure 装饰的用例失败时记为 expected failure，意外通过则记为 unexpected success。",
+      "level_3": "👀 共 4 空：① 预期失败装饰器；② 被装饰的测试方法定义；③ 与错误实现相悖的断言；④ 脚本入口调用。",
+      "level_4": "📝 正确答案：`@unittest.expectedFailure`、`def test_broken(self):`、`self.assertEqual(broken_add(2, 3), 5)`、`unittest.main()`"
+    },
+    "explanation": "expectedFailure 把已知 bug 从红灯转为可跟踪的预期失败，修复后运行会提示 unexpected success。"
+  },
+  {
+    "id": "unittest-013",
+    "title": "脚本入口",
+    "description": "在 __main__ 中以 verbosity=2 运行测试",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "beginner",
+    "category": "unittest_cli",
+    "subcategory": "unittest",
+    "full_code": "import unittest\n\n\nclass TestMath(unittest.TestCase):\n    def test_add(self):\n        self.assertEqual(1 + 1, 2)\n\n\nif __name__ == \"__main__\":\n    unittest.main(verbosity=2)",
+    "expected": "",
+    "points": [
+      {
+        "id": "case_base",
+        "text": "unittest.TestCase",
+        "category": "unittest_case",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "测试类继承的基类",
+        "fill_type": "text"
+      },
+      {
+        "id": "assert_add",
+        "text": "self.assertEqual(1 + 1, 2)",
+        "category": "unittest_assert",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "简单加法的相等断言",
+        "fill_type": "text"
+      },
+      {
+        "id": "main_guard",
+        "text": "if __name__ == \"__main__\":",
+        "category": "unittest_cli",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "直接运行脚本时的判断语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "main_call",
+        "text": "unittest.main(verbosity=2)",
+        "category": "unittest_cli",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "带详细输出参数的入口调用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 文件作为脚本直接运行时的入口，写在 __main__ 判断里。",
+      "level_2": "📖 给 unittest.main() 传 verbosity=2 可以打印每个测试方法的明细结果。",
+      "level_3": "👀 共 4 空：① 测试类基类；② 加法相等断言；③ __main__ 判断；④ 带 verbosity 的入口调用。",
+      "level_4": "📝 正确答案：`unittest.TestCase`、`self.assertEqual(1 + 1, 2)`、`if __name__ == \"__main__\":`、`unittest.main(verbosity=2)`"
+    },
+    "explanation": "unittest.main() 解析命令行参数并运行当前模块中的测试，verbosity=2 输出每个用例的名称与状态。"
+  },
+  {
+    "id": "unittest-014",
+    "title": "组装测试套件",
+    "description": "用 TestLoader 与 TestSuite 收集并组合用例",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "medium",
+    "category": "unittest_suite",
+    "subcategory": "unittest",
+    "full_code": "import unittest\n\nfrom tests.test_math import TestAdd\n\n\ndef suite():\n    loader = unittest.TestLoader()\n    s = unittest.TestSuite()\n    s.addTests(loader.loadTestsFromTestCase(TestAdd))\n    return s\n\n\nif __name__ == \"__main__\":\n    runner = unittest.TextTestRunner(verbosity=2)\n    runner.run(suite())",
+    "expected": "",
+    "points": [
+      {
+        "id": "loader",
+        "text": "loader = unittest.TestLoader()",
+        "category": "unittest_suite",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "创建测试加载器",
+        "fill_type": "text"
+      },
+      {
+        "id": "suite_obj",
+        "text": "s = unittest.TestSuite()",
+        "category": "unittest_suite",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "创建空测试套件",
+        "fill_type": "text"
+      },
+      {
+        "id": "add_tests",
+        "text": "s.addTests(loader.loadTestsFromTestCase(TestAdd))",
+        "category": "unittest_suite",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "用加载器从测试类收集用例并加入套件",
+        "fill_type": "text"
+      },
+      {
+        "id": "main_guard",
+        "text": "if __name__ == \"__main__\":",
+        "category": "unittest_cli",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "直接运行脚本时的判断语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "runner",
+        "text": "runner = unittest.TextTestRunner(verbosity=2)",
+        "category": "unittest_runner",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "创建带详细输出的运行器",
+        "fill_type": "text"
+      },
+      {
+        "id": "run_suite",
+        "text": "runner.run(suite())",
+        "category": "unittest_runner",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "运行工厂函数返回的套件",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 需要手工组织要跑哪些用例时，用加载器收集、用套件组合。",
+      "level_2": "📖 TestLoader 负责从测试类加载用例，TestSuite 通过 addTests 聚合，TextTestRunner 负责执行。",
+      "level_3": "👀 共 6 空：① 创建 TestLoader；② 创建 TestSuite；③ 收集测试类并加入套件；④ __main__ 判断；⑤ 创建带 verbosity 的运行器；⑥ 运行套件。",
+      "level_4": "📝 正确答案：`loader = unittest.TestLoader()`、`s = unittest.TestSuite()`、`s.addTests(loader.loadTestsFromTestCase(TestAdd))`、`if __name__ == \"__main__\":`、`runner = unittest.TextTestRunner(verbosity=2)`、`runner.run(suite())`"
+    },
+    "explanation": "loadTestsFromTestCase 把类中的 test_* 方法逐个转成用例，addTests 装进套件后交给 runner 执行。"
+  },
+  {
+    "id": "unittest-015",
+    "title": "运行套件",
+    "description": "用 TextTestRunner 运行套件并读取结果对象",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "medium",
+    "category": "unittest_runner",
+    "subcategory": "unittest",
+    "full_code": "import unittest\n\nfrom tests.test_math import TestAdd\n\n\nif __name__ == \"__main__\":\n    suite = unittest.TestLoader().loadTestsFromTestCase(TestAdd)\n    runner = unittest.TextTestRunner(verbosity=2)\n    result = runner.run(suite)\n    print(\"failures:\", len(result.failures))",
+    "expected": "",
+    "points": [
+      {
+        "id": "main_guard",
+        "text": "if __name__ == \"__main__\":",
+        "category": "unittest_cli",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "直接运行脚本时的判断语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "load_suite",
+        "text": "suite = unittest.TestLoader().loadTestsFromTestCase(TestAdd)",
+        "category": "unittest_suite",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "链式加载测试类得到套件",
+        "fill_type": "text"
+      },
+      {
+        "id": "runner",
+        "text": "runner = unittest.TextTestRunner(verbosity=2)",
+        "category": "unittest_runner",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "创建带详细输出的运行器",
+        "fill_type": "text"
+      },
+      {
+        "id": "run_result",
+        "text": "result = runner.run(suite)",
+        "category": "unittest_runner",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "执行套件并接收结果对象",
+        "fill_type": "text"
+      },
+      {
+        "id": "print_failures",
+        "text": "print(\"failures:\", len(result.failures))",
+        "category": "unittest_runner",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "打印失败列表长度",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 想拿到测试结果对象做后续处理，就显式创建 runner 并接收 run 的返回值。",
+      "level_2": "📖 TestLoader 加载出套件，TextTestRunner(verbosity=2) 执行，run 返回 TestResult。",
+      "level_3": "👀 共 5 空：① __main__ 判断；② 加载测试类得到套件；③ 创建运行器；④ 接收运行结果；⑤ 打印失败数量。",
+      "level_4": "📝 正确答案：`if __name__ == \"__main__\":`、`suite = unittest.TestLoader().loadTestsFromTestCase(TestAdd)`、`runner = unittest.TextTestRunner(verbosity=2)`、`result = runner.run(suite)`、`print(\"failures:\", len(result.failures))`"
+    },
+    "explanation": "run 返回的 TestResult 中 failures 是失败用例与回溯的列表，可据此做自定义报告或 CI 判断。"
+  },
+  {
+    "id": "unittest-016",
+    "title": "patch 装饰器",
+    "description": "用 @patch 替换被测代码依赖的请求函数",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "medium",
+    "category": "unittest_mock",
+    "subcategory": "unittest",
+    "full_code": "import unittest\nfrom unittest.mock import patch\n\nfrom app import get_weather\n\n\nclass TestWeather(unittest.TestCase):\n    @patch(\"app.requests.get\")\n    def test_weather(self, mock_get):\n        mock_get.return_value.json.return_value = {\"temp\": 20}\n        self.assertEqual(get_weather(), 20)\n\n\nif __name__ == \"__main__\":\n    unittest.main()",
+    "expected": "",
+    "points": [
+      {
+        "id": "import_patch",
+        "text": "from unittest.mock import patch",
+        "category": "unittest_mock",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "导入 patch 的语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "patch_deco",
+        "text": "@patch(\"app.requests.get\")",
+        "category": "unittest_mock",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "替换目标路径的装饰器",
+        "fill_type": "text"
+      },
+      {
+        "id": "set_return",
+        "text": "mock_get.return_value.json.return_value = {\"temp\": 20}",
+        "category": "unittest_mock",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "逐层设置 mock 的链式返回值",
+        "fill_type": "text"
+      },
+      {
+        "id": "assert_weather",
+        "text": "self.assertEqual(get_weather(), 20)",
+        "category": "unittest_assert",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "天气结果的相等断言",
+        "fill_type": "text"
+      },
+      {
+        "id": "main_call",
+        "text": "unittest.main()",
+        "category": "unittest_case",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "脚本入口调用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 不想真的发网络请求，就用 patch 把被测模块里引用的函数换成 mock。",
+      "level_2": "📖 @patch(目标路径) 装饰方法时，mock 会作为额外参数注入到测试方法签名里。",
+      "level_3": "👀 共 5 空：① 导入 patch；② patch 装饰器及目标路径；③ 设置链式返回值；④ 天气结果断言；⑤ 脚本入口调用。",
+      "level_4": "📝 正确答案：`from unittest.mock import patch`、`@patch(\"app.requests.get\")`、`mock_get.return_value.json.return_value = {\"temp\": 20}`、`self.assertEqual(get_weather(), 20)`、`unittest.main()`"
+    },
+    "explanation": "patch 按名字替换目标模块中的引用并在退出时自动还原，返回值链条要按被测代码实际访问的属性逐层设置。"
+  },
+  {
+    "id": "unittest-017",
+    "title": "patch.object",
+    "description": "用 patch.object 替换对象属性并断言调用",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "hard",
+    "category": "unittest_mock",
+    "subcategory": "unittest",
+    "full_code": "import unittest\nfrom unittest.mock import patch\n\nfrom app import service\n\n\nclass TestService(unittest.TestCase):\n    def test_run(self):\n        with patch.object(service, \"execute\", return_value=\"ok\") as mock_exec:\n            self.assertEqual(service.run(), \"ok\")\n        mock_exec.assert_called_once()\n\n\nif __name__ == \"__main__\":\n    unittest.main()",
+    "expected": "",
+    "points": [
+      {
+        "id": "import_patch",
+        "text": "from unittest.mock import patch",
+        "category": "unittest_mock",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "导入 patch 的语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "patch_object_ctx",
+        "text": "with patch.object(service, \"execute\", return_value=\"ok\") as mock_exec:",
+        "category": "unittest_mock",
+        "min_weight": "hard",
+        "weight_score": 2,
+        "hint": "以上下文管理器替换对象属性",
+        "fill_type": "text"
+      },
+      {
+        "id": "assert_run",
+        "text": "self.assertEqual(service.run(), \"ok\")",
+        "category": "unittest_assert",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "被测服务运行结果的断言",
+        "fill_type": "text"
+      },
+      {
+        "id": "assert_called",
+        "text": "mock_exec.assert_called_once()",
+        "category": "unittest_mock",
+        "min_weight": "hard",
+        "weight_score": 1.5,
+        "hint": "断言 mock 恰好被调用一次",
+        "fill_type": "text"
+      },
+      {
+        "id": "main_call",
+        "text": "unittest.main()",
+        "category": "unittest_case",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "脚本入口调用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 目标是一个对象上的属性而不是模块路径时，用 patch.object。",
+      "level_2": "📖 patch.object(对象, 属性名, return_value=...) 可作为上下文管理器，as 后面接 mock。",
+      "level_3": "👀 共 5 空：① 导入 patch；② patch.object 上下文管理器；③ 运行结果断言；④ 一次性调用断言；⑤ 脚本入口调用。",
+      "level_4": "📝 正确答案：`from unittest.mock import patch`、`with patch.object(service, \"execute\", return_value=\"ok\") as mock_exec:`、`self.assertEqual(service.run(), \"ok\")`、`mock_exec.assert_called_once()`、`unittest.main()`"
+    },
+    "explanation": "patch.object 直接替换给定对象的属性，适合 service、client 这类实例或模块对象。"
+  },
+  {
+    "id": "unittest-018",
+    "title": "MagicMock 返回值",
+    "description": "用 MagicMock 的 return_value 模拟缓存读取",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "medium",
+    "category": "unittest_mock",
+    "subcategory": "unittest",
+    "full_code": "import unittest\nfrom unittest.mock import MagicMock\n\n\nclass TestCache(unittest.TestCase):\n    def test_get(self):\n        cache = MagicMock()\n        cache.get.return_value = \"value\"\n        self.assertEqual(cache.get(\"key\"), \"value\")\n\n\nif __name__ == \"__main__\":\n    unittest.main()",
+    "expected": "",
+    "points": [
+      {
+        "id": "import_magicmock",
+        "text": "from unittest.mock import MagicMock",
+        "category": "unittest_mock",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "导入 MagicMock 的语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "make_mock",
+        "text": "cache = MagicMock()",
+        "category": "unittest_mock",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "创建 mock 对象",
+        "fill_type": "text"
+      },
+      {
+        "id": "set_return",
+        "text": "cache.get.return_value = \"value\"",
+        "category": "unittest_mock",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "设置 get 方法的返回值",
+        "fill_type": "text"
+      },
+      {
+        "id": "assert_get",
+        "text": "self.assertEqual(cache.get(\"key\"), \"value\")",
+        "category": "unittest_assert",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "读取缓存结果的相等断言",
+        "fill_type": "text"
+      },
+      {
+        "id": "main_call",
+        "text": "unittest.main()",
+        "category": "unittest_case",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "脚本入口调用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 用 Mock 家族模拟一个对象，并预设方法被调用时返回什么。",
+      "level_2": "📖 MagicMock 自动支持魔术方法，return_value 决定该 mock 被调用后的返回值。",
+      "level_3": "👀 共 5 空：① 导入 MagicMock；② 创建 mock 对象；③ 设置 get 方法的返回值；④ 读取结果断言；⑤ 脚本入口调用。",
+      "level_4": "📝 正确答案：`from unittest.mock import MagicMock`、`cache = MagicMock()`、`cache.get.return_value = \"value\"`、`self.assertEqual(cache.get(\"key\"), \"value\")`、`unittest.main()`"
+    },
+    "explanation": "MagicMock 是 Mock 的增强版，默认支持 __len__、__iter__ 等魔术方法，适合替换普通对象。"
+  },
+  {
+    "id": "unittest-019",
+    "title": "side_effect 序列",
+    "description": "用 side_effect 让 mock 先抛错再返回值",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "hard",
+    "category": "unittest_mock",
+    "subcategory": "unittest",
+    "full_code": "import unittest\nfrom unittest.mock import Mock\n\n\nclass TestRetry(unittest.TestCase):\n    def test_flaky(self):\n        task = Mock()\n        task.side_effect = [RuntimeError, \"done\"]\n        with self.assertRaises(RuntimeError):\n            task()\n        self.assertEqual(task(), \"done\")\n\n\nif __name__ == \"__main__\":\n    unittest.main()",
+    "expected": "",
+    "points": [
+      {
+        "id": "import_mock",
+        "text": "from unittest.mock import Mock",
+        "category": "unittest_mock",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "导入 Mock 的语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "make_mock",
+        "text": "task = Mock()",
+        "category": "unittest_mock",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "创建 mock 对象",
+        "fill_type": "text"
+      },
+      {
+        "id": "set_side_effect",
+        "text": "task.side_effect = [RuntimeError, \"done\"]",
+        "category": "unittest_mock",
+        "min_weight": "hard",
+        "weight_score": 2,
+        "hint": "设置异常与返回值交替生效的副作用序列",
+        "fill_type": "text"
+      },
+      {
+        "id": "assert_raises",
+        "text": "with self.assertRaises(RuntimeError):",
+        "category": "unittest_assert",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "断言首次调用抛出异常",
+        "fill_type": "text"
+      },
+      {
+        "id": "assert_done",
+        "text": "self.assertEqual(task(), \"done\")",
+        "category": "unittest_assert",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "断言第二次调用返回成功值",
+        "fill_type": "text"
+      },
+      {
+        "id": "main_call",
+        "text": "unittest.main()",
+        "category": "unittest_case",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "脚本入口调用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 想让 mock 每次调用表现不同，用 side_effect 给它一个行为序列。",
+      "level_2": "📖 side_effect 为异常类时调用会抛出该异常，为普通值时作为返回值，列表则按顺序逐个生效。",
+      "level_3": "👀 共 6 空：① 导入 Mock；② 创建 mock；③ 设置抛错与返回的副作用序列；④ 首次调用抛异常的断言；⑤ 第二次调用的返回值断言；⑥ 脚本入口调用。",
+      "level_4": "📝 正确答案：`from unittest.mock import Mock`、`task = Mock()`、`task.side_effect = [RuntimeError, \"done\"]`、`with self.assertRaises(RuntimeError):`、`self.assertEqual(task(), \"done\")`、`unittest.main()`"
+    },
+    "explanation": "side_effect 序列常用于模拟重试场景：第一次失败、第二次成功。"
+  },
+  {
+    "id": "unittest-020",
+    "title": "断言调用参数",
+    "description": "用 assert_called_once_with 校验 mock 调用",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "hard",
+    "category": "unittest_mock",
+    "subcategory": "unittest",
+    "full_code": "import unittest\nfrom unittest.mock import Mock\n\n\ndef notify(mailer, message):\n    mailer.send(message)\n\n\nclass TestNotifier(unittest.TestCase):\n    def test_send(self):\n        mailer = Mock()\n        notify(mailer, \"hello\")\n        mailer.send.assert_called_once_with(\"hello\")\n\n\nif __name__ == \"__main__\":\n    unittest.main()",
+    "expected": "",
+    "points": [
+      {
+        "id": "import_mock",
+        "text": "from unittest.mock import Mock",
+        "category": "unittest_mock",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "导入 Mock 的语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "notify_def",
+        "text": "def notify(mailer, message):",
+        "category": "unittest_mock",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "被测的通知函数定义",
+        "fill_type": "text"
+      },
+      {
+        "id": "make_mock",
+        "text": "mailer = Mock()",
+        "category": "unittest_mock",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "创建 mock 对象",
+        "fill_type": "text"
+      },
+      {
+        "id": "assert_called_once_with",
+        "text": "mailer.send.assert_called_once_with(\"hello\")",
+        "category": "unittest_mock",
+        "min_weight": "hard",
+        "weight_score": 2,
+        "hint": "同时校验调用次数与参数的断言",
+        "fill_type": "text"
+      },
+      {
+        "id": "main_call",
+        "text": "unittest.main()",
+        "category": "unittest_case",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "脚本入口调用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 不仅要验证 mock 被调用，还要精确核对调用时传了什么参数。",
+      "level_2": "📖 assert_called_once_with(...) 同时要求恰好调用一次且参数完全匹配。",
+      "level_3": "👀 共 5 空：① 导入 Mock；② 被测通知函数定义；③ 创建 mock；④ 一次性调用参数断言；⑤ 脚本入口调用。",
+      "level_4": "📝 正确答案：`from unittest.mock import Mock`、`def notify(mailer, message):`、`mailer = Mock()`、`mailer.send.assert_called_once_with(\"hello\")`、`unittest.main()`"
+    },
+    "explanation": "assert_called_once_with 等价于调用次数为 1 且参数相等，未调用、多次调用或参数不同都会失败。"
+  },
+  {
+    "id": "unittest-021",
+    "title": "autospec 规格校验",
+    "description": "用 autospec=True 让 mock 校验函数签名",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "expert",
+    "category": "unittest_mock",
+    "subcategory": "unittest",
+    "full_code": "import unittest\nfrom unittest.mock import patch\n\nfrom app.client import fetch\n\n\nclass TestClient(unittest.TestCase):\n    @patch(\"app.client.requests.get\", autospec=True)\n    def test_fetch(self, mock_get):\n        mock_get.return_value.status_code = 200\n        self.assertEqual(fetch(\"url\"), 200)\n        mock_get.assert_called_once_with(\"url\")\n\n\nif __name__ == \"__main__\":\n    unittest.main()",
+    "expected": "",
+    "points": [
+      {
+        "id": "patch_autospec",
+        "text": "@patch(\"app.client.requests.get\", autospec=True)",
+        "category": "unittest_mock",
+        "min_weight": "expert",
+        "weight_score": 2,
+        "hint": "带 autospec 参数的 patch 装饰器",
+        "fill_type": "text"
+      },
+      {
+        "id": "test_def",
+        "text": "def test_fetch(self, mock_get):",
+        "category": "unittest_case",
+        "min_weight": "expert",
+        "weight_score": 1,
+        "hint": "接收注入 mock 参数的测试方法定义",
+        "fill_type": "text"
+      },
+      {
+        "id": "set_status",
+        "text": "mock_get.return_value.status_code = 200",
+        "category": "unittest_mock",
+        "min_weight": "hard",
+        "weight_score": 1.5,
+        "hint": "设置响应对象的 status_code",
+        "fill_type": "text"
+      },
+      {
+        "id": "assert_fetch",
+        "text": "self.assertEqual(fetch(\"url\"), 200)",
+        "category": "unittest_assert",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "请求函数返回值的断言",
+        "fill_type": "text"
+      },
+      {
+        "id": "assert_called",
+        "text": "mock_get.assert_called_once_with(\"url\")",
+        "category": "unittest_mock",
+        "min_weight": "hard",
+        "weight_score": 1.5,
+        "hint": "校验调用参数的断言",
+        "fill_type": "text"
+      },
+      {
+        "id": "main_call",
+        "text": "unittest.main()",
+        "category": "unittest_case",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "脚本入口调用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 普通 mock 不检查调用签名，加上 autospec 就能按原函数规格校验。",
+      "level_2": "📖 @patch(路径, autospec=True) 依据真实对象生成规格化 mock，调用参数不合法会直接报错。",
+      "level_3": "👀 共 6 空：① 带 autospec 的 patch 装饰器；② 被注入 mock 参数的测试方法定义；③ 设置 status_code 返回值；④ 请求结果断言；⑤ 调用参数断言；⑥ 脚本入口调用。",
+      "level_4": "📝 正确答案：`@patch(\"app.client.requests.get\", autospec=True)`、`def test_fetch(self, mock_get):`、`mock_get.return_value.status_code = 200`、`self.assertEqual(fetch(\"url\"), 200)`、`mock_get.assert_called_once_with(\"url\")`、`unittest.main()`"
+    },
+    "explanation": "autospec=True 让 mock 拥有与原对象一致的签名与属性结构，能更早发现参数拼写或数量错误。"
+  },
+  {
+    "id": "unittest-022",
+    "title": "patch 上下文管理器",
+    "description": "用 with patch(...) as m 在用例内临时替换依赖",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "easy",
+    "category": "unittest_mock",
+    "subcategory": "unittest",
+    "full_code": "import unittest\nfrom unittest.mock import patch\n\nfrom app import clock\n\n\nclass TestClock(unittest.TestCase):\n    def test_now(self):\n        with patch(\"app.clock.datetime\") as mock_dt:\n            mock_dt.now.return_value.year = 2030\n            self.assertEqual(clock.current_year(), 2030)\n\n\nif __name__ == \"__main__\":\n    unittest.main()",
+    "expected": "",
+    "points": [
+      {
+        "id": "import_patch",
+        "text": "from unittest.mock import patch",
+        "category": "unittest_mock",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "导入 patch 的语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "patch_ctx",
+        "text": "with patch(\"app.clock.datetime\") as mock_dt:",
+        "category": "unittest_mock",
+        "min_weight": "easy",
+        "weight_score": 1.5,
+        "hint": "替换依赖的 with 语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "set_year",
+        "text": "mock_dt.now.return_value.year = 2030",
+        "category": "unittest_mock",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "设置 now 返回值上的年份属性",
+        "fill_type": "text"
+      },
+      {
+        "id": "assert_year",
+        "text": "self.assertEqual(clock.current_year(), 2030)",
+        "category": "unittest_assert",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "当前年份的相等断言",
+        "fill_type": "text"
+      },
+      {
+        "id": "main_call",
+        "text": "unittest.main()",
+        "category": "unittest_case",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "脚本入口调用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 只在某个用例或代码块内替换依赖时，用 with patch(...) 的写法。",
+      "level_2": "📖 with patch(目标路径) as mock_dt: 块内生效，退出 with 后自动还原。",
+      "level_3": "👀 共 5 空：① 导入 patch；② patch 上下文管理器；③ 设置 now 返回值的年份；④ 当前年份断言；⑤ 脚本入口调用。",
+      "level_4": "📝 正确答案：`from unittest.mock import patch`、`with patch(\"app.clock.datetime\") as mock_dt:`、`mock_dt.now.return_value.year = 2030`、`self.assertEqual(clock.current_year(), 2030)`、`unittest.main()`"
+    },
+    "explanation": "上下文管理器形式适合临时替换，作用域只覆盖 with 代码块，不会影响其他用例。"
+  },
+  {
+    "id": "unittest-023",
+    "title": "嵌套容器断言",
+    "description": "用 assertEqual 比较嵌套字典与列表",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "medium",
+    "category": "unittest_assert",
+    "subcategory": "unittest",
+    "full_code": "import unittest\n\n\nclass TestConfig(unittest.TestCase):\n    def test_merge(self):\n        result = {\"a\": [1, 2], \"b\": {\"c\": 3}}\n        expected = {\"a\": [1, 2], \"b\": {\"c\": 3}}\n        self.assertEqual(result, expected)\n\n\nif __name__ == \"__main__\":\n    unittest.main()",
+    "expected": "",
+    "points": [
+      {
+        "id": "case_base",
+        "text": "unittest.TestCase",
+        "category": "unittest_case",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "测试类继承的基类",
+        "fill_type": "text"
+      },
+      {
+        "id": "result_dict",
+        "text": "result = {\"a\": [1, 2], \"b\": {\"c\": 3}}",
+        "category": "unittest_assert",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "待验证的实际结果字典",
+        "fill_type": "text"
+      },
+      {
+        "id": "assert_equal",
+        "text": "self.assertEqual(result, expected)",
+        "category": "unittest_assert",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "整体相等断言",
+        "fill_type": "text"
+      },
+      {
+        "id": "main_call",
+        "text": "unittest.main()",
+        "category": "unittest_case",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "脚本入口调用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 字典套列表、列表套字典这类结构，assertEqual 会做深度比较。",
+      "level_2": "📖 准备一个实际结果和一个期望结果，直接用 assertEqual 比较整个嵌套结构。",
+      "level_3": "👀 共 4 空：① 测试类基类；② 实际结果字典；③ 整体相等断言；④ 脚本入口调用。",
+      "level_4": "📝 正确答案：`unittest.TestCase`、`result = {\"a\": [1, 2], \"b\": {\"c\": 3}}`、`self.assertEqual(result, expected)`、`unittest.main()`"
+    },
+    "explanation": "assertEqual 对 dict/list 递归比较键与元素，嵌套结构不一致时会报告差异路径。"
+  },
+  {
+    "id": "unittest-024",
+    "title": "按顺序断言调用",
+    "description": "用 assert_has_calls 检查 mock 的调用顺序",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "expert",
+    "category": "unittest_mock",
+    "subcategory": "unittest",
+    "full_code": "import unittest\nfrom unittest.mock import Mock, call\n\n\ndef run(pipe):\n    pipe.add(\"read\")\n    pipe.add(\"parse\")\n\n\nclass TestPipeline(unittest.TestCase):\n    def test_order(self):\n        pipe = Mock()\n        run(pipe)\n        pipe.add.assert_has_calls([call(\"read\"), call(\"parse\")])\n\n\nif __name__ == \"__main__\":\n    unittest.main()",
+    "expected": "",
+    "points": [
+      {
+        "id": "import_call",
+        "text": "from unittest.mock import Mock, call",
+        "category": "unittest_mock",
+        "min_weight": "expert",
+        "weight_score": 1.5,
+        "hint": "导入 Mock 与 call 辅助对象的语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "run_def",
+        "text": "def run(pipe):",
+        "category": "unittest_mock",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "驱动 mock 的执行函数定义",
+        "fill_type": "text"
+      },
+      {
+        "id": "make_mock",
+        "text": "pipe = Mock()",
+        "category": "unittest_mock",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "创建 mock 对象",
+        "fill_type": "text"
+      },
+      {
+        "id": "assert_calls",
+        "text": "pipe.add.assert_has_calls([call(\"read\"), call(\"parse\")])",
+        "category": "unittest_mock",
+        "min_weight": "expert",
+        "weight_score": 2,
+        "hint": "按顺序检查调用记录的断言",
+        "fill_type": "text"
+      },
+      {
+        "id": "main_call",
+        "text": "unittest.main()",
+        "category": "unittest_case",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "脚本入口调用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 要断言 mock 上多个调用的先后顺序，用带 call 列表的专用断言。",
+      "level_2": "📖 assert_has_calls([call(...), call(...)]) 按给定顺序在调用记录中查找子序列。",
+      "level_3": "👀 共 5 空：① 导入 Mock 与 call；② 驱动函数定义；③ 创建 mock；④ 顺序调用断言；⑤ 脚本入口调用。",
+      "level_4": "📝 正确答案：`from unittest.mock import Mock, call`、`def run(pipe):`、`pipe = Mock()`、`pipe.add.assert_has_calls([call(\"read\"), call(\"parse\")])`、`unittest.main()`"
+    },
+    "explanation": "assert_has_calls 默认要求按顺序连续匹配给定调用，可用 any_order=True 放宽顺序要求。"
+  },
+  {
+    "id": "unittest-025",
+    "title": "运行单个测试方法",
+    "description": "在命令行中只运行指定的测试方法",
+    "exercise_type": "command",
+    "tech_stack": "testing",
+    "weight": "easy",
+    "category": "unittest_cli",
+    "subcategory": "unittest",
+    "full_code": "python -m unittest tests.test_mod.TestClass.test_method",
+    "expected": "",
+    "points": [
+      {
+        "id": "mod_prefix",
+        "text": "python -m unittest",
+        "category": "unittest_cli",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "以模块方式运行标准库测试框架的前缀",
+        "fill_type": "text"
+      },
+      {
+        "id": "module_path",
+        "text": "tests.test_mod",
+        "category": "unittest_cli",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "测试模块的点号路径",
+        "fill_type": "text"
+      },
+      {
+        "id": "class_method",
+        "text": "TestClass.test_method",
+        "category": "unittest_cli",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "类名与方法名组成的点号路径",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 只跑一个测试方法时，把模块、类、方法用点号串成完整路径。",
+      "level_2": "📖 python -m unittest 后面接 模块.类.方法 的完整限定名。",
+      "level_3": "👀 共 3 空：① unittest 的模块运行前缀；② 测试模块点号路径；③ 类与方法点号路径。",
+      "level_4": "📝 正确答案：`python -m unittest`、`tests.test_mod`、`TestClass.test_method`"
+    },
+    "explanation": "unittest 支持把目标写成点号路径，精确运行到某一个测试方法，便于本地调试。"
+  },
+  {
+    "id": "unittest-026",
+    "title": "详细输出模式",
+    "description": "用 -v 打印每个测试方法的结果",
+    "exercise_type": "command",
+    "tech_stack": "testing",
+    "weight": "easy",
+    "category": "unittest_cli",
+    "subcategory": "unittest",
+    "full_code": "python -m unittest -v tests.test_mod",
+    "expected": "",
+    "points": [
+      {
+        "id": "mod_prefix",
+        "text": "python -m unittest",
+        "category": "unittest_cli",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "以模块方式运行标准库测试框架的前缀",
+        "fill_type": "text"
+      },
+      {
+        "id": "verbose_flag",
+        "text": "-v",
+        "category": "unittest_cli",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "开启详细输出的短选项",
+        "fill_type": "text"
+      },
+      {
+        "id": "module_path",
+        "text": "tests.test_mod",
+        "category": "unittest_cli",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "测试模块的点号路径",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 想看到每个测试方法的名称和结果，给命令加详细输出开关。",
+      "level_2": "📖 -v 对应 verbose，等价于代码里调用 unittest.main(verbosity=2)。",
+      "level_3": "👀 共 3 空：① unittest 的模块运行前缀；② 详细输出选项；③ 测试模块点号路径。",
+      "level_4": "📝 正确答案：`python -m unittest`、`-v`、`tests.test_mod`"
+    },
+    "explanation": "unittest 的 -v/--verbose 会为每个用例打印一行结果，失败时还能看到完整回溯。"
+  },
+  {
+    "id": "unittest-027",
+    "title": "按模块运行测试",
+    "description": "用 unittest 运行指定模块中的全部测试",
+    "exercise_type": "command",
+    "tech_stack": "testing",
+    "weight": "beginner",
+    "category": "unittest_cli",
+    "subcategory": "unittest",
+    "full_code": "python -m unittest tests.test_mod",
+    "expected": "",
+    "points": [
+      {
+        "id": "python_cmd",
+        "text": "python -m",
+        "category": "unittest_cli",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "把后面模块当脚本执行的解释器前缀",
+        "fill_type": "text"
+      },
+      {
+        "id": "framework",
+        "text": "unittest",
+        "category": "unittest_cli",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "标准库自带的测试框架模块名",
+        "fill_type": "text"
+      },
+      {
+        "id": "module_path",
+        "text": "tests.test_mod",
+        "category": "unittest_cli",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "测试模块的点号路径",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 不写入口脚本，也能在命令行直接运行某个测试模块。",
+      "level_2": "📖 python -m unittest 接模块的点号路径，就会执行该模块中的全部测试。",
+      "level_3": "👀 共 3 空：① 以模块方式执行解释器命令；② 标准库测试框架名；③ 测试模块点号路径。",
+      "level_4": "📝 正确答案：`python -m`、`unittest`、`tests.test_mod`"
+    },
+    "explanation": "python -m unittest 会自动导入目标模块并运行其中的 TestCase。"
+  },
+  {
+    "id": "unittest-028",
+    "title": "自动发现测试",
+    "description": "用 discover 按目录与文件名模式发现测试",
+    "exercise_type": "command",
+    "tech_stack": "testing",
+    "weight": "medium",
+    "category": "unittest_cli",
+    "subcategory": "unittest",
+    "full_code": "python -m unittest discover -s tests -p \"test_*.py\"",
+    "expected": "",
+    "points": [
+      {
+        "id": "discover_prefix",
+        "text": "python -m unittest discover",
+        "category": "unittest_cli",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "自动发现子命令的调用前缀",
+        "fill_type": "text"
+      },
+      {
+        "id": "start_dir",
+        "text": "-s tests",
+        "category": "unittest_cli",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "指定发现起始目录的选项",
+        "fill_type": "text"
+      },
+      {
+        "id": "pattern",
+        "text": "-p \"test_*.py\"",
+        "category": "unittest_cli",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "指定文件名匹配模式的选项",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 测试文件散落在目录里时，用自动发现而不是逐个列模块。",
+      "level_2": "📖 discover 子命令用 -s 指定起始目录，-p 指定文件名模式。",
+      "level_3": "👀 共 3 空：① 自动发现子命令前缀；② 起始目录选项；③ 文件名模式选项。",
+      "level_4": "📝 正确答案：`python -m unittest discover`、`-s tests`、`-p \"test_*.py\"`"
+    },
+    "explanation": "discover 默认从当前目录递归查找 test*.py，-s 与 -p 可自定义搜索起点和匹配模式。"
+  },
+  {
+    "id": "unittest-029",
+    "title": "按名称模式筛选",
+    "description": "用 -k 只运行名字匹配模式的测试",
+    "exercise_type": "command",
+    "tech_stack": "testing",
+    "weight": "hard",
+    "category": "unittest_cli",
+    "subcategory": "unittest",
+    "full_code": "python -m unittest -k test_login tests.test_auth",
+    "expected": "",
+    "points": [
+      {
+        "id": "mod_prefix",
+        "text": "python -m unittest",
+        "category": "unittest_cli",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "以模块方式运行标准库测试框架的前缀",
+        "fill_type": "text"
+      },
+      {
+        "id": "k_option",
+        "text": "-k test_login",
+        "category": "unittest_cli",
+        "min_weight": "hard",
+        "weight_score": 1.5,
+        "hint": "按名称模式过滤用例的选项及模式",
+        "fill_type": "text"
+      },
+      {
+        "id": "module_path",
+        "text": "tests.test_auth",
+        "category": "unittest_cli",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "测试模块的点号路径",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 只想跑名字里含某个关键字的用例，用名称模式过滤选项。",
+      "level_2": "📖 -k 接受子串或通配模式，可重复出现，匹配测试方法名（含类名）。",
+      "level_3": "👀 共 3 空：① unittest 的模块运行前缀；② 名称过滤选项及其模式；③ 测试模块点号路径。",
+      "level_4": "📝 正确答案：`python -m unittest`、`-k test_login`、`tests.test_auth`"
+    },
+    "explanation": "-k 自 Python 3.7 起可用，过滤依据是 类名.方法名，适合在大量用例中只跑相关部分。"
+  },
+  {
+    "id": "unittest-030",
+    "title": "缓冲输出与快速失败",
+    "description": "用 -b 缓冲打印并用 -f 在首次失败时停止",
+    "exercise_type": "command",
+    "tech_stack": "testing",
+    "weight": "hard",
+    "category": "unittest_cli",
+    "subcategory": "unittest",
+    "full_code": "python -m unittest -b -f tests.test_mod",
+    "expected": "",
+    "points": [
+      {
+        "id": "mod_prefix",
+        "text": "python -m unittest",
+        "category": "unittest_cli",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "以模块方式运行标准库测试框架的前缀",
+        "fill_type": "text"
+      },
+      {
+        "id": "buffer_failfast",
+        "text": "-b -f",
+        "category": "unittest_cli",
+        "min_weight": "hard",
+        "weight_score": 1.5,
+        "hint": "缓冲输出与快速失败两个短选项",
+        "fill_type": "text"
+      },
+      {
+        "id": "module_path",
+        "text": "tests.test_mod",
+        "category": "unittest_cli",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "测试模块的点号路径",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 命令行想控制输出与失败行为，用缓冲和快速失败两个开关。",
+      "level_2": "📖 -b 缓冲每个用例的标准输出，-f 或 --failfast 遇到首个失败或错误立即停止。",
+      "level_3": "👀 共 3 空：① unittest 的模块运行前缀；② 缓冲与快速失败两个选项；③ 测试模块点号路径。",
+      "level_4": "📝 正确答案：`python -m unittest`、`-b -f`、`tests.test_mod`"
+    },
+    "explanation": "-b 让用例打印不干扰结果版面，-f 适合在 CI 中尽早暴露失败。"
+  }
+]

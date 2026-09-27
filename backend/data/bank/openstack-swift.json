@@ -1,0 +1,1342 @@
+[
+  {
+    "id": "os-swift-001",
+    "title": "查看账号/容器/对象统计",
+    "description": "用 swift stat 分别查看账号、容器、对象三个层级的统计信息",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "beginner",
+    "category": "swift_stat",
+    "subcategory": "Swift",
+    "full_code": "swift stat\nswift stat photos\nswift stat photos cat.jpg",
+    "expected": "",
+    "points": [
+      {
+        "id": "account_cmd",
+        "text": "swift stat",
+        "category": "command_verb",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "账号级统计命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "container_name",
+        "text": "photos",
+        "category": "swift_stat",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "要查看的容器名",
+        "fill_type": "text"
+      },
+      {
+        "id": "object_name",
+        "text": "cat.jpg",
+        "category": "swift_stat",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "要查看的对象名",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 同一条命令按参数层级查看账号、容器、对象",
+      "level_2": "📖 `swift stat` 看账号；`swift stat <容器>` 看容器；`swift stat <容器> <对象>` 看对象",
+      "level_3": "👀 第一行填命令本身，第二行填容器名，第三行填对象名",
+      "level_4": "📝 正确答案：`swift stat` / `photos` / `cat.jpg`"
+    },
+    "explanation": "stat 是排查用量与元数据的第一入口：不带参数返回账号级容器数/对象数/字节数，带容器或对象参数则返回对应层级的统计与元数据。"
+  },
+  {
+    "id": "os-swift-002",
+    "title": "列出容器与对象",
+    "description": "先列出账号下的容器，再列出指定容器的对象并做前缀过滤",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "beginner",
+    "category": "swift_list",
+    "subcategory": "Swift",
+    "full_code": "swift list\nswift list photos\nswift list photos --prefix 2026/",
+    "expected": "",
+    "points": [
+      {
+        "id": "list_cmd",
+        "text": "swift list",
+        "category": "command_verb",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "列出账号下所有容器的命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "container_name",
+        "text": "photos",
+        "category": "swift_list",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "要列出对象的容器名",
+        "fill_type": "text"
+      },
+      {
+        "id": "prefix_flag",
+        "text": "--prefix 2026/",
+        "category": "command_flag",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "只列出该前缀下的对象",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "-p 2026/"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 容器列表 → 对象列表 → 前缀过滤",
+      "level_2": "📖 `swift list` 列出容器；`swift list <容器>` 列出对象；`--prefix` 只保留指定前缀",
+      "level_3": "👀 三行依次缺：列表命令、容器名、前缀参数",
+      "level_4": "📝 正确答案：`swift list` / `photos` / `--prefix 2026/`"
+    },
+    "explanation": "list 默认列出账号下所有容器；给出容器名则列出对象；--prefix 常用于只查看某个虚拟目录（如 2026/）下的对象。"
+  },
+  {
+    "id": "os-swift-003",
+    "title": "上传对象与重命名",
+    "description": "上传本地文件，并用 --object-name 指定存储后的对象名",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "easy",
+    "category": "swift_upload",
+    "subcategory": "Swift",
+    "full_code": "swift upload photos --object-name 2026/cat.jpg /tmp/cat.jpg\nswift upload backup /var/log/app.log",
+    "expected": "",
+    "points": [
+      {
+        "id": "upload_cmd",
+        "text": "swift upload",
+        "category": "command_verb",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "上传子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "object_name_flag",
+        "text": "--object-name 2026/cat.jpg",
+        "category": "command_flag",
+        "min_weight": "easy",
+        "weight_score": 1.2,
+        "hint": "上传后重命名并加目录前缀",
+        "fill_type": "text"
+      },
+      {
+        "id": "local_file",
+        "text": "/var/log/app.log",
+        "category": "swift_upload",
+        "min_weight": "easy",
+        "weight_score": 1.2,
+        "hint": "第二行要上传的本地文件",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 上传命令 + 改名参数 + 本地路径",
+      "level_2": "📖 `swift upload <容器> <文件>`，容器不存在会自动创建；`--object-name` 决定对象在容器里的名字（可带目录前缀）",
+      "level_3": "👀 第一行缺子命令和改名参数，第二行缺本地文件路径",
+      "level_4": "📝 正确答案：`swift upload` / `--object-name 2026/cat.jpg` / `/var/log/app.log`"
+    },
+    "explanation": "upload 时容器会被自动创建；--object-name 把本地文件名映射为对象名，常用它保留目录结构（如 2026/cat.jpg）。"
+  },
+  {
+    "id": "os-swift-004",
+    "title": "下载对象到文件与目录",
+    "description": "用 -o 下载单个对象到文件，用 --prefix + -D 批量下载到目录",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "easy",
+    "category": "swift_download",
+    "subcategory": "Swift",
+    "full_code": "swift download photos cat.jpg -o /tmp/cat.jpg\nswift download photos --prefix 2026/ -D /tmp/photos/",
+    "expected": "",
+    "points": [
+      {
+        "id": "download_cmd",
+        "text": "swift download",
+        "category": "command_verb",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "下载子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "output_file",
+        "text": "-o /tmp/cat.jpg",
+        "category": "command_flag",
+        "min_weight": "easy",
+        "weight_score": 1.2,
+        "hint": "把单个对象写到文件",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "--output /tmp/cat.jpg"
+        ]
+      },
+      {
+        "id": "prefix_flag",
+        "text": "--prefix 2026/",
+        "category": "command_flag",
+        "min_weight": "easy",
+        "weight_score": 1.2,
+        "hint": "批量下载的前缀过滤",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "-p 2026/"
+        ]
+      },
+      {
+        "id": "output_dir",
+        "text": "-D /tmp/photos/",
+        "category": "command_flag",
+        "min_weight": "easy",
+        "weight_score": 1.2,
+        "hint": "批量下载的输出目录",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "--output-dir /tmp/photos/"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 单文件输出、前缀过滤、批量输出目录",
+      "level_2": "📖 `-o <文件>` 只用于单个对象；批量下载用 `--prefix` 过滤并配 `-D <目录>` 落地",
+      "level_3": "👀 第一行缺下载命令与输出文件参数，第二行缺前缀和输出目录参数",
+      "level_4": "📝 正确答案：`swift download` / `-o /tmp/cat.jpg` / `--prefix 2026/` / `-D /tmp/photos/`"
+    },
+    "explanation": "download 不加参数会下载整个账号；-o 把单个对象写到文件（与多对象互斥），-D 指定批量下载的落地目录。"
+  },
+  {
+    "id": "os-swift-005",
+    "title": "删除对象与前缀批量删除",
+    "description": "删除单个对象，并按前缀批量清理容器内对象",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "easy",
+    "category": "swift_delete",
+    "subcategory": "Swift",
+    "full_code": "swift delete photos 2026/cat.jpg\nswift delete photos --prefix 2026/",
+    "expected": "",
+    "points": [
+      {
+        "id": "delete_cmd",
+        "text": "swift delete",
+        "category": "command_verb",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "删除子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "object_name",
+        "text": "2026/cat.jpg",
+        "category": "swift_delete",
+        "min_weight": "easy",
+        "weight_score": 1.2,
+        "hint": "要删除的单个对象",
+        "fill_type": "text"
+      },
+      {
+        "id": "prefix_flag",
+        "text": "--prefix 2026/",
+        "category": "command_flag",
+        "min_weight": "easy",
+        "weight_score": 1.2,
+        "hint": "按前缀批量删除",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "-p 2026/"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 删除单个对象；按前缀批量删除",
+      "level_2": "📖 `swift delete <容器> <对象>` 删一个；`swift delete <容器> --prefix <前缀>` 删一批",
+      "level_3": "👀 第一行缺删除命令与对象名，第二行缺前缀参数",
+      "level_4": "📝 正确答案：`swift delete` / `2026/cat.jpg` / `--prefix 2026/`"
+    },
+    "explanation": "delete 支持一次传多个对象名；--prefix 会删除容器内所有匹配前缀的对象，操作不可恢复，生产环境务必先 list 确认。"
+  },
+  {
+    "id": "os-swift-006",
+    "title": "大对象：SLO 与 DLO",
+    "description": "用分片上传大文件，并理解静态大对象清单与动态大对象清单头",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "medium",
+    "category": "swift_large_object",
+    "subcategory": "Swift",
+    "full_code": "swift upload backup bigfile.iso --segment-size 1073741824 --use-slo\nswift post backup bigfile.iso -H \"X-Object-Manifest: backup_segments/bigfile.iso\"",
+    "expected": "",
+    "points": [
+      {
+        "id": "upload_cmd",
+        "text": "swift upload",
+        "category": "command_verb",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "上传命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "segment_size",
+        "text": "--segment-size 1073741824",
+        "category": "command_flag",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "分片大小（字节，这里 1 GiB）",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "-S 1073741824"
+        ]
+      },
+      {
+        "id": "slo_flag",
+        "text": "--use-slo",
+        "category": "command_flag",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "使用静态大对象 SLO",
+        "fill_type": "text"
+      },
+      {
+        "id": "manifest_header",
+        "text": "X-Object-Manifest",
+        "category": "swift_large_object",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "DLO 清单头的头名",
+        "fill_type": "text"
+      },
+      {
+        "id": "manifest_prefix",
+        "text": "backup_segments/bigfile.iso",
+        "category": "swift_large_object",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "DLO 清单头的值：分片容器/前缀",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 分片大小、SLO 开关、DLO 清单头",
+      "level_2": "📖 `--segment-size` 超过该大小就切片；`--use-slo` 生成静态大对象（JSON 清单），不加则走 DLO；DLO 用 X-Object-Manifest 头指向分片前缀",
+      "level_3": "👀 依次填：上传命令、分片大小、SLO 开关、DLO 清单头的头名与分片前缀",
+      "level_4": "📝 正确答案：`swift upload` / `--segment-size 1073741824` / `--use-slo` / `X-Object-Manifest` / `backup_segments/bigfile.iso`"
+    },
+    "explanation": "大对象由多个分片加一个清单对象组成：SLO 清单是 JSON 列表（对象带 X-Static-Large-Object 标记），DLO 清单只记录 X-Object-Manifest 前缀，读取时按前缀顺序拼接。"
+  },
+  {
+    "id": "os-swift-007",
+    "title": "设置容器 ACL 与元数据",
+    "description": "用 swift post 配置容器的读写 ACL 和自定义元数据",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "medium",
+    "category": "swift_post_container",
+    "subcategory": "Swift",
+    "full_code": "swift post photos --read-acl \".r:*,.rlistings\"\nswift post photos --write-acl \"AUTH_test:demo\"\nswift post photos -m \"Category:Nature\"",
+    "expected": "",
+    "points": [
+      {
+        "id": "post_cmd",
+        "text": "swift post",
+        "category": "command_verb",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "更新容器属性的命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "read_acl",
+        "text": ".r:*,.rlistings",
+        "category": "container_acl",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "读 ACL：公开读并允许列容器",
+        "fill_type": "text"
+      },
+      {
+        "id": "write_acl",
+        "text": "AUTH_test:demo",
+        "category": "container_acl",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "写 ACL：账号:用户",
+        "fill_type": "text"
+      },
+      {
+        "id": "container_meta",
+        "text": "Category:Nature",
+        "category": "container_meta",
+        "min_weight": "easy",
+        "weight_score": 1.2,
+        "hint": "自定义容器元数据（键:值）",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 读 ACL、写 ACL、元数据",
+      "level_2": "📖 `--read-acl`/`--write-acl` 设置 X-Container-Read/Write；`-m` 设置 X-Container-Meta-*，值为 键:值",
+      "level_3": "👀 依次填：post 命令、读 ACL 值、写 ACL 值、元数据键值",
+      "level_4": "📝 正确答案：`swift post` / `.r:*,.rlistings` / `AUTH_test:demo` / `Category:Nature`"
+    },
+    "explanation": "容器 ACL 以逗号分隔：.r:* 表示所有人可读，.rlistings 允许列出对象；写 ACL 用 账号:用户 形式，Keystone 下账号形如 AUTH_<项目>。"
+  },
+  {
+    "id": "os-swift-008",
+    "title": "设置对象元数据与 Content-Type",
+    "description": "给已上传对象追加自定义元数据并修正 MIME 类型",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "medium",
+    "category": "swift_post_object",
+    "subcategory": "Swift",
+    "full_code": "swift post photos cat.jpg -m \"Photographer:Alice\"\nswift post photos cat.jpg -H \"Content-Type:image/jpeg\"",
+    "expected": "",
+    "points": [
+      {
+        "id": "post_cmd",
+        "text": "swift post",
+        "category": "command_verb",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "更新对象属性的命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "object_meta",
+        "text": "Photographer:Alice",
+        "category": "object_meta",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "自定义对象元数据（键:值）",
+        "fill_type": "text"
+      },
+      {
+        "id": "content_type",
+        "text": "Content-Type:image/jpeg",
+        "category": "object_header",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "用 -H 覆盖对象 MIME 类型",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 对象元数据、Content-Type",
+      "level_2": "📖 `-m` 写入 X-Object-Meta-*；`-H` 直接下发 HTTP 头，Content-Type 影响客户端如何解释对象",
+      "level_3": "👀 第一行缺 post 命令与元数据键值，第二行缺 Content-Type 头",
+      "level_4": "📝 正确答案：`swift post` / `Photographer:Alice` / `Content-Type:image/jpeg`"
+    },
+    "explanation": "对象元数据以 X-Object-Meta-<键> 保存；Content-Type 决定下载时的 MIME，可用 -H 覆盖上传时自动推断的值。"
+  },
+  {
+    "id": "os-swift-009",
+    "title": "服务端复制对象",
+    "description": "用 --destination 跨容器复制对象或原地改名",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "medium",
+    "category": "swift_copy",
+    "subcategory": "Swift",
+    "full_code": "swift copy photos cat.jpg --destination /archive/2026/cat.jpg\nswift copy archive 2026/cat.jpg --destination /photos/cat-backup.jpg",
+    "expected": "",
+    "points": [
+      {
+        "id": "copy_cmd",
+        "text": "swift copy",
+        "category": "command_verb",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "服务端复制命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "dest_cross_container",
+        "text": "--destination",
+        "category": "command_flag",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "跨容器复制的目标参数",
+        "fill_type": "text",
+        "occurrence": 0
+      },
+      {
+        "id": "dest_cross_container_path",
+        "text": "/archive/2026/cat.jpg",
+        "category": "swift_copy",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "跨容器复制的目标容器/对象",
+        "fill_type": "text"
+      },
+      {
+        "id": "dest_rename_path",
+        "text": "/photos/cat-backup.jpg",
+        "category": "swift_copy",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "改名后的目标容器/对象",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 复制命令与目标地址",
+      "level_2": "📖 `swift copy <源容器> <源对象> --destination /<目标容器>/<目标对象>`，复制在服务端完成并默认保留元数据",
+      "level_3": "👀 依次填：复制命令、第一处 --destination 与跨容器目标路径、第二处 --destination 与改名目标路径",
+      "level_4": "📝 正确答案：`swift copy`、`--destination`、`/archive/2026/cat.jpg`、`/photos/cat-backup.jpg`"
+    },
+    "explanation": "copy 由代理服务端完成，不经过客户端流量；目标路径以 / 开头写全 容器/对象，可加 --fresh-metadata 丢弃原元数据。"
+  },
+  {
+    "id": "os-swift-010",
+    "title": "生成临时 URL",
+    "description": "用 swift tempurl 为对象签发限时的 GET/PUT 链接",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "hard",
+    "category": "swift_tempurl",
+    "subcategory": "Swift",
+    "full_code": "swift tempurl GET 3600 /v1/AUTH_test/photos/cat.jpg secret_key\nswift tempurl PUT 600 /v1/AUTH_test/incoming/upload.bin secret_key",
+    "expected": "",
+    "points": [
+      {
+        "id": "tempurl_cmd",
+        "text": "swift tempurl",
+        "category": "command_verb",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "生成临时 URL 的命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "get_expiry",
+        "text": "GET 3600",
+        "category": "swift_tempurl",
+        "min_weight": "hard",
+        "weight_score": 1.8,
+        "hint": "允许 GET、3600 秒内有效",
+        "fill_type": "text"
+      },
+      {
+        "id": "put_expiry",
+        "text": "PUT 600",
+        "category": "swift_tempurl",
+        "min_weight": "hard",
+        "weight_score": 1.8,
+        "hint": "允许 PUT、600 秒内有效",
+        "fill_type": "text"
+      },
+      {
+        "id": "tempurl_key",
+        "text": "secret_key",
+        "category": "swift_tempurl",
+        "min_weight": "hard",
+        "weight_score": 1.8,
+        "hint": "临时 URL 共享密钥",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 方法、有效期、路径、密钥",
+      "level_2": "📖 `swift tempurl <方法> <秒数> <完整路径> <密钥>`；密钥要与集群 [filter:tempurl] 的 key 或账号 Temp-URL-Key 一致",
+      "level_3": "👀 第一行缺 tempurl 命令、GET 与有效期，第二行缺 PUT 与有效期，两行末尾都缺密钥",
+      "level_4": "📝 正确答案：`swift tempurl`、`GET 3600`、`PUT 600`、`secret_key`"
+    },
+    "explanation": "tempurl 中间件用 HMAC 签名生成无需 token 的限时链接：GET 用于分享下载，PUT 常用于允许外部匿名上传；时间单位为秒。"
+  },
+  {
+    "id": "os-swift-011",
+    "title": "认证与存储 URL",
+    "description": "分别用 Keystone v3/v2 认证，并演示用 token + storage URL 跳过认证",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "hard",
+    "category": "swift_auth",
+    "subcategory": "Swift",
+    "full_code": "swift -V 3.0 -A https://keystone.example.com/v3 -U demo -K secret auth\nswift -V 2.0 -A https://keystone.example.com/v2.0 -U demo -K secret auth\nswift --os-auth-token 6ee5eb33efad4e45ab46806eac010566 --os-storage-url https://10.1.5.2:8080/v1/AUTH_test list",
+    "expected": "",
+    "points": [
+      {
+        "id": "auth_v3",
+        "text": "-V 3.0",
+        "category": "swift_auth",
+        "min_weight": "hard",
+        "weight_score": 1.8,
+        "hint": "Keystone v3 认证版本",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "--auth-version 3.0"
+        ]
+      },
+      {
+        "id": "auth_v2",
+        "text": "-V 2.0",
+        "category": "swift_auth",
+        "min_weight": "hard",
+        "weight_score": 1.8,
+        "hint": "Keystone v2.0 认证版本",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "--auth-version 2.0"
+        ]
+      },
+      {
+        "id": "storage_url",
+        "text": "--os-storage-url",
+        "category": "swift_auth",
+        "min_weight": "hard",
+        "weight_score": 1.8,
+        "hint": "已有 token 时指定存储 URL 的参数",
+        "fill_type": "text"
+      },
+      {
+        "id": "storage_url_endpoint",
+        "text": "https://10.1.5.2:8080",
+        "category": "swift_auth",
+        "min_weight": "hard",
+        "weight_score": 1.8,
+        "hint": "存储服务 endpoint（协议+地址+端口）",
+        "fill_type": "text"
+      },
+      {
+        "id": "storage_url_account",
+        "text": "/v1/AUTH_test",
+        "category": "swift_auth",
+        "min_weight": "hard",
+        "weight_score": 1.8,
+        "hint": "存储 URL 的账号路径",
+        "fill_type": "text"
+      },
+      {
+        "id": "auth_cmd",
+        "text": "auth",
+        "category": "command_verb",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "执行认证并打印导出环境变量的子命令",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 认证版本、认证子命令、存储 URL",
+      "level_2": "📖 `-V`/`--auth-version` 指定 3.0 或 2.0；`swift auth` 输出 OS_STORAGE_URL/OS_AUTH_TOKEN；已有 token 时用 `--os-auth-token` + `--os-storage-url` 直接访问",
+      "level_3": "👀 前两行缺版本号，第三行缺存储 URL 参数、endpoint 与账号路径，第一行末尾缺认证子命令",
+      "level_4": "📝 正确答案：`-V 3.0`、`-V 2.0`、`--os-storage-url`、`https://10.1.5.2:8080`、`/v1/AUTH_test`、`auth`"
+    },
+    "explanation": "swift auth 会打印可直接 export 的环境变量；v3 走 Keystone 项目/域模型，v2.0 走租户模型；拿到 token 后可配合 --os-storage-url 省去重复认证。"
+  },
+  {
+    "id": "os-swift-012",
+    "title": "创建对象环并加入设备",
+    "description": "创建 object ring、按 region/zone 添加设备并 rebalance",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "hard",
+    "category": "ring_builder",
+    "subcategory": "Swift",
+    "full_code": "swift-ring-builder object.builder create 10 3 1\nswift-ring-builder object.builder add --region 1 --zone 1 --ip 10.0.0.11 --port 6000 --device sdb --weight 100\nswift-ring-builder object.builder add --region 1 --zone 2 --ip 10.0.0.12 --port 6000 --device sdb --weight 100\nswift-ring-builder object.builder rebalance",
+    "expected": "",
+    "points": [
+      {
+        "id": "ring_builder_cmd",
+        "text": "swift-ring-builder",
+        "category": "ring_builder",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "环构建工具",
+        "fill_type": "text"
+      },
+      {
+        "id": "create_cmd",
+        "text": "create",
+        "category": "ring_builder",
+        "min_weight": "hard",
+        "weight_score": 1.8,
+        "hint": "建环子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "part_power",
+        "text": "10",
+        "category": "ring_builder",
+        "min_weight": "hard",
+        "weight_score": 1.5,
+        "hint": "part power=10（2^10 个分区）",
+        "fill_type": "text"
+      },
+      {
+        "id": "replicas",
+        "text": "3",
+        "category": "ring_builder",
+        "min_weight": "hard",
+        "weight_score": 1.5,
+        "hint": "副本数 replicas=3",
+        "fill_type": "text"
+      },
+      {
+        "id": "min_part_hours",
+        "text": "1",
+        "category": "ring_builder",
+        "min_weight": "hard",
+        "weight_score": 1.5,
+        "hint": "min_part_hours=1",
+        "fill_type": "text",
+        "occurrence": 1
+      },
+      {
+        "id": "zone_two",
+        "text": "--zone 2",
+        "category": "ring_topology",
+        "min_weight": "hard",
+        "weight_score": 1.8,
+        "hint": "第二个 zone，用于副本反亲和",
+        "fill_type": "text"
+      },
+      {
+        "id": "rebalance_cmd",
+        "text": "rebalance",
+        "category": "ring_builder",
+        "min_weight": "hard",
+        "weight_score": 1.8,
+        "hint": "重新分配分区并生成 ring 文件",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 建环参数、加盘参数、重平衡",
+      "level_2": "📖 `create <part_power> <replicas> <min_part_hours>`；`add --region --zone --ip --port --device --weight`；副本按 zone 反亲和；最后 `rebalance` 才真正分配分区",
+      "level_3": "👀 第一行缺环构建工具、create 子命令与 part power / replicas / min_part_hours 三个参数，第三行缺 zone，第四行缺 rebalance",
+      "level_4": "📝 正确答案：`swift-ring-builder`、`create`、`10`、`3`、`1`、`--zone 2`、`rebalance`"
+    },
+    "explanation": "part power 10 表示 2^10=1024 个分区，replicas=3 表示每分区存 3 份；add 时不同 zone 保证副本落在不同故障域，rebalance 后才会生成 object.ring.gz。"
+  },
+  {
+    "id": "os-swift-013",
+    "title": "磁盘故障排查与替换",
+    "description": "从 recon 巡检到摘除坏盘、补入新盘并重平衡的完整流程",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "expert",
+    "category": "swift_ops",
+    "subcategory": "Swift",
+    "full_code": "swift-recon --diskusage\nswift-drive-audit /etc/swift/drive-audit.conf\nswift-ring-builder object.builder search --ip 10.0.0.9\nswift-ring-builder object.builder remove --ip 10.0.0.9 --yes\nswift-ring-builder object.builder add --region 1 --zone 1 --ip 10.0.0.19 --port 6000 --device sdb --weight 100\nswift-ring-builder object.builder rebalance",
+    "expected": "",
+    "points": [
+      {
+        "id": "recon_diskusage",
+        "text": "swift-recon --diskusage",
+        "category": "swift_ops",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "查看集群各磁盘使用率",
+        "fill_type": "text"
+      },
+      {
+        "id": "drive_audit",
+        "text": "swift-drive-audit",
+        "category": "swift_ops",
+        "min_weight": "hard",
+        "weight_score": 1.8,
+        "hint": "坏盘审计工具",
+        "fill_type": "text"
+      },
+      {
+        "id": "drive_audit_conf",
+        "text": "/etc/swift/drive-audit.conf",
+        "category": "swift_ops",
+        "min_weight": "hard",
+        "weight_score": 1.8,
+        "hint": "审计配置文件路径",
+        "fill_type": "text"
+      },
+      {
+        "id": "search_cmd",
+        "text": "search",
+        "category": "ring_builder",
+        "min_weight": "expert",
+        "weight_score": 2,
+        "hint": "按条件查找环上设备的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "search_ip",
+        "text": "--ip 10.0.0.9",
+        "category": "ring_builder",
+        "min_weight": "expert",
+        "weight_score": 2,
+        "hint": "要查找的设备 IP",
+        "fill_type": "text",
+        "occurrence": 0
+      },
+      {
+        "id": "remove_cmd",
+        "text": "remove",
+        "category": "ring_builder",
+        "min_weight": "expert",
+        "weight_score": 2,
+        "hint": "把设备从环中摘除的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "remove_yes",
+        "text": "--yes",
+        "category": "ring_builder",
+        "min_weight": "expert",
+        "weight_score": 2,
+        "hint": "免交互确认",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 巡检、坏盘审计、查环、摘盘",
+      "level_2": "📖 `swift-recon --diskusage` 看各盘用量；`swift-drive-audit` 读内核日志标记坏盘；`search --ip` 定位设备；`remove` 摘除后 `add` 新盘再 `rebalance`",
+      "level_3": "👀 六行依次缺：recon 的 --diskusage、drive-audit 命令与配置文件、search 与要查的 IP、remove 与要摘的 IP、--yes",
+      "level_4": "📝 正确答案：`swift-recon --diskusage`、`swift-drive-audit`、`/etc/swift/drive-audit.conf`、`search`、`--ip 10.0.0.9`、`remove`、`--yes`"
+    },
+    "explanation": "坏盘替换标准流程：recon/drive-audit 发现问题 → search 确认环上设备 → remove（--yes 免交互）→ 换盘后 add 新设备 → rebalance 并同步 ring 到所有节点。"
+  },
+  {
+    "id": "os-swift-014",
+    "title": "swift.conf 哈希盐配置",
+    "description": "配置 [swift-hash] 中的路径哈希前缀与后缀",
+    "exercise_type": "config",
+    "tech_stack": "openstack",
+    "weight": "beginner",
+    "category": "swift_conf",
+    "subcategory": "Swift",
+    "full_code": "[swift-hash]\nswift_hash_path_prefix = 0f3c4d5e6a7b8c9d\nswift_hash_path_suffix = a1b2c3d4e5f60718",
+    "expected": "",
+    "points": [
+      {
+        "id": "hash_section",
+        "text": "[swift-hash]",
+        "category": "config_section",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "哈希配置段",
+        "fill_type": "text"
+      },
+      {
+        "id": "hash_prefix",
+        "text": "swift_hash_path_prefix",
+        "category": "config_directive",
+        "min_weight": "beginner",
+        "weight_score": 1.2,
+        "hint": "路径前缀哈希盐的配置键",
+        "fill_type": "text"
+      },
+      {
+        "id": "hash_prefix_value",
+        "text": "0f3c4d5e6a7b8c9d",
+        "category": "config_directive",
+        "min_weight": "beginner",
+        "weight_score": 1.2,
+        "hint": "路径前缀哈希盐的值",
+        "fill_type": "text"
+      },
+      {
+        "id": "hash_suffix",
+        "text": "swift_hash_path_suffix",
+        "category": "config_directive",
+        "min_weight": "beginner",
+        "weight_score": 1.2,
+        "hint": "路径后缀哈希盐的配置键",
+        "fill_type": "text"
+      },
+      {
+        "id": "hash_suffix_value",
+        "text": "a1b2c3d4e5f60718",
+        "category": "config_directive",
+        "min_weight": "beginner",
+        "weight_score": 1.2,
+        "hint": "路径后缀哈希盐的值",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 哈希段的两个盐值",
+      "level_2": "📖 swift_hash_path_prefix/suffix 参与数据落盘位置计算，集群部署后绝不能修改",
+      "level_3": "👀 依次填 section 名、前缀哈希盐的键与值、后缀哈希盐的键与值",
+      "level_4": "📝 正确答案：`[swift-hash]`、`swift_hash_path_prefix`、`0f3c4d5e6a7b8c9d`、`swift_hash_path_suffix`、`a1b2c3d4e5f60718`"
+    },
+    "explanation": "Swift 用 prefix+suffix 对对象路径做哈希来决定分区位置；修改盐值会让所有对象被算到新位置，表现为数据丢失，所以必须一次设定、永不更改。"
+  },
+  {
+    "id": "os-swift-015",
+    "title": "proxy-server 管道顺序",
+    "description": "理解 [pipeline:main] 中中间件的排列顺序",
+    "exercise_type": "config",
+    "tech_stack": "openstack",
+    "weight": "medium",
+    "category": "proxy_pipeline",
+    "subcategory": "Swift",
+    "full_code": "[pipeline:main]\npipeline = healthcheck proxy-logging cache keystoneauth slo dlo proxy-logging proxy-server",
+    "expected": "",
+    "points": [
+      {
+        "id": "pipeline_section",
+        "text": "[pipeline:main]",
+        "category": "config_section",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "代理中间件管道段",
+        "fill_type": "text"
+      },
+      {
+        "id": "healthcheck",
+        "text": "healthcheck",
+        "category": "config_directive",
+        "min_weight": "easy",
+        "weight_score": 1.2,
+        "hint": "最前面的健康检查中间件",
+        "fill_type": "text"
+      },
+      {
+        "id": "keystoneauth",
+        "text": "keystoneauth",
+        "category": "config_directive",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "认证中间件",
+        "fill_type": "text"
+      },
+      {
+        "id": "proxy_server",
+        "text": "proxy-server",
+        "category": "config_directive",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "管道末尾的代理应用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 健康检查在前、代理应用在最后",
+      "level_2": "📖 请求按 pipeline 从左到右经过中间件、响应反向返回；healthcheck 放最前，proxy-server 必须最后，认证类中间件放在代理之前",
+      "level_3": "👀 依次填 section 名、第一个中间件、认证中间件、最后的应用",
+      "level_4": "📝 正确答案：`[pipeline:main]`、`healthcheck`、`keystoneauth`、`proxy-server`"
+    },
+    "explanation": "管道顺序决定处理链：healthcheck 最先拦截探活请求，keystoneauth 在进入 proxy-server 前完成鉴权与账号映射，proxy-server 永远排在最后。"
+  },
+  {
+    "id": "os-swift-016",
+    "title": "proxy-server 应用配置",
+    "description": "配置 [app:proxy-server] 的加载入口与账号行为",
+    "exercise_type": "config",
+    "tech_stack": "openstack",
+    "weight": "easy",
+    "category": "proxy_app",
+    "subcategory": "Swift",
+    "full_code": "[app:proxy-server]\nuse = egg:swift#proxy\nallow_account_management = true\naccount_autocreate = true",
+    "expected": "",
+    "points": [
+      {
+        "id": "app_section",
+        "text": "[app:proxy-server]",
+        "category": "config_section",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "代理应用段",
+        "fill_type": "text"
+      },
+      {
+        "id": "use_proxy",
+        "text": "use",
+        "category": "config_directive",
+        "min_weight": "easy",
+        "weight_score": 1.2,
+        "hint": "加载 proxy 应用的配置键",
+        "fill_type": "text"
+      },
+      {
+        "id": "use_proxy_value",
+        "text": "egg:swift#proxy",
+        "category": "config_directive",
+        "min_weight": "easy",
+        "weight_score": 1.2,
+        "hint": "proxy 应用的 entry point",
+        "fill_type": "text"
+      },
+      {
+        "id": "allow_account_management",
+        "text": "allow_account_management",
+        "category": "config_directive",
+        "min_weight": "easy",
+        "weight_score": 1.2,
+        "hint": "账号管理开关的配置键",
+        "fill_type": "text"
+      },
+      {
+        "id": "allow_account_management_value",
+        "text": "true",
+        "category": "config_directive",
+        "min_weight": "easy",
+        "weight_score": 1.2,
+        "hint": "允许通过 API 管理账号",
+        "fill_type": "text",
+        "occurrence": 0
+      },
+      {
+        "id": "account_autocreate",
+        "text": "account_autocreate",
+        "category": "config_directive",
+        "min_weight": "easy",
+        "weight_score": 1.2,
+        "hint": "自动建账号开关的配置键",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 应用入口、账号管理开关、自动建账号",
+      "level_2": "📖 `use` 指定 Paste entry point；allow_account_management 控制是否允许创建/删除账号；account_autocreate 在首次写入时自动建账号",
+      "level_3": "👀 依次填 section 名、use 键与值、allow_account_management 键与值、account_autocreate 键与值",
+      "level_4": "📝 正确答案：`[app:proxy-server]`、`use`、`egg:swift#proxy`、`allow_account_management`、`true`、`account_autocreate`"
+    },
+    "explanation": "proxy-server 是唯一对客户端暴露的 Swift 服务，账号是否可管理、是否自动创建都在这里控制。"
+  },
+  {
+    "id": "os-swift-017",
+    "title": "keystoneauth 认证中间件",
+    "description": "配置 [filter:keystoneauth] 的中间件入口、操作角色与账号前缀",
+    "exercise_type": "config",
+    "tech_stack": "openstack",
+    "weight": "medium",
+    "category": "proxy_keystoneauth",
+    "subcategory": "Swift",
+    "full_code": "[filter:keystoneauth]\nuse = egg:swift#keystoneauth\noperator_roles = admin, swiftoperator\nreseller_prefix = AUTH_",
+    "expected": "",
+    "points": [
+      {
+        "id": "keystoneauth_section",
+        "text": "[filter:keystoneauth]",
+        "category": "config_section",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "Keystone 认证过滤段",
+        "fill_type": "text"
+      },
+      {
+        "id": "use_keystoneauth",
+        "text": "use",
+        "category": "config_directive",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "加载中间件的配置键",
+        "fill_type": "text"
+      },
+      {
+        "id": "use_keystoneauth_value",
+        "text": "egg:swift#keystoneauth",
+        "category": "config_directive",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "keystoneauth 中间件的 entry point",
+        "fill_type": "text"
+      },
+      {
+        "id": "operator_roles",
+        "text": "operator_roles",
+        "category": "config_directive",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "可管理容器的角色列表配置键",
+        "fill_type": "text"
+      },
+      {
+        "id": "operator_roles_value",
+        "text": "admin, swiftoperator",
+        "category": "config_directive",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "角色列表（逗号分隔）",
+        "fill_type": "text"
+      },
+      {
+        "id": "reseller_prefix",
+        "text": "reseller_prefix",
+        "category": "config_directive",
+        "min_weight": "easy",
+        "weight_score": 1.2,
+        "hint": "账号前缀配置键",
+        "fill_type": "text"
+      },
+      {
+        "id": "reseller_prefix_value",
+        "text": "AUTH_",
+        "category": "config_directive",
+        "min_weight": "easy",
+        "weight_score": 1.2,
+        "hint": "账号前缀的值",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 中间件入口、操作角色、账号前缀",
+      "level_2": "📖 keystoneauth 把 Keystone token 映射为 Swift 账号 AUTH_<项目ID>；拥有 operator_roles 中任一角色的用户才能管理容器",
+      "level_3": "👀 依次填 section 名、use 键与值、operator_roles 键与值、reseller_prefix 键与值",
+      "level_4": "📝 正确答案：`[filter:keystoneauth]`、`use`、`egg:swift#keystoneauth`、`operator_roles`、`admin, swiftoperator`、`reseller_prefix`、`AUTH_`"
+    },
+    "explanation": "keystoneauth 负责把 Keystone 身份转成 Swift 账号空间；operator_roles 决定谁能改容器 ACL/元数据，reseller_prefix 决定账号命名空间。"
+  },
+  {
+    "id": "os-swift-018",
+    "title": "account-server 基础配置",
+    "description": "配置账号服务的端口、设备目录与管道",
+    "exercise_type": "config",
+    "tech_stack": "openstack",
+    "weight": "easy",
+    "category": "account_server_conf",
+    "subcategory": "Swift",
+    "full_code": "[DEFAULT]\nbind_port = 6202\ndevices = /srv/node\nmount_check = true\n\n[pipeline:main]\npipeline = healthcheck recon account-server",
+    "expected": "",
+    "points": [
+      {
+        "id": "default_section",
+        "text": "[DEFAULT]",
+        "category": "config_section",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "默认配置段",
+        "fill_type": "text"
+      },
+      {
+        "id": "bind_port",
+        "text": "bind_port",
+        "category": "config_directive",
+        "min_weight": "easy",
+        "weight_score": 1.2,
+        "hint": "端口配置键",
+        "fill_type": "text"
+      },
+      {
+        "id": "bind_port_value",
+        "text": "6202",
+        "category": "config_directive",
+        "min_weight": "easy",
+        "weight_score": 1.2,
+        "hint": "account-server 默认端口号",
+        "fill_type": "text"
+      },
+      {
+        "id": "devices",
+        "text": "devices",
+        "category": "config_directive",
+        "min_weight": "easy",
+        "weight_score": 1.2,
+        "hint": "数据盘根目录配置键",
+        "fill_type": "text"
+      },
+      {
+        "id": "devices_value",
+        "text": "/srv/node",
+        "category": "config_directive",
+        "min_weight": "easy",
+        "weight_score": 1.2,
+        "hint": "数据盘挂载根目录",
+        "fill_type": "text"
+      },
+      {
+        "id": "account_server_app",
+        "text": "account-server",
+        "category": "config_directive",
+        "min_weight": "easy",
+        "weight_score": 1.2,
+        "hint": "管道末尾的账号服务应用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 端口、设备目录、管道末尾应用",
+      "level_2": "📖 account-server 默认监听 6202；devices 指向数据盘挂载点（通常 /srv/node）；pipeline 末尾必须是 account-server",
+      "level_3": "👀 依次填 DEFAULT 段、bind_port 键与值、devices 键与值、管道末尾的 account-server",
+      "level_4": "📝 正确答案：`[DEFAULT]`、`bind_port`、`6202`、`devices`、`/srv/node`、`account-server`"
+    },
+    "explanation": "account-server 维护账号级数据库；bind_port 6202 与容器 6201、对象 6200 一起构成 Swift 存储服务端口族。"
+  },
+  {
+    "id": "os-swift-019",
+    "title": "object-server 基础配置",
+    "description": "配置对象服务的端口、设备、挂载检查与应用入口",
+    "exercise_type": "config",
+    "tech_stack": "openstack",
+    "weight": "medium",
+    "category": "object_server_conf",
+    "subcategory": "Swift",
+    "full_code": "[DEFAULT]\nbind_port = 6200\ndevices = /srv/node\nmount_check = true\n\n[pipeline:main]\npipeline = healthcheck recon object-server\n\n[app:object-server]\nuse = egg:swift#object",
+    "expected": "",
+    "points": [
+      {
+        "id": "default_section",
+        "text": "[DEFAULT]",
+        "category": "config_section",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "默认配置段",
+        "fill_type": "text"
+      },
+      {
+        "id": "bind_port",
+        "text": "bind_port",
+        "category": "config_directive",
+        "min_weight": "easy",
+        "weight_score": 1.2,
+        "hint": "端口配置键",
+        "fill_type": "text"
+      },
+      {
+        "id": "bind_port_value",
+        "text": "6200",
+        "category": "config_directive",
+        "min_weight": "easy",
+        "weight_score": 1.2,
+        "hint": "object-server 默认端口号",
+        "fill_type": "text"
+      },
+      {
+        "id": "mount_check",
+        "text": "mount_check",
+        "category": "config_directive",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "挂载检查配置键",
+        "fill_type": "text"
+      },
+      {
+        "id": "mount_check_value",
+        "text": "true",
+        "category": "config_directive",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "开启挂载检查",
+        "fill_type": "text"
+      },
+      {
+        "id": "use_object",
+        "text": "use",
+        "category": "config_directive",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "加载对象服务的配置键",
+        "fill_type": "text"
+      },
+      {
+        "id": "use_object_value",
+        "text": "egg:swift#object",
+        "category": "config_directive",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "对象服务应用 entry point",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 端口、设备目录、挂载检查、应用入口",
+      "level_2": "📖 object-server 默认 6200；mount_check=true 要求 devices 下的目录必须是已挂载磁盘，否则拒绝写入；[app:object-server] 用 use 加载实现",
+      "level_3": "👀 依次填 DEFAULT 段、bind_port 键与值、mount_check 键与值、use 键与值",
+      "level_4": "📝 正确答案：`[DEFAULT]`、`bind_port`、`6200`、`mount_check`、`true`、`use`、`egg:swift#object`"
+    },
+    "explanation": "对象服务直接读写数据盘；mount_check 是防止磁盘掉线后数据写到本地裸目录导致副本错乱的关键保护。"
+  },
+  {
+    "id": "os-swift-020",
+    "title": "代理中间件配置",
+    "description": "配置 bulk/slo/dlo/cache 四个常用代理中间件",
+    "exercise_type": "config",
+    "tech_stack": "openstack",
+    "weight": "hard",
+    "category": "proxy_middleware",
+    "subcategory": "Swift",
+    "full_code": "[filter:bulk]\nuse = egg:swift#bulk\nmax_deletes_per_request = 10000\n\n[filter:slo]\nuse = egg:swift#slo\n\n[filter:dlo]\nuse = egg:swift#dlo\n[filter:cache]\nuse = egg:swift#memcache\nmemcache_servers = 10.0.0.21:11211,10.0.0.22:11211",
+    "expected": "",
+    "points": [
+      {
+        "id": "bulk_section",
+        "text": "[filter:bulk]",
+        "category": "config_section",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "批量操作中间件段",
+        "fill_type": "text"
+      },
+      {
+        "id": "max_deletes",
+        "text": "max_deletes_per_request",
+        "category": "config_directive",
+        "min_weight": "hard",
+        "weight_score": 1.8,
+        "hint": "单次批量删除上限配置键",
+        "fill_type": "text"
+      },
+      {
+        "id": "max_deletes_value",
+        "text": "10000",
+        "category": "config_directive",
+        "min_weight": "hard",
+        "weight_score": 1.8,
+        "hint": "单次批量删除上限值",
+        "fill_type": "text"
+      },
+      {
+        "id": "slo_use",
+        "text": "use",
+        "category": "config_directive",
+        "min_weight": "hard",
+        "weight_score": 1.8,
+        "hint": "加载 SLO 中间件的配置键",
+        "fill_type": "text",
+        "occurrence": 1
+      },
+      {
+        "id": "slo_use_value",
+        "text": "egg:swift#slo",
+        "category": "config_directive",
+        "min_weight": "hard",
+        "weight_score": 1.8,
+        "hint": "静态大对象中间件 entry point",
+        "fill_type": "text"
+      },
+      {
+        "id": "memcache_servers",
+        "text": "memcache_servers",
+        "category": "config_directive",
+        "min_weight": "hard",
+        "weight_score": 1.8,
+        "hint": "memcache 地址配置键",
+        "fill_type": "text"
+      },
+      {
+        "id": "memcache_servers_1",
+        "text": "10.0.0.21:11211",
+        "category": "config_directive",
+        "min_weight": "hard",
+        "weight_score": 1.8,
+        "hint": "第一个 memcache 节点",
+        "fill_type": "text"
+      },
+      {
+        "id": "memcache_servers_2",
+        "text": "10.0.0.22:11211",
+        "category": "config_directive",
+        "min_weight": "hard",
+        "weight_score": 1.8,
+        "hint": "第二个 memcache 节点",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 批量删除上限、SLO/DLO 中间件、memcache 地址",
+      "level_2": "📖 bulk 提供批量删除/提取（max_deletes_per_request 限流）；slo/dlo 分别支撑静态/动态大对象；cache 中间件用 egg:swift#memcache 连接 memcached",
+      "level_3": "👀 依次填 bulk 段、max_deletes_per_request 键与值、SLO 的 use 键与值、memcache_servers 键与两个地址",
+      "level_4": "📝 正确答案：`[filter:bulk]`、`max_deletes_per_request`、`10000`、`use`、`egg:swift#slo`、`memcache_servers`、`10.0.0.21:11211`、`10.0.0.22:11211`"
+    },
+    "explanation": "这些中间件必须同时出现在 [pipeline:main] 里才会生效；bulk 承担 DELETE 批量删除，slo/dlo 负责大对象清单解析，cache 为其他中间件提供共享缓存。"
+  }
+]

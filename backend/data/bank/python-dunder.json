@@ -33,17 +33,44 @@
         "id": "repr_call",
         "text": "print(repr(b))",
         "category": "repr_call",
-        "min_weight": "beginner",
+        "min_weight": "easy",
         "weight_score": 1,
         "hint": "显式调用 repr 观察差异",
+        "fill_type": "text"
+      },
+      {
+        "id": "repr_return",
+        "text": "return f\"Book(title={self.title!r})\"",
+        "category": "repr_return",
+        "min_weight": "hard",
+        "weight_score": 1.5,
+        "hint": "repr 里用 !r 让字符串保留引号",
+        "fill_type": "text"
+      },
+      {
+        "id": "str_call",
+        "text": "print(str(b))",
+        "category": "str_call",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "显式调用 str() 观察用户视图",
+        "fill_type": "text"
+      },
+      {
+        "id": "plain_print",
+        "text": "print(b)",
+        "category": "plain_print",
+        "min_weight": "expert",
+        "weight_score": 1,
+        "hint": "裸 print 走 __str__，与显式 str 一致",
         "fill_type": "text"
       }
     ],
     "hints": {
       "level_1": "💡 print 和 repr 各调用哪个魔术方法？",
       "level_2": "📖 `str(obj)` 找 `__str__`，`repr(obj)` 找 `__repr__`；`print` 用的是 `str`",
-      "level_3": "👀 两个方法名都写在类里，最后三行分别用 `str`、`repr`、裸 `print` 输出",
-      "level_4": "📝 正确答案：`def __str__(self):`、`def __repr__(self):` 与 `print(repr(b))`"
+      "level_3": "👀 类里写 `def __str__(self):` 与 `def __repr__(self):`，后者用 `return f\"Book(title={self.title!r})\"`；下面三行 `print(str(b))`、`print(repr(b))` 与 `print(b)` 分别输出用户视图、调试视图和裸打印结果",
+      "level_4": "📝 正确答案：`def __str__(self):`、`def __repr__(self):`、`print(repr(b))`、`return f\"Book(title={self.title!r})\"`、`print(str(b))` 与 `print(b)`"
     },
     "explanation": "`__str__` 面向终端用户、`__repr__` 面向开发者：`print`/f-string 走 `__str__`，容器打印与调试走 `__repr__`；未定义 `__str__` 时会回退到 `__repr__`。"
   },
@@ -72,7 +99,7 @@
         "id": "eq_return",
         "text": "return (self.x, self.y) == (other.x, other.y)",
         "category": "eq_return",
-        "min_weight": "beginner",
+        "min_weight": "medium",
         "weight_score": 1,
         "hint": "把两个字段打包成元组比较",
         "fill_type": "text"
@@ -81,17 +108,44 @@
         "id": "hash_lookup",
         "text": "print(Point.__hash__)",
         "category": "hash_lookup",
-        "min_weight": "beginner",
+        "min_weight": "hard",
         "weight_score": 1,
         "hint": "查看类上 __hash__ 变成了什么",
+        "fill_type": "text"
+      },
+      {
+        "id": "coord_assign",
+        "text": "self.x = x",
+        "category": "coord_assign",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "初始化第一个坐标字段",
+        "fill_type": "text"
+      },
+      {
+        "id": "eq_probe",
+        "text": "print(p1 == p2)",
+        "category": "eq_probe",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "比较两个坐标相同的实例",
+        "fill_type": "text"
+      },
+      {
+        "id": "hash_none_probe",
+        "text": "print(p1.__hash__ is None)",
+        "category": "hash_none_probe",
+        "min_weight": "expert",
+        "weight_score": 1.5,
+        "hint": "实例的 __hash__ 也变成 None",
         "fill_type": "text"
       }
     ],
     "hints": {
       "level_1": "💡 类里定义了 `__eq__`，对象的哈希能力会发生什么？",
       "level_2": "📖 Python 认为相等的可变对象不该有稳定哈希，于是自动把 `__hash__` 置为 None",
-      "level_3": "👀 打印 `Point.__hash__`，再确认实例的 `__hash__` 也是 None",
-      "level_4": "📝 正确答案：`def __eq__(self, other):`、`return (self.x, self.y) == (other.x, other.y)` 与 `print(Point.__hash__)`"
+      "level_3": "👀 `self.x = x` 初始化字段，`def __eq__(self, other):` 里 `return (self.x, self.y) == (other.x, other.y)`；`print(p1 == p2)` 比较相等，再看 `print(Point.__hash__)` 与 `print(p1.__hash__ is None)`",
+      "level_4": "📝 正确答案：`def __eq__(self, other):`、`return (self.x, self.y) == (other.x, other.y)`、`print(Point.__hash__)`、`self.x = x`、`print(p1 == p2)` 与 `print(p1.__hash__ is None)`"
     },
     "explanation": "自定义 `__eq__` 会让 Python 自动将 `__hash__` 置为 None，对象随即不可哈希（不能做 dict 键或 set 元素），除非再显式实现 `__hash__`。"
   },
@@ -120,7 +174,7 @@
         "id": "return_hash",
         "text": "return hash(self.uid)",
         "category": "hash_return",
-        "min_weight": "medium",
+        "min_weight": "easy",
         "weight_score": 1.5,
         "hint": "用 uid 的哈希作为对象哈希",
         "fill_type": "text"
@@ -129,17 +183,44 @@
         "id": "dict_lookup",
         "text": "print(d[u2])",
         "category": "dict_lookup",
-        "min_weight": "medium",
+        "min_weight": "hard",
         "weight_score": 1.5,
         "hint": "用等价的另一个实例取字典值",
+        "fill_type": "text"
+      },
+      {
+        "id": "uid_assign",
+        "text": "self.uid = uid",
+        "category": "uid_assign",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "把 uid 存成实例属性",
+        "fill_type": "text"
+      },
+      {
+        "id": "eq_impl",
+        "text": "return isinstance(other, User) and self.uid == other.uid",
+        "category": "eq_impl",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "类型判断加 uid 相等构成 __eq__",
+        "fill_type": "text"
+      },
+      {
+        "id": "hash_equality",
+        "text": "print(hash(u1) == hash(u2))",
+        "category": "hash_equality",
+        "min_weight": "expert",
+        "weight_score": 1.5,
+        "hint": "验证相等对象的哈希一致",
         "fill_type": "text"
       }
     ],
     "hints": {
       "level_1": "💡 想让 uid 相同的两个 User 共用一个字典键，需要实现哪些方法？",
       "level_2": "📖 相等性交给 `__eq__`，哈希值交给 `__hash__`，两者必须保持一致",
-      "level_3": "👀 补上 `__hash__` 返回 `hash(self.uid)`，再用 u1 建字典、u2 取值",
-      "level_4": "📝 正确答案：`def __hash__(self):`、`return hash(self.uid)` 与 `print(d[u2])`"
+      "level_3": "👀 `self.uid = uid` 存字段，`def __hash__(self):` 里 `return hash(self.uid)`，`__eq__` 用 `return isinstance(other, User) and self.uid == other.uid`；`print(hash(u1) == hash(u2))` 验证哈希一致，最后 `print(d[u2])` 取字典值",
+      "level_4": "📝 正确答案：`def __hash__(self):`、`return hash(self.uid)`、`print(d[u2])`、`self.uid = uid`、`return isinstance(other, User) and self.uid == other.uid` 与 `print(hash(u1) == hash(u2))`"
     },
     "explanation": "dict 先用哈希定位桶、再用 `__eq__` 确认相等，二者缺一不可；`hash(self.uid)` 保证相等对象哈希一致，u2 才能命中 u1 的键。"
   },
@@ -168,7 +249,7 @@
         "id": "dunder_bool",
         "text": "def __bool__(self):",
         "category": "dunder_bool",
-        "min_weight": "medium",
+        "min_weight": "easy",
         "weight_score": 1.5,
         "hint": "定义真值判断逻辑",
         "fill_type": "text"
@@ -181,13 +262,40 @@
         "weight_score": 1.5,
         "hint": "空盒为假、非空为真",
         "fill_type": "text"
+      },
+      {
+        "id": "items_assign",
+        "text": "self.items = items",
+        "category": "items_assign",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "把元素列表存进实例",
+        "fill_type": "text"
+      },
+      {
+        "id": "len_probe",
+        "text": "print(len(empty), len(full))",
+        "category": "len_probe",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "一次打印空盒与非空盒的长度",
+        "fill_type": "text"
+      },
+      {
+        "id": "bool_probe",
+        "text": "print(bool(empty), bool(full))",
+        "category": "bool_probe",
+        "min_weight": "expert",
+        "weight_score": 1.5,
+        "hint": "对比两者的真值结果",
+        "fill_type": "text"
       }
     ],
     "hints": {
       "level_1": "💡 对象同时有 `__len__` 和 `__bool__` 时，`bool()` 听谁的？",
       "level_2": "📖 `bool()` 优先调用 `__bool__`，没有它才退回 `len() != 0`",
-      "level_3": "👀 `__len__` 直接返回列表长度，`__bool__` 返回 `len(self.items) > 0`",
-      "level_4": "📝 正确答案：`def __len__(self):`、`def __bool__(self):` 与 `return len(self.items) > 0`"
+      "level_3": "👀 `self.items = items` 保存列表；`def __len__(self):` 返回长度，`def __bool__(self):` 返回 `return len(self.items) > 0`；用 `print(len(empty), len(full))` 与 `print(bool(empty), bool(full))` 对比",
+      "level_4": "📝 正确答案：`def __len__(self):`、`def __bool__(self):`、`return len(self.items) > 0`、`self.items = items`、`print(len(empty), len(full))` 与 `print(bool(empty), bool(full))`"
     },
     "explanation": "`len()` 走 `__len__`；真值判断优先 `__bool__`，缺失时退化为 `__len__` 是否为 0，可借此表达「空即假」而无需关心长度数值。"
   },
@@ -216,7 +324,7 @@
         "id": "return_item",
         "text": "return self.songs[index]",
         "category": "getitem_return",
-        "min_weight": "medium",
+        "min_weight": "easy",
         "weight_score": 1.5,
         "hint": "把 index 原样透传给内部列表",
         "fill_type": "text"
@@ -225,17 +333,44 @@
         "id": "slice_call",
         "text": "print(p[1:3])",
         "category": "slice_call",
-        "min_weight": "medium",
+        "min_weight": "expert",
         "weight_score": 1.5,
         "hint": "切片也会走同一个方法",
+        "fill_type": "text"
+      },
+      {
+        "id": "songs_assign",
+        "text": "self.songs = songs",
+        "category": "songs_assign",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "保存歌单内部列表",
+        "fill_type": "text"
+      },
+      {
+        "id": "index_probe",
+        "text": "print(p[0])",
+        "category": "index_probe",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "用下标 0 取第一首歌",
+        "fill_type": "text"
+      },
+      {
+        "id": "neg_index_probe",
+        "text": "print(p[-1])",
+        "category": "neg_index_probe",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "负索引同样透传给内部列表",
         "fill_type": "text"
       }
     ],
     "hints": {
       "level_1": "💡 怎样让自定义对象像列表一样支持 `p[0]` 和 `p[1:3]`？",
       "level_2": "📖 实现 `__getitem__`；切片会以 `slice` 对象作为 index 传入，透传给列表即可",
-      "level_3": "👀 方法体一行：`return self.songs[index]`，最后用切片语句验证",
-      "level_4": "📝 正确答案：`def __getitem__(self, index):`、`return self.songs[index]` 与 `print(p[1:3])`"
+      "level_3": "👀 `self.songs = songs` 存歌单；`def __getitem__(self, index):` 里 `return self.songs[index]`；依次用 `print(p[0])`、`print(p[-1])` 与 `print(p[1:3])` 验证索引、负索引和切片",
+      "level_4": "📝 正确答案：`def __getitem__(self, index):`、`return self.songs[index]`、`print(p[1:3])`、`self.songs = songs`、`print(p[0])` 与 `print(p[-1])`"
     },
     "explanation": "`obj[key]` 等价于 `type(obj).__getitem__(obj, key)`；索引、负数、切片都以 index 参数传入，委托给内部列表最省事。"
   },
@@ -264,7 +399,7 @@
         "id": "contains_return",
         "text": "return name in self.members",
         "category": "contains_return",
-        "min_weight": "beginner",
+        "min_weight": "expert",
         "weight_score": 1,
         "hint": "复用列表自带的 in",
         "fill_type": "text"
@@ -277,13 +412,40 @@
         "weight_score": 1.5,
         "hint": "验证成员判断结果",
         "fill_type": "text"
+      },
+      {
+        "id": "members_assign",
+        "text": "self.members = members",
+        "category": "members_assign",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "把成员列表存进实例",
+        "fill_type": "text"
+      },
+      {
+        "id": "team_build",
+        "text": "t = Team([\"Alice\", \"Bob\"])",
+        "category": "team_build",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "先构造队伍实例再验证",
+        "fill_type": "text"
+      },
+      {
+        "id": "not_in_probe",
+        "text": "print(\"Cara\" in t)",
+        "category": "not_in_probe",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "不存在的成员应返回 False",
+        "fill_type": "text"
       }
     ],
     "hints": {
       "level_1": "💡 `in` 运算符背后调用哪个魔术方法？",
       "level_2": "📖 `x in obj` 先找 `__contains__`，返回布尔值即可",
-      "level_3": "👀 方法体直接 `return name in self.members`，把判断委托给内部列表",
-      "level_4": "📝 正确答案：`def __contains__(self, name):`、`return name in self.members` 与 `print(\"Bob\" in t)`"
+      "level_3": "👀 `self.members = members` 存成员，`def __contains__(self, name):` 里 `return name in self.members`；先 `t = Team([\"Alice\", \"Bob\"])`，再用 `print(\"Bob\" in t)` 与 `print(\"Cara\" in t)` 验证命中与未命中",
+      "level_4": "📝 正确答案：`def __contains__(self, name):`、`return name in self.members`、`print(\"Bob\" in t)`、`self.members = members`、`t = Team([\"Alice\", \"Bob\"])` 与 `print(\"Cara\" in t)`"
     },
     "explanation": "`in` 优先调用 `__contains__`，没有它才退化为迭代查找；重写后可以自定义「包含」的语义（大小写、别名、区间等）。"
   },
@@ -312,7 +474,7 @@
         "id": "call_instance",
         "text": "print(add5(3))",
         "category": "call_instance",
-        "min_weight": "beginner",
+        "min_weight": "easy",
         "weight_score": 1,
         "hint": "像函数一样调用实例",
         "fill_type": "text"
@@ -321,17 +483,44 @@
         "id": "callable_check",
         "text": "print(callable(add5))",
         "category": "callable_check",
-        "min_weight": "easy",
+        "min_weight": "hard",
         "weight_score": 1.5,
         "hint": "验证实例已成为可调用对象",
+        "fill_type": "text"
+      },
+      {
+        "id": "base_assign",
+        "text": "self.base = base",
+        "category": "base_assign",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "把基数存成实例属性",
+        "fill_type": "text"
+      },
+      {
+        "id": "call_return",
+        "text": "return self.base + x",
+        "category": "call_return",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "调用时用保存的 base 加上参数",
+        "fill_type": "text"
+      },
+      {
+        "id": "adder_build",
+        "text": "add5 = Adder(5)",
+        "category": "adder_build",
+        "min_weight": "expert",
+        "weight_score": 0.5,
+        "hint": "先创建带 base 的实例",
         "fill_type": "text"
       }
     ],
     "hints": {
       "level_1": "💡 怎样让实例像函数一样写 `add5(3)`？",
       "level_2": "📖 实现 `__call__`，调用实例时就会执行它",
-      "level_3": "👀 `__call__` 里返回 `self.base + x`，最后用 `callable()` 确认",
-      "level_4": "📝 正确答案：`def __call__(self, x):`、`print(add5(3))` 与 `print(callable(add5))`"
+      "level_3": "👀 `self.base = base` 保存基数，`def __call__(self, x):` 里 `return self.base + x`；先 `add5 = Adder(5)`，再用 `print(add5(3))` 与 `print(callable(add5))` 验证调用",
+      "level_4": "📝 正确答案：`def __call__(self, x):`、`print(add5(3))`、`print(callable(add5))`、`self.base = base`、`return self.base + x` 与 `add5 = Adder(5)`"
     },
     "explanation": "实现 `__call__` 后实例成为 callable，能把「状态 + 行为」打包传递，常用于装饰器、回调和策略对象。"
   },
@@ -360,7 +549,7 @@
         "id": "lazy_print",
         "text": "print(f\"lazy: {name}\")",
         "category": "lazy_attribute",
-        "min_weight": "medium",
+        "min_weight": "easy",
         "weight_score": 1.5,
         "hint": "只对不存在的属性打印，观察触发时机",
         "fill_type": "text"
@@ -369,17 +558,44 @@
         "id": "lazy_return",
         "text": "return name.upper()",
         "category": "lazy_return",
-        "min_weight": "medium",
+        "min_weight": "expert",
         "weight_score": 1.5,
         "hint": "按属性名动态计算返回值",
+        "fill_type": "text"
+      },
+      {
+        "id": "debug_assign",
+        "text": "self.debug = True",
+        "category": "debug_assign",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "预置一个真实存在的属性",
+        "fill_type": "text"
+      },
+      {
+        "id": "exist_probe",
+        "text": "print(c.debug)",
+        "category": "exist_probe",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "已有属性不会触发 __getattr__",
+        "fill_type": "text"
+      },
+      {
+        "id": "missing_probe",
+        "text": "print(c.host)",
+        "category": "missing_probe",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "缺失属性才触发兜底逻辑",
         "fill_type": "text"
       }
     ],
     "hints": {
       "level_1": "💡 访问不存在的属性时，怎样返回一个动态计算的默认值？",
       "level_2": "📖 `__getattr__` 仅在常规查找失败后触发，适合做惰性/兜底属性",
-      "level_3": "👀 已存在的 `debug` 不触发打印；访问 `host` 时才打印并返回大写属性名",
-      "level_4": "📝 正确答案：`def __getattr__(self, name):`、`print(f\"lazy: {name}\")` 与 `return name.upper()`"
+      "level_3": "👀 `self.debug = True` 是已有属性，`def __getattr__(self, name):` 里先 `print(f\"lazy: {name}\")` 再 `return name.upper()`；`print(c.debug)` 不触发打印，`print(c.host)` 才触发",
+      "level_4": "📝 正确答案：`def __getattr__(self, name):`、`print(f\"lazy: {name}\")`、`return name.upper()`、`self.debug = True`、`print(c.debug)` 与 `print(c.host)`"
     },
     "explanation": "`__getattr__` 是属性查找的最后一道兜底：已存在的属性不会触发它，只有查找失败才调用，因此可安全实现惰性配置与动态代理。"
   },
@@ -417,17 +633,44 @@
         "id": "object_getattribute",
         "text": "return object.__getattribute__(self, name)",
         "category": "object_getattribute",
-        "min_weight": "hard",
+        "min_weight": "expert",
         "weight_score": 2,
         "hint": "委托父类实现取值，避免无限递归",
+        "fill_type": "text"
+      },
+      {
+        "id": "value_assign",
+        "text": "self.value = 10",
+        "category": "value_assign",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "存一个普通实例属性",
+        "fill_type": "text"
+      },
+      {
+        "id": "access_log",
+        "text": "print(f\"access: {name}\")",
+        "category": "access_log",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "每次访问都会先打印属性名",
+        "fill_type": "text"
+      },
+      {
+        "id": "value_probe",
+        "text": "print(t.value)",
+        "category": "value_probe",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "访问已有属性也会经过 __getattribute__",
         "fill_type": "text"
       }
     ],
     "hints": {
       "level_1": "💡 想拦截「每一次」属性访问，应该用哪个方法？",
       "level_2": "📖 `__getattribute__` 对所有属性访问生效，必须调用 `object.__getattribute__` 才能拿到真实值，否则无限递归",
-      "level_3": "👀 `value` 和 `other` 都触发打印；只有 `other` 查找失败后才轮到 `__getattr__` 返回 fallback",
-      "level_4": "📝 正确答案：`def __getattribute__(self, name):`、`def __getattr__(self, name):` 与 `return object.__getattribute__(self, name)`"
+      "level_3": "👀 `self.value = 10` 存字段；`def __getattribute__(self, name):` 里 `print(f\"access: {name}\")` 后 `return object.__getattribute__(self, name)`，`def __getattr__(self, name):` 兜底；`print(t.value)` 会先打印 access",
+      "level_4": "📝 正确答案：`def __getattribute__(self, name):`、`def __getattr__(self, name):`、`return object.__getattribute__(self, name)`、`self.value = 10`、`print(f\"access: {name}\")` 与 `print(t.value)`"
     },
     "explanation": "访问顺序是 `__getattribute__` → 失败后 `__getattr__`；重写前者必须委托 `object.__getattribute__` 避免递归，后者只处理「找不到」的情况。"
   },
@@ -465,17 +708,44 @@
         "id": "delattr_call",
         "text": "del obj.count",
         "category": "delattr_call",
-        "min_weight": "easy",
+        "min_weight": "hard",
         "weight_score": 1.5,
         "hint": "触发 __delattr__ 观察日志",
+        "fill_type": "text"
+      },
+      {
+        "id": "set_log",
+        "text": "print(f\"set: {name}={value}\")",
+        "category": "set_log",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "赋值时打印属性名与值",
+        "fill_type": "text"
+      },
+      {
+        "id": "assign_probe",
+        "text": "obj.count = 3",
+        "category": "assign_probe",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "赋值语句触发 __setattr__ 日志",
+        "fill_type": "text"
+      },
+      {
+        "id": "hasattr_probe",
+        "text": "print(hasattr(obj, \"count\"))",
+        "category": "hasattr_probe",
+        "min_weight": "expert",
+        "weight_score": 1,
+        "hint": "删除后确认属性确实不存在",
         "fill_type": "text"
       }
     ],
     "hints": {
       "level_1": "💡 想记录每次属性赋值和删除，该重写哪些方法？",
       "level_2": "📖 `__setattr__` 拦截 `obj.x = v`，`__delattr__` 拦截 `del obj.x`；真正落盘要调用 `object.__setattr__`",
-      "level_3": "👀 两个方法都先 print 再委托给 object 的对应实现",
-      "level_4": "📝 正确答案：`def __setattr__(self, name, value):`、`object.__setattr__(self, name, value)` 与 `del obj.count`"
+      "level_3": "👀 `def __setattr__(self, name, value):` 里 `print(f\"set: {name}={value}\")` 后调用 `object.__setattr__(self, name, value)`；`obj.count = 3` 触发日志，`del obj.count` 后 `print(hasattr(obj, \"count\"))` 为 False",
+      "level_4": "📝 正确答案：`def __setattr__(self, name, value):`、`object.__setattr__(self, name, value)`、`del obj.count`、`print(f\"set: {name}={value}\")`、`obj.count = 3` 与 `print(hasattr(obj, \"count\"))`"
     },
     "explanation": "属性赋值/删除的入口是 `__setattr__`/`__delattr__`；拦截后若还要真正写入 `__dict__`，必须委托 `object.__setattr__`，否则会无限递归。"
   },
@@ -513,17 +783,44 @@
         "id": "radd_call",
         "text": "print(2 + Vector(3))",
         "category": "radd_call",
-        "min_weight": "medium",
+        "min_weight": "hard",
         "weight_score": 1.5,
         "hint": "int 不认识 Vector，Python 回头调用 __radd__",
+        "fill_type": "text"
+      },
+      {
+        "id": "x_assign",
+        "text": "self.x = x",
+        "category": "x_assign",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "保存分量字段",
+        "fill_type": "text"
+      },
+      {
+        "id": "add_return",
+        "text": "return Vector(self.x + other.x)",
+        "category": "add_return",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "相加后返回新的 Vector",
+        "fill_type": "text"
+      },
+      {
+        "id": "repr_return",
+        "text": "return f\"Vector({self.x})\"",
+        "category": "repr_return",
+        "min_weight": "expert",
+        "weight_score": 1,
+        "hint": "让打印结果可读为 Vector(x)",
         "fill_type": "text"
       }
     ],
     "hints": {
       "level_1": "💡 `Vector + Vector` 和 `2 + Vector` 分别调用哪个方法？",
       "level_2": "📖 左操作数实现 `__add__`；左操作数不认识右操作数时（如 `2 + v`），Python 会回头调用右操作数的 `__radd__`",
-      "level_3": "👀 两个方法都返回新的 `Vector(...)`，`__radd__` 里注意 `other` 在左侧",
-      "level_4": "📝 正确答案：`def __add__(self, other):`、`def __radd__(self, other):` 与 `print(2 + Vector(3))`"
+      "level_3": "👀 `self.x = x` 存分量，`def __add__(self, other):` 返回 `return Vector(self.x + other.x)`，`def __radd__(self, other):` 处理右侧加法；`print(2 + Vector(3))` 走反向加法，`return f\"Vector({self.x})\"` 负责打印格式",
+      "level_4": "📝 正确答案：`def __add__(self, other):`、`def __radd__(self, other):`、`print(2 + Vector(3))`、`self.x = x`、`return Vector(self.x + other.x)` 与 `return f\"Vector({self.x})\"`"
     },
     "explanation": "二元运算符先试左操作数的 `__add__`，返回 NotImplemented 时再试右操作数的 `__radd__`；`__radd__` 用于支持 `int + Vector` 这类混合运算。"
   },
@@ -552,7 +849,7 @@
         "id": "iadd_return",
         "text": "return self",
         "category": "iadd_return",
-        "min_weight": "hard",
+        "min_weight": "medium",
         "weight_score": 2,
         "hint": "返回自身表示就地修改",
         "fill_type": "text"
@@ -565,13 +862,40 @@
         "weight_score": 2,
         "hint": "验证别名看到的仍是同一个对象",
         "fill_type": "text"
+      },
+      {
+        "id": "n_assign",
+        "text": "self.n = n",
+        "category": "n_assign",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "初始化计数器字段",
+        "fill_type": "text"
+      },
+      {
+        "id": "iadd_mutate",
+        "text": "self.n += other",
+        "category": "iadd_mutate",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "把增量累加到实例属性",
+        "fill_type": "text"
+      },
+      {
+        "id": "repr_return",
+        "text": "return f\"Counter({self.n})\"",
+        "category": "repr_return",
+        "min_weight": "expert",
+        "weight_score": 1,
+        "hint": "让打印结果可读为 Counter(n)",
+        "fill_type": "text"
       }
     ],
     "hints": {
       "level_1": "💡 `c += 5` 如何做到修改原对象而不是新建对象？",
       "level_2": "📖 实现 `__iadd__` 就地修改并返回 `self`；没有它时 `+=` 会退化为 `c = c + 5`",
-      "level_3": "👀 `self.n += other` 之后必须 `return self`，最后用别名判断验证身份",
-      "level_4": "📝 正确答案：`def __iadd__(self, other):`、`return self` 与 `print(alias is c)`"
+      "level_3": "👀 `self.n = n` 初始化；`def __iadd__(self, other):` 里 `self.n += other` 后 `return self`；`print(alias is c)` 验证就地修改，`return f\"Counter({self.n})\"` 负责打印格式",
+      "level_4": "📝 正确答案：`def __iadd__(self, other):`、`return self`、`print(alias is c)`、`self.n = n`、`self.n += other` 与 `return f\"Counter({self.n})\"`"
     },
     "explanation": "`+=` 优先调用 `__iadd__`：返回 `self` 表示就地修改，所有别名都能看到变化；若返回新对象，语义就等价于 `c = c + 5`。"
   },
@@ -591,7 +915,7 @@
         "id": "dunder_lt",
         "text": "def __lt__(self, other):",
         "category": "dunder_lt",
-        "min_weight": "beginner",
+        "min_weight": "medium",
         "weight_score": 1,
         "hint": "唯一需要手写的排序方法",
         "fill_type": "text"
@@ -600,7 +924,7 @@
         "id": "dunder_eq",
         "text": "def __eq__(self, other):",
         "category": "dunder_eq",
-        "min_weight": "easy",
+        "min_weight": "beginner",
         "weight_score": 1,
         "hint": "相等比较仍然必须自己写",
         "fill_type": "text"
@@ -613,13 +937,40 @@
         "weight_score": 2,
         "hint": "类装饰器自动补出 <= > >=",
         "fill_type": "text"
+      },
+      {
+        "id": "import_line",
+        "text": "from functools import total_ordering",
+        "category": "import_line",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "先导入 functools 里的装饰器",
+        "fill_type": "text"
+      },
+      {
+        "id": "eq_return",
+        "text": "return (self.major, self.minor) == (other.major, other.minor)",
+        "category": "eq_return",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "元组逐项比较定义相等",
+        "fill_type": "text"
+      },
+      {
+        "id": "le_probe",
+        "text": "print(v1 <= v2)",
+        "category": "le_probe",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "<= 是装饰器自动补出来的",
+        "fill_type": "text"
       }
     ],
     "hints": {
       "level_1": "💡 只实现 `__eq__` 和 `__lt__`，怎样免费获得 `<=`、`>`、`>=`？",
       "level_2": "📖 用 `functools.total_ordering` 装饰类，它会依据 `__eq__` 与 `__lt__` 自动补全其余比较方法",
-      "level_3": "👀 类定义上一行写 `@total_ordering`，类里补 `__eq__` 与 `__lt__`",
-      "level_4": "📝 正确答案：`def __lt__(self, other):`、`def __eq__(self, other):` 与 `@total_ordering`"
+      "level_3": "👀 `from functools import total_ordering` 导入装饰器，`@total_ordering` 装饰类；`def __eq__(self, other):` 里 `return (self.major, self.minor) == (other.major, other.minor)`，`def __lt__(self, other):` 提供排序依据；`print(v1 <= v2)` 验证自动补出的运算符",
+      "level_4": "📝 正确答案：`def __lt__(self, other):`、`def __eq__(self, other):`、`@total_ordering`、`from functools import total_ordering`、`return (self.major, self.minor) == (other.major, other.minor)` 与 `print(v1 <= v2)`"
     },
     "explanation": "`@total_ordering` 从 `__eq__` + `__lt__`（或 `__le__` 等）推导出剩余比较运算符，代价是推导出的方法稍慢，但代码量大幅减少。"
   },
@@ -648,7 +999,7 @@
         "id": "yield_value",
         "text": "yield n",
         "category": "generator_yield",
-        "min_weight": "beginner",
+        "min_weight": "expert",
         "weight_score": 1,
         "hint": "逐个产出并保留局部状态",
         "fill_type": "text"
@@ -657,17 +1008,44 @@
         "id": "for_loop",
         "text": "for x in Countdown(3):",
         "category": "for_loop",
-        "min_weight": "beginner",
+        "min_weight": "hard",
         "weight_score": 1,
         "hint": "直接迭代自定义对象",
+        "fill_type": "text"
+      },
+      {
+        "id": "start_assign",
+        "text": "self.start = start",
+        "category": "start_assign",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "保存倒数的起点",
+        "fill_type": "text"
+      },
+      {
+        "id": "local_n",
+        "text": "n = self.start",
+        "category": "local_n",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "把起点拷到局部变量再递减",
+        "fill_type": "text"
+      },
+      {
+        "id": "while_cond",
+        "text": "while n > 0:",
+        "category": "while_cond",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "循环条件决定倒数的边界",
         "fill_type": "text"
       }
     ],
     "hints": {
       "level_1": "💡 `for x in obj` 背后调用了什么？",
       "level_2": "📖 `for` 需要 `__iter__`；用 `yield` 写生成器函数最简洁，每次迭代产出一个值",
-      "level_3": "👀 `__iter__` 内先 `n = self.start`，`while n > 0` 中 `yield n` 再自减",
-      "level_4": "📝 正确答案：`def __iter__(self):`、`yield n` 与 `for x in Countdown(3):`"
+      "level_3": "👀 `self.start = start` 存起点；`def __iter__(self):` 里 `n = self.start`，`while n > 0:` 中 `yield n`；`for x in Countdown(3):` 遍历输出",
+      "level_4": "📝 正确答案：`def __iter__(self):`、`yield n`、`for x in Countdown(3):`、`self.start = start`、`n = self.start` 与 `while n > 0:`"
     },
     "explanation": "`for` 先调用 `__iter__` 拿到迭代器；生成器函数天然返回迭代器，`yield` 逐个产出且自动保留局部变量状态。"
   },
@@ -687,7 +1065,7 @@
         "id": "dict_subclass",
         "text": "class DefaultDict(dict):",
         "category": "dict_subclass",
-        "min_weight": "beginner",
+        "min_weight": "easy",
         "weight_score": 1,
         "hint": "继承内置 dict",
         "fill_type": "text"
@@ -705,17 +1083,44 @@
         "id": "missing_probe",
         "text": "print(\"b\" in d)",
         "category": "missing_lookup",
-        "min_weight": "beginner",
+        "min_weight": "expert",
         "weight_score": 1,
         "hint": "确认 __missing__ 不会插入键",
+        "fill_type": "text"
+      },
+      {
+        "id": "missing_return",
+        "text": "return 0",
+        "category": "missing_return",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "缺键时返回默认值 0",
+        "fill_type": "text"
+      },
+      {
+        "id": "instance_create",
+        "text": "d = DefaultDict()",
+        "category": "instance_create",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "创建子类实例",
+        "fill_type": "text"
+      },
+      {
+        "id": "hit_probe",
+        "text": "print(d[\"b\"])",
+        "category": "hit_probe",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "缺键访问返回 0 而不抛 KeyError",
         "fill_type": "text"
       }
     ],
     "hints": {
       "level_1": "💡 字典取不存在的键会 KeyError，怎样让它返回默认值 0？",
       "level_2": "📖 子类化 `dict` 并实现 `__missing__`，`d[k]` 缺键时会调用它",
-      "level_3": "👀 `class DefaultDict(dict):` 中定义 `__missing__` 返回 0；注意 `in` 判断不受影响",
-      "level_4": "📝 正确答案：`class DefaultDict(dict):`、`def __missing__(self, key):` 与 `print(\"b\" in d)`"
+      "level_3": "👀 `class DefaultDict(dict):` 继承 dict，`def __missing__(self, key):` 里 `return 0`；`d = DefaultDict()` 后 `print(d[\"b\"])` 返回 0，而 `print(\"b\" in d)` 仍为 False",
+      "level_4": "📝 正确答案：`class DefaultDict(dict):`、`def __missing__(self, key):`、`print(\"b\" in d)`、`return 0`、`d = DefaultDict()` 与 `print(d[\"b\"])`"
     },
     "explanation": "`__missing__` 只在 `dict.__getitem__` 找不到键时被调用，且不会插入该键，所以 `\"b\" in d` 仍为 False；标准库 `defaultdict` 正基于它实现。"
   }

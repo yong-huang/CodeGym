@@ -35,6 +35,34 @@ def post(url, payload, headers=None):
         return r.status, json.loads(r.read())
 
 
+def put(url, payload, headers=None):
+    data = json.dumps(payload).encode()
+    h = {"Content-Type": "application/json", **(headers or {})}
+    req = urllib.request.Request(url, data=data, headers=h, method="PUT")
+    with _NO_PROXY.open(req, timeout=15) as r:
+        return r.status, json.loads(r.read())
+
+
+def delete(url, headers=None):
+    req = urllib.request.Request(url, headers=headers or {}, method="DELETE")
+    with _NO_PROXY.open(req, timeout=15) as r:
+        return r.status, r.read()
+
+
+def status_of(url, headers=None):
+    """Returns the HTTP status without raising on 4xx."""
+    req = urllib.request.Request(url, headers=headers or {})
+    try:
+        with _NO_PROXY.open(req, timeout=15) as r:
+            return r.status
+    except urllib.error.HTTPError as e:
+        return e.code
+
+
+def bearer(token):
+    return {"Authorization": f"Bearer {token}"}
+
+
 def main():
     # 1. frontend shell
     st, html = get(BASE + "/")
@@ -171,8 +199,27 @@ def main():
     ok = ok and not bare.get("weak_analysis")
     check("browser bare-key answers graded", ok, f"score={bare['score']} grade={bare['grade']}")
 
-    # 8. progress + weak points (dedicated live user, unique per run)
-    user = {"X-User-Id": f"e2e-live-{RUN}"}
+    # 8. 用户体系：注册 / 登录 / me / 我的题库（每个 run 独立账号）
+    _, reg = post(API + "/auth/register",
+                  {"username": f"e2elive{RUN}", "password": "secret123", "display_name": "冒烟账号"})
+    token, live_user = reg["token"], reg["user"]
+    check("register via proxy", bool(token) and live_user["username"].startswith("e2elive"))
+    check("anonymous me rejected", status_of(API + "/auth/me") == 401)
+    st, body = get(API + "/auth/me", bearer(token))
+    check("me with token", st == 200 and json.loads(body)["user"]["id"] == live_user["id"])
+
+    st, body = get(API + "/me/banks", bearer(token))
+    banks = json.loads(body)
+    check("bank picker available", st == 200 and len(banks["available"]) >= 50,
+          f"{len(banks['available'])} banks")
+    st, saved = put(API + "/me/banks", {"selected": ["testing::pytest", "bogus::x"]}, bearer(token))
+    check("bank selection saved", st == 200 and saved["selected"] == ["testing::pytest"],
+          repr(saved))
+    st, body = get(API + "/auth/me", bearer(token))
+    check("bank selection persisted", json.loads(body)["user"]["selected_banks"] == ["testing::pytest"])
+
+    # progress + weak points for this account
+    user = bearer(token)
     post(API + "/execute", {"exercise_id": "py-lc-001", "weight_level": "easy",
                             "fill_answers": {"FILL_expr": "x*2", "FILL_iter": "numbers"}}, user)
     post(API + "/execute", {"exercise_id": "py-lc-001", "weight_level": "easy",
@@ -189,6 +236,19 @@ def main():
     st, body = get(API + "/weak-points", user)
     weak = json.loads(body)
     check("weak-points endpoint", any(w["exercise_id"] == "py-lc-001" for w in weak))
+
+    # 用户隔离：另一个账号看不到上面的进度
+    _, reg2 = post(API + "/auth/register", {"username": f"e2eliveb{RUN}", "password": "secret123"})
+    st, body = get(API + "/progress", bearer(reg2["token"]))
+    other = json.loads(body)["progress"]
+    check("user data isolated", other["total_attempts"] == 0, repr(other["total_attempts"]))
+
+    # 教练端用户列表能看到新账号；跑完清理
+    st, body = get(API + "/admin/users")
+    users = json.loads(body)
+    check("admin user list", st == 200 and any(u["id"] == live_user["id"] for u in users))
+    for u in (live_user, reg2["user"]):
+        delete(API + f"/admin/users/{u['id']}")
 
     # 9. coach/admin endpoints via proxy
     ex_id = f"e2e-proxy-{RUN}"
@@ -212,8 +272,9 @@ def main():
     req = urllib.request.Request(f"{API}/admin/exercises/{ex_id}", method="DELETE")
     _NO_PROXY.open(req, timeout=10).close()
 
-    # favorites: toggle on/off for a dedicated live user
-    fuser = {"X-User-Id": f"fav-{RUN}"}
+    # favorites: toggle on/off for a dedicated live account
+    _, fav_reg = post(API + "/auth/register", {"username": f"e2efav{RUN}", "password": "secret123"})
+    fuser = bearer(fav_reg["token"])
     _, sky = post(API + "/favorites", {"exercise_id": "k8s-basics-001"}, fuser)
     check("favorite toggle on", sky.get("favorited") is True, repr(sky))
     _, body = get(API + "/favorites", fuser)
@@ -222,6 +283,7 @@ def main():
           repr(favs))
     _, sky = post(API + "/favorites", {"exercise_id": "k8s-basics-001"}, fuser)
     check("favorite toggle off", sky.get("favorited") is False, repr(sky))
+    delete(API + f"/admin/users/{fav_reg['user']['id']}")
 
     print()
     if failures:

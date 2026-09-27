@@ -133,6 +133,40 @@ export interface ProgressResponse {
   recent_attempts: RecentAttempt[];
 }
 
+export interface User {
+  id: string;
+  username: string;
+  display_name?: string;
+  disabled: boolean;
+  selected_banks: string[];
+  created_at: string;
+  updated_at: string;
+}
+
+export interface BankInfo {
+  tech_stack: string;
+  subcategory: string;
+  exercise_count: number;
+}
+
+export interface BankSource {
+  name: string;
+  source: string;
+  exercise_count: number;
+  updated_at: string;
+}
+
+export interface AdminUser extends User {
+  total_attempts: number;
+  completed_count: number;
+  current_streak: number;
+}
+
+export interface AuthResponse {
+  token: string;
+  user: User;
+}
+
 export interface ExerciseDetail {
   id: string;
   title: string;

@@ -1,0 +1,1710 @@
+[
+  {
+    "id": "os-nova-001",
+    "title": "创建实例并注入密钥与初始化脚本",
+    "description": "用 openstack server create 基于镜像、规格和网络创建实例，并指定密钥对与 cloud-init 用户数据",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "easy",
+    "category": "server_create",
+    "subcategory": "Nova",
+    "full_code": "openstack server create --image cirros-0.6.2 --flavor m1.small --network private-net --key-name my-key --user-data ./init.yaml web-01\nopenstack server create --image ubuntu-22.04 --flavor m1.medium --network private-net --security-group web-sg web-02",
+    "expected": "",
+    "points": [
+      {
+        "id": "image_cirros",
+        "text": "--image cirros-0.6.2",
+        "category": "server_create",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "第一台实例的镜像参数（--image + 镜像名）",
+        "fill_type": "text"
+      },
+      {
+        "id": "flavor_small",
+        "text": "--flavor m1.small",
+        "category": "server_create",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "第一台实例的规格参数（--flavor + 规格名）",
+        "fill_type": "text"
+      },
+      {
+        "id": "network_private",
+        "text": "--network private-net",
+        "category": "server_create",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "接入网络用 --network，值是网络名",
+        "fill_type": "text"
+      },
+      {
+        "id": "key_name",
+        "text": "--key-name my-key",
+        "category": "server_create",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "注入密钥对用 --key-name，值是密钥对名",
+        "fill_type": "text"
+      },
+      {
+        "id": "user_data",
+        "text": "--user-data ./init.yaml",
+        "category": "server_create",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "cloud-init 用户数据文件通过 --user-data 传入",
+        "fill_type": "text"
+      },
+      {
+        "id": "security_group",
+        "text": "--security-group web-sg",
+        "category": "server_create",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "第二台实例的安全组参数（--security-group + 组名）",
+        "fill_type": "text"
+      },
+      {
+        "id": "web_02",
+        "text": "web-02",
+        "category": "server_create",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "第二台实例的名称",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 创建实例的基本三件套是镜像、规格、网络，另外还要注入密钥和初始化脚本",
+      "level_2": "📖 server create 用 --image/--flavor/--network 指定来源与网络，--key-name 注入密钥对，--user-data 传 cloud-init 脚本",
+      "level_3": "👀 共 7 空：① 第一台的 --image 参数（镜像名）；② 第一台的 --flavor 参数（规格名）；③ --network 参数；④ --key-name 参数；⑤ --user-data 参数；⑥ 第二台的 --security-group 参数；⑦ 第二台实例名",
+      "level_4": "📝 正确答案：`--image cirros-0.6.2`、`--flavor m1.small`、`--network private-net`、`--key-name my-key`、`--user-data ./init.yaml`、`--security-group web-sg`、`web-02`"
+    },
+    "explanation": "server create 把镜像、规格、网络等信息提交给 nova-api 调度建机；--key-name 让实例注入指定密钥对，--user-data 由 cloud-init 在首次启动时执行，--security-group 控制实例的网络访问规则。"
+  },
+  {
+    "id": "os-nova-002",
+    "title": "过滤列出实例并查看详情",
+    "description": "用 --all-projects/--status/--name 过滤实例列表，并用 server show 查看单台实例详情",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "beginner",
+    "category": "server_query",
+    "subcategory": "Nova",
+    "full_code": "openstack server list --all-projects --status ACTIVE --name web\nopenstack server show web-01",
+    "expected": "",
+    "points": [
+      {
+        "id": "list_cmd",
+        "text": "server list",
+        "category": "server_query",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "列出实例的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "all_projects",
+        "text": "--all-projects",
+        "category": "server_query",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "管理员跨项目查看所有实例",
+        "fill_type": "text"
+      },
+      {
+        "id": "status_filter",
+        "text": "--status ACTIVE",
+        "category": "server_query",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "按状态过滤，只留 ACTIVE",
+        "fill_type": "text"
+      },
+      {
+        "id": "name_filter",
+        "text": "--name web",
+        "category": "server_query",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "按名称模糊过滤，值是 web",
+        "fill_type": "text"
+      },
+      {
+        "id": "show_cmd",
+        "text": "server show",
+        "category": "server_query",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "查看单台实例详情的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "show_target",
+        "text": "web-01",
+        "category": "server_query",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "要查看详情的实例名",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 列表用 server list，详情用 server show；过滤的关键词是项目、状态、名字",
+      "level_2": "📖 --all-projects 是管理员跨项目视角，--status 按状态过滤，--name 对实例名做模糊匹配",
+      "level_3": "👀 共 6 空：① 列表子命令；② 跨项目开关；③ 状态过滤；④ 名称过滤；⑤ 详情子命令；⑥ 实例名",
+      "level_4": "📝 正确答案：`server list`、`--all-projects`、`--status ACTIVE`、`--name web`、`server show`、`web-01`"
+    },
+    "explanation": "list 用于按项目、状态、名称快速筛出目标实例，show 输出单台实例的完整字段（地址、规格、主机、安全组等），排障时先 list 定位再 show 看细节。"
+  },
+  {
+    "id": "os-nova-003",
+    "title": "删除单台与批量删除实例",
+    "description": "用 server delete 删除指定实例，并结合 server list 过滤结果批量删除异常实例",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "easy",
+    "category": "server_delete",
+    "subcategory": "Nova",
+    "full_code": "openstack server delete web-01\nopenstack server delete web-02 db-01\nopenstack server list --name test --status ERROR -f value -c ID | xargs openstack server delete",
+    "expected": "",
+    "points": [
+      {
+        "id": "delete_cmd",
+        "text": "server delete",
+        "category": "server_delete",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "删除实例的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "target_one",
+        "text": "web-01",
+        "category": "server_delete",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "第一台要删除的实例名",
+        "fill_type": "text"
+      },
+      {
+        "id": "targets_multi",
+        "text": "web-02 db-01",
+        "category": "server_delete",
+        "min_weight": "easy",
+        "weight_score": 0.75,
+        "hint": "一次传入多个实例名，server delete 支持批量",
+        "fill_type": "text"
+      },
+      {
+        "id": "filter_name",
+        "text": "--name test",
+        "category": "server_delete",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "按名称过滤出 test 实例",
+        "fill_type": "text"
+      },
+      {
+        "id": "filter_status",
+        "text": "--status ERROR",
+        "category": "server_delete",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "只挑状态为 ERROR 的实例",
+        "fill_type": "text"
+      },
+      {
+        "id": "output_value",
+        "text": "-f value",
+        "category": "server_delete",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "-f value 只输出字段值，便于管道处理",
+        "fill_type": "text"
+      },
+      {
+        "id": "output_id",
+        "text": "-c ID",
+        "category": "server_delete",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "-c ID 只输出实例 ID 列",
+        "fill_type": "text"
+      },
+      {
+        "id": "xargs_delete",
+        "text": "xargs",
+        "category": "server_delete",
+        "min_weight": "easy",
+        "weight_score": 0.75,
+        "hint": "把 ID 列表交给它批量执行后面的删除命令",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 删除用 server delete，批量删除可以先过滤再交给 xargs",
+      "level_2": "📖 server delete 支持一次传多个实例；-f value -c ID 只输出 ID，配合管道和 xargs 实现批量删除",
+      "level_3": "👀 共 8 空：① 删除子命令；② 第一台实例名；③ 第二、三台实例名；④ --name 过滤；⑤ --status 过滤；⑥ -f 输出格式；⑦ -c 输出列；⑧ 批量执行命令",
+      "level_4": "📝 正确答案：`server delete`、`web-01`、`web-02 db-01`、`--name test`、`--status ERROR`、`-f value`、`-c ID`、`xargs`"
+    },
+    "explanation": "server delete 直接向 nova-api 发起删除；批量场景先用 list 的过滤条件筛出目标，再用 -f value -c ID 提取 ID 列表交给 xargs 删除，避免手工复制。"
+  },
+  {
+    "id": "os-nova-004",
+    "title": "软硬重启与救援模式",
+    "description": "对实例执行软重启、硬重启，并进入与退出救援模式",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "medium",
+    "category": "server_power",
+    "subcategory": "Nova",
+    "full_code": "openstack server reboot --soft web-01\nopenstack server reboot --hard db-01\nopenstack server rescue --image cirros-0.6.2 web-01\nopenstack server unrescue web-01",
+    "expected": "",
+    "points": [
+      {
+        "id": "reboot_cmd",
+        "text": "server reboot",
+        "category": "server_power",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "重启实例的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "soft_flag",
+        "text": "--soft",
+        "category": "server_power",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "软重启开关，走 ACPI 通知 guest",
+        "fill_type": "text"
+      },
+      {
+        "id": "reboot_target",
+        "text": "web-01",
+        "category": "server_power",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "第一台要重启的实例名",
+        "fill_type": "text"
+      },
+      {
+        "id": "hard_flag",
+        "text": "--hard",
+        "category": "server_power",
+        "min_weight": "easy",
+        "weight_score": 0.75,
+        "hint": "硬重启开关，相当于强制断电",
+        "fill_type": "text"
+      },
+      {
+        "id": "hard_target",
+        "text": "db-01",
+        "category": "server_power",
+        "min_weight": "easy",
+        "weight_score": 0.75,
+        "hint": "第二台要重启的实例名",
+        "fill_type": "text"
+      },
+      {
+        "id": "rescue_cmd",
+        "text": "server rescue",
+        "category": "server_power",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "救援模式的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "rescue_image",
+        "text": "--image cirros-0.6.2",
+        "category": "server_power",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "救援模式用该参数指定救援镜像",
+        "fill_type": "text"
+      },
+      {
+        "id": "unrescue_cmd",
+        "text": "server unrescue",
+        "category": "server_power",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "退出救援模式、恢复原系统盘引导",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 重启分软硬两种，救援模式需要一张救援镜像",
+      "level_2": "📖 --soft 走 ACPI 优雅重启，--hard 强制断电重启；rescue 用 --image 指定救援镜像，unrescue 退出",
+      "level_3": "👀 共 8 空：① 重启子命令；② 软重启开关；③ 第一台实例名；④ 硬重启开关；⑤ 第二台实例名；⑥ 救援子命令；⑦ 救援镜像参数；⑧ 退出救援子命令",
+      "level_4": "📝 正确答案：`server reboot`、`--soft`、`web-01`、`--hard`、`db-01`、`server rescue`、`--image cirros-0.6.2`、`server unrescue`"
+    },
+    "explanation": "软重启通过 ACPI 通知 guest 优雅重启，硬重启直接重置电源；救援模式把实例引导到指定救援镜像，用于修复系统盘或找回数据，处理完用 unrescue 恢复正常引导。"
+  },
+  {
+    "id": "os-nova-005",
+    "title": "调整实例规格并确认或回退",
+    "description": "用 resize 变更实例规格，再用 confirm 确认或 revert 回退",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "medium",
+    "category": "server_resize",
+    "subcategory": "Nova",
+    "full_code": "openstack server resize --flavor m1.large web-01\nopenstack server resize confirm web-01\nopenstack server resize revert web-01",
+    "expected": "",
+    "points": [
+      {
+        "id": "resize_cmd",
+        "text": "server resize",
+        "category": "server_resize",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "变更规格的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "flavor_target",
+        "text": "--flavor m1.large",
+        "category": "server_resize",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "目标规格用 --flavor 指定",
+        "fill_type": "text"
+      },
+      {
+        "id": "resize_target",
+        "text": "web-01",
+        "category": "server_resize",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "待调整的实例名",
+        "fill_type": "text"
+      },
+      {
+        "id": "confirm_cmd",
+        "text": "resize confirm",
+        "category": "server_resize",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "确认变更，释放旧实例",
+        "fill_type": "text"
+      },
+      {
+        "id": "revert_cmd",
+        "text": "resize revert",
+        "category": "server_resize",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "回退变更，恢复原规格",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 改规格用 resize，之后必须确认或回退",
+      "level_2": "📖 resize 会新建目标规格实例并迁移磁盘，确认用 resize confirm，回退用 resize revert",
+      "level_3": "👀 共 5 空：① 变更规格子命令；② 目标规格参数；③ 实例名；④ 确认变更；⑤ 回退变更",
+      "level_4": "📝 正确答案：`server resize`、`--flavor m1.large`、`web-01`、`resize confirm`、`resize revert`"
+    },
+    "explanation": "resize 本质是“用新规格重建并搬迁磁盘”的两阶段操作，实例会短暂进入 VERIFY_RESIZE 状态，确认后释放旧实例，回退则丢弃新实例恢复原规格。"
+  },
+  {
+    "id": "os-nova-006",
+    "title": "搁置与恢复实例",
+    "description": "用 shelve 释放实例占用的计算资源，再用 unshelve 恢复，并过滤查看已搁置实例",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "easy",
+    "category": "server_shelve",
+    "subcategory": "Nova",
+    "full_code": "openstack server shelve web-01\nopenstack server unshelve web-01\nopenstack server list --status SHELVED_OFFLOADED",
+    "expected": "",
+    "points": [
+      {
+        "id": "shelve_cmd",
+        "text": "server shelve",
+        "category": "server_shelve",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "搁置实例、释放 CPU/内存的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "shelve_target",
+        "text": "web-01",
+        "category": "server_shelve",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "要搁置的实例名",
+        "fill_type": "text"
+      },
+      {
+        "id": "unshelve_cmd",
+        "text": "server unshelve",
+        "category": "server_shelve",
+        "min_weight": "easy",
+        "weight_score": 0.75,
+        "hint": "恢复被搁置实例的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "shelved_status",
+        "text": "--status SHELVED_OFFLOADED",
+        "category": "server_shelve",
+        "min_weight": "easy",
+        "weight_score": 0.75,
+        "hint": "快照被 offload 到对象存储后的状态名",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 暂时不用的实例可以搁置以释放计算资源",
+      "level_2": "📖 shelve 关闭实例并释放 CPU/内存，unshelve 重新拉起；完全 offload 后状态为 SHELVED_OFFLOADED",
+      "level_3": "👀 共 4 空：① 搁置子命令；② 实例名；③ 恢复子命令；④ 已 offload 的状态名",
+      "level_4": "📝 正确答案：`server shelve`、`web-01`、`server unshelve`、`--status SHELVED_OFFLOADED`"
+    },
+    "explanation": "shelve 会关机并释放实例占用的计算资源（镜像快照保留），unshelve 时重新调度拉起；如果快照被 offload 到对象存储，状态显示 SHELVED_OFFLOADED。"
+  },
+  {
+    "id": "os-nova-007",
+    "title": "冷迁移与热迁移实例",
+    "description": "用 server migrate 执行冷迁移，并用 --live-migration 带目标主机做热迁移",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "expert",
+    "category": "server_migrate",
+    "subcategory": "Nova",
+    "full_code": "openstack server migrate --host compute-02 web-01\nopenstack server migrate --wait web-02\nopenstack server migrate --live-migration --host compute-03 --block-migration db-01\nopenstack server migrate --live-migration --host compute-04 --shared-migration web-03",
+    "expected": "",
+    "points": [
+      {
+        "id": "migrate_cmd",
+        "text": "server migrate",
+        "category": "server_migrate",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "迁移实例的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "cold_host",
+        "text": "--host compute-02",
+        "category": "server_migrate",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "冷迁移用 --host 指定目标计算节点",
+        "fill_type": "text"
+      },
+      {
+        "id": "wait_flag",
+        "text": "--wait",
+        "category": "server_migrate",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "加 --wait 等待迁移完成再返回",
+        "fill_type": "text"
+      },
+      {
+        "id": "live_flag",
+        "text": "--live-migration",
+        "category": "server_migrate",
+        "min_weight": "expert",
+        "weight_score": 1.5,
+        "hint": "热迁移的开关参数",
+        "fill_type": "text"
+      },
+      {
+        "id": "live_host_a",
+        "text": "--host compute-03",
+        "category": "server_migrate",
+        "min_weight": "expert",
+        "weight_score": 1.5,
+        "hint": "热迁移第一台的目标计算节点",
+        "fill_type": "text"
+      },
+      {
+        "id": "block_flag",
+        "text": "--block-migration",
+        "category": "server_migrate",
+        "min_weight": "expert",
+        "weight_score": 1.5,
+        "hint": "无共享存储时连磁盘一起搬",
+        "fill_type": "text"
+      },
+      {
+        "id": "live_host_b",
+        "text": "--host compute-04",
+        "category": "server_migrate",
+        "min_weight": "hard",
+        "weight_score": 1.25,
+        "hint": "热迁移第二台的目标计算节点",
+        "fill_type": "text"
+      },
+      {
+        "id": "shared_flag",
+        "text": "--shared-migration",
+        "category": "server_migrate",
+        "min_weight": "hard",
+        "weight_score": 1.25,
+        "hint": "共享存储场景只迁移内存状态",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 迁移分冷迁移和热迁移，热迁移要加 --live-migration",
+      "level_2": "📖 冷迁移用 server migrate --host 指定目标主机（两阶段，需 confirm/revert）；热迁移加 --live-migration，--block-migration 用于无共享存储，--shared-migration 用于共享存储",
+      "level_3": "👀 共 8 空：① 迁移子命令；② 冷迁移目标主机；③ 等待开关；④ 热迁移开关；⑤ 热迁移目标主机 1；⑥ 块迁移开关；⑦ 热迁移目标主机 2；⑧ 共享迁移开关",
+      "level_4": "📝 正确答案：`server migrate`、`--host compute-02`、`--wait`、`--live-migration`、`--host compute-03`、`--block-migration`、`--host compute-04`、`--shared-migration`"
+    },
+    "explanation": "冷迁移会关机并把磁盘搬到目标主机，完成后仍需 confirm/revert；热迁移在运行中迁移，--block-migration 把本地磁盘一并搬走（无共享存储），--shared-migration 则假定共享存储只迁移内存状态。"
+  },
+  {
+    "id": "os-nova-008",
+    "title": "挂载卸载卷与浮动 IP",
+    "description": "用 server add/remove 子命令为实例挂载数据卷、绑定和释放浮动 IP",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "medium",
+    "category": "server_volume",
+    "subcategory": "Nova",
+    "full_code": "openstack server add volume web-01 data-vol\nopenstack server remove volume web-01 data-vol\nopenstack server add floating ip web-01 203.0.113.10\nopenstack server remove floating ip web-01 203.0.113.10",
+    "expected": "",
+    "points": [
+      {
+        "id": "add_volume",
+        "text": "add volume",
+        "category": "server_volume",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "给实例挂载数据卷的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "volume_name",
+        "text": "data-vol",
+        "category": "server_volume",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "要挂载的数据卷名",
+        "fill_type": "text"
+      },
+      {
+        "id": "remove_volume",
+        "text": "remove volume",
+        "category": "server_volume",
+        "min_weight": "easy",
+        "weight_score": 0.75,
+        "hint": "卸载数据卷的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "add_floating",
+        "text": "add floating",
+        "category": "server_volume",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "绑定浮动 IP 的子命令（add floating ip）",
+        "fill_type": "text"
+      },
+      {
+        "id": "fip_addr",
+        "text": "203.0.113.10",
+        "category": "server_volume",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "要绑定/释放的浮动 IP 地址",
+        "fill_type": "text"
+      },
+      {
+        "id": "remove_floating",
+        "text": "remove floating",
+        "category": "server_volume",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "释放浮动 IP 的子命令（remove floating ip）",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 server 下有 add/remove 两个方向，卷和浮动 IP 都用它们",
+      "level_2": "📖 add volume/remove volume 挂载卸载数据卷，add floating ip/remove floating ip 绑定释放浮动 IP",
+      "level_3": "👀 共 6 空：① 挂载卷子命令；② 卷名；③ 卸载卷子命令；④ 绑定浮动 IP 子命令；⑤ 浮动 IP 地址；⑥ 释放浮动 IP 子命令",
+      "level_4": "📝 正确答案：`add volume`、`data-vol`、`remove volume`、`add floating`、`203.0.113.10`、`remove floating`"
+    },
+    "explanation": "add/remove volume 走 Cinder 挂载卸载接口，需要卷与实例在同一可用域；浮动 IP 由 Neutron 管理，绑定后实例才能从外部网络直接访问。"
+  },
+  {
+    "id": "os-nova-009",
+    "title": "锁定实例与修改属性",
+    "description": "用 lock/unlock 防止误操作，并用 server set 修改实例属性与元数据",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "easy",
+    "category": "server_metadata",
+    "subcategory": "Nova",
+    "full_code": "openstack server lock web-01\nopenstack server unlock web-01\nopenstack server set --property maintenance=planned web-01",
+    "expected": "",
+    "points": [
+      {
+        "id": "lock_cmd",
+        "text": "server lock",
+        "category": "server_metadata",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "锁定实例、防止误删误改的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "lock_target",
+        "text": "web-01",
+        "category": "server_metadata",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "要锁定的实例名",
+        "fill_type": "text"
+      },
+      {
+        "id": "unlock_cmd",
+        "text": "server unlock",
+        "category": "server_metadata",
+        "min_weight": "easy",
+        "weight_score": 0.75,
+        "hint": "解除实例锁定的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "set_cmd",
+        "text": "server set",
+        "category": "server_metadata",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "修改实例属性的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "property_kv",
+        "text": "--property maintenance=planned",
+        "category": "server_metadata",
+        "min_weight": "easy",
+        "weight_score": 0.75,
+        "hint": "server set 用该参数写入实例属性（metadata）",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 锁定防误操作，改属性用 server set",
+      "level_2": "📖 lock/unlock 切换实例锁定状态；server set --property 实际写入实例 metadata（OSC 内部调用 set_server_metadata）",
+      "level_3": "👀 共 5 空：① 锁定子命令；② 实例名；③ 解锁子命令；④ set 子命令；⑤ 属性参数",
+      "level_4": "📝 正确答案：`server lock`、`web-01`、`server unlock`、`server set`、`--property maintenance=planned`"
+    },
+    "explanation": "lock 后除管理员外的删除、重建等操作会被拒绝，防止误操作；server set --property 更新实例 metadata，常用于标记维护窗口、负责人等信息。"
+  },
+  {
+    "id": "os-nova-010",
+    "title": "创建自定义规格并调整项目配额",
+    "description": "用 flavor create 定义 vCPU/内存/磁盘/临时盘规格，用 flavor set 设置 extra specs，并查看与调整项目配额",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "medium",
+    "category": "flavor_quota",
+    "subcategory": "Nova",
+    "full_code": "openstack flavor create --vcpus 4 --ram 8192 --disk 40 --ephemeral 20 m1.custom\nopenstack flavor set --property hw:cpu_policy=dedicated m1.custom\nopenstack quota show --compute demo-project\nopenstack quota set --instances 20 --cores 40 --ram 81920 demo-project",
+    "expected": "",
+    "points": [
+      {
+        "id": "flavor_create_cmd",
+        "text": "flavor create",
+        "category": "flavor_quota",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "创建自定义规格的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "vcpus",
+        "text": "--vcpus 4",
+        "category": "flavor_quota",
+        "min_weight": "easy",
+        "weight_score": 0.75,
+        "hint": "vCPU 个数参数",
+        "fill_type": "text"
+      },
+      {
+        "id": "ram",
+        "text": "--ram 8192",
+        "category": "flavor_quota",
+        "min_weight": "easy",
+        "weight_score": 0.75,
+        "hint": "内存大小参数（MB）",
+        "fill_type": "text"
+      },
+      {
+        "id": "disk",
+        "text": "--disk 40",
+        "category": "flavor_quota",
+        "min_weight": "easy",
+        "weight_score": 0.75,
+        "hint": "根盘大小参数（GB）",
+        "fill_type": "text"
+      },
+      {
+        "id": "ephemeral",
+        "text": "--ephemeral 20",
+        "category": "flavor_quota",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "临时盘大小参数（GB）",
+        "fill_type": "text"
+      },
+      {
+        "id": "flavor_set_cmd",
+        "text": "flavor set",
+        "category": "flavor_quota",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "写 extra specs 的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "extra_spec",
+        "text": "hw:cpu_policy=dedicated",
+        "category": "flavor_quota",
+        "min_weight": "medium",
+        "weight_score": 1.25,
+        "hint": "CPU 绑定策略的 extra spec 值",
+        "fill_type": "text"
+      },
+      {
+        "id": "quota_show_cmd",
+        "text": "quota show",
+        "category": "flavor_quota",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "查看项目配额的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "quota_set_cmd",
+        "text": "quota set",
+        "category": "flavor_quota",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "调整项目配额的子命令",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 自定义规格用 flavor create，extra specs 用 flavor set，项目配额用 quota",
+      "level_2": "📖 flavor create 用 --vcpus/--ram/--disk/--ephemeral 定义资源；flavor set --property 写 extra specs；quota show/set 查看和调整项目配额",
+      "level_3": "👀 共 9 空：① 创建规格子命令；② vCPU 数；③ 内存；④ 根盘；⑤ 临时盘；⑥ extra specs 子命令；⑦ extra spec 值；⑧ 查看配额子命令；⑨ 调整配额子命令",
+      "level_4": "📝 正确答案：`flavor create`、`--vcpus 4`、`--ram 8192`、`--disk 40`、`--ephemeral 20`、`flavor set`、`hw:cpu_policy=dedicated`、`quota show`、`quota set`"
+    },
+    "explanation": "flavor create 定义 vCPU、内存、根盘与临时盘；flavor set --property 写入的 extra specs 会影响调度与实例行为（如 CPU 绑定）；quota set 调整项目可用的实例数、核数与内存上限。"
+  },
+  {
+    "id": "os-nova-011",
+    "title": "创建、导入与删除密钥对",
+    "description": "用 keypair create 生成新密钥对、导入已有公钥，并删除不再使用的密钥对",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "beginner",
+    "category": "keypair_manage",
+    "subcategory": "Nova",
+    "full_code": "openstack keypair create my-key > my-key.pem\nopenstack keypair create --public-key ~/.ssh/id_rsa.pub imported-key\nopenstack keypair delete my-key\nopenstack keypair list",
+    "expected": "",
+    "points": [
+      {
+        "id": "create_cmd",
+        "text": "keypair create",
+        "category": "keypair_manage",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "生成新密钥对的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "private_file",
+        "text": "my-key.pem",
+        "category": "keypair_manage",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "私钥重定向保存的文件名",
+        "fill_type": "text"
+      },
+      {
+        "id": "public_key",
+        "text": "--public-key ~/.ssh/id_rsa.pub",
+        "category": "keypair_manage",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "导入已有公钥用 --public-key",
+        "fill_type": "text"
+      },
+      {
+        "id": "imported_key",
+        "text": "imported-key",
+        "category": "keypair_manage",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "导入的公钥对应的密钥对名",
+        "fill_type": "text"
+      },
+      {
+        "id": "delete_cmd",
+        "text": "keypair delete",
+        "category": "keypair_manage",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "删除密钥对的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "delete_target",
+        "text": "my-key",
+        "category": "keypair_manage",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "keypair delete 后面的密钥对名（第三个 my-key）",
+        "fill_type": "text",
+        "occurrence": 2
+      },
+      {
+        "id": "list_key",
+        "text": "keypair list",
+        "category": "keypair_manage",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "列出当前项目的密钥对",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 密钥对有三件事：生成、导入、删除",
+      "level_2": "📖 keypair create 默认生成新密钥并把私钥输出到 stdout；--public-key 导入已有公钥；keypair delete 删除",
+      "level_3": "👀 共 7 空：① 创建子命令；② 私钥文件名；③ --public-key 参数；④ 导入的密钥对名；⑤ 删除子命令；⑥ 要删除的密钥对名；⑦ 列表子命令",
+      "level_4": "📝 正确答案：`keypair create`、`my-key.pem`、`--public-key ~/.ssh/id_rsa.pub`、`imported-key`、`keypair delete`、`my-key`、`keypair list`"
+    },
+    "explanation": "keypair create 生成的私钥只会在创建时输出一次，务必重定向保存；导入模式只上传公钥，私钥保留在本地；密钥对删除后无法再用它创建实例。"
+  },
+  {
+    "id": "os-nova-012",
+    "title": "创建反亲和组与主机聚合",
+    "description": "用 server group 反亲和策略隔离实例，用 aggregate 创建主机聚合并加入计算节点",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "hard",
+    "category": "server_group",
+    "subcategory": "Nova",
+    "full_code": "GROUP_ID=$(openstack server group create --policy anti-affinity web-ha -f value -c id)\nopenstack server create --image cirros-0.6.2 --flavor m1.small --network private-net --hint group=$GROUP_ID web-03\nopenstack aggregate create --zone nova web-zone\nopenstack aggregate add host web-zone compute-02\nopenstack aggregate set --property pinned=true web-zone",
+    "expected": "",
+    "points": [
+      {
+        "id": "group_create_cmd",
+        "text": "group create",
+        "category": "server_group",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "创建实例组的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "group_policy",
+        "text": "--policy anti-affinity",
+        "category": "server_group",
+        "min_weight": "hard",
+        "weight_score": 1.5,
+        "hint": "反亲和策略参数（--policy + 值）",
+        "fill_type": "text"
+      },
+      {
+        "id": "group_hint",
+        "text": "--hint group=$GROUP_ID",
+        "category": "server_group",
+        "min_weight": "hard",
+        "weight_score": 1.5,
+        "hint": "创建实例时用该参数把实例加入实例组",
+        "fill_type": "text"
+      },
+      {
+        "id": "agg_create_cmd",
+        "text": "aggregate create",
+        "category": "server_group",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "创建主机聚合的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "agg_zone",
+        "text": "--zone nova",
+        "category": "server_group",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "聚合关联的可用域参数",
+        "fill_type": "text"
+      },
+      {
+        "id": "add_host_cmd",
+        "text": "add host",
+        "category": "server_group",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "把计算节点加入聚合的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "agg_host",
+        "text": "compute-02",
+        "category": "server_group",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "要加入聚合的计算节点名",
+        "fill_type": "text"
+      },
+      {
+        "id": "agg_property",
+        "text": "--property pinned=true",
+        "category": "server_group",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "给聚合设置属性的参数",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 反亲和组隔离实例，主机聚合划分资源池",
+      "level_2": "📖 server group create --policy anti-affinity 创建反亲和组，创建实例时用 --hint group=<组ID> 加入；aggregate 用于把主机按属性分组",
+      "level_3": "👀 共 8 空：① 创建实例组子命令；② 反亲和策略参数；③ --hint 加入组参数；④ 创建聚合子命令；⑤ 可用域参数；⑥ 加入主机子命令；⑦ 计算节点名；⑧ 聚合属性参数",
+      "level_4": "📝 正确答案：`group create`、`--policy anti-affinity`、`--hint group=$GROUP_ID`、`aggregate create`、`--zone nova`、`add host`、`compute-02`、`--property pinned=true`"
+    },
+    "explanation": "反亲和策略让同组实例落在不同计算节点上，提升高可用；主机聚合把具有相同属性（如 SSD、GPU）的主机分组，并可关联可用域，配合 extra specs 实现定向调度。"
+  },
+  {
+    "id": "os-nova-013",
+    "title": "查询计算服务、hypervisor 与控制台",
+    "description": "查看 nova-compute 服务状态、hypervisor 信息，并获取实例的控制台 URL 与串口日志",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "hard",
+    "category": "compute_service",
+    "subcategory": "Nova",
+    "full_code": "openstack compute service list --service nova-compute\nopenstack compute service set --disable compute-02 nova-compute\nopenstack hypervisor list\nopenstack hypervisor show compute-02\nopenstack console url show web-01 --novnc\nopenstack console log show web-01 --lines 50",
+    "expected": "",
+    "points": [
+      {
+        "id": "service_list_cmd",
+        "text": "service list",
+        "category": "compute_service",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "列出计算服务的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "service_filter",
+        "text": "--service nova-compute",
+        "category": "compute_service",
+        "min_weight": "hard",
+        "weight_score": 1.25,
+        "hint": "只看 nova-compute 服务的过滤参数",
+        "fill_type": "text"
+      },
+      {
+        "id": "service_set_cmd",
+        "text": "service set",
+        "category": "compute_service",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "设置服务状态的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "disable_flag",
+        "text": "--disable",
+        "category": "compute_service",
+        "min_weight": "hard",
+        "weight_score": 1.25,
+        "hint": "维护前下线节点的开关",
+        "fill_type": "text"
+      },
+      {
+        "id": "node_name",
+        "text": "compute-02",
+        "category": "compute_service",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "要下线的计算节点名",
+        "fill_type": "text"
+      },
+      {
+        "id": "hypervisor_show_cmd",
+        "text": "hypervisor show",
+        "category": "compute_service",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "查看单个计算节点资源的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "console_url_cmd",
+        "text": "url show",
+        "category": "compute_service",
+        "min_weight": "hard",
+        "weight_score": 1.25,
+        "hint": "获取控制台地址的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "novnc_flag",
+        "text": "--novnc",
+        "category": "compute_service",
+        "min_weight": "hard",
+        "weight_score": 1.25,
+        "hint": "noVNC 控制台类型开关",
+        "fill_type": "text"
+      },
+      {
+        "id": "console_log_cmd",
+        "text": "log show",
+        "category": "compute_service",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "导出串口日志的子命令",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 运维三件套：服务状态、hypervisor、控制台",
+      "level_2": "📖 compute service list 查看 nova-compute 服务，compute service set --disable 下线节点；hypervisor show 看单节点资源；console url/log 用于远程排障",
+      "level_3": "👀 共 9 空：① 列出服务子命令；② --service 过滤；③ 设置服务子命令；④ --disable 开关；⑤ 计算节点名；⑥ hypervisor 查看子命令；⑦ 控制台地址子命令；⑧ --novnc 开关；⑨ 控制台日志子命令",
+      "level_4": "📝 正确答案：`service list`、`--service nova-compute`、`service set`、`--disable`、`compute-02`、`hypervisor show`、`url show`、`--novnc`、`log show`"
+    },
+    "explanation": "compute service list 显示各 nova-compute 的 State/Status，set --disable 用于维护前下线节点；hypervisor show 展示 vCPU、内存、磁盘总量与已用量；console url show 返回可浏览器访问的控制台地址，console log show 导出串口日志用于启动排障。"
+  },
+  {
+    "id": "os-nova-014",
+    "title": "nova.conf 基础：my_ip 与消息队列",
+    "description": "配置 nova.conf [DEFAULT] 段的本机管理 IP 与 RabbitMQ transport_url",
+    "exercise_type": "config",
+    "tech_stack": "openstack",
+    "weight": "easy",
+    "category": "nova_conf_default",
+    "subcategory": "Nova",
+    "full_code": "[DEFAULT]\nmy_ip = 10.0.0.11\ntransport_url = rabbit://openstack:rabbit_pass@controller:5672//",
+    "expected": "",
+    "points": [
+      {
+        "id": "default_section",
+        "text": "[DEFAULT]",
+        "category": "nova_conf_default",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "全局默认段",
+        "fill_type": "text"
+      },
+      {
+        "id": "my_ip_key",
+        "text": "my_ip",
+        "category": "nova_conf_default",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "本机管理网络 IP 的配置键",
+        "fill_type": "text"
+      },
+      {
+        "id": "my_ip_value",
+        "text": "10.0.0.11",
+        "category": "nova_conf_default",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "管理网络上的本机 IP",
+        "fill_type": "text"
+      },
+      {
+        "id": "transport_key",
+        "text": "transport_url",
+        "category": "nova_conf_default",
+        "min_weight": "easy",
+        "weight_score": 0.75,
+        "hint": "消息队列连接串的配置键",
+        "fill_type": "text"
+      },
+      {
+        "id": "broker",
+        "text": "rabbit://openstack:rabbit_pass",
+        "category": "nova_conf_default",
+        "min_weight": "easy",
+        "weight_score": 0.75,
+        "hint": "RabbitMQ 连接串的协议与账号密码部分",
+        "fill_type": "text"
+      },
+      {
+        "id": "broker_host",
+        "text": "controller:5672//",
+        "category": "nova_conf_default",
+        "min_weight": "easy",
+        "weight_score": 0.75,
+        "hint": "MQ 主机、端口与默认 vhost 部分",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 [DEFAULT] 里要告诉 nova 本机管理 IP 和消息队列地址",
+      "level_2": "📖 my_ip 是管理网络 IP，transport_url 用 rabbit://用户:密码@主机:5672// 格式",
+      "level_3": "👀 共 6 空：① 全局段；② my_ip 配置键；③ 管理 IP；④ transport_url 配置键；⑤ RabbitMQ 连接串账号部分；⑥ 主机端口与 vhost",
+      "level_4": "📝 正确答案：`[DEFAULT]`、`my_ip`、`10.0.0.11`、`transport_url`、`rabbit://openstack:rabbit_pass`、`controller:5672//`"
+    },
+    "explanation": "my_ip 用于确定节点在管理网络上的地址（如 VNC 代理回连），transport_url 让 nova 各服务通过 RabbitMQ 通信，注意结尾的 // 表示默认 vhost。"
+  },
+  {
+    "id": "os-nova-015",
+    "title": "nova.conf 调度器：默认过滤器与主机发现",
+    "description": "配置 scheduler_default_filters 选择调度过滤器，并设置 cells 主机发现间隔",
+    "exercise_type": "config",
+    "tech_stack": "openstack",
+    "weight": "medium",
+    "category": "nova_conf_scheduler",
+    "subcategory": "Nova",
+    "full_code": "[DEFAULT]\nscheduler_default_filters = RetryFilter,AvailabilityZoneFilter,ComputeFilter,ComputeCapabilitiesFilter,ImagePropertiesFilter,ServerGroupAntiAffinityFilter,ServerGroupAffinityFilter\n\n[scheduler]\ndiscover_hosts_in_cells_interval = 60",
+    "expected": "",
+    "points": [
+      {
+        "id": "default_section",
+        "text": "[DEFAULT]",
+        "category": "nova_conf_scheduler",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "调度过滤器在全局默认段配置",
+        "fill_type": "text"
+      },
+      {
+        "id": "filters_key",
+        "text": "scheduler_default_filters",
+        "category": "nova_conf_scheduler",
+        "min_weight": "medium",
+        "weight_score": 1.25,
+        "hint": "调度过滤器链的配置键",
+        "fill_type": "text"
+      },
+      {
+        "id": "filter_retry",
+        "text": "RetryFilter",
+        "category": "nova_conf_scheduler",
+        "min_weight": "medium",
+        "weight_score": 0.75,
+        "hint": "失败后重试的过滤器",
+        "fill_type": "text"
+      },
+      {
+        "id": "filter_compute",
+        "text": "ComputeFilter",
+        "category": "nova_conf_scheduler",
+        "min_weight": "medium",
+        "weight_score": 0.75,
+        "hint": "按计算资源余量过滤的过滤器",
+        "fill_type": "text"
+      },
+      {
+        "id": "filter_anti",
+        "text": "ServerGroupAntiAffinityFilter",
+        "category": "nova_conf_scheduler",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "反亲和过滤器",
+        "fill_type": "text"
+      },
+      {
+        "id": "scheduler_section",
+        "text": "[scheduler]",
+        "category": "nova_conf_scheduler",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "scheduler 专属配置段",
+        "fill_type": "text"
+      },
+      {
+        "id": "discover_key_head",
+        "text": "discover_hosts_in_cells",
+        "category": "nova_conf_scheduler",
+        "min_weight": "medium",
+        "weight_score": 0.75,
+        "hint": "主机发现间隔配置键的前半段",
+        "fill_type": "text"
+      },
+      {
+        "id": "discover_key_tail",
+        "text": "interval",
+        "category": "nova_conf_scheduler",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "主机发现间隔配置键的后半段",
+        "fill_type": "text"
+      },
+      {
+        "id": "discover_value",
+        "text": "60",
+        "category": "nova_conf_scheduler",
+        "min_weight": "medium",
+        "weight_score": 0.75,
+        "hint": "周期发现未注册计算节点的间隔（秒）",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 调度过滤器决定实例落在哪台主机，cells 需要定期发现主机",
+      "level_2": "📖 scheduler_default_filters 按顺序执行过滤器；discover_hosts_in_cells_interval 周期扫描并注册新主机",
+      "level_3": "👀 共 9 空：① 全局段；② 过滤器链配置键；③ RetryFilter；④ ComputeFilter；⑤ 反亲和过滤器；⑥ scheduler 段；⑦ 主机发现配置键前半段；⑧ 配置键后半段；⑨ 发现间隔秒数",
+      "level_4": "📝 正确答案：`[DEFAULT]`、`scheduler_default_filters`、`RetryFilter`、`ComputeFilter`、`ServerGroupAntiAffinityFilter`、`[scheduler]`、`discover_hosts_in_cells`、`interval`、`60`"
+    },
+    "explanation": "过滤器链依次排除不满足条件的主机（可用域、资源余量、镜像属性、反亲和等）；开启 discover_hosts_in_cells_interval 后 nova 会周期性发现未注册的 compute 节点，省去手动执行 nova-manage cell_v2 discover_hosts。"
+  },
+  {
+    "id": "os-nova-016",
+    "title": "nova.conf 虚拟化：libvirt 与 VNC",
+    "description": "配置 [libvirt] 虚拟化类型与 [vnc] 远程控制台开关",
+    "exercise_type": "config",
+    "tech_stack": "openstack",
+    "weight": "beginner",
+    "category": "nova_conf_libvirt",
+    "subcategory": "Nova",
+    "full_code": "[libvirt]\nvirt_type = kvm\ncpu_mode = host-passthrough\n\n[vnc]\nenabled = true\nserver_listen = 0.0.0.0\nserver_proxyclient_address = 10.0.0.11",
+    "expected": "",
+    "points": [
+      {
+        "id": "libvirt_section",
+        "text": "[libvirt]",
+        "category": "nova_conf_libvirt",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "libvirt 驱动配置段",
+        "fill_type": "text"
+      },
+      {
+        "id": "virt_type_key",
+        "text": "virt_type",
+        "category": "nova_conf_libvirt",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "虚拟化类型的配置键",
+        "fill_type": "text"
+      },
+      {
+        "id": "virt_type_value",
+        "text": "kvm",
+        "category": "nova_conf_libvirt",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "物理机常用的虚拟化类型",
+        "fill_type": "text"
+      },
+      {
+        "id": "cpu_mode_key",
+        "text": "cpu_mode",
+        "category": "nova_conf_libvirt",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "CPU 模式的配置键",
+        "fill_type": "text"
+      },
+      {
+        "id": "cpu_mode_value",
+        "text": "host-passthrough",
+        "category": "nova_conf_libvirt",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "把宿主机 CPU 特性透传给 guest",
+        "fill_type": "text"
+      },
+      {
+        "id": "vnc_section",
+        "text": "[vnc]",
+        "category": "nova_conf_libvirt",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "VNC 控制台配置段",
+        "fill_type": "text"
+      },
+      {
+        "id": "vnc_enabled_key",
+        "text": "enabled",
+        "category": "nova_conf_libvirt",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "VNC 控制台开关的配置键",
+        "fill_type": "text"
+      },
+      {
+        "id": "vnc_enabled_value",
+        "text": "true",
+        "category": "nova_conf_libvirt",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "开启 VNC 控制台",
+        "fill_type": "text"
+      },
+      {
+        "id": "proxyclient_addr",
+        "text": "server_proxyclient_address",
+        "category": "nova_conf_libvirt",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "VNC 代理回连地址的配置键",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 虚拟化类型和 VNC 控制台是两个最基础的开关",
+      "level_2": "📖 [libvirt] virt_type 指定 kvm/qemu 等虚拟化方式；[vnc] enabled 控制是否开放 VNC 控制台",
+      "level_3": "👀 共 9 空：① libvirt 段；② virt_type 配置键；③ 虚拟化类型值；④ cpu_mode 配置键；⑤ CPU 模式值；⑥ vnc 段；⑦ enabled 配置键；⑧ 开关值；⑨ 代理回连地址配置键",
+      "level_4": "📝 正确答案：`[libvirt]`、`virt_type`、`kvm`、`cpu_mode`、`host-passthrough`、`[vnc]`、`enabled`、`true`、`server_proxyclient_address`"
+    },
+    "explanation": "virt_type 决定 libvirt 使用的虚拟化驱动，物理机通常用 kvm；[vnc] enabled 开启 VNC 控制台，server_listen 和 server_proxyclient_address 分别控制监听地址与代理回连地址。"
+  },
+  {
+    "id": "os-nova-017",
+    "title": "nova.conf 对接 Neutron",
+    "description": "配置 nova.conf [neutron] 段的服务认证信息与 endpoint 类型",
+    "exercise_type": "config",
+    "tech_stack": "openstack",
+    "weight": "medium",
+    "category": "nova_conf_neutron",
+    "subcategory": "Nova",
+    "full_code": "[neutron]\nauth_url = http://controller:5000\nauth_type = password\nproject_domain_name = Default\nuser_domain_name = Default\nregion_name = RegionOne\nproject_name = service\nusername = nova\npassword = nova_pass\nendpoint_type = internalURL",
+    "expected": "",
+    "points": [
+      {
+        "id": "neutron_section",
+        "text": "[neutron]",
+        "category": "nova_conf_neutron",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "对接 Neutron 的配置段",
+        "fill_type": "text"
+      },
+      {
+        "id": "auth_url_key",
+        "text": "auth_url",
+        "category": "nova_conf_neutron",
+        "min_weight": "medium",
+        "weight_score": 0.75,
+        "hint": "Keystone 认证地址的配置键",
+        "fill_type": "text"
+      },
+      {
+        "id": "auth_url_value",
+        "text": "http://controller:5000",
+        "category": "nova_conf_neutron",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "Keystone 认证地址",
+        "fill_type": "text"
+      },
+      {
+        "id": "auth_type_key",
+        "text": "auth_type",
+        "category": "nova_conf_neutron",
+        "min_weight": "medium",
+        "weight_score": 0.75,
+        "hint": "认证方式的配置键",
+        "fill_type": "text"
+      },
+      {
+        "id": "auth_type_value",
+        "text": "password",
+        "category": "nova_conf_neutron",
+        "min_weight": "medium",
+        "weight_score": 0.75,
+        "hint": "用户名密码认证方式",
+        "fill_type": "text"
+      },
+      {
+        "id": "endpoint_key",
+        "text": "endpoint_type",
+        "category": "nova_conf_neutron",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "endpoint 类型的配置键",
+        "fill_type": "text"
+      },
+      {
+        "id": "endpoint_value",
+        "text": "internalURL",
+        "category": "nova_conf_neutron",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "组件间走内部 endpoint",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 nova 要访问 Neutron 的 API，需要在 [neutron] 段配置 Keystone 认证信息",
+      "level_2": "📖 auth_url 指向 Keystone，auth_type=password 表示用户名密码认证，endpoint_type 决定用 public/internal/admin 哪个 endpoint",
+      "level_3": "👀 共 7 空：① neutron 段；② auth_url 配置键；③ Keystone 地址；④ auth_type 配置键；⑤ 认证方式值；⑥ endpoint_type 配置键；⑦ endpoint 类型值",
+      "level_4": "📝 正确答案：`[neutron]`、`auth_url`、`http://controller:5000`、`auth_type`、`password`、`endpoint_type`、`internalURL`"
+    },
+    "explanation": "nova 以 service 项目身份调用 Neutron，认证信息放在 [neutron] 段；endpoint_type=internalURL 让组件走内部网络 endpoint，避免绕行公网 VIP。"
+  },
+  {
+    "id": "os-nova-018",
+    "title": "nova.conf 对接 Glance 与 Keystone",
+    "description": "配置 [glance] api_servers 指向镜像服务，并在 [keystone_authtoken] 中配置认证",
+    "exercise_type": "config",
+    "tech_stack": "openstack",
+    "weight": "medium",
+    "category": "nova_conf_glance",
+    "subcategory": "Nova",
+    "full_code": "[glance]\napi_servers = http://controller:9292\n\n[keystone_authtoken]\nauth_url = http://controller:5000/v3\nauth_type = password\nproject_domain_name = Default\nuser_domain_name = Default\nproject_name = service\nusername = nova\npassword = nova_pass",
+    "expected": "",
+    "points": [
+      {
+        "id": "glance_section",
+        "text": "[glance]",
+        "category": "nova_conf_glance",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "对接镜像服务的配置段",
+        "fill_type": "text"
+      },
+      {
+        "id": "api_servers_key",
+        "text": "api_servers",
+        "category": "nova_conf_glance",
+        "min_weight": "medium",
+        "weight_score": 0.75,
+        "hint": "Glance API 地址的配置键",
+        "fill_type": "text"
+      },
+      {
+        "id": "api_servers_value",
+        "text": "http://controller:9292",
+        "category": "nova_conf_glance",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "Glance API 地址（端口 9292）",
+        "fill_type": "text"
+      },
+      {
+        "id": "keystone_section",
+        "text": "[keystone_authtoken]",
+        "category": "nova_conf_glance",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "API 认证中间件配置段",
+        "fill_type": "text"
+      },
+      {
+        "id": "ks_auth_url_key",
+        "text": "auth_url",
+        "category": "nova_conf_glance",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "v3 认证地址的配置键",
+        "fill_type": "text"
+      },
+      {
+        "id": "ks_auth_url_value",
+        "text": "http://controller:5000/v3",
+        "category": "nova_conf_glance",
+        "min_weight": "medium",
+        "weight_score": 1.25,
+        "hint": "带 /v3 路径的 Keystone 认证地址",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 镜像服务地址和 API 认证段是 nova 的两项基础对接",
+      "level_2": "📖 [glance] api_servers 指定 Glance 地址；[keystone_authtoken] 是 nova-api 校验用户 token 用的认证配置",
+      "level_3": "👀 共 6 空：① glance 段；② api_servers 配置键；③ Glance 地址；④ keystone_authtoken 段；⑤ auth_url 配置键；⑥ v3 认证地址",
+      "level_4": "📝 正确答案：`[glance]`、`api_servers`、`http://controller:9292`、`[keystone_authtoken]`、`auth_url`、`http://controller:5000/v3`"
+    },
+    "explanation": "api_servers 告诉 nova 从哪里下载镜像；[keystone_authtoken] 让 nova-api 使用 Keystone 中间件校验请求，v3 认证必须使用带 /v3 的 auth_url。"
+  },
+  {
+    "id": "os-nova-019",
+    "title": "nova.conf 消息队列高可用与通知",
+    "description": "配置 [oslo_messaging_rabbit] 的 HA 队列与重试参数，并启用 [oslo_messaging_notifications] 通知驱动",
+    "exercise_type": "config",
+    "tech_stack": "openstack",
+    "weight": "hard",
+    "category": "nova_conf_messaging",
+    "subcategory": "Nova",
+    "full_code": "[oslo_messaging_rabbit]\nrabbit_ha_queues = true\nrabbit_retry_interval = 1\nrabbit_retry_backoff = 2\n\n[oslo_messaging_notifications]\ndriver = messagingv2\ntopics = notifications",
+    "expected": "",
+    "points": [
+      {
+        "id": "rabbit_section",
+        "text": "[oslo_messaging_rabbit]",
+        "category": "nova_conf_messaging",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "RabbitMQ 驱动配置段",
+        "fill_type": "text"
+      },
+      {
+        "id": "ha_key",
+        "text": "rabbit_ha_queues",
+        "category": "nova_conf_messaging",
+        "min_weight": "hard",
+        "weight_score": 1.25,
+        "hint": "镜像队列的配置键",
+        "fill_type": "text"
+      },
+      {
+        "id": "ha_value",
+        "text": "true",
+        "category": "nova_conf_messaging",
+        "min_weight": "hard",
+        "weight_score": 0.75,
+        "hint": "开启镜像队列，避免单点故障",
+        "fill_type": "text"
+      },
+      {
+        "id": "retry_interval_key",
+        "text": "rabbit_retry_interval",
+        "category": "nova_conf_messaging",
+        "min_weight": "hard",
+        "weight_score": 0.75,
+        "hint": "重试间隔的配置键",
+        "fill_type": "text"
+      },
+      {
+        "id": "retry_backoff_key",
+        "text": "rabbit_retry_backoff",
+        "category": "nova_conf_messaging",
+        "min_weight": "hard",
+        "weight_score": 0.75,
+        "hint": "重试退避倍数的配置键",
+        "fill_type": "text"
+      },
+      {
+        "id": "notifications_section",
+        "text": "[oslo_messaging_notifications]",
+        "category": "nova_conf_messaging",
+        "min_weight": "medium",
+        "weight_score": 1.25,
+        "hint": "事件通知配置段",
+        "fill_type": "text"
+      },
+      {
+        "id": "driver_key",
+        "text": "driver",
+        "category": "nova_conf_messaging",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "通知驱动的配置键",
+        "fill_type": "text"
+      },
+      {
+        "id": "driver_value",
+        "text": "messagingv2",
+        "category": "nova_conf_messaging",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "把通知发到消息队列的驱动",
+        "fill_type": "text"
+      },
+      {
+        "id": "topics_key",
+        "text": "topics",
+        "category": "nova_conf_messaging",
+        "min_weight": "medium",
+        "weight_score": 0.75,
+        "hint": "通知主题的配置键",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 RabbitMQ 高可用和消息通知是生产环境常见配置",
+      "level_2": "📖 [oslo_messaging_rabbit] rabbit_ha_queues 开启镜像队列；[oslo_messaging_notifications] driver=messagingv2 把事件发到消息队列",
+      "level_3": "👀 共 9 空：① rabbit 段；② rabbit_ha_queues 配置键；③ 镜像队列开关值；④ rabbit_retry_interval 配置键；⑤ rabbit_retry_backoff 配置键；⑥ notifications 段；⑦ driver 配置键；⑧ 通知驱动值；⑨ topics 配置键",
+      "level_4": "📝 正确答案：`[oslo_messaging_rabbit]`、`rabbit_ha_queues`、`true`、`rabbit_retry_interval`、`rabbit_retry_backoff`、`[oslo_messaging_notifications]`、`driver`、`messagingv2`、`topics`"
+    },
+    "explanation": "rabbit_ha_queues 让队列在 RabbitMQ 集群各节点镜像，避免单点故障；messagingv2 通知驱动把实例生命周期事件发送到消息队列，供 ceilometer 等组件消费。"
+  },
+  {
+    "id": "os-nova-020",
+    "title": "nova.conf 服务启用与 API 认证",
+    "description": "配置 [DEFAULT] 启用的 API 与数据路径，[api] 认证策略，以及 [conductor] 工作进程数",
+    "exercise_type": "config",
+    "tech_stack": "openstack",
+    "weight": "hard",
+    "category": "nova_conf_api",
+    "subcategory": "Nova",
+    "full_code": "[DEFAULT]\nenabled_apis = osapi_compute,metadata\nstate_path = /var/lib/nova\ninstances_path = /var/lib/nova/instances\n\n[api]\nauth_strategy = keystone\n\n[conductor]\nworkers = 4",
+    "expected": "",
+    "points": [
+      {
+        "id": "default_section",
+        "text": "[DEFAULT]",
+        "category": "nova_conf_api",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "全局默认段",
+        "fill_type": "text"
+      },
+      {
+        "id": "enabled_apis_key",
+        "text": "enabled_apis",
+        "category": "nova_conf_api",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "nova-api 启用哪些端点的配置键",
+        "fill_type": "text"
+      },
+      {
+        "id": "enabled_apis_value",
+        "text": "osapi_compute,metadata",
+        "category": "nova_conf_api",
+        "min_weight": "hard",
+        "weight_score": 1.25,
+        "hint": "默认启用的 API 列表",
+        "fill_type": "text"
+      },
+      {
+        "id": "auth_strategy_key",
+        "text": "auth_strategy",
+        "category": "nova_conf_api",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "认证策略的配置键",
+        "fill_type": "text"
+      },
+      {
+        "id": "auth_strategy_value",
+        "text": "keystone",
+        "category": "nova_conf_api",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "使用 Keystone 认证",
+        "fill_type": "text"
+      },
+      {
+        "id": "workers_key",
+        "text": "workers",
+        "category": "nova_conf_api",
+        "min_weight": "medium",
+        "weight_score": 0.75,
+        "hint": "conductor 进程数的配置键",
+        "fill_type": "text"
+      },
+      {
+        "id": "workers_value",
+        "text": "4",
+        "category": "nova_conf_api",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "conductor 工作进程数",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 启用哪些 API、用什么认证策略、conductor 开多少进程",
+      "level_2": "📖 enabled_apis 列出启用的 API（osapi_compute、metadata）；auth_strategy=keystone 表示用 Keystone 认证；[conductor] workers 控制进程数",
+      "level_3": "👀 共 7 空：① 全局段；② enabled_apis 配置键；③ 启用 API 列表；④ auth_strategy 配置键；⑤ 认证策略值；⑥ workers 配置键；⑦ 进程数",
+      "level_4": "📝 正确答案：`[DEFAULT]`、`enabled_apis`、`osapi_compute,metadata`、`auth_strategy`、`keystone`、`workers`、`4`"
+    },
+    "explanation": "enabled_apis 决定 nova-api 启动哪些服务端点；auth_strategy=keystone 启用 Keystone 认证（noauth2 仅供测试）；conductor workers 按 CPU 核数配置以提升数据库操作吞吐。"
+  }
+]

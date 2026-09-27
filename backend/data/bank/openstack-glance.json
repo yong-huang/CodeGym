@@ -1,0 +1,1576 @@
+[
+  {
+    "id": "os-glance-001",
+    "title": "上传本地镜像并理解磁盘/容器格式",
+    "description": "用 --file 上传 qcow2 镜像，并用 vmdk/ovf 格式创建 VMware 镜像",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "beginner",
+    "category": "glance_create",
+    "subcategory": "Glance",
+    "full_code": "openstack image create --file /tmp/cirros-0.6.2-x86_64-disk.img --disk-format qcow2 --container-format bare --tag base cirros\nopenstack image create --file /tmp/ubuntu-22.04.vmdk --disk-format vmdk --container-format ovf --private ubuntu-vmdk",
+    "expected": "",
+    "points": [
+      {
+        "id": "create_cmd",
+        "text": "image create",
+        "category": "command_verb",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "创建并上传镜像的子命令",
+        "fill_type": "text",
+        "occurrence": 0
+      },
+      {
+        "id": "file_flag",
+        "text": "--file",
+        "category": "command_flag",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "上传本地文件的参数",
+        "fill_type": "text"
+      },
+      {
+        "id": "file_name",
+        "text": "cirros-0.6.2-x86_64-disk.img",
+        "category": "glance_create",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "cirros 的 qcow2 镜像文件名",
+        "fill_type": "text"
+      },
+      {
+        "id": "disk_format_flag",
+        "text": "--disk-format",
+        "category": "command_flag",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "指定磁盘格式的参数",
+        "fill_type": "text"
+      },
+      {
+        "id": "disk_format_value",
+        "text": "qcow2",
+        "category": "glance_format",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "KVM 最常用的磁盘格式",
+        "fill_type": "text"
+      },
+      {
+        "id": "container_format_flag",
+        "text": "--container-format",
+        "category": "command_flag",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "指定容器格式的参数",
+        "fill_type": "text"
+      },
+      {
+        "id": "container_format_value",
+        "text": "bare",
+        "category": "glance_format",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "无额外封装的容器格式",
+        "fill_type": "text"
+      },
+      {
+        "id": "vmdk_value",
+        "text": "vmdk",
+        "category": "glance_format",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "VMware 的磁盘格式",
+        "fill_type": "text",
+        "occurrence": 1
+      },
+      {
+        "id": "ovf_value",
+        "text": "ovf",
+        "category": "glance_format",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "VMware 的容器封装格式",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 从本地文件创建镜像，磁盘与容器格式各由一个参数决定",
+      "level_2": "📖 --file 上传本地文件；--disk-format 描述磁盘内容（qcow2/raw/vmdk/vhd/ami），--container-format 描述外层封装（bare/ovf/ami）",
+      "level_3": "👀 依次填：创建子命令、上传文件的参数、qcow2 文件名、磁盘格式参数、磁盘格式值、容器格式参数、容器格式值、第二行磁盘格式值、第二行封装格式值",
+      "level_4": "📝 正确答案：`image create` / `--file` / `cirros-0.6.2-x86_64-disk.img` / `--disk-format` / `qcow2` / `--container-format` / `bare` / `vmdk` / `ovf`"
+    },
+    "explanation": "image create 把本地文件注册并上传为镜像：disk_format 说明磁盘内容格式（qcow2 是 KVM 最常用格式，raw 为裸盘，vmdk 来自 VMware，vhd 来自 Hyper-V，ami 用于 EC2），container_format 说明外层封装（bare 表示无额外封装，ovf/ova 用于打包 vmdk，ami/ari/aki 用于 EC2）；--tag 便于按标签检索，--private 让镜像只对属主可见。"
+  },
+  {
+    "id": "os-glance-002",
+    "title": "列出、查看与导出镜像",
+    "description": "按属性过滤列表，查看详情并把镜像下载到本地",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "easy",
+    "category": "glance_query",
+    "subcategory": "Glance",
+    "full_code": "openstack image list --long --property os_type=linux\nopenstack image show cirros --human-readable\nopenstack image save --file /tmp/cirros-backup.img cirros",
+    "expected": "",
+    "points": [
+      {
+        "id": "list_cmd",
+        "text": "image list",
+        "category": "command_verb",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "列出镜像的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "long_flag",
+        "text": "--long",
+        "category": "command_flag",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "列表显示额外字段",
+        "fill_type": "text"
+      },
+      {
+        "id": "prop_filter",
+        "text": "--property os_type=linux",
+        "category": "command_flag",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "按镜像属性过滤",
+        "fill_type": "text"
+      },
+      {
+        "id": "show_cmd",
+        "text": "image show",
+        "category": "command_verb",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "查看单个镜像的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "show_image",
+        "text": "cirros",
+        "category": "glance_query",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "第二行查看的镜像名",
+        "fill_type": "text"
+      },
+      {
+        "id": "human_flag",
+        "text": "--human-readable",
+        "category": "command_flag",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "大小用人类可读单位",
+        "fill_type": "text"
+      },
+      {
+        "id": "save_file",
+        "text": "--file /tmp/cirros-backup.img",
+        "category": "glance_download",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "保存到本地的文件名",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 列表过滤 → 查看详情 → 下载到本地",
+      "level_2": "📖 --property key=value 按属性过滤；--human-readable 把字节数换成 GB/MB；image save --file 把镜像数据保存成本地文件",
+      "level_3": "👀 依次填：列表命令、--long、属性过滤条件、查看命令、第二行的镜像名、人类可读开关、第三行保存用的 --file 与路径",
+      "level_4": "📝 正确答案：`image list` / `--long` / `--property os_type=linux` / `image show` / `cirros` / `--human-readable` / `--file /tmp/cirros-backup.img`"
+    },
+    "explanation": "image list 的 --long 增加大小、可见性等列，--property 按镜像属性（元数据）过滤；image show 展示单个镜像的全部字段；image save 把后端存储中的镜像数据下载到本地文件，常用于备份或跨云迁移。"
+  },
+  {
+    "id": "os-glance-003",
+    "title": "glance-api.conf 声明多后端",
+    "description": "在 [DEFAULT] 中用 enabled_backends 声明启用的存储后端",
+    "exercise_type": "config",
+    "tech_stack": "openstack",
+    "weight": "beginner",
+    "category": "glance_conf_backend",
+    "subcategory": "Glance",
+    "full_code": "[DEFAULT]\nenabled_backends = file:file,rbd:rbd",
+    "expected": "",
+    "points": [
+      {
+        "id": "section",
+        "text": "[DEFAULT]",
+        "category": "glance_conf_backend",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "全局配置段",
+        "fill_type": "text"
+      },
+      {
+        "id": "opt",
+        "text": "enabled_backends",
+        "category": "glance_conf_backend",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "声明启用哪些后端",
+        "fill_type": "text"
+      },
+      {
+        "id": "backends",
+        "text": "file:file,rbd:rbd",
+        "category": "glance_conf_backend",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "后端名:store 类型，逗号分隔",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 新版 Glance 用 enabled_backends 声明多后端",
+      "level_2": "📖 enabled_backends 是 dict：冒号前是后端名（对应同名配置段），冒号后是 store 类型（file/rbd/swift/cinder 等），多个后端用逗号分隔",
+      "level_3": "👀 [DEFAULT] 段下：enabled_backends = file:file,rbd:rbd",
+      "level_4": "📝 正确答案：`[DEFAULT]` / `enabled_backends` / `file:file,rbd:rbd`"
+    },
+    "explanation": "enabled_backends 的 key 是后端名（配置时在 glance-api.conf 中写同名 section），value 是 store 类型；镜像默认写入 default_backend 指定的后端。它取代了旧的 [glance_store] stores/default_store 写法，是多后端（如本地 file + Ceph rbd）部署的入口。"
+  },
+  {
+    "id": "os-glance-004",
+    "title": "调整镜像资源要求与可见性",
+    "description": "设置启动镜像所需的最小资源、可见性，并重命名与加保护",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "easy",
+    "category": "glance_update",
+    "subcategory": "Glance",
+    "full_code": "openstack image set --min-disk 20 --min-ram 4096 ubuntu-22.04\nopenstack image set --shared ubuntu-22.04\nopenstack image set --name ubuntu-lts --protected ubuntu-22.04",
+    "expected": "",
+    "points": [
+      {
+        "id": "set_cmd",
+        "text": "image set",
+        "category": "command_verb",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "修改镜像的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "min_disk_flag",
+        "text": "--min-disk",
+        "category": "command_flag",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "最小磁盘需求的参数",
+        "fill_type": "text"
+      },
+      {
+        "id": "min_disk_value",
+        "text": "20",
+        "category": "glance_update",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "最小磁盘 GiB 数",
+        "fill_type": "text"
+      },
+      {
+        "id": "min_ram_flag",
+        "text": "--min-ram",
+        "category": "command_flag",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "最小内存需求的参数",
+        "fill_type": "text"
+      },
+      {
+        "id": "min_ram_value",
+        "text": "4096",
+        "category": "glance_update",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "最小内存 MB 数",
+        "fill_type": "text"
+      },
+      {
+        "id": "visibility",
+        "text": "--shared",
+        "category": "glance_update",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "可见性开关：只对属主与镜像成员可见（visibility=shared）",
+        "fill_type": "text"
+      },
+      {
+        "id": "name_flag",
+        "text": "--name",
+        "category": "command_flag",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "重命名的参数",
+        "fill_type": "text"
+      },
+      {
+        "id": "name_value",
+        "text": "ubuntu-lts",
+        "category": "glance_update",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "改名后的镜像名",
+        "fill_type": "text"
+      },
+      {
+        "id": "protected_flag",
+        "text": "--protected",
+        "category": "command_flag",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "开启删除保护",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 资源要求、可见性、改名保护都通过 image set",
+      "level_2": "📖 --min-disk/--min-ram 供调度器判断资源；可见性用 --public/--private/--shared/--community 开关设置（对应 API 的 visibility 字段，openstackclient 没有 --visibility 参数）；--name 改名，--protected 防误删",
+      "level_3": "👀 依次填：设置子命令、--min-disk 参数、磁盘 GiB 值、--min-ram 参数、内存 MB 值、--shared、--name 参数、新名字、--protected",
+      "level_4": "📝 正确答案：`image set` / `--min-disk` / `20` / `--min-ram` / `4096` / `--shared` / `--name` / `ubuntu-lts` / `--protected`"
+    },
+    "explanation": "min_disk/min_ram 让 Nova 调度时判断宿主机是否满足启动条件；visibility 取 public/private/shared/community，shared 是共享镜像的前置状态；protected 的镜像必须先 --unprotected 才能删除。"
+  },
+  {
+    "id": "os-glance-005",
+    "title": "删除单个与批量镜像",
+    "description": "用 image delete 删除一个镜像，并一次删除多个镜像",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "beginner",
+    "category": "glance_delete",
+    "subcategory": "Glance",
+    "full_code": "openstack image delete cirros\nopenstack image delete ubuntu-22.04 old-image",
+    "expected": "",
+    "points": [
+      {
+        "id": "delete_cmd",
+        "text": "image delete",
+        "category": "command_verb",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "删除镜像的子命令",
+        "fill_type": "text",
+        "occurrence": 0
+      },
+      {
+        "id": "single",
+        "text": "cirros",
+        "category": "glance_delete",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "第一行要删除的镜像名",
+        "fill_type": "text"
+      },
+      {
+        "id": "batch",
+        "text": "ubuntu-22.04 old-image",
+        "category": "glance_delete",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "第二行一次删除两个镜像，名称/ID 用空格分隔",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 delete 后面可以直接跟多个镜像",
+      "level_2": "📖 用法是 image delete <image> [<image> ...]，支持名称或 ID；删除是异步的，后端数据可能稍后清理",
+      "level_3": "👀 第一行删一个，第二行删两个",
+      "level_4": "📝 正确答案：`image delete` / `cirros` / `ubuntu-22.04 old-image`"
+    },
+    "explanation": "image delete 支持一次传入多个镜像名/ID 批量删除；被 --protected 保护的镜像需要先取消保护；删除共享镜像后，成员项目也会失去访问。"
+  },
+  {
+    "id": "os-glance-006",
+    "title": "[glance_store] 启用与默认后端",
+    "description": "用传统写法声明启用的 store 并指定默认后端",
+    "exercise_type": "config",
+    "tech_stack": "openstack",
+    "weight": "easy",
+    "category": "glance_conf_store",
+    "subcategory": "Glance",
+    "full_code": "[glance_store]\nstores = file,rbd\ndefault_store = rbd",
+    "expected": "",
+    "points": [
+      {
+        "id": "section",
+        "text": "[glance_store]",
+        "category": "glance_conf_store",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "存储后端配置段",
+        "fill_type": "text"
+      },
+      {
+        "id": "stores_key",
+        "text": "stores",
+        "category": "glance_conf_store",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "声明启用哪些 store 的配置键",
+        "fill_type": "text"
+      },
+      {
+        "id": "stores_value",
+        "text": "file,rbd",
+        "category": "glance_conf_store",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "逗号分隔的 store 列表",
+        "fill_type": "text"
+      },
+      {
+        "id": "default_key",
+        "text": "default_store",
+        "category": "glance_conf_store",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "指定默认 store 的配置键",
+        "fill_type": "text"
+      },
+      {
+        "id": "default_value",
+        "text": "rbd",
+        "category": "glance_conf_store",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "默认写入的后端",
+        "fill_type": "text",
+        "occurrence": 1
+      }
+    ],
+    "hints": {
+      "level_1": "💡 先声明启用的 store，再指定默认 store",
+      "level_2": "📖 stores 列出可用的存储后端 scheme（file/http/swift/rbd/cinder/s3 等），default_store 决定没有显式指定时数据写到哪个后端",
+      "level_3": "👀 依次填：段名、stores 配置键、逗号分隔的 store 值、default_store 配置键、默认 store 值",
+      "level_4": "📝 正确答案：`[glance_store]` / `stores` / `file,rbd` / `default_store` / `rbd`"
+    },
+    "explanation": "stores/default_store 是传统写法，自 Rocky 起被标记废弃，推荐改用 [DEFAULT] enabled_backends 声明多后端、[glance_store] default_backend 指定默认后端；老配置在很多现网部署中仍可见。"
+  },
+  {
+    "id": "os-glance-007",
+    "title": "设置硬件特性元数据",
+    "description": "用 --property 设置磁盘总线、网卡模型与 guest agent 等 hw_ 属性",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "medium",
+    "category": "glance_metadata",
+    "subcategory": "Glance",
+    "full_code": "openstack image set --property hw_disk_bus=scsi --property hw_vif_model=virtio my-image\nopenstack image set --property hw_qemu_guest_agent=yes --property os_type=linux my-image",
+    "expected": "",
+    "points": [
+      {
+        "id": "set_cmd",
+        "text": "image set",
+        "category": "command_verb",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "设置镜像属性的子命令",
+        "fill_type": "text",
+        "occurrence": 0
+      },
+      {
+        "id": "disk_bus",
+        "text": "--property hw_disk_bus=scsi",
+        "category": "glance_metadata",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "告诉 Nova 用 SCSI 总线挂磁盘",
+        "fill_type": "text"
+      },
+      {
+        "id": "vif_model",
+        "text": "--property hw_vif_model=virtio",
+        "category": "glance_metadata",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "网卡模型（virtio/e1000/rtl8139 等）",
+        "fill_type": "text"
+      },
+      {
+        "id": "property_flag",
+        "text": "--property",
+        "category": "command_flag",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "第二行第一个属性参数",
+        "fill_type": "text",
+        "occurrence": 2
+      },
+      {
+        "id": "guest_agent_value",
+        "text": "hw_qemu_guest_agent=yes",
+        "category": "glance_metadata",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "镜像内已装 qemu-guest-agent",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 硬件特性都通过 --property hw_* 传给 Nova",
+      "level_2": "📖 hw_disk_bus 指定磁盘总线（scsi/virtio/ide/usb），hw_vif_model 指定网卡模型，hw_qemu_guest_agent=yes 表示镜像装了 qemu-guest-agent，os_type 帮助 Nova 选择 guest OS 优化",
+      "level_3": "👀 依次填：设置子命令、hw_disk_bus 属性、hw_vif_model 属性、第二行的 --property 参数、guest agent 属性",
+      "level_4": "📝 正确答案：`image set` / `--property hw_disk_bus=scsi` / `--property hw_vif_model=virtio` / `--property` / `hw_qemu_guest_agent=yes`"
+    },
+    "explanation": "以 hw_ 开头的镜像属性会被 Nova 读取：hw_disk_bus 决定虚机磁盘挂载总线（scsi 支持更多设备），hw_vif_model 选择网卡模型（virtio 性能最好但需要镜像内有驱动），hw_qemu_guest_agent=yes 允许 Nova 通过 agent 做优雅关机、改密码等操作；os_type 影响调度与 guest 优化。"
+  },
+  {
+    "id": "os-glance-008",
+    "title": "更新与删除属性、管理标签",
+    "description": "更新镜像属性、删除属性，并添加/移除标签",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "medium",
+    "category": "glance_tag",
+    "subcategory": "Glance",
+    "full_code": "openstack image set --property os_type=windows --property hw_disk_bus=ide my-image\nopenstack image unset --property os_type my-image\nopenstack image set --tag latest --tag stable my-image\nopenstack image unset --tag stable my-image",
+    "expected": "",
+    "points": [
+      {
+        "id": "set_cmd",
+        "text": "image set",
+        "category": "command_verb",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "修改属性的子命令（第一行）",
+        "fill_type": "text"
+      },
+      {
+        "id": "property_flag",
+        "text": "--property",
+        "category": "command_flag",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "设置属性的参数",
+        "fill_type": "text"
+      },
+      {
+        "id": "os_windows",
+        "text": "os_type=windows",
+        "category": "glance_metadata",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "第一行设置的 os_type 属性",
+        "fill_type": "text"
+      },
+      {
+        "id": "disk_bus_ide",
+        "text": "hw_disk_bus=ide",
+        "category": "glance_metadata",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "第一行设置的磁盘总线属性",
+        "fill_type": "text"
+      },
+      {
+        "id": "unset_cmd",
+        "text": "image unset",
+        "category": "command_verb",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "删除属性的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "os_type_key",
+        "text": "os_type",
+        "category": "glance_metadata",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "第二行要删除的属性名",
+        "fill_type": "text",
+        "occurrence": 1
+      },
+      {
+        "id": "tag_flag",
+        "text": "--tag",
+        "category": "command_flag",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "添加标签的参数（第三行）",
+        "fill_type": "text"
+      },
+      {
+        "id": "tag_latest",
+        "text": "latest",
+        "category": "glance_tag",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "第三行添加的标签",
+        "fill_type": "text"
+      },
+      {
+        "id": "tag_stable",
+        "text": "stable",
+        "category": "glance_tag",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "第四行要删除的标签",
+        "fill_type": "text",
+        "occurrence": 1
+      }
+    ],
+    "hints": {
+      "level_1": "💡 属性用 image set/unset --property 增删，标签用 --tag 增删",
+      "level_2": "📖 image set --property key=value 覆盖同名属性；image unset --property key 删除属性；--tag 可以重复出现设置多个标签，删除标签用 image unset --tag",
+      "level_3": "👀 依次填：第一行的设置子命令、--property 参数、os_type 属性值、hw_disk_bus 属性值、第二行的 unset 子命令、要删除的 os_type、第三行的 --tag 参数、标签 latest、第四行要删除的标签 stable",
+      "level_4": "📝 正确答案：`image set` / `--property` / `os_type=windows` / `hw_disk_bus=ide` / `image unset` / `os_type` / `--tag` / `latest` / `stable`"
+    },
+    "explanation": "属性（property）和标签（tag）都是镜像元数据：属性键值对会影响 Nova/Cinder 的行为，删除用 image unset；标签适合做检索和生命周期管理，image list --tag 可按标签过滤。"
+  },
+  {
+    "id": "os-glance-009",
+    "title": "v2 镜像导入：web-download 与 glance-direct",
+    "description": "先创建镜像记录，再分别用 web-download 与 stage+glance-direct 导入数据",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "hard",
+    "category": "glance_import",
+    "subcategory": "Glance",
+    "full_code": "openstack image create --container-format bare --disk-format qcow2 cirros-web\nopenstack image import --method web-download --uri https://download.cirros-cloud.net/0.6.2/cirros-0.6.2-x86_64-disk.img --wait cirros-web\nopenstack image create --container-format bare --disk-format qcow2 cirros-local\nopenstack image stage --file /tmp/cirros.qcow2 cirros-local\nopenstack image import --method glance-direct --wait cirros-local",
+    "expected": "",
+    "points": [
+      {
+        "id": "create_cmd",
+        "text": "image create",
+        "category": "command_verb",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "先创建 queued 状态的镜像记录（不带 --file）",
+        "fill_type": "text",
+        "occurrence": 0
+      },
+      {
+        "id": "method_flag",
+        "text": "--method",
+        "category": "command_flag",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "指定导入方式的参数",
+        "fill_type": "text"
+      },
+      {
+        "id": "web_download_value",
+        "text": "web-download",
+        "category": "glance_import",
+        "min_weight": "hard",
+        "weight_score": 1.5,
+        "hint": "由服务端从 URL 拉取",
+        "fill_type": "text"
+      },
+      {
+        "id": "uri_flag",
+        "text": "--uri",
+        "category": "command_flag",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "指定下载地址的参数",
+        "fill_type": "text"
+      },
+      {
+        "id": "stage_cmd",
+        "text": "image stage",
+        "category": "command_verb",
+        "min_weight": "hard",
+        "weight_score": 1.5,
+        "hint": "把本地数据上传到 staging 的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "stage_file_flag",
+        "text": "--file",
+        "category": "command_flag",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "stage 指定的本地文件参数",
+        "fill_type": "text"
+      },
+      {
+        "id": "stage_file_path",
+        "text": "/tmp/cirros.qcow2",
+        "category": "glance_import",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "staging 的本地 qcow2 文件路径",
+        "fill_type": "text"
+      },
+      {
+        "id": "glance_direct_value",
+        "text": "glance-direct",
+        "category": "glance_import",
+        "min_weight": "hard",
+        "weight_score": 1.5,
+        "hint": "先 stage 再触发的导入方式",
+        "fill_type": "text"
+      },
+      {
+        "id": "wait_flag",
+        "text": "--wait",
+        "category": "command_flag",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "等待导入完成的参数",
+        "fill_type": "text",
+        "occurrence": 1
+      }
+    ],
+    "hints": {
+      "level_1": "💡 导入分两条路：web-download 给 URL，glance-direct 先 stage 本地文件",
+      "level_2": "📖 先用 image create 建一条 queued 记录（不要带 --file）；web-download 由服务端下载，glance-direct 需要 image stage --file 上传到 staging 后再触发 import",
+      "level_3": "👀 依次填：创建子命令、--method 参数、web-download、--uri 参数、stage 子命令、--file 参数、本地 staging 文件路径、glance-direct、第五行的 --wait",
+      "level_4": "📝 正确答案：`image create` / `--method` / `web-download` / `--uri` / `image stage` / `--file` / `/tmp/cirros.qcow2` / `glance-direct` / `--wait`"
+    },
+    "explanation": "互操作镜像导入（Image API 2.6+）把「建记录」和「导数据」解耦：web-download 由 glance-api 从 URI 拉取，不占客户端带宽；glance-direct 分 create→stage→import 三步，数据先落 staging 再转 active；可用方法由 glance-api.conf 的 enabled_import_methods 控制。"
+  },
+  {
+    "id": "os-glance-010",
+    "title": "[file] 文件系统后端目录",
+    "description": "配置 file store 的镜像落盘目录",
+    "exercise_type": "config",
+    "tech_stack": "openstack",
+    "weight": "easy",
+    "category": "glance_conf_file",
+    "subcategory": "Glance",
+    "full_code": "[file]\nfilesystem_store_datadir = /var/lib/glance/images",
+    "expected": "",
+    "points": [
+      {
+        "id": "section",
+        "text": "[file]",
+        "category": "glance_conf_file",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "文件系统后端对应的配置段",
+        "fill_type": "text"
+      },
+      {
+        "id": "datadir_key",
+        "text": "filesystem_store_datadir",
+        "category": "glance_conf_file",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "镜像落盘目录的配置键",
+        "fill_type": "text"
+      },
+      {
+        "id": "datadir_value",
+        "text": "/var/lib/glance/images",
+        "category": "glance_conf_file",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "镜像文件存放路径",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 file store 的数据目录",
+      "level_2": "📖 [file] 段的 filesystem_store_datadir 指定镜像文件存放目录，glance-api 启动时会检查目录可写，否则 file store 初始化失败",
+      "level_3": "👀 依次填：段名、落盘目录的配置键、目录值",
+      "level_4": "📝 正确答案：`[file]` / `filesystem_store_datadir` / `/var/lib/glance/images`"
+    },
+    "explanation": "file store 是默认后端，镜像以文件形式存在本地磁盘（默认 /var/lib/glance/images）；生产环境常用 Ceph RBD 或 Swift 获得共享存储，但 file 仍适合单节点或测试环境。"
+  },
+  {
+    "id": "os-glance-011",
+    "title": "查看镜像成员并接受共享",
+    "description": "列出镜像成员，并演示成员项目接受/拒绝共享",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "medium",
+    "category": "glance_member",
+    "subcategory": "Glance",
+    "full_code": "openstack image member list my-image\nopenstack image set --accept my-image\nopenstack image set --reject my-image",
+    "expected": "",
+    "points": [
+      {
+        "id": "member_cmd",
+        "text": "image member",
+        "category": "command_verb",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "成员管理子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "list_word",
+        "text": "list",
+        "category": "glance_member",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "列出成员",
+        "fill_type": "text"
+      },
+      {
+        "id": "set_cmd",
+        "text": "image set",
+        "category": "command_verb",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "接受/拒绝共享用的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "accept_flag",
+        "text": "--accept",
+        "category": "command_flag",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "接受共享的参数",
+        "fill_type": "text"
+      },
+      {
+        "id": "member_image",
+        "text": "my-image",
+        "category": "glance_member",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "第二行操作的镜像名",
+        "fill_type": "text",
+        "occurrence": 1
+      },
+      {
+        "id": "reject_flag",
+        "text": "--reject",
+        "category": "command_flag",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "拒绝共享的参数",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 成员状态 pending 时需要接受；接受要用成员项目的凭证执行",
+      "level_2": "📖 共享方 add project 后成员记录是 pending；成员项目用 image set --accept 接受、--reject 拒绝、--pending 重置，image member list 查看状态",
+      "level_3": "👀 依次填：成员管理子命令、list、设置子命令、--accept、第二行的镜像名、--reject",
+      "level_4": "📝 正确答案：`image member` / `list` / `image set` / `--accept` / `my-image` / `--reject`"
+    },
+    "explanation": "镜像共享是两段式：owner 把目标项目加为成员（pending），成员项目接受后变为 accepted，镜像才会出现在其 image list --shared 中；可见性为 shared 的镜像只对属主与成员可见。"
+  },
+  {
+    "id": "os-glance-012",
+    "title": "共享与取消共享：add/remove project",
+    "description": "把项目加为镜像成员，再移除该成员",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "medium",
+    "category": "glance_share",
+    "subcategory": "Glance",
+    "full_code": "openstack image add project my-image demo-project\nopenstack image remove project my-image demo-project",
+    "expected": "",
+    "points": [
+      {
+        "id": "add_cmd",
+        "text": "image add",
+        "category": "command_verb",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "添加成员的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "project_word",
+        "text": "project",
+        "category": "glance_share",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "add/remove 后面的关键字",
+        "fill_type": "text"
+      },
+      {
+        "id": "add_args",
+        "text": "my-image demo-project",
+        "category": "glance_share",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "要共享的镜像与目标项目（add 一行）",
+        "fill_type": "text",
+        "occurrence": 0
+      },
+      {
+        "id": "remove_cmd",
+        "text": "image remove",
+        "category": "command_verb",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "移除成员的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "remove_project",
+        "text": "demo-project",
+        "category": "glance_share",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "第二行要移除的项目",
+        "fill_type": "text",
+        "occurrence": 1
+      }
+    ],
+    "hints": {
+      "level_1": "💡 共享用 add project，取消共享用 remove project",
+      "level_2": "📖 image add project <image> <project> 会创建一条 member 记录（pending），等价于其他工具的 member create；image remove project 撤销共享；project 参数是项目 ID",
+      "level_3": "👀 依次填：添加子命令、project 关键字、第一行的镜像与项目、移除子命令、第二行的项目",
+      "level_4": "📝 正确答案：`image add` / `project` / `my-image demo-project` / `image remove` / `demo-project`"
+    },
+    "explanation": "add project 是 openstackclient 中创建镜像成员的命令（对应 Glance API 的 members 接口）；共享前镜像通常需要先设为 shared 可见性，成员项目用 image set --accept 确认后才真正可用。"
+  },
+  {
+    "id": "os-glance-013",
+    "title": "从 Cinder 卷创建镜像",
+    "description": "用 image create --volume 把卷导出为镜像，并允许对使用中的卷操作",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "hard",
+    "category": "glance_volume_image",
+    "subcategory": "Glance",
+    "full_code": "openstack image create --volume my-volume --disk-format qcow2 --container-format bare --force my-volume-image\nopenstack image show my-volume-image",
+    "expected": "",
+    "points": [
+      {
+        "id": "create_cmd",
+        "text": "image create",
+        "category": "command_verb",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "创建镜像的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "volume_flag",
+        "text": "--volume",
+        "category": "command_flag",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "从卷创建镜像的参数",
+        "fill_type": "text"
+      },
+      {
+        "id": "volume_name",
+        "text": "my-volume",
+        "category": "glance_volume_image",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "源 Cinder 卷名",
+        "fill_type": "text"
+      },
+      {
+        "id": "disk_format_flag",
+        "text": "--disk-format",
+        "category": "command_flag",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "磁盘格式参数",
+        "fill_type": "text"
+      },
+      {
+        "id": "disk_format_value",
+        "text": "qcow2",
+        "category": "glance_volume_image",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "卷导出的磁盘格式",
+        "fill_type": "text"
+      },
+      {
+        "id": "container_format_flag",
+        "text": "--container-format",
+        "category": "command_flag",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "容器格式参数",
+        "fill_type": "text"
+      },
+      {
+        "id": "container_format_value",
+        "text": "bare",
+        "category": "glance_volume_image",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "无封装容器格式",
+        "fill_type": "text"
+      },
+      {
+        "id": "force",
+        "text": "--force",
+        "category": "glance_volume_image",
+        "min_weight": "hard",
+        "weight_score": 1.75,
+        "hint": "允许对使用中的卷创建镜像",
+        "fill_type": "text"
+      },
+      {
+        "id": "image_name",
+        "text": "my-volume-image",
+        "category": "glance_volume_image",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "新镜像的名字",
+        "fill_type": "text",
+        "occurrence": 0
+      }
+    ],
+    "hints": {
+      "level_1": "💡 image create 除了 --file，还支持 --volume",
+      "level_2": "📖 --volume 会调用 Cinder 的卷上传接口把卷导出成 Glance 镜像；卷正在被实例挂载时默认拒绝，--force 可以强制",
+      "level_3": "👀 依次填：创建子命令、--volume、卷名、--disk-format、qcow2、--container-format、bare、--force、新镜像名",
+      "level_4": "📝 正确答案：`image create` / `--volume` / `my-volume` / `--disk-format` / `qcow2` / `--container-format` / `bare` / `--force` / `my-volume-image`"
+    },
+    "explanation": "从卷创建镜像是 Glance 与 Cinder 的交界操作：openstackclient 调用 Cinder 的 os-volume_upload_image 把卷数据导出并注册为 Glance 镜像；--force 允许对 in-use 卷执行（需后端支持），生成的镜像可用于批量创建实例或跨项目共享。"
+  },
+  {
+    "id": "os-glance-014",
+    "title": "[rbd] 配置 Ceph 后端",
+    "description": "配置 RBD store 的存储池、认证用户与 ceph.conf 路径",
+    "exercise_type": "config",
+    "tech_stack": "openstack",
+    "weight": "medium",
+    "category": "glance_conf_rbd",
+    "subcategory": "Glance",
+    "full_code": "[rbd]\nrbd_store_pool = images\nrbd_store_user = glance\nrbd_store_ceph_conf = /etc/ceph/ceph.conf",
+    "expected": "",
+    "points": [
+      {
+        "id": "section",
+        "text": "[rbd]",
+        "category": "glance_conf_rbd",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "RBD 后端配置段（段名与 enabled_backends 的 key 一致）",
+        "fill_type": "text"
+      },
+      {
+        "id": "pool_key",
+        "text": "rbd_store_pool",
+        "category": "glance_conf_rbd",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "RADOS 池的配置键",
+        "fill_type": "text"
+      },
+      {
+        "id": "pool_value",
+        "text": "images",
+        "category": "glance_conf_rbd",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "镜像数据存放的池名",
+        "fill_type": "text"
+      },
+      {
+        "id": "user_key",
+        "text": "rbd_store_user",
+        "category": "glance_conf_rbd",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "认证用户的配置键",
+        "fill_type": "text"
+      },
+      {
+        "id": "user_value",
+        "text": "glance",
+        "category": "glance_conf_rbd",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "Cephx 认证用户名",
+        "fill_type": "text"
+      },
+      {
+        "id": "ceph_conf_key",
+        "text": "rbd_store_ceph_conf",
+        "category": "glance_conf_rbd",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "ceph.conf 路径的配置键",
+        "fill_type": "text"
+      },
+      {
+        "id": "ceph_conf_value",
+        "text": "/etc/ceph/ceph.conf",
+        "category": "glance_conf_rbd",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "配置文件路径",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 RBD 后端三要素：池、用户、ceph.conf",
+      "level_2": "📖 rbd_store_pool 指定 RADOS pool；rbd_store_user 是 Cephx 认证用户，需要在 Ceph 侧授权该池；rbd_store_ceph_conf 指向 ceph.conf，里面引用 client.<user> 的 keyring",
+      "level_3": "👀 依次填：段名、pool 配置键、池名、user 配置键、认证用户名、ceph_conf 配置键、配置文件路径",
+      "level_4": "📝 正确答案：`[rbd]` / `rbd_store_pool` / `images` / `rbd_store_user` / `glance` / `rbd_store_ceph_conf` / `/etc/ceph/ceph.conf`"
+    },
+    "explanation": "RBD 后端把镜像以 RADOS 对象存进 Ceph 池，天然共享、多副本，适合多节点 Glance；glance-api 进程必须能读取 ceph.conf 与 keyring，否则 store 初始化失败，上传会报错。"
+  },
+  {
+    "id": "os-glance-015",
+    "title": "[swift] 配置 Swift 后端",
+    "description": "配置 Swift store 的认证地址、容器与自动建容器",
+    "exercise_type": "config",
+    "tech_stack": "openstack",
+    "weight": "medium",
+    "category": "glance_conf_swift",
+    "subcategory": "Glance",
+    "full_code": "[swift]\nswift_store_auth_address = http://controller:5000/v3\nswift_store_container = glance\nswift_store_create_container_on_put = True",
+    "expected": "",
+    "points": [
+      {
+        "id": "section",
+        "text": "[swift]",
+        "category": "glance_conf_swift",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "Swift 后端配置段",
+        "fill_type": "text"
+      },
+      {
+        "id": "auth_key",
+        "text": "swift_store_auth_address",
+        "category": "glance_conf_swift",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "认证地址的配置键",
+        "fill_type": "text"
+      },
+      {
+        "id": "auth_value",
+        "text": "http://controller:5000/v3",
+        "category": "glance_conf_swift",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "Keystone v3 认证地址",
+        "fill_type": "text"
+      },
+      {
+        "id": "container_key",
+        "text": "swift_store_container",
+        "category": "glance_conf_swift",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "容器名的配置键",
+        "fill_type": "text"
+      },
+      {
+        "id": "container_value",
+        "text": "glance",
+        "category": "glance_conf_swift",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "存放镜像的容器名",
+        "fill_type": "text"
+      },
+      {
+        "id": "create_on_put_key",
+        "text": "create_container_on_put",
+        "category": "glance_conf_swift",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "上传时自动建容器的选项名（键的后半段）",
+        "fill_type": "text"
+      },
+      {
+        "id": "create_on_put_value",
+        "text": "True",
+        "category": "glance_conf_swift",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "布尔值（首字母大写）",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 Swift 后端：认证地址、容器名、自动建容器",
+      "level_2": "📖 swift_store_auth_address 是 Keystone 地址；swift_store_container 指定容器（默认 glance）；swift_store_create_container_on_put=True 时首次上传自动创建容器",
+      "level_3": "👀 依次填：段名、auth_address 配置键、认证地址、container 配置键、容器名、自动建容器选项名、布尔值",
+      "level_4": "📝 正确答案：`[swift]` / `swift_store_auth_address` / `http://controller:5000/v3` / `swift_store_container` / `glance` / `create_container_on_put` / `True`"
+    },
+    "explanation": "Swift 后端把镜像对象存入对象存储容器，多副本且可跨节点共享；swift_store_create_container_on_put 免去手工建容器；较新版本推荐在 Swift 后端配置里用 auth_address 替代 swift_store_auth_address（后者已标记废弃）。"
+  },
+  {
+    "id": "os-glance-016",
+    "title": "glance-manage 数据库与元数据定义",
+    "description": "执行数据库迁移、加载 metadefs 并查看数据库版本",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "hard",
+    "category": "glance_manage",
+    "subcategory": "Glance",
+    "full_code": "glance-manage db_sync\nglance-manage db_load_metadefs\nglance-manage db_version",
+    "expected": "",
+    "points": [
+      {
+        "id": "db_sync",
+        "text": "glance-manage db_sync",
+        "category": "glance_manage",
+        "min_weight": "hard",
+        "weight_score": 1.75,
+        "hint": "执行数据库迁移（部署/升级后必做）",
+        "fill_type": "text"
+      },
+      {
+        "id": "load_metadefs",
+        "text": "glance-manage db_load_metadefs",
+        "category": "glance_manage",
+        "min_weight": "hard",
+        "weight_score": 1.75,
+        "hint": "把 /etc/glance/metadefs 下的元数据定义导入数据库",
+        "fill_type": "text"
+      },
+      {
+        "id": "db_version",
+        "text": "glance-manage db_version",
+        "category": "glance_manage",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "查看当前数据库迁移版本",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 建库、导元数据、查版本",
+      "level_2": "📖 db_sync 把数据库升级到最新迁移版本；db_load_metadefs 默认从 /etc/glance/metadefs 加载（也可指定路径）；db_version 显示当前迁移级别",
+      "level_3": "👀 三行都是 glance-manage 子命令：db_sync / db_load_metadefs / db_version",
+      "level_4": "📝 正确答案：`glance-manage db_sync` / `glance-manage db_load_metadefs` / `glance-manage db_version`"
+    },
+    "explanation": "glance-manage 是 Glance 的离线管理工具：部署或升级后必须 db_sync 迁移数据库结构；db_load_metadefs 导入 OS::Glance 等命名空间，供属性校验与界面展示；db_version 可确认迁移是否成功。"
+  },
+  {
+    "id": "os-glance-017",
+    "title": "配置镜像缓存",
+    "description": "配置缓存目录、缓存驱动并启用缓存中间件",
+    "exercise_type": "config",
+    "tech_stack": "openstack",
+    "weight": "medium",
+    "category": "glance_conf_cache",
+    "subcategory": "Glance",
+    "full_code": "[DEFAULT]\nimage_cache_dir = /var/lib/glance/image-cache\nimage_cache_driver = sqlite\n\n[paste_deploy]\nflavor = keystone+cachemanagement",
+    "expected": "",
+    "points": [
+      {
+        "id": "cache_dir_key",
+        "text": "image_cache_dir",
+        "category": "glance_conf_cache",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "缓存目录的配置键",
+        "fill_type": "text"
+      },
+      {
+        "id": "cache_dir_value",
+        "text": "/var/lib/glance/image-cache",
+        "category": "glance_conf_cache",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "缓存目录路径",
+        "fill_type": "text"
+      },
+      {
+        "id": "cache_driver_key",
+        "text": "image_cache_driver",
+        "category": "glance_conf_cache",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "缓存驱动的配置键",
+        "fill_type": "text"
+      },
+      {
+        "id": "cache_driver_value",
+        "text": "sqlite",
+        "category": "glance_conf_cache",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "传统缓存元数据驱动",
+        "fill_type": "text"
+      },
+      {
+        "id": "section",
+        "text": "[paste_deploy]",
+        "category": "glance_conf_cache",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "应用 pipeline flavor 的配置段",
+        "fill_type": "text"
+      },
+      {
+        "id": "flavor_key",
+        "text": "flavor",
+        "category": "glance_conf_cache",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "flavor 配置键",
+        "fill_type": "text"
+      },
+      {
+        "id": "flavor_value",
+        "text": "keystone+cachemanagement",
+        "category": "glance_conf_cache",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "启用缓存与缓存管理的 flavor",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 缓存三件事：目录、驱动、启用缓存的 flavor",
+      "level_2": "📖 image_cache_dir 指定缓存目录（必填）；image_cache_driver 选驱动；flavor 在 [paste_deploy] 段，keystone+cachemanagement 会启用缓存与缓存管理中间件（早期版本写作 cache flavor）",
+      "level_3": "👀 依次填：缓存目录配置键、目录值、缓存驱动配置键、驱动值、paste_deploy 段名、flavor 配置键、flavor 值",
+      "level_4": "📝 正确答案：`image_cache_dir` / `/var/lib/glance/image-cache` / `image_cache_driver` / `sqlite` / `[paste_deploy]` / `flavor` / `keystone+cachemanagement`"
+    },
+    "explanation": "镜像缓存把常用镜像留在 glance-api 本地目录，减少对后端存储的读取；缓存是本节点本地的，多 controller 需要逐台配置相同目录与驱动（sqlite 驱动为传统选择，新版本默认 centralized_db）；管理缓存需要 cachemanagement 中间件。"
+  },
+  {
+    "id": "os-glance-018",
+    "title": "镜像缓存管理",
+    "description": "用 glance-cache-manage 与 openstack cached image 查看和排队缓存",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "hard",
+    "category": "glance_cache",
+    "subcategory": "Glance",
+    "full_code": "glance-cache-manage --host controller-1 list-cached\nglance-cache-manage --host controller-1 queue-image my-image\nopenstack cached image list\nopenstack cached image queue my-image",
+    "expected": "",
+    "points": [
+      {
+        "id": "list_cached",
+        "text": "list-cached",
+        "category": "glance_cache",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "列出该节点已缓存的镜像",
+        "fill_type": "text"
+      },
+      {
+        "id": "manage_cmd",
+        "text": "glance-cache-manage",
+        "category": "glance_cache",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "直连节点的缓存管理命令",
+        "fill_type": "text",
+        "occurrence": 1
+      },
+      {
+        "id": "host_flag",
+        "text": "--host",
+        "category": "command_flag",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "指定节点的参数",
+        "fill_type": "text",
+        "occurrence": 1
+      },
+      {
+        "id": "host_value",
+        "text": "controller-1",
+        "category": "glance_cache",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "目标 controller 节点名",
+        "fill_type": "text",
+        "occurrence": 1
+      },
+      {
+        "id": "queue_image_word",
+        "text": "queue-image",
+        "category": "glance_cache",
+        "min_weight": "hard",
+        "weight_score": 1.5,
+        "hint": "把镜像加入缓存队列的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "cached_image",
+        "text": "cached image",
+        "category": "glance_cache",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "走 API 的缓存子命令（前两词）",
+        "fill_type": "text"
+      },
+      {
+        "id": "queue_word",
+        "text": "queue",
+        "category": "glance_cache",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "排队缓存的子命令",
+        "fill_type": "text",
+        "occurrence": 1
+      },
+      {
+        "id": "queue_image_name",
+        "text": "my-image",
+        "category": "glance_cache",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "第四行排队的镜像名",
+        "fill_type": "text",
+        "occurrence": 1
+      }
+    ],
+    "hints": {
+      "level_1": "💡 缓存管理有两个入口：glance-cache-manage 直连节点，openstack cached image 走 API",
+      "level_2": "📖 缓存是节点本地的，HA 部署要用 --host 指定具体 controller；queue-image 把镜像入队，由 cache_images 周期任务（默认 300 秒，可配 cache_prefetcher_interval）预取；openstack cached image 系列需要 cachemanage 中间件",
+      "level_3": "👀 依次填：list-cached、缓存管理命令、--host、节点名、queue-image、第三行的 cached image、第四行的 queue、镜像名",
+      "level_4": "📝 正确答案：`list-cached` / `glance-cache-manage` / `--host` / `controller-1` / `queue-image` / `cached image` / `queue` / `my-image`"
+    },
+    "explanation": "glance-cache-manage 直接连到某个 glance-api 节点操作本地缓存：list-cached 查看、queue-image 入队、delete-cached-image 清理；cache_images 周期任务会把队列中的镜像预取到缓存。openstack cached image 系列是等价的 API 入口，需要启用 cachemanage 中间件。"
+  },
+  {
+    "id": "os-glance-019",
+    "title": "启用镜像导入方法",
+    "description": "在 [DEFAULT] 中声明允许使用的镜像导入方式",
+    "exercise_type": "config",
+    "tech_stack": "openstack",
+    "weight": "easy",
+    "category": "glance_conf_import",
+    "subcategory": "Glance",
+    "full_code": "[DEFAULT]\nenabled_import_methods = [glance-direct,web-download,copy-image]",
+    "expected": "",
+    "points": [
+      {
+        "id": "section",
+        "text": "[DEFAULT]",
+        "category": "glance_conf_import",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "全局配置段",
+        "fill_type": "text"
+      },
+      {
+        "id": "opt",
+        "text": "enabled_import_methods",
+        "category": "glance_conf_import",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "声明允许的导入方式",
+        "fill_type": "text"
+      },
+      {
+        "id": "method_glance_direct",
+        "text": "glance-direct",
+        "category": "glance_conf_import",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "先上传 staging 的导入方法",
+        "fill_type": "text"
+      },
+      {
+        "id": "method_web_download",
+        "text": "web-download",
+        "category": "glance_conf_import",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "服务端拉取的导入方法",
+        "fill_type": "text"
+      },
+      {
+        "id": "method_copy_image",
+        "text": "copy-image",
+        "category": "glance_conf_import",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "多后端复制的导入方法",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 导入方式必须在 enabled_import_methods 里显式声明",
+      "level_2": "📖 默认是 [glance-direct,web-download]；copy-image 用于在多个后端间复制，glance-download 用于从联邦的另一区域导入",
+      "level_3": "👀 依次填：段名、配置键、列表中依次出现的三个导入方法名",
+      "level_4": "📝 正确答案：`[DEFAULT]` / `enabled_import_methods` / `glance-direct` / `web-download` / `copy-image`"
+    },
+    "explanation": "enabled_import_methods 决定 image import --method 允许哪些取值：glance-direct 走 staging 上传，web-download 由服务端拉取 URL，copy-image 在多个后端间复制，glance-download 从其他区域导入；方法未启用时导入请求会被直接拒绝。"
+  },
+  {
+    "id": "os-glance-020",
+    "title": "镜像状态机与排障",
+    "description": "按状态过滤卡住的镜像，查看详情并检查后端 store 状态",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "expert",
+    "category": "glance_troubleshooting",
+    "subcategory": "Glance",
+    "full_code": "openstack image list --status saving\nopenstack image show stuck-image -f json\nopenstack image stores list --detail",
+    "expected": "",
+    "points": [
+      {
+        "id": "status_keyword",
+        "text": "saving",
+        "category": "glance_troubleshooting",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "上传中断或后端不可用时镜像会卡在这个中间状态",
+        "fill_type": "text"
+      },
+      {
+        "id": "show_cmd",
+        "text": "image show",
+        "category": "command_verb",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "查看镜像详情的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "stuck_image",
+        "text": "stuck-image",
+        "category": "glance_troubleshooting",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "第二行查看的镜像名",
+        "fill_type": "text"
+      },
+      {
+        "id": "output_flag",
+        "text": "-f json",
+        "category": "command_flag",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "指定输出格式的参数与值",
+        "fill_type": "text"
+      },
+      {
+        "id": "stores_cmd",
+        "text": "image stores",
+        "category": "command_verb",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "查看后端 store 的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "stores_list_word",
+        "text": "list",
+        "category": "glance_troubleshooting",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "stores 后面的动作",
+        "fill_type": "text",
+        "occurrence": 1
+      },
+      {
+        "id": "detail_flag",
+        "text": "--detail",
+        "category": "command_flag",
+        "min_weight": "expert",
+        "weight_score": 1.5,
+        "hint": "显示详细信息的参数",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 先用状态过滤找出卡住的镜像，再看详情与后端状态",
+      "level_2": "📖 状态机：queued（只有记录）→ saving/uploading（数据写入中）→ active（可用），删除后为 deleted；卡在 saving 常见原因是 store 不可用、上传中断或 staging 目录异常",
+      "level_3": "👀 依次填：saving 状态值、查看命令、镜像名、-f json、stores 子命令、list、--detail",
+      "level_4": "📝 正确答案：`saving` / `image show` / `stuck-image` / `-f json` / `image stores` / `list` / `--detail`"
+    },
+    "explanation": "镜像生命周期：queued → saving/uploading → active，删除后为 deleted/pending_delete；长期停留在 saving 通常是后端 store 故障或写入中断。排障顺序：image list --status saving 定位、image show -f json 看字段、image stores list --detail 确认后端可用性，再结合 glance-api 日志分析。"
+  }
+]

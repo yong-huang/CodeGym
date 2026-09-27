@@ -1,12 +1,15 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"log"
 	"net/http"
 	"os"
+	"time"
 
 	"codegym/backend/internal/api"
+	"codegym/backend/internal/bankwatch"
 	"codegym/backend/internal/engine"
 	"codegym/backend/internal/model"
 	"codegym/backend/internal/seed"
@@ -19,6 +22,7 @@ func main() {
 	pyBin := flag.String("python", firstNonEmpty(os.Getenv("PYTHON_BIN"), "python3"), "python interpreter")
 	bankDir := flag.String("bank", "data/bank", "题库 JSON 目录（唯一数据源，可用 $CODEGYM_BANK_DIR 或留空自动定位）")
 	adminToken := flag.String("admin-token", os.Getenv("CODEGYM_ADMIN_TOKEN"), "教练端接口令牌（启用后所有 /api/v1/admin/* 需携带 X-Admin-Token 或 Bearer；为空不鉴权，仅建议本地开发使用）")
+	bankWatch := flag.Duration("bank-watch", 15*time.Second, "题库目录热加载扫描间隔（0 关闭；新增/修改 data/bank 下的 JSON 无需重启）")
 	flag.Parse()
 
 	st, err := store.Open(*dbPath)
@@ -35,6 +39,13 @@ func main() {
 	}
 	if err := seedEnvironments(st); err != nil {
 		log.Printf("seed environments: %v", err)
+	}
+
+	// 题库目录热加载：新增/修改的 bank JSON 在运行期自动生效
+	if *bankWatch > 0 {
+		dir := seed.ResolveBankDir(*bankDir)
+		go bankwatch.New(dir, *bankWatch, st).Run(context.Background())
+		log.Printf("题库目录热加载已启用（%s，每 %s 扫描）", dir, *bankWatch)
 	}
 
 	eng := engine.New(*pyBin)

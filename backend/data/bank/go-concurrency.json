@@ -7,7 +7,7 @@
     "tech_stack": "go",
     "weight": "beginner",
     "category": "goroutine",
-    "subcategory": "并发",
+    "subcategory": "通信机制",
     "full_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"sync\"\n)\n\nfunc main() {\n\tvar wg sync.WaitGroup\n\twg.Add(1)\n\tgo func() {\n\t\tdefer wg.Done()\n\t\tfmt.Println(\"hi\")\n\t}()\n\twg.Wait()\n}",
     "expected": "hi",
     "points": [
@@ -64,7 +64,7 @@
     "tech_stack": "go",
     "weight": "beginner",
     "category": "waitgroup",
-    "subcategory": "并发",
+    "subcategory": "通信机制",
     "full_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"sync\"\n)\n\nfunc main() {\n\tvar wg sync.WaitGroup\n\tdone := make(chan int, 5)\n\tfor i := 0; i < 5; i++ {\n\t\twg.Add(1)\n\t\tgo func() {\n\t\t\tdefer wg.Done()\n\t\t\tdone <- 1\n\t\t}()\n\t}\n\twg.Wait()\n\tclose(done)\n\ts := 0\n\tfor range done {\n\t\ts++\n\t}\n\tfmt.Println(s)\n}",
     "expected": "5",
     "points": [
@@ -148,7 +148,7 @@
     "tech_stack": "go",
     "weight": "easy",
     "category": "goroutine",
-    "subcategory": "并发",
+    "subcategory": "通信机制",
     "full_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"sync\"\n)\n\nfunc main() {\n\tvar wg sync.WaitGroup\n\tch := make(chan int, 3)\n\tfor i := 1; i <= 3; i++ {\n\t\twg.Add(1)\n\t\tgo func(n int) {\n\t\t\tdefer wg.Done()\n\t\t\tch <- n\n\t\t}(i)\n\t}\n\twg.Wait()\n\tclose(ch)\n\ts := 0\n\tfor v := range ch {\n\t\ts += v\n\t}\n\tfmt.Println(s)\n}",
     "expected": "6",
     "points": [
@@ -232,7 +232,7 @@
     "tech_stack": "go",
     "weight": "beginner",
     "category": "channel",
-    "subcategory": "并发",
+    "subcategory": "通信机制",
     "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tch := make(chan int)\n\tgo func() { ch <- 7 }()\n\tv := <-ch\n\tfmt.Println(v)\n}",
     "expected": "7",
     "points": [
@@ -298,7 +298,7 @@
     "tech_stack": "go",
     "weight": "beginner",
     "category": "channel",
-    "subcategory": "并发",
+    "subcategory": "通信机制",
     "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tch := make(chan int, 3)\n\tch <- 1\n\tch <- 2\n\tch <- 3\n\tfmt.Println(len(ch))\n}",
     "expected": "3",
     "points": [
@@ -346,7 +346,7 @@
     "tech_stack": "go",
     "weight": "easy",
     "category": "channel",
-    "subcategory": "并发",
+    "subcategory": "通信机制",
     "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tch := make(chan int, 3)\n\tch <- 1\n\tch <- 2\n\tch <- 3\n\tclose(ch)\n\ts := 0\n\tfor v := range ch {\n\t\ts += v\n\t}\n\tfmt.Println(s)\n}",
     "expected": "6",
     "points": [
@@ -394,7 +394,7 @@
     "tech_stack": "go",
     "weight": "medium",
     "category": "channel_direction",
-    "subcategory": "并发",
+    "subcategory": "通信机制",
     "full_code": "package main\n\nimport \"fmt\"\n\nfunc send(ch chan<- int) {\n\tch <- 42\n}\n\nfunc main() {\n\tch := make(chan int)\n\tgo send(ch)\n\tfmt.Println(<-ch)\n}",
     "expected": "42",
     "points": [
@@ -451,7 +451,7 @@
     "tech_stack": "go",
     "weight": "medium",
     "category": "channel_direction",
-    "subcategory": "并发",
+    "subcategory": "通信机制",
     "full_code": "package main\n\nimport \"fmt\"\n\nfunc recv(ch <-chan int) int {\n\treturn <-ch\n}\n\nfunc main() {\n\tch := make(chan int, 1)\n\tch <- 7\n\tfmt.Println(recv(ch))\n}",
     "expected": "7",
     "points": [
@@ -508,7 +508,7 @@
     "tech_stack": "go",
     "weight": "easy",
     "category": "channel",
-    "subcategory": "并发",
+    "subcategory": "通信机制",
     "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tch := make(chan int, 1)\n\tch <- 5\n\tclose(ch)\n\tv, ok := <-ch\n\tfmt.Println(v, ok)\n}",
     "expected": "5 true",
     "points": [
@@ -574,7 +574,7 @@
     "tech_stack": "go",
     "weight": "easy",
     "category": "select",
-    "subcategory": "并发",
+    "subcategory": "通信机制",
     "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\ta := make(chan int, 1)\n\tb := make(chan int, 1)\n\tb <- 2\n\tselect {\n\tcase x := <-a:\n\t\tfmt.Println(\"a\", x)\n\tcase x := <-b:\n\t\tfmt.Println(\"b\", x)\n\t}\n}",
     "expected": "b 2",
     "points": [
@@ -631,7 +631,7 @@
     "tech_stack": "go",
     "weight": "easy",
     "category": "select",
-    "subcategory": "并发",
+    "subcategory": "通信机制",
     "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tch := make(chan int)\n\tselect {\n\tcase v := <-ch:\n\t\tfmt.Println(v)\n\tdefault:\n\t\tfmt.Println(\"default\")\n\t}\n}",
     "expected": "default",
     "points": [
@@ -688,7 +688,7 @@
     "tech_stack": "go",
     "weight": "medium",
     "category": "select",
-    "subcategory": "并发",
+    "subcategory": "通信机制",
     "full_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\nfunc main() {\n\tch := make(chan int)\n\tselect {\n\tcase v := <-ch:\n\t\tfmt.Println(v)\n\tcase <-time.After(10 * time.Millisecond):\n\t\tfmt.Println(\"timeout\")\n\t}\n}",
     "expected": "timeout",
     "points": [
@@ -754,7 +754,7 @@
     "tech_stack": "go",
     "weight": "medium",
     "category": "mutex",
-    "subcategory": "并发",
+    "subcategory": "同步与原子",
     "full_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"sync\"\n)\n\nfunc main() {\n\tvar wg sync.WaitGroup\n\tvar mu sync.Mutex\n\tn := 0\n\tfor i := 0; i < 1000; i++ {\n\t\twg.Add(1)\n\t\tgo func() {\n\t\t\tdefer wg.Done()\n\t\t\tmu.Lock()\n\t\t\tn++\n\t\t\tmu.Unlock()\n\t\t}()\n\t}\n\twg.Wait()\n\tfmt.Println(n)\n}",
     "expected": "1000",
     "points": [
@@ -829,7 +829,7 @@
     "tech_stack": "go",
     "weight": "hard",
     "category": "rwmutex",
-    "subcategory": "并发",
+    "subcategory": "同步与原子",
     "full_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"sync\"\n)\n\nfunc main() {\n\tvar mu sync.RWMutex\n\tvar wg sync.WaitGroup\n\treads := 0\n\tfor i := 0; i < 5; i++ {\n\t\twg.Add(1)\n\t\tgo func() {\n\t\t\tdefer wg.Done()\n\t\t\tmu.RLock()\n\t\t\t_ = reads\n\t\t\tmu.RUnlock()\n\t\t}()\n\t}\n\twg.Wait()\n\tfmt.Println(reads)\n}",
     "expected": "0",
     "points": [
@@ -895,7 +895,7 @@
     "tech_stack": "go",
     "weight": "medium",
     "category": "once",
-    "subcategory": "并发",
+    "subcategory": "同步与原子",
     "full_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"sync\"\n)\n\nfunc main() {\n\tvar once sync.Once\n\tvar wg sync.WaitGroup\n\tfor i := 0; i < 5; i++ {\n\t\twg.Add(1)\n\t\tgo func() {\n\t\t\tdefer wg.Done()\n\t\t\tonce.Do(func() { fmt.Println(\"init\") })\n\t\t}()\n\t}\n\twg.Wait()\n\tfmt.Println(\"done\")\n}",
     "expected": "init\ndone",
     "points": [
@@ -961,7 +961,7 @@
     "tech_stack": "go",
     "weight": "medium",
     "category": "atomic",
-    "subcategory": "并发",
+    "subcategory": "同步与原子",
     "full_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"sync\"\n\t\"sync/atomic\"\n)\n\nfunc main() {\n\tvar n int64\n\tvar wg sync.WaitGroup\n\tfor i := 0; i < 100; i++ {\n\t\twg.Add(1)\n\t\tgo func() {\n\t\t\tdefer wg.Done()\n\t\t\tatomic.AddInt64(&n, 1)\n\t\t}()\n\t}\n\twg.Wait()\n\tfmt.Println(n)\n}",
     "expected": "100",
     "points": [
@@ -1036,7 +1036,7 @@
     "tech_stack": "go",
     "weight": "hard",
     "category": "atomic",
-    "subcategory": "并发",
+    "subcategory": "同步与原子",
     "full_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"sync/atomic\"\n)\n\nfunc main() {\n\tvar n int64 = 5\n\tok := atomic.CompareAndSwapInt64(&n, 5, 10)\n\tfmt.Println(n, ok)\n}",
     "expected": "10 true",
     "points": [
@@ -1075,7 +1075,7 @@
     "tech_stack": "go",
     "weight": "medium",
     "category": "channel_pattern",
-    "subcategory": "并发",
+    "subcategory": "并发模式",
     "full_code": "package main\n\nimport \"fmt\"\n\nfunc nums() <-chan int {\n\tch := make(chan int)\n\tgo func() {\n\t\tfor i := 1; i <= 4; i++ {\n\t\t\tch <- i\n\t\t}\n\t\tclose(ch)\n\t}()\n\treturn ch\n}\n\nfunc main() {\n\ts := 0\n\tfor v := range nums() {\n\t\ts += v\n\t}\n\tfmt.Println(s)\n}",
     "expected": "10",
     "points": [
@@ -1150,7 +1150,7 @@
     "tech_stack": "go",
     "weight": "hard",
     "category": "channel_pattern",
-    "subcategory": "并发",
+    "subcategory": "并发模式",
     "full_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"sync\"\n)\n\nfunc worker(id int, jobs <-chan int, res chan<- int, wg *sync.WaitGroup) {\n\tfor j := range jobs {\n\t\tres <- j * 2\n\t}\n\twg.Done()\n}\n\nfunc main() {\n\tjobs := make(chan int, 5)\n\tres := make(chan int, 5)\n\tvar wg sync.WaitGroup\n\tfor w := 0; w < 2; w++ {\n\t\twg.Add(1)\n\t\tgo worker(w, jobs, res, &wg)\n\t}\n\tfor j := 1; j <= 5; j++ {\n\t\tjobs <- j\n\t}\n\tclose(jobs)\n\twg.Wait()\n\tclose(res)\n\ts := 0\n\tfor v := range res {\n\t\ts += v\n\t}\n\tfmt.Println(s)\n}",
     "expected": "30",
     "points": [
@@ -1225,7 +1225,7 @@
     "tech_stack": "go",
     "weight": "medium",
     "category": "channel_pattern",
-    "subcategory": "并发",
+    "subcategory": "并发模式",
     "full_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"sync\"\n)\n\nfunc main() {\n\tch := make(chan int, 2)\n\tvar wg sync.WaitGroup\n\tfor i := 1; i <= 2; i++ {\n\t\twg.Add(1)\n\t\tgo func(n int) {\n\t\t\tdefer wg.Done()\n\t\t\tch <- n\n\t\t}(i)\n\t}\n\twg.Wait()\n\tclose(ch)\n\ts := 0\n\tfor v := range ch {\n\t\ts += v\n\t}\n\tfmt.Println(s)\n}",
     "expected": "3",
     "points": [
@@ -1300,7 +1300,7 @@
     "tech_stack": "go",
     "weight": "hard",
     "category": "channel_pattern",
-    "subcategory": "并发",
+    "subcategory": "并发模式",
     "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tin := make(chan int)\n\tout := make(chan int)\n\tgo func() {\n\t\tin <- 4\n\t\tclose(in)\n\t}()\n\tgo func() {\n\t\tfor v := range in {\n\t\t\tout <- v * 2\n\t\t}\n\t\tclose(out)\n\t}()\n\tfmt.Println(<-out)\n}",
     "expected": "8",
     "points": [
@@ -1357,7 +1357,7 @@
     "tech_stack": "go",
     "weight": "easy",
     "category": "channel",
-    "subcategory": "并发",
+    "subcategory": "通信机制",
     "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tch := make(chan int, 5)\n\tch <- 1\n\tch <- 2\n\tfmt.Println(len(ch), cap(ch))\n}",
     "expected": "2 5",
     "points": [
@@ -1405,7 +1405,7 @@
     "tech_stack": "go",
     "weight": "hard",
     "category": "channel",
-    "subcategory": "并发",
+    "subcategory": "通信机制",
     "full_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"sync\"\n)\n\nfunc main() {\n\tdone := make(chan struct{})\n\tvar wg sync.WaitGroup\n\tfor i := 0; i < 3; i++ {\n\t\twg.Add(1)\n\t\tgo func() {\n\t\t\tdefer wg.Done()\n\t\t\t<-done\n\t\t\tfmt.Println(\"x\")\n\t\t}()\n\t}\n\tclose(done)\n\twg.Wait()\n}",
     "expected": "x\nx\nx",
     "points": [
@@ -1480,7 +1480,7 @@
     "tech_stack": "go",
     "weight": "hard",
     "category": "pattern",
-    "subcategory": "并发",
+    "subcategory": "并发模式",
     "full_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"sync\"\n)\n\nfunc main() {\n\tvar wg sync.WaitGroup\n\tsem := make(chan struct{}, 2)\n\tcnt := 0\n\tfor i := 0; i < 10; i++ {\n\t\twg.Add(1)\n\t\tgo func() {\n\t\t\tdefer wg.Done()\n\t\t\tsem <- struct{}{}\n\t\t\tcnt++\n\t\t\t<-sem\n\t\t}()\n\t}\n\twg.Wait()\n\tfmt.Println(cnt, cap(sem))\n}",
     "expected": "10 2",
     "points": [
@@ -1564,7 +1564,7 @@
     "tech_stack": "go",
     "weight": "hard",
     "category": "context",
-    "subcategory": "并发",
+    "subcategory": "并发模式",
     "full_code": "package main\n\nimport (\n\t\"context\"\n\t\"fmt\"\n\t\"sync\"\n)\n\nfunc main() {\n\tctx, cancel := context.WithCancel(context.Background())\n\tvar wg sync.WaitGroup\n\twg.Add(1)\n\tgo func() {\n\t\tdefer wg.Done()\n\t\tselect {\n\t\tcase <-ctx.Done():\n\t\t\tfmt.Println(\"canceled\")\n\t\t}\n\t}()\n\tcancel()\n\twg.Wait()\n}",
     "expected": "canceled",
     "points": [
@@ -1648,7 +1648,7 @@
     "tech_stack": "go",
     "weight": "hard",
     "category": "context",
-    "subcategory": "并发",
+    "subcategory": "并发模式",
     "full_code": "package main\n\nimport (\n\t\"context\"\n\t\"fmt\"\n\t\"time\"\n)\n\nfunc main() {\n\tctx, cancel := context.WithTimeout(context.Background(), 10*time.Millisecond)\n\tdefer cancel()\n\tselect {\n\tcase <-ctx.Done():\n\t\tfmt.Println(\"timeout\")\n\t}\n}",
     "expected": "timeout",
     "points": [
@@ -1705,7 +1705,7 @@
     "tech_stack": "go",
     "weight": "hard",
     "category": "context",
-    "subcategory": "并发",
+    "subcategory": "并发模式",
     "full_code": "package main\n\nimport (\n\t\"context\"\n\t\"fmt\"\n)\n\nfunc main() {\n\tctx := context.WithValue(context.Background(), \"user\", \"admin\")\n\tfmt.Println(ctx.Value(\"user\"))\n}",
     "expected": "admin",
     "points": [
@@ -1735,7 +1735,7 @@
     "tech_stack": "go",
     "weight": "medium",
     "category": "channel",
-    "subcategory": "并发",
+    "subcategory": "通信机制",
     "full_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"sync\"\n)\n\nfunc main() {\n\tdone := make(chan struct{})\n\tvar wg sync.WaitGroup\n\twg.Add(1)\n\tgo func() {\n\t\tdefer wg.Done()\n\t\t<-done\n\t\tfmt.Println(\"exit\")\n\t}()\n\tclose(done)\n\twg.Wait()\n}",
     "expected": "exit",
     "points": [
@@ -1810,7 +1810,7 @@
     "tech_stack": "go",
     "weight": "hard",
     "category": "pattern",
-    "subcategory": "并发",
+    "subcategory": "并发模式",
     "full_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"sync\"\n)\n\nfunc main() {\n\tch := make(chan int, 5)\n\tvar wg sync.WaitGroup\n\twg.Add(1)\n\tgo func() {\n\t\tdefer wg.Done()\n\t\tfor i := 1; i <= 5; i++ {\n\t\t\tch <- i\n\t\t}\n\t\tclose(ch)\n\t}()\n\ts := 0\n\tfor v := range ch {\n\t\ts += v\n\t}\n\twg.Wait()\n\tfmt.Println(s)\n}",
     "expected": "15",
     "points": [
@@ -1885,7 +1885,7 @@
     "tech_stack": "go",
     "weight": "medium",
     "category": "bugfix",
-    "subcategory": "并发",
+    "subcategory": "同步与原子",
     "full_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"sync\"\n)\n\nfunc main() {\n\tvar wg sync.WaitGroup\n\tfor i := 0; i < 3; i++ {\n\t\twg.Add(1)\n\t\tgo func() {\n\t\t\tdefer wg.Done()\n\t\t\tfmt.Println(\"x\")\n\t\t}()\n\t}\n\twg.Wait()\n\tfmt.Println(\"done\")\n}",
     "buggy_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"sync\"\n)\n\nfunc main() {\n\tvar wg sync.WaitGroup\n\tfor i := 0; i < 3; i++ {\n\t\twg.Add(1)\n\t\tgo func() {\n\t\t\tfmt.Println(\"x\")\n\t\t}()\n\t}\n\twg.Wait()\n\tfmt.Println(\"done\")\n}",
     "expected": "x\nx\nx\ndone",
@@ -1922,7 +1922,7 @@
     "tech_stack": "go",
     "weight": "hard",
     "category": "bugfix",
-    "subcategory": "并发",
+    "subcategory": "同步与原子",
     "full_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"sync\"\n)\n\nfunc main() {\n\tvar wg sync.WaitGroup\n\tvar mu sync.Mutex\n\tn := 0\n\tfor i := 0; i < 1000; i++ {\n\t\twg.Add(1)\n\t\tgo func() {\n\t\t\tdefer wg.Done()\n\t\t\tmu.Lock()\n\t\t\tn++\n\t\t\tmu.Unlock()\n\t\t}()\n\t}\n\twg.Wait()\n\tfmt.Println(n)\n}",
     "buggy_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"sync\"\n)\n\nfunc main() {\n\tvar wg sync.WaitGroup\n\tn := 0\n\tfor i := 0; i < 1000; i++ {\n\t\twg.Add(1)\n\t\tgo func() {\n\t\t\tdefer wg.Done()\n\t\t\tn++\n\t\t}()\n\t}\n\twg.Wait()\n\tfmt.Println(n)\n}",
     "expected": "1000",
@@ -1959,7 +1959,7 @@
     "tech_stack": "go",
     "weight": "medium",
     "category": "bugfix",
-    "subcategory": "并发",
+    "subcategory": "通信机制",
     "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tch := make(chan int, 3)\n\tch <- 1\n\tch <- 2\n\tch <- 3\n\tfmt.Println(len(ch))\n}",
     "buggy_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tch := make(chan int)\n\tch <- 1\n\tch <- 2\n\tch <- 3\n\tfmt.Println(len(ch))\n}",
     "expected": "3",
@@ -1996,7 +1996,7 @@
     "tech_stack": "go",
     "weight": "medium",
     "category": "bugfix",
-    "subcategory": "并发",
+    "subcategory": "同步与原子",
     "full_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"sync\"\n)\n\nfunc main() {\n\tvar once sync.Once\n\tvar wg sync.WaitGroup\n\tfor i := 0; i < 5; i++ {\n\t\twg.Add(1)\n\t\tgo func() {\n\t\t\tdefer wg.Done()\n\t\t\tonce.Do(func() { fmt.Println(\"init\") })\n\t\t}()\n\t}\n\twg.Wait()\n\tfmt.Println(\"done\")\n}",
     "buggy_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"sync\"\n)\n\nfunc main() {\n\tvar wg sync.WaitGroup\n\tfor i := 0; i < 5; i++ {\n\t\twg.Add(1)\n\t\tgo func() {\n\t\t\tdefer wg.Done()\n\t\t\tfmt.Println(\"init\")\n\t\t}()\n\t}\n\twg.Wait()\n\tfmt.Println(\"done\")\n}",
     "expected": "init\ndone",
@@ -2033,7 +2033,7 @@
     "tech_stack": "go",
     "weight": "hard",
     "category": "cond",
-    "subcategory": "并发",
+    "subcategory": "同步与原子",
     "full_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"sync\"\n)\n\nfunc main() {\n\tvar mu sync.Mutex\n\tcond := sync.NewCond(&mu)\n\tready := false\n\tvar wg sync.WaitGroup\n\twg.Add(1)\n\tgo func() {\n\t\tdefer wg.Done()\n\t\tmu.Lock()\n\t\tfor !ready {\n\t\t\tcond.Wait()\n\t\t}\n\t\tfmt.Println(\"go\")\n\t\tmu.Unlock()\n\t}()\n\tmu.Lock()\n\tready = true\n\tcond.Broadcast()\n\tmu.Unlock()\n\twg.Wait()\n}",
     "expected": "go",
     "points": [
@@ -2117,7 +2117,7 @@
     "tech_stack": "go",
     "weight": "hard",
     "category": "pool",
-    "subcategory": "并发",
+    "subcategory": "同步与原子",
     "full_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"sync\"\n)\n\nfunc main() {\n\tp := &sync.Pool{New: func() any { return 0 }}\n\tx := p.Get()\n\t_ = x\n\tp.Put(42)\n\ty := p.Get()\n\tfmt.Println(y)\n}",
     "expected": "42",
     "points": [
@@ -2147,7 +2147,7 @@
     "tech_stack": "go",
     "weight": "medium",
     "category": "channel",
-    "subcategory": "并发",
+    "subcategory": "通信机制",
     "full_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"sync\"\n)\n\nfunc main() {\n\tstart := make(chan struct{})\n\tvar wg sync.WaitGroup\n\tfor i := 0; i < 3; i++ {\n\t\twg.Add(1)\n\t\tgo func() {\n\t\t\tdefer wg.Done()\n\t\t\t<-start\n\t\t\tfmt.Println(\"run\")\n\t\t}()\n\t}\n\tclose(start)\n\twg.Wait()\n}",
     "expected": "run\nrun\nrun",
     "points": [
@@ -2231,7 +2231,7 @@
     "tech_stack": "go",
     "weight": "medium",
     "category": "channel_direction",
-    "subcategory": "并发",
+    "subcategory": "通信机制",
     "full_code": "package main\n\nimport \"fmt\"\n\nfunc consume(ch <-chan int) int {\n\treturn <-ch\n}\n\nfunc main() {\n\tch := make(chan int, 1)\n\tch <- 9\n\tfmt.Println(consume(ch))\n}",
     "expected": "9",
     "points": [
@@ -2288,7 +2288,7 @@
     "tech_stack": "go",
     "weight": "medium",
     "category": "atomic",
-    "subcategory": "并发",
+    "subcategory": "同步与原子",
     "full_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"sync/atomic\"\n)\n\nfunc main() {\n\tvar n int64 = 7\n\tatomic.StoreInt64(&n, 10)\n\tfmt.Println(atomic.LoadInt64(&n))\n}",
     "expected": "10",
     "points": [
@@ -2345,7 +2345,7 @@
     "tech_stack": "go",
     "weight": "hard",
     "category": "once",
-    "subcategory": "并发",
+    "subcategory": "同步与原子",
     "full_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"sync\"\n)\n\nvar (\n\tonce sync.Once\n\tcfg  string\n)\n\nfunc config() string {\n\tonce.Do(func() { cfg = \"loaded\" })\n\treturn cfg\n}\n\nfunc main() {\n\tfmt.Println(config(), config())\n}",
     "expected": "loaded loaded",
     "points": [
@@ -2375,7 +2375,7 @@
     "tech_stack": "go",
     "weight": "hard",
     "category": "bugfix",
-    "subcategory": "并发",
+    "subcategory": "同步与原子",
     "full_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"sync\"\n)\n\nfunc main() {\n\tvar mu sync.RWMutex\n\tm := map[string]int{}\n\tvar wg sync.WaitGroup\n\tfor i := 0; i < 5; i++ {\n\t\twg.Add(1)\n\t\tgo func(n int) {\n\t\t\tdefer wg.Done()\n\t\t\tmu.Lock()\n\t\t\tm[\"k\"] = n\n\t\t\tmu.Unlock()\n\t\t}(i)\n\t}\n\twg.Wait()\n\tmu.RLock()\n\tfmt.Println(len(m))\n\tmu.RUnlock()\n}",
     "buggy_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"sync\"\n)\n\nfunc main() {\n\tm := map[string]int{}\n\tvar wg sync.WaitGroup\n\tfor i := 0; i < 5; i++ {\n\t\twg.Add(1)\n\t\tgo func(n int) {\n\t\t\tdefer wg.Done()\n\t\t\tm[\"k\"] = n\n\t\t}(i)\n\t}\n\twg.Wait()\n\tfmt.Println(len(m))\n}",
     "expected": "1",
@@ -2412,7 +2412,7 @@
     "tech_stack": "go",
     "weight": "hard",
     "category": "ticker",
-    "subcategory": "并发",
+    "subcategory": "并发模式",
     "full_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\nfunc main() {\n\tt := time.NewTicker(10 * time.Millisecond)\n\tgo func() {\n\t\t<-t.C\n\t\tfmt.Println(\"tick\")\n\t\tt.Stop()\n\t}()\n\ttime.Sleep(50 * time.Millisecond)\n}",
     "expected": "tick",
     "points": [
@@ -2460,7 +2460,7 @@
     "tech_stack": "go",
     "weight": "hard",
     "category": "channel",
-    "subcategory": "并发",
+    "subcategory": "通信机制",
     "full_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"sync\"\n\t\"sync/atomic\"\n)\n\nfunc main() {\n\ttoken := make(chan struct{}, 1)\n\tvar wg sync.WaitGroup\n\tvar executed int64\n\tfor i := 0; i < 5; i++ {\n\t\twg.Add(1)\n\t\tgo func() {\n\t\t\tdefer wg.Done()\n\t\t\ttoken <- struct{}{}\n\t\t\tatomic.AddInt64(&executed, 1)\n\t\t\t<-token\n\t\t}()\n\t}\n\twg.Wait()\n\tfmt.Println(executed)\n}",
     "expected": "5",
     "points": [
@@ -2544,7 +2544,7 @@
     "tech_stack": "go",
     "weight": "easy",
     "category": "select",
-    "subcategory": "并发",
+    "subcategory": "通信机制",
     "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tch := make(chan int, 1)\n\tch <- 1\n\tselect {\n\tcase ch <- 2:\n\t\tfmt.Println(\"sent\")\n\tdefault:\n\t\tfmt.Println(\"full\")\n\t}\n}",
     "expected": "full",
     "points": [
@@ -2601,7 +2601,7 @@
     "tech_stack": "go",
     "weight": "hard",
     "category": "channel",
-    "subcategory": "并发",
+    "subcategory": "通信机制",
     "full_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"sync\"\n)\n\nfunc main() {\n\tdone := make(chan struct{})\n\tvar wg sync.WaitGroup\n\twg.Add(1)\n\tgo func() {\n\t\tdefer wg.Done()\n\t\tfor {\n\t\t\tselect {\n\t\t\tcase <-done:\n\t\t\t\treturn\n\t\t\t}\n\t\t}\n\t}()\n\tclose(done)\n\twg.Wait()\n\tfmt.Println(\"ok\")\n}",
     "expected": "ok",
     "points": [
@@ -2676,7 +2676,7 @@
     "tech_stack": "go",
     "weight": "hard",
     "category": "pattern",
-    "subcategory": "并发",
+    "subcategory": "并发模式",
     "full_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"sync\"\n)\n\nfunc worker(done <-chan struct{}, wg *sync.WaitGroup) {\n\tdefer wg.Done()\n\tfor {\n\t\tselect {\n\t\tcase <-done:\n\t\t\treturn\n\t\tdefault:\n\t\t}\n\t}\n}\n\nfunc main() {\n\tdone := make(chan struct{})\n\tvar wg sync.WaitGroup\n\twg.Add(1)\n\tgo worker(done, &wg)\n\tclose(done)\n\twg.Wait()\n\tfmt.Println(\"stopped\")\n}",
     "expected": "stopped",
     "points": [
@@ -2760,7 +2760,7 @@
     "tech_stack": "go",
     "weight": "medium",
     "category": "select",
-    "subcategory": "并发",
+    "subcategory": "通信机制",
     "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tc1 := make(chan int, 1)\n\tc2 := make(chan int, 1)\n\tc1 <- 1\n\tc2 <- 2\n\ts := 0\n\tfor i := 0; i < 2; i++ {\n\t\tselect {\n\t\tcase v := <-c1:\n\t\t\ts += v\n\t\tcase v := <-c2:\n\t\t\ts += v\n\t\t}\n\t}\n\tfmt.Println(s)\n}",
     "expected": "3",
     "points": [
@@ -2808,7 +2808,7 @@
     "tech_stack": "go",
     "weight": "hard",
     "category": "channel_pattern",
-    "subcategory": "并发",
+    "subcategory": "并发模式",
     "full_code": "package main\n\nimport (\n\t\"fmt\"\n\t\"sync\"\n)\n\nfunc main() {\n\tsrc := make(chan int, 3)\n\tgo func() {\n\t\tfor i := 1; i <= 3; i++ {\n\t\t\tsrc <- i\n\t\t}\n\t\tclose(src)\n\t}()\n\tvar mu sync.Mutex\n\ts := 0\n\tvar wg sync.WaitGroup\n\tfor w := 0; w < 2; w++ {\n\t\twg.Add(1)\n\t\tgo func() {\n\t\t\tdefer wg.Done()\n\t\t\tfor v := range src {\n\t\t\t\tmu.Lock()\n\t\t\t\ts += v\n\t\t\t\tmu.Unlock()\n\t\t\t}\n\t\t}()\n\t}\n\twg.Wait()\n\tfmt.Println(s)\n}",
     "expected": "6",
     "points": [
@@ -2883,7 +2883,7 @@
     "tech_stack": "go",
     "weight": "easy",
     "category": "channel",
-    "subcategory": "并发",
+    "subcategory": "通信机制",
     "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tch := make(chan int, 2)\n\tch <- 1\n\tch <- 2\n\tclose(ch)\n\ts := 0\n\tfor {\n\t\tv, ok := <-ch\n\t\tif !ok {\n\t\t\tbreak\n\t\t}\n\t\ts += v\n\t}\n\tfmt.Println(s)\n}",
     "expected": "3",
     "points": [
@@ -2958,7 +2958,7 @@
     "tech_stack": "go",
     "weight": "easy",
     "category": "channel",
-    "subcategory": "并发",
+    "subcategory": "通信机制",
     "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tch := make(chan int, 3)\n\tch <- 1\n\tch <- 2\n\tch <- 3\n\t<-ch\n\t<-ch\n\tfmt.Println(len(ch))\n}",
     "expected": "1",
     "points": [
@@ -3015,7 +3015,7 @@
     "tech_stack": "go",
     "weight": "medium",
     "category": "select",
-    "subcategory": "并发",
+    "subcategory": "通信机制",
     "full_code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tch := make(chan int, 1)\n\tch <- 7\n\tselect {\n\tcase v, ok := <-ch:\n\t\tfmt.Println(v, ok)\n\t}\n}",
     "expected": "7 true",
     "points": [

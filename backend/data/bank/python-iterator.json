@@ -33,17 +33,44 @@
         "id": "catch_stop",
         "text": "except StopIteration:",
         "category": "stop_iteration",
-        "min_weight": "beginner",
+        "min_weight": "expert",
         "weight_score": 1,
         "hint": "兜住取完后的停止信号",
+        "fill_type": "text"
+      },
+      {
+        "id": "bind_iterator",
+        "text": "it = ",
+        "category": "iterator_binding",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "把 iter() 拿到的迭代器绑定到变量 it，后面都靠它取元素",
+        "fill_type": "text"
+      },
+      {
+        "id": "try_block",
+        "text": "try:",
+        "category": "exception_guard",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "把可能抛 StopIteration 的调用放进 try 块",
+        "fill_type": "text"
+      },
+      {
+        "id": "print_exhausted",
+        "text": "print(\"exhausted\")",
+        "category": "exhaustion_output",
+        "min_weight": "hard",
+        "weight_score": 1.5,
+        "hint": "捕获到耗尽信号后打印收尾信息",
         "fill_type": "text"
       }
     ],
     "hints": {
       "level_1": "💡 怎样手动从列表里一个一个取元素，取完怎么优雅收场？",
       "level_2": "📖 `iter()` 拿到迭代器，`next()` 取下一个；取空后再 next 会抛 `StopIteration`",
-      "level_3": "👀 `it = iter([10, 20])` → `print(next(it))` → `except StopIteration:`",
-      "level_4": "📝 正确答案：`iter([10, 20])`、`print(next(it))`、`except StopIteration:`"
+      "level_3": "👀 `it = ` … `iter([10, 20])` … `print(next(it))` … `try:` … `except StopIteration:` … `print(\"exhausted\")`",
+      "level_4": "📝 正确答案：`it = `、`iter([10, 20])`、`print(next(it))`、`try:`、`except StopIteration:` 与 `print(\"exhausted\")`"
     },
     "explanation": "`iter()` 把可迭代对象转成迭代器，`next()` 每次前进一格；元素耗尽后抛 `StopIteration`，这正是 for 循环的底层终止信号。"
   },
@@ -72,7 +99,7 @@
         "id": "call_next",
         "text": "it.__next__()",
         "category": "next_dunder",
-        "min_weight": "beginner",
+        "min_weight": "medium",
         "weight_score": 1.5,
         "hint": "调用 __next__ 取出下一个元素",
         "fill_type": "text"
@@ -81,17 +108,44 @@
         "id": "catch_stop",
         "text": "except StopIteration:",
         "category": "stop_iteration",
-        "min_weight": "beginner",
+        "min_weight": "expert",
         "weight_score": 1.5,
         "hint": "捕获迭代结束信号并跳出循环",
+        "fill_type": "text"
+      },
+      {
+        "id": "make_nums",
+        "text": "nums = [1, 2, 3]",
+        "category": "data_setup",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "准备要遍历的源数据",
+        "fill_type": "text"
+      },
+      {
+        "id": "while_true",
+        "text": "while True:",
+        "category": "loop_control",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "用死循环反复尝试取下一个元素",
+        "fill_type": "text"
+      },
+      {
+        "id": "break_loop",
+        "text": "break",
+        "category": "loop_control",
+        "min_weight": "hard",
+        "weight_score": 1.5,
+        "hint": "捕获停止信号后跳出循环",
         "fill_type": "text"
       }
     ],
     "hints": {
       "level_1": "💡 for 循环内部到底做了什么？把它的两个步骤手动调一遍。",
       "level_2": "📖 `__iter__` 返回迭代器，`__next__` 返回下一个值，耗尽抛 `StopIteration`",
-      "level_3": "👀 `it = nums.__iter__()` 与 `it.__next__()` 分别补进 while 循环",
-      "level_4": "📝 正确答案：`nums.__iter__()`、`it.__next__()`、`except StopIteration:`"
+      "level_3": "👀 `nums = [1, 2, 3]` … `nums.__iter__()` … `while True:` … `it.__next__()` … `except StopIteration:` … `break`",
+      "level_4": "📝 正确答案：`nums = [1, 2, 3]`、`nums.__iter__()`、`while True:`、`it.__next__()`、`except StopIteration:` 与 `break`"
     },
     "explanation": "for 循环等价于先调 `__iter__` 拿到迭代器，再反复调 `__next__`，直到捕获 `StopIteration` 结束。"
   },
@@ -120,7 +174,7 @@
         "id": "iter_method",
         "text": "def __iter__(self):",
         "category": "iter_dunder",
-        "min_weight": "beginner",
+        "min_weight": "hard",
         "weight_score": 1,
         "hint": "实现 __iter__ 使实例可被迭代",
         "fill_type": "text"
@@ -129,17 +183,44 @@
         "id": "return_iterator",
         "text": "return iter(self.items)",
         "category": "iter_dunder",
-        "min_weight": "beginner",
+        "min_weight": "expert",
         "weight_score": 1.5,
         "hint": "把内部列表的迭代器交出去",
+        "fill_type": "text"
+      },
+      {
+        "id": "init_method",
+        "text": "def __init__(self, items):",
+        "category": "init_method",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "构造函数先接收数据：def __init__(self, items)",
+        "fill_type": "text"
+      },
+      {
+        "id": "store_items",
+        "text": "self.items = items",
+        "category": "instance_state",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "把传入的数据存成实例属性，供 __iter__ 使用",
+        "fill_type": "text"
+      },
+      {
+        "id": "consume_bag",
+        "text": "for item in Bag([1, 2]):",
+        "category": "iterable_consume",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "用 for 驱动自定义对象，逐个取出元素",
         "fill_type": "text"
       }
     ],
     "hints": {
       "level_1": "💡 自定义对象想被 for 遍历，需要实现哪个方法？",
       "level_2": "📖 类里定义 `__iter__` 并返回一个真正的迭代器，即可被 for、list() 驱动",
-      "level_3": "👀 `class Bag:` 内部补 `def __iter__(self):` 与 `return iter(self.items)`",
-      "level_4": "📝 正确答案：`class Bag:`、`def __iter__(self):`、`return iter(self.items)`"
+      "level_3": "👀 `class Bag:` … `def __init__(self, items):` … `self.items = items` … `def __iter__(self):` … `return iter(self.items)` … `for item in Bag([1, 2]):`",
+      "level_4": "📝 正确答案：`class Bag:`、`def __init__(self, items):`、`self.items = items`、`def __iter__(self):`、`return iter(self.items)` 与 `for item in Bag([1, 2]):`"
     },
     "explanation": "可迭代对象只需实现 `__iter__` 并返回迭代器；`for item in Bag(...)` 会先调用它拿到迭代器再逐个取值。"
   },
@@ -168,7 +249,7 @@
         "id": "raise_stop",
         "text": "raise StopIteration",
         "category": "stop_iteration",
-        "min_weight": "easy",
+        "min_weight": "expert",
         "weight_score": 1.5,
         "hint": "计数耗尽时抛出终止信号",
         "fill_type": "text"
@@ -181,13 +262,40 @@
         "weight_score": 1.5,
         "hint": "__next__ 返回当前倒计数值",
         "fill_type": "text"
+      },
+      {
+        "id": "next_method",
+        "text": "def __next__(self):",
+        "category": "iterator_class",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "__next__ 是迭代器每次产出值的入口",
+        "fill_type": "text"
+      },
+      {
+        "id": "check_zero",
+        "text": "if self.n <= 0:",
+        "category": "termination_check",
+        "min_weight": "hard",
+        "weight_score": 1.5,
+        "hint": "倒到 0 就该停：先判断边界条件",
+        "fill_type": "text"
+      },
+      {
+        "id": "decrement",
+        "text": "self.n -= 1",
+        "category": "state_update",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "每产出一个值就把计数减一，维护迭代状态",
+        "fill_type": "text"
       }
     ],
     "hints": {
       "level_1": "💡 自己写一个迭代器类，倒着数 3、2、1，要实现哪两个魔术方法？",
       "level_2": "📖 `__iter__` 返回 `self`；`__next__` 产出下一个值，耗尽时 `raise StopIteration`",
-      "level_3": "👀 补 `return self`、`raise StopIteration`、`return value` 三处",
-      "level_4": "📝 正确答案：`return self`、`raise StopIteration`、`return value`"
+      "level_3": "👀 `return self` … `def __next__(self):` … `if self.n <= 0:` … `raise StopIteration` … `self.n -= 1` … `return value`",
+      "level_4": "📝 正确答案：`return self`、`def __next__(self):`、`if self.n <= 0:`、`raise StopIteration`、`self.n -= 1` 与 `return value`"
     },
     "explanation": "迭代器必须同时实现 `__iter__`（返回 self）和 `__next__`（产出下一个值，耗尽抛 `StopIteration`）。"
   },
@@ -216,7 +324,7 @@
         "id": "yield_expr",
         "text": "yield i * i",
         "category": "yield_expr",
-        "min_weight": "easy",
+        "min_weight": "expert",
         "weight_score": 1.5,
         "hint": "每次迭代产出一个平方数",
         "fill_type": "text"
@@ -225,17 +333,44 @@
         "id": "for_consume",
         "text": "for value in squares(3):",
         "category": "generator_consume",
-        "min_weight": "easy",
+        "min_weight": "hard",
         "weight_score": 1,
         "hint": "用 for 驱动生成器逐个取值",
+        "fill_type": "text"
+      },
+      {
+        "id": "loop_head",
+        "text": "for i in",
+        "category": "generator_function",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "循环头：变量 i 依次接收 range 产出的整数",
+        "fill_type": "text"
+      },
+      {
+        "id": "range_expr",
+        "text": "range(1, n + 1):",
+        "category": "range_bounds",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "生成 1..n 的整数序列，+1 是为了包含 n",
+        "fill_type": "text"
+      },
+      {
+        "id": "print_value",
+        "text": "print(value)",
+        "category": "generator_consume",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "for 每拿到一个值就打印，驱动生成器前进",
         "fill_type": "text"
       }
     ],
     "hints": {
       "level_1": "💡 函数里出现哪个关键字后，调用它就得到生成器？",
       "level_2": "📖 含 `yield` 的函数是生成器函数，调用返回生成器；for 每次驱动它产出一个值",
-      "level_3": "👀 `def squares(n):` 里补 `yield i * i`，再用 `for value in squares(3):` 消费",
-      "level_4": "📝 正确答案：`def squares(n):`、`yield i * i`、`for value in squares(3):`"
+      "level_3": "👀 `def squares(n):` … `for i in` … `range(1, n + 1):` … `yield i * i` … `for value in squares(3):` … `print(value)`",
+      "level_4": "📝 正确答案：`def squares(n):`、`for i in`、`range(1, n + 1):`、`yield i * i`、`for value in squares(3):` 与 `print(value)`"
     },
     "explanation": "含 `yield` 的函数是生成器函数，调用它不会立即执行函数体，而是返回一个惰性执行、自动实现迭代器协议的生成器对象。"
   },
@@ -264,7 +399,7 @@
         "id": "gen_expr",
         "text": "(x * 2 for x in nums)",
         "category": "generator_expression",
-        "min_weight": "easy",
+        "min_weight": "expert",
         "weight_score": 1.5,
         "hint": "圆括号表达式：惰性生成器",
         "fill_type": "text"
@@ -273,17 +408,44 @@
         "id": "next_gen",
         "text": "print(next(gen))",
         "category": "lazy_consume",
-        "min_weight": "easy",
+        "min_weight": "hard",
         "weight_score": 1,
         "hint": "按需取出生成器的第一个元素",
+        "fill_type": "text"
+      },
+      {
+        "id": "source_nums",
+        "text": "nums = [1, 2, 3, 4]",
+        "category": "data_setup",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "准备源数据，供两种推导对比使用",
+        "fill_type": "text"
+      },
+      {
+        "id": "print_list",
+        "text": "print(lst)",
+        "category": "list_comprehension",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "直接打印列表推导的结果：全部元素已算好",
+        "fill_type": "text"
+      },
+      {
+        "id": "drain_gen",
+        "text": "print(list(gen))",
+        "category": "lazy_consume",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "把生成器剩下的元素一次性取完（第一个已被 next 取走）",
         "fill_type": "text"
       }
     ],
     "hints": {
       "level_1": "💡 列表推导和生成器表达式长得很像，求值时机却完全不同。",
       "level_2": "📖 列表推导立即求出全部元素；生成器表达式惰性求值，被 `next()`/`list()` 驱动时才逐个计算",
-      "level_3": "👀 `[x * 2 for x in nums]` 立即算完，`(x * 2 for x in nums)` 留给 `print(next(gen))`",
-      "level_4": "📝 正确答案：`[x * 2 for x in nums]`、`(x * 2 for x in nums)`、`print(next(gen))`"
+      "level_3": "👀 `nums = [1, 2, 3, 4]` … `[x * 2 for x in nums]` … `(x * 2 for x in nums)` … `print(lst)` … `print(next(gen))` … `print(list(gen))`",
+      "level_4": "📝 正确答案：`nums = [1, 2, 3, 4]`、`[x * 2 for x in nums]`、`(x * 2 for x in nums)`、`print(lst)`、`print(next(gen))` 与 `print(list(gen))`"
     },
     "explanation": "列表推导占用内存保存全部结果；生成器表达式只在被消费时逐个计算，`next()` 只取一个，`list()` 会取走剩余的全部。"
   },
@@ -312,7 +474,7 @@
         "id": "yield_from",
         "text": "yield from inner()",
         "category": "yield_from",
-        "min_weight": "easy",
+        "min_weight": "expert",
         "weight_score": 1.5,
         "hint": "把子生成器的产出逐个转发出去",
         "fill_type": "text"
@@ -321,17 +483,44 @@
         "id": "collect",
         "text": "list(outer())",
         "category": "generator_consume",
-        "min_weight": "easy",
+        "min_weight": "hard",
         "weight_score": 1,
         "hint": "汇总外层生成器的全部产出",
+        "fill_type": "text"
+      },
+      {
+        "id": "yield_a",
+        "text": "yield \"a\"",
+        "category": "sub_generator",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "子生成器逐个产出自己的值",
+        "fill_type": "text"
+      },
+      {
+        "id": "outer_def",
+        "text": "def outer():",
+        "category": "yield_from",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "定义外层生成器，负责转发子生成器并追加",
+        "fill_type": "text"
+      },
+      {
+        "id": "join_consume",
+        "text": "print(\"\".join(outer()))",
+        "category": "generator_consume",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "把全部产出拼成字符串，验证委托顺序",
         "fill_type": "text"
       }
     ],
     "hints": {
       "level_1": "💡 一个生成器想把另一个生成器的产出原样转出去，怎么写？",
       "level_2": "📖 `yield from 子生成器` 把委托对象的每个值逐个转发给调用者",
-      "level_3": "👀 `def outer():` 里补 `yield from inner()`，再用 `list(outer())` 汇总",
-      "level_4": "📝 正确答案：`def inner():`、`yield from inner()`、`list(outer())`"
+      "level_3": "👀 `def inner():` … `yield \"a\"` … `def outer():` … `yield from inner()` … `list(outer())` … `print(\"\".join(outer()))`",
+      "level_4": "📝 正确答案：`def inner():`、`yield \"a\"`、`def outer():`、`yield from inner()`、`list(outer())` 与 `print(\"\".join(outer()))`"
     },
     "explanation": "`yield from` 把子生成器的产出逐个转发，还能收集子生成器的 `return` 值，是生成器委托的标准写法。"
   },
@@ -360,7 +549,7 @@
         "id": "yield_recv",
         "text": "x = yield total",
         "category": "generator_send",
-        "min_weight": "medium",
+        "min_weight": "expert",
         "weight_score": 2,
         "hint": "yield 作为表达式接收 send() 送进来的值",
         "fill_type": "text"
@@ -373,13 +562,40 @@
         "weight_score": 1.5,
         "hint": "把 5 送进生成器并继续执行",
         "fill_type": "text"
+      },
+      {
+        "id": "stop_check",
+        "text": "if x is None:",
+        "category": "generator_send",
+        "min_weight": "hard",
+        "weight_score": 1.5,
+        "hint": "收到 None 就提前结束生成器（收尾协议）",
+        "fill_type": "text"
+      },
+      {
+        "id": "accumulate",
+        "text": "total += x",
+        "category": "accumulator",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "把 send 送进来的值累加到总账上",
+        "fill_type": "text"
+      },
+      {
+        "id": "send_seven",
+        "text": "g.send(7)",
+        "category": "generator_send",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "再送一个值进去，观察累计结果继续增长",
+        "fill_type": "text"
       }
     ],
     "hints": {
       "level_1": "💡 生成器除了产出值，能不能接收外面送进来的值？",
       "level_2": "📖 `x = yield total` 先产出再接收；`send(v)` 把 v 送进去并恢复到挂起点",
-      "level_3": "👀 先 `print(next(g))` 启动，再 `g.send(5)` 传值，生成器内部是 `x = yield total`",
-      "level_4": "📝 正确答案：`print(next(g))`、`x = yield total`、`g.send(5)`"
+      "level_3": "👀 `x = yield total` … `if x is None:` … `total += x` … `print(next(g))` … `g.send(5)` … `g.send(7)`",
+      "level_4": "📝 正确答案：`x = yield total`、`if x is None:`、`total += x`、`print(next(g))`、`g.send(5)` 与 `g.send(7)`"
     },
     "explanation": "`yield` 是双向通道：既把值送出去，也能通过 `send()` 接收值并赋给表达式左侧；首次启动必须先 `next()` 或 `send(None)`。"
   },
@@ -408,7 +624,7 @@
         "id": "catch_value_error",
         "text": "except ValueError as err:",
         "category": "generator_throw",
-        "min_weight": "medium",
+        "min_weight": "hard",
         "weight_score": 1.5,
         "hint": "在生成器内部捕获被抛入的异常",
         "fill_type": "text"
@@ -417,17 +633,44 @@
         "id": "throw_call",
         "text": "g.throw(ValueError(\"boom\"))",
         "category": "generator_throw",
-        "min_weight": "medium",
+        "min_weight": "expert",
         "weight_score": 2,
         "hint": "在挂起的 yield 处抛入 ValueError",
+        "fill_type": "text"
+      },
+      {
+        "id": "yield_tick",
+        "text": "yield \"tick\"",
+        "category": "generator_loop",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "生成器循环产出心跳值，等待被注入异常",
+        "fill_type": "text"
+      },
+      {
+        "id": "print_caught",
+        "text": "print(\"caught\", err)",
+        "category": "generator_throw",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "在生成器内部打印捕获到的异常信息",
+        "fill_type": "text"
+      },
+      {
+        "id": "yield_recovered",
+        "text": "yield \"recovered\"",
+        "category": "generator_throw",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "捕获异常后继续产出，证明生成器没有死",
         "fill_type": "text"
       }
     ],
     "hints": {
       "level_1": "💡 想在生成器暂停的 yield 处强行抛一个异常，用哪个方法？",
       "level_2": "📖 `g.throw(exc)` 在暂停点抛出异常，可被生成器内部 try/except 捕获后继续 yield",
-      "level_3": "👀 生成器里补 `except ValueError as err:`，外部补 `g.throw(ValueError(\"boom\"))`",
-      "level_4": "📝 正确答案：`print(next(g))`、`except ValueError as err:`、`g.throw(ValueError(\"boom\"))`"
+      "level_3": "👀 `yield \"tick\"` … `except ValueError as err:` … `print(\"caught\", err)` … `yield \"recovered\"` … `print(next(g))` … `g.throw(ValueError(\"boom\"))`",
+      "level_4": "📝 正确答案：`yield \"tick\"`、`except ValueError as err:`、`print(\"caught\", err)`、`yield \"recovered\"`、`print(next(g))` 与 `g.throw(ValueError(\"boom\"))`"
     },
     "explanation": "`throw()` 把异常注入生成器挂起的 yield 处；生成器若捕获它，还能清理现场并继续产出，否则异常会向调用者传播。"
   },
@@ -456,7 +699,7 @@
         "id": "catch_exit",
         "text": "except GeneratorExit:",
         "category": "generator_close",
-        "min_weight": "hard",
+        "min_weight": "expert",
         "weight_score": 2,
         "hint": "捕获关闭信号做清理",
         "fill_type": "text"
@@ -469,13 +712,40 @@
         "weight_score": 1.5,
         "hint": "主动关闭生成器",
         "fill_type": "text"
+      },
+      {
+        "id": "print_open",
+        "text": "print(\"open\")",
+        "category": "resource_acquire",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "生成器启动时先打印，模拟资源打开",
+        "fill_type": "text"
+      },
+      {
+        "id": "print_closed",
+        "text": "print(\"closed\")",
+        "category": "resource_release",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "收到关闭信号后打印，模拟资源释放",
+        "fill_type": "text"
+      },
+      {
+        "id": "prime_close",
+        "text": "print(next(g))",
+        "category": "generator_prime",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "先推进到挂起点，close() 才有意义",
+        "fill_type": "text"
       }
     ],
     "hints": {
       "level_1": "💡 提前结束生成器时，它内部能感知到并做清理吗？",
       "level_2": "📖 `close()` 在挂起点抛 `GeneratorExit`；生成器捕获后清理并退出，不应再 yield",
-      "level_3": "👀 `yield 1` 之后调用 `g.close()`，生成器里用 `except GeneratorExit:` 收尾",
-      "level_4": "📝 正确答案：`yield 1`、`except GeneratorExit:`、`g.close()`"
+      "level_3": "👀 `print(\"open\")` … `yield 1` … `except GeneratorExit:` … `print(\"closed\")` … `print(next(g))` … `g.close()`",
+      "level_4": "📝 正确答案：`print(\"open\")`、`yield 1`、`except GeneratorExit:`、`print(\"closed\")`、`print(next(g))` 与 `g.close()`"
     },
     "explanation": "`close()` 在生成器挂起的 yield 处抛 `GeneratorExit`，让 finally/except 有机会释放资源；捕获后若再 yield 会触发 RuntimeError。"
   },
@@ -495,7 +765,7 @@
         "id": "yield_n",
         "text": "yield n",
         "category": "generator_function",
-        "min_weight": "beginner",
+        "min_weight": "easy",
         "weight_score": 1,
         "hint": "逐个产出自然数",
         "fill_type": "text"
@@ -504,7 +774,7 @@
         "id": "while_true",
         "text": "while True:",
         "category": "infinite_generator",
-        "min_weight": "medium",
+        "min_weight": "hard",
         "weight_score": 1,
         "hint": "无限循环持续产出",
         "fill_type": "text"
@@ -513,17 +783,44 @@
         "id": "islice_call",
         "text": "itertools.islice(naturals(), 5)",
         "category": "islice",
-        "min_weight": "medium",
+        "min_weight": "expert",
         "weight_score": 2,
         "hint": "只截取前 5 个值",
+        "fill_type": "text"
+      },
+      {
+        "id": "import_itertools",
+        "text": "import itertools",
+        "category": "itertools",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "导入提供 islice 的标准库模块",
+        "fill_type": "text"
+      },
+      {
+        "id": "init_n",
+        "text": "n = 1",
+        "category": "generator_state",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "从 1 开始计数，作为自然数的起点",
+        "fill_type": "text"
+      },
+      {
+        "id": "inc_n",
+        "text": "n += 1",
+        "category": "generator_state",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "每产出一个值就自增，保持无限序列前进",
         "fill_type": "text"
       }
     ],
     "hints": {
       "level_1": "💡 生成器可以无限产出，怎么只取前 5 个而不死循环？",
       "level_2": "📖 无限生成器配合 `itertools.islice` 截断，惰性求值保证安全",
-      "level_3": "👀 `while True:` 里 `yield n`，外面用 `itertools.islice(naturals(), 5)`",
-      "level_4": "📝 正确答案：`yield n`、`while True:`、`itertools.islice(naturals(), 5)`"
+      "level_3": "👀 `import itertools` … `n = 1` … `while True:` … `yield n` … `n += 1` … `itertools.islice(naturals(), 5)`",
+      "level_4": "📝 正确答案：`import itertools`、`n = 1`、`while True:`、`yield n`、`n += 1` 与 `itertools.islice(naturals(), 5)`"
     },
     "explanation": "无限生成器本身不会死循环，只有无节制消费才会；`itertools.islice` 按需取前 N 个，是截断无限序列的标准做法。"
   },
@@ -552,7 +849,7 @@
         "id": "groupby_call",
         "text": "itertools.groupby(data, key=lambda p: p[0])",
         "category": "groupby",
-        "min_weight": "medium",
+        "min_weight": "expert",
         "weight_score": 2,
         "hint": "按元组第一个字段分组",
         "fill_type": "text"
@@ -561,17 +858,44 @@
         "id": "consume_group",
         "text": "sum(value for _, value in group)",
         "category": "groupby",
-        "min_weight": "medium",
+        "min_weight": "hard",
         "weight_score": 1.5,
         "hint": "对当前分组求和（要立即消费）",
+        "fill_type": "text"
+      },
+      {
+        "id": "data_pairs",
+        "text": "data = [(\"a\", 1), (\"a\", 2), (\"b\", 3)]",
+        "category": "groupby_input",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "准备相邻同 key 的数据对，用于分组聚合",
+        "fill_type": "text"
+      },
+      {
+        "id": "loop_unpack",
+        "text": "for key, group in",
+        "category": "groupby",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "for 解包：同时拿到分组 key 与该组的迭代器 group",
+        "fill_type": "text"
+      },
+      {
+        "id": "print_key",
+        "text": "print(key,",
+        "category": "groupby_output",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "打印当前分组的 key（后面紧跟聚合结果）",
         "fill_type": "text"
       }
     ],
     "hints": {
       "level_1": "💡 把相邻相同 key 的数据分组求和，标准库里有现成工具。",
       "level_2": "📖 `itertools.groupby(data, key=...)` 按相邻 key 分组，group 本身是共享底层数据的迭代器",
-      "level_3": "👀 补 `itertools.groupby(data, key=lambda p: p[0])` 与 `sum(value for _, value in group)`",
-      "level_4": "📝 正确答案：`import itertools`、`itertools.groupby(data, key=lambda p: p[0])`、`sum(value for _, value in group)`"
+      "level_3": "👀 `import itertools` … `data = [(\"a\", 1), (\"a\", 2), (\"b\", 3)]` … `for key, group in` … `itertools.groupby(data, key=lambda p: p[0])` … `print(key,` … `sum(value for _, value in group)`",
+      "level_4": "📝 正确答案：`import itertools`、`data = [(\"a\", 1), (\"a\", 2), (\"b\", 3)]`、`for key, group in`、`itertools.groupby(data, key=lambda p: p[0])`、`print(key,` 与 `sum(value for _, value in group)`"
     },
     "explanation": "`groupby` 只合并相邻的相同 key，分组结果必须在进入下一组前消费，否则底层迭代器前进后数据就取不到了。"
   },
@@ -600,7 +924,7 @@
         "id": "make_iterator",
         "text": "it = iter(nums)",
         "category": "iterator",
-        "min_weight": "medium",
+        "min_weight": "easy",
         "weight_score": 1.5,
         "hint": "取得一个迭代器实例",
         "fill_type": "text"
@@ -609,17 +933,45 @@
         "id": "iter_is_self",
         "text": "iter(it) is it",
         "category": "iterator",
-        "min_weight": "medium",
+        "min_weight": "expert",
         "weight_score": 1.5,
         "hint": "迭代器对 iter() 返回自身",
+        "fill_type": "text"
+      },
+      {
+        "id": "print_head",
+        "text": "print(",
+        "category": "identity_check",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "用 print 输出比较结果",
+        "fill_type": "text",
+        "occurrence": 0
+      },
+      {
+        "id": "iter_is_nums",
+        "text": "iter(nums) is nums",
+        "category": "iterable_vs_iterator",
+        "min_weight": "hard",
+        "weight_score": 1.5,
+        "hint": "验证列表每次 iter() 都产生新迭代器",
+        "fill_type": "text"
+      },
+      {
+        "id": "fresh_next",
+        "text": "next(iter(nums))",
+        "category": "iterator",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "重新取迭代器再 next，拿到第一个元素",
         "fill_type": "text"
       }
     ],
     "hints": {
       "level_1": "💡 列表和它的迭代器是同一个东西吗？`iter(x) is x` 能说明什么？",
       "level_2": "📖 可迭代对象每次 `iter()` 都产生新迭代器；迭代器上的 `iter()` 返回自身",
-      "level_3": "👀 三行打印分别验证 `iter(nums) is nums` 与 `iter(it) is it`",
-      "level_4": "📝 正确答案：`nums = [1, 2, 3]`、`it = iter(nums)`、`iter(it) is it`"
+      "level_3": "👀 `nums = [1, 2, 3]` … `it = iter(nums)` … `print(` … `iter(nums) is nums` … `iter(it) is it` … `next(iter(nums))`",
+      "level_4": "📝 正确答案：`nums = [1, 2, 3]`、`it = iter(nums)`、`print(`、`iter(nums) is nums`、`iter(it) is it` 与 `next(iter(nums))`"
     },
     "explanation": "可迭代对象（如 list）每次 `iter()` 都生成新迭代器，所以 `iter(nums) is nums` 为 False；迭代器自身实现 `__iter__` 返回 self，所以 `iter(it) is it` 为 True。"
   },
@@ -648,7 +1000,7 @@
         "id": "reuse_iterator",
         "text": "print(list(it))",
         "category": "iterator_exhaustion",
-        "min_weight": "hard",
+        "min_weight": "expert",
         "weight_score": 2,
         "hint": "第二次 list 同一个迭代器：已耗尽，得到空列表",
         "fill_type": "text",
@@ -662,13 +1014,40 @@
         "weight_score": 1.5,
         "hint": "想重新遍历必须重新取迭代器",
         "fill_type": "text"
+      },
+      {
+        "id": "first_iterator",
+        "text": "it = iter(nums)",
+        "category": "iterator",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "创建第一个迭代器，后面会被耗尽",
+        "fill_type": "text"
+      },
+      {
+        "id": "next_after_recreate",
+        "text": "print(next(it2))",
+        "category": "iterator_recreate",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "新迭代器取出第一个元素，证明重新开始",
+        "fill_type": "text"
+      },
+      {
+        "id": "rest_after_next",
+        "text": "print(list(it2))",
+        "category": "iterator_exhaustion",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "取走剩余元素：列表只剩 2",
+        "fill_type": "text"
       }
     ],
     "hints": {
       "level_1": "💡 同一个迭代器被 list 两次，第二次为什么得到空列表？",
       "level_2": "📖 迭代器有状态且一次性，耗尽后 `next()` 永远抛 `StopIteration`",
-      "level_3": "👀 第二个 `print(list(it))` 得到空列表；重新 `it2 = iter(nums)` 才能再取",
-      "level_4": "📝 正确答案：`nums = [1, 2]`、第二处 `print(list(it))`、`it2 = iter(nums)`"
+      "level_3": "👀 `nums = [1, 2]` … `it = iter(nums)` … `print(list(it))` … `it2 = iter(nums)` … `print(next(it2))` … `print(list(it2))`",
+      "level_4": "📝 正确答案：`nums = [1, 2]`、`it = iter(nums)`、`print(list(it))`、`it2 = iter(nums)`、`print(next(it2))` 与 `print(list(it2))`"
     },
     "explanation": "迭代器记录着遍历位置且一次性耗尽，耗尽后只会抛 `StopIteration`；要重新遍历可迭代对象，必须重新调用 `iter()`。"
   },
@@ -711,13 +1090,40 @@
         "weight_score": 2,
         "hint": "先反序遍历每行，再逐元素倒序",
         "fill_type": "text"
+      },
+      {
+        "id": "rows_loop",
+        "text": "for row in self.rows:",
+        "category": "generator_iter",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "先遍历外层行，再逐元素产出（__iter__ 的骨架）",
+        "fill_type": "text"
+      },
+      {
+        "id": "reversed_rows_loop",
+        "text": "for row in reversed(self.rows):",
+        "category": "reversed_protocol",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "反向遍历外层行：reversed 在行维度上翻转顺序",
+        "fill_type": "text"
+      },
+      {
+        "id": "consume_reversed",
+        "text": "print(list(reversed(m)))",
+        "category": "reversed_protocol",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "用 list 消费反向迭代器，验证整体倒序",
+        "fill_type": "text"
       }
     ],
     "hints": {
       "level_1": "💡 类的 `__iter__` 直接写成生成器函数会很简洁，再补一个反向遍历能力。",
       "level_2": "📖 `__iter__` 里用 `yield` 即生成器函数；实现 `__reversed__` 后 `reversed(obj)` 才可用",
-      "level_3": "👀 `yield value` 逐元素产出，`def __reversed__(self):` 里用 `for value in reversed(row):`",
-      "level_4": "📝 正确答案：`yield value`、`def __reversed__(self):`、`for value in reversed(row):`"
+      "level_3": "👀 `for row in self.rows:` … `yield value` … `def __reversed__(self):` … `for row in reversed(self.rows):` … `for value in reversed(row):` … `print(list(reversed(m)))`",
+      "level_4": "📝 正确答案：`for row in self.rows:`、`yield value`、`def __reversed__(self):`、`for row in reversed(self.rows):`、`for value in reversed(row):` 与 `print(list(reversed(m)))`"
     },
     "explanation": "在 `__iter__` 中直接写 `yield` 是最简洁的惯用写法；实现 `__reversed__` 后 `reversed()` 才能对自定义对象生效，否则会退化为先 list 再反转。"
   }

@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { api } from '../api/client';
 import { navigate } from '../App';
+import { selectedBanksOf, useUser } from '../auth';
 import { TECH_EMOJI, TYPE_LABEL } from '../tech';
 import type { ExerciseListItem } from '../types';
 
@@ -22,6 +23,9 @@ interface TechGroup {
 const subKey = (tech: string, sub: string) => `${tech}::${sub}`;
 
 export default function Sidebar({ collapsed, activeExerciseId }: SidebarProps) {
+  const user = useUser();
+  const selectedKey = (user?.selected_banks ?? []).join('|');
+  const selected = useMemo(() => selectedBanksOf(user), [selectedKey]);
   const [exercises, setExercises] = useState<ExerciseListItem[]>([]);
   const [completed, setCompleted] = useState<Set<string>>(new Set());
   const [favoriteIds, setFavoriteIds] = useState<Set<string>>(new Set());
@@ -56,6 +60,7 @@ export default function Sidebar({ collapsed, activeExerciseId }: SidebarProps) {
     const byTech = new Map<string, Map<string, ExerciseListItem[]>>();
     for (const ex of exercises) {
       if (favOnly && !isFav(ex.id)) continue; // 收藏模式只展示收藏
+      if (selected.size > 0 && !selected.has(`${ex.tech_stack}::${ex.subcategory}`)) continue; // 我的题库范围
       const subs = byTech.get(ex.tech_stack) ?? new Map<string, ExerciseListItem[]>();
       const list = subs.get(ex.subcategory) ?? [];
       list.push(ex);
@@ -72,7 +77,7 @@ export default function Sidebar({ collapsed, activeExerciseId }: SidebarProps) {
       out.push({ tech, subgroups });
     }
     return out.sort((a, b) => a.tech.localeCompare(b.tech));
-  }, [exercises, favOnly, favoriteIds]);
+  }, [exercises, favOnly, favoriteIds, selected]);
 
   // Groups/subcategories default to COLLAPSED. When training an exercise,
   // auto-expand its tech group and its subcategory so it stays visible.
@@ -113,7 +118,11 @@ export default function Sidebar({ collapsed, activeExerciseId }: SidebarProps) {
           </button>
         </div>
         <span className="sidebar-summary">
-          {favOnly ? `${favoriteIds.size} 题收藏` : `${exercises.length} 题 · ${groups.length} 个技术栈`}
+          {favOnly
+            ? `${favoriteIds.size} 题收藏`
+            : selected.size > 0
+              ? `我的题库：${selected.size} 个子库 · ${groups.reduce((a, g) => a + g.subgroups.reduce((x, s) => x + s.items.length, 0), 0)} 题`
+              : `${exercises.length} 题 · ${groups.length} 个技术栈`}
         </span>
       </div>
       <div className="sidebar-tree">

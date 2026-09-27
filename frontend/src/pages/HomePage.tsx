@@ -1,10 +1,14 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { api } from '../api/client';
 import { navigate } from '../App';
+import { selectedBanksOf, useUser } from '../auth';
 import { TECH_EMOJI, TYPE_LABEL } from '../tech';
 import type { ExerciseListItem, ProgressResponse } from '../types';
 
 export default function HomePage() {
+  const user = useUser();
+  const selectedKey = (user?.selected_banks ?? []).join('|');
+  const selected = useMemo(() => selectedBanksOf(user), [selectedKey]);
   const [exercises, setExercises] = useState<ExerciseListItem[]>([]);
   const [progress, setProgress] = useState<ProgressResponse | null>(null);
   const [tech, setTech] = useState('');
@@ -33,14 +37,31 @@ export default function HomePage() {
   };
 
   const p = progress?.progress;
+  const visible = useMemo(
+    () =>
+      selected.size > 0
+        ? exercises.filter((e) => selected.has(`${e.tech_stack}::${e.subcategory}`))
+        : exercises,
+    [exercises, selected],
+  );
   const completed = p ? Object.keys(p.completed_exercises).length : 0;
-  const total = Math.max(exercises.length, 1);
+  const total = Math.max(visible.length, 1);
   const pct = total ? Math.round((completed / total) * 100) : 0;
-  const techs = [...new Set(exercises.map((e) => e.tech_stack))];
-  const shown = favOnly ? exercises.filter((e) => favorites.has(e.id)) : exercises;
+  const techs = [...new Set(visible.map((e) => e.tech_stack))];
+  const shown = favOnly ? visible.filter((e) => favorites.has(e.id)) : visible;
 
   return (
     <div className="page">
+      {selected.size > 0 && (
+        <div className="banks-banner">
+          <span>
+            🎯 已按「我的题库」过滤：{selected.size} 个子库 / {visible.length} 题
+          </span>
+          <button className="nav-link" onClick={() => navigate({ name: 'banks' })}>
+            调整范围 →
+          </button>
+        </div>
+      )}
       {p && (
         <section className="dashboard">
           <div className="panel">

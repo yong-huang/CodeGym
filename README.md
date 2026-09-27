@@ -20,19 +20,26 @@
 ## 功能总览
 
 - 📚 **训练计划**：浏览 / 按技术栈筛选训练动作（Python / Go / JavaScript / Kubernetes / …）
+- 👤 **用户体系**：注册 / 登录（PBKDF2 密码 + 会话 token），进度、收藏、薄弱点、连续打卡按用户独立保存；匿名访问回退到共享的 demo 用户
+- 🧪 **我的题库**：每个用户可勾选要练的技术栈 / 子库（如只练 testing 的 pytest + selenium），保存后首页与侧边栏只展示所选范围，不勾选 = 全部题库
+- 📥 **题库动态加载**：教练端上传题库 JSON 立即生效无需重启；把 JSON 放进 `data/bank` 目录也会被后端自动热扫描加载（`-bank-watch` 调整间隔）
+- 🧑‍🏫 **用户管理（教练端）**：用户列表（作答 / 完成 / 连续天数）、创建账号、禁用 / 启用、重置密码、删除（连带清理其数据）
 - 🐍 **Python 题库**：50 道基础题（语法/f-string/流程/列表推导/函数/递归/异常/类……），真实 `python3` 执行判题
 - ⚡ **Python 协程题库**：20 道专项题（async/await/create_task/gather/超时与异常/异步迭代器/Queue/Semaphore……），真实 `asyncio` 执行判题
 - 🧵 **Python 多线程题库**：20 道专项题（Thread/join/共享状态/Lock·RLock/Semaphore/Event/Barrier/threading.local/queue.Queue/Timer/线程池……），全部按确定性输出设计并真实执行判题
-- 🧩 **Python 进阶题库**：90 道专项题，6 个子分类各 15 题——装饰器（wraps/带参/叠加/lru_cache/singledispatch/property）、迭代器与生成器（iter·next/yield/yield from/send/throw/close/islice）、描述符（__get__·__set__/__set_name__/数据与非数据优先级/classmethod 原理）、上下文管理器（__enter__·__exit__/contextmanager/suppress/ExitStack）、元类与类机制（type() 动态建类/__init_subclass__/MRO·super/__slots__/ABCMeta）、魔术方法（__repr__/__eq__·__hash__/__getitem__/__call__/__getattr__/运算符重载），真实执行判题
+- 🧩 **Python 进阶题库**：90 道专项题，6 个子分类各 15 题、每题 6 个训练点（负重分级各档均有足够空位）——装饰器（wraps/带参/叠加/lru_cache/singledispatch/property）、迭代器与生成器（iter·next/yield/yield from/send/throw/close/islice）、描述符（__get__·__set__/__set_name__/数据与非数据优先级/classmethod 原理）、上下文管理器（__enter__·__exit__/contextmanager/suppress/ExitStack）、元类与类机制（type() 动态建类/__init_subclass__/MRO·super/__slots__/ABCMeta）、魔术方法（__repr__/__eq__·__hash__/__getitem__/__call__/__getattr__/运算符重载），真实执行判题
 - 🤖 **Agentic AI 开发题库**：50 道 Python 题（消息与采样参数、工具 Schema 与注册分派、Agent 循环与 ReAct 轨迹、滑动窗口/摘要/向量检索/RAG、结构化输出校验、多智能体路由与 handoff、退避重试/成本核算/日志），真实执行判题
 - 🐹 **Go 题库**：50 道基础题（语法/函数/切片/map/结构体/接口/并发/泛型……），真实 `go run` 执行判题
 - 🔷 **Go 类型系统题库**：30 道专项题（零值与类型推断/iota/定义类型与别名/转换与 rune/类型断言与 type switch/结构体与方法集/嵌入与标签/接口隐式实现与 nil 陷阱/any/error/接口组合/泛型约束/指针语义），真实 `go run` 执行判题
+- ⛓️ **Go 并发题库**：50 道专项题，3 个子分类——通信机制（goroutine/WaitGroup/channel/select/缓冲死锁，25 题）、同步与原子（Mutex·RWMutex/Once/atomic/Cond/Pool/数据竞争与并发 map 修复，13 题）、并发模式（生成器/Worker Pool/Fan-in·out/Pipeline/生产者消费者/context/Ticker/优雅关闭，12 题），真实 `go run` 执行判题
 - 🧱 **数据结构系列题库**（60 题，Python 真实执行判题，6 个子分类各 10 题）：数组（双指针/二分/前缀和/差分/滑动窗口）、链表（反转/快慢指针/合并/环检测/两数相加）、栈与队列（括号匹配/逆波兰/最小栈/循环队列/单调栈与单调队列）、哈希表（手写哈希/两数之和/异位词分组/开放寻址/LRU）、树（遍历/BST/翻转/堆/Trie）、图（BFS/DFS/拓扑排序/并查集/岛屿数量/Dijkstra）
 - ☸️ **Kubernetes 题库**：50 道基础题（kubectl 命令补全 + YAML 配置补全），支持别名答案（如 `-A` = `--all-namespaces`）
 - 🗄️ **SQL 题库**：50 道基础题（SELECT/WHERE 排序分页/聚合分组/多表 JOIN/子查询/DML/DDL 与约束……），围绕统一的示例库（员工/部门/商品/客户/订单）出题
 - 📊 **BigQuery 题库**：61 道题，拆两个子库——「SQL 基础」（35 题：通用 SQL 语法）与「BigQuery 特有」（26 题：数组·STRUCT·UNNEST/JSON/窗口·QUALIFY/分区聚类/通配表/INFORMATION_SCHEMA/脚本变量/采样/时间旅行等 BQ 专属），围绕 sales 数据集出题
 - 🚀 **DevOps 题库**：140 道题，拆四个子库——「terraform」（30）、「ansible」（30）、「docker」（50：命令 + Dockerfile/compose）与「prometheus」（30：promtool/HTTP API/PromQL/告警配置，答案匹配判题）
 - ☁️ **AWS 题库**：180 道题，六个子库各 30 题——ec2（实例/镜像/EBS/安全组/弹性 IP）、iam（用户·组·角色/策略 JSON/信任与边界/临时凭证）、eks（集群/节点组/Fargate/OIDC·kubectl）、s3（桶/对象/存储级别/生命周期/加密/桶策略）、vpc（子网/路由/IGW·NAT/对等·端点/流日志）、rds（建库/快照恢复/只读副本/Multi-AZ/Aurora/参数组）
+- 🌩️ **OpenStack 题库**：200 道题，10 个子库各 20 题——Nova（server/flavor/keypair/migrate/配额/nova.conf）、Neutron（network/subnet/router/安全组/Floating IP/ML2·OVS）、Cinder（volume/snapshot/backup/type/QoS/LVM·Ceph 后端）、Swift（对象上传下载/大对象/临时 URL/ring/中间件）、TripleO（undercloud/overcloud deploy/节点自省/roles_data/升级更新）、Keystone（token/项目·用户·角色/catalog/endpoint/fernet/policy）、Glance（镜像导入导出/共享/格式/多后端/缓存）、运维（服务巡检/日志/DB·MQ/高可用/疏散/备份）、升级（版本流/三阶段升级/DB 迁移/镜像 tag/回滚）、Ceph（集群状态/pool·RBD/CRUSH/认证/Cinder·Glance·Nova 对接），命令与配置补全、答案匹配判题
+- 🧪 **测试框架题库**：180 道题，6 个子库各 30 题——pytest（断言·raises·approx/fixture/yield·scope·params/conftest/parametrize·indirect/tmp_path/monkeypatch/capsys/mock/skip·xfail/CLI·ini·pyproject 配置）、unittest（TestCase·断言族/setUp·tearDown/subTest/skip·expectedFailure/TestSuite·TestLoader·TextTestRunner/mock·patch·autospec/side_effect/assert_called_once_with/addCleanup/CLI）、selenium（Chrome 启动/By 定位/send_keys·click/text·get_attribute/Select/implicitly_wait/WebDriverWait·EC/ActionChains/iframe·窗口·alert/execute_script/headless/Remote Grid/Selenium Manager 与 Grid 命令）、playwright（TS：getByRole·TestId·Text/expect 断言族/route·fulfill·abort/storageState/beforeEach·test.step/soft 断言/request API/iframe/下载/playwright.config.ts/npx CLI）、cypress（JS：cy.visit·get·contains·within/type·click·check·select/should 断言族/intercept·as·wait/fixture·request·session/wrap·invoke·then/clock·tick/origin/Cypress.Commands.add/cypress.config.js/npx CLI）、locust（HttpUser·@task/wait_time·constant_pacing/on_start/client get·post/name·catch_response/events 监听/SequentialTaskSet·tag/FastHttpUser/LoadTestShape·tick/StopUser/headless·master·worker·csv·html CLI/locust.conf），代码填空 + 命令 + 配置补全、答案匹配判题
 - ⭐ **收藏**：给需要加强的题目点 ★ 收藏，训练页与首页可随时取消，支持「只看收藏」筛选，有空多练练
 - 🎯 **负重分级**：🌱入门 → 🌿简单 → 🌳中等 → 🔥困难 → 💎专家，随机留空数量随级别变化（设计 §5）
 - 🧑‍💻 **四种题型**：填空补全、命令补全、配置补全、Bug 修复（设计 §4）
@@ -72,11 +79,12 @@ CODEGYM_ADMIN_TOKEN=$(openssl rand -hex 16) docker compose up -d --build
 
 ```bash
 cd backend
-go run ./cmd/server -addr :8090        # 首次启动自动建库并 seed data/bank 下的全部内置题库（1086 题）
+go run ./cmd/server -addr :8090        # 首次启动自动建库并 seed data/bank 下的全部内置题库（1466 题）
 ```
 
 可选参数：`-db data/codegym.db` 指定数据库文件；`PYTHON_BIN` 指定 Python 解释器；
-`-admin-token <token>`（或环境变量 `CODEGYM_ADMIN_TOKEN`）为教练端接口启用鉴权。
+`-admin-token <token>`（或环境变量 `CODEGYM_ADMIN_TOKEN`）为教练端接口启用鉴权；
+`-bank-watch 15s` 设置题库目录热扫描间隔（`0` 关闭，也可直接在教练端上传题库 JSON）。
 
 #### 2. 启动前端
 
@@ -90,9 +98,10 @@ npm run dev                             # http://localhost:5190 （/api 已代�
 
 ## ⚠️ 安全提示
 
-CodeGym 的定位是**个人/内网训练工具**，默认配置**未启用任何鉴权与沙箱隔离**：
+CodeGym 的定位是**个人/内网训练工具**，默认配置**未启用沙箱隔离，且未登录请求会落到共享的 demo 用户**：
 
-- 教练端接口（创建/删除题目、导入导出、AI 出题）可被任意调用；
+- 学员账号（注册/登录）之间的进度/收藏/薄弱点互相隔离，但匿名访问仍可训练并写入 demo 用户；
+- 教练端接口（创建/删除题目、用户管理、题库上传、导入导出、AI 出题）可被任意调用，除非启用令牌；
 - 训练代码会在服务器本地以子进程真实执行（Python 直接运行、Go 经 `go run` 编译执行）。
 
 **请勿将未加防护的实例暴露到公网。** 对外部署时：

@@ -54,6 +54,23 @@ func (s *Server) Handler() http.Handler {
 	mux.HandleFunc("POST /api/v1/favorites", s.toggleFavorite)
 	mux.HandleFunc("GET /api/v1/environments", s.listEnvironments)
 
+	// 用户体系：注册 / 登录 / 会话 / 选题库
+	mux.HandleFunc("POST /api/v1/auth/register", s.register)
+	mux.HandleFunc("POST /api/v1/auth/login", s.login)
+	mux.HandleFunc("POST /api/v1/auth/logout", s.logout)
+	mux.HandleFunc("GET /api/v1/auth/me", s.me)
+	mux.HandleFunc("PUT /api/v1/auth/me", s.updateMe)
+	mux.HandleFunc("GET /api/v1/me/banks", s.myBanks)
+	mux.HandleFunc("PUT /api/v1/me/banks", s.setMyBanks)
+
+	// 教练端：用户管理 + 题库动态加载
+	mux.HandleFunc("GET /api/v1/admin/users", s.adminOnly(s.adminListUsers))
+	mux.HandleFunc("POST /api/v1/admin/users", s.adminOnly(s.adminCreateUser))
+	mux.HandleFunc("PUT /api/v1/admin/users/{id}", s.adminOnly(s.adminUpdateUser))
+	mux.HandleFunc("DELETE /api/v1/admin/users/{id}", s.adminOnly(s.adminDeleteUser))
+	mux.HandleFunc("GET /api/v1/admin/banks", s.adminOnly(s.adminListBanks))
+	mux.HandleFunc("POST /api/v1/admin/banks", s.adminOnly(s.adminUploadBank))
+
 	mux.HandleFunc("POST /api/v1/admin/exercises", s.adminOnly(s.createExercise))
 	mux.HandleFunc("PUT /api/v1/admin/exercises/{id}", s.adminOnly(s.updateExercise))
 	mux.HandleFunc("DELETE /api/v1/admin/exercises/{id}", s.adminOnly(s.deleteExercise))
@@ -105,7 +122,7 @@ func (s *Server) withCommon(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
-		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, X-User-Id")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Auth-Token, X-Admin-Token")
 		if r.Method == http.MethodOptions {
 			w.WriteHeader(http.StatusNoContent)
 			return
@@ -116,10 +133,11 @@ func (s *Server) withCommon(next http.Handler) http.Handler {
 	})
 }
 
-// userID extracts the calling user, defaulting to a demo trainee (MVP auth).
+// userID resolves the calling user from the session token. Requests without a
+// valid token fall back to the shared "demo-user" (anonymous demo mode).
 func (s *Server) userID(r *http.Request) string {
-	if id := r.Header.Get("X-User-Id"); id != "" {
-		return id
+	if u, ok := s.currentUser(r); ok {
+		return u.ID
 	}
 	return "demo-user"
 }

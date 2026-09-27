@@ -1,0 +1,1910 @@
+[
+  {
+    "id": "locust-001",
+    "title": "定义压测用户类",
+    "description": "定义一个继承 HttpUser 的最简压测用户并访问根路径",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "beginner",
+    "category": "locust_user",
+    "subcategory": "locust",
+    "full_code": "from locust import HttpUser, task\n\n\nclass WebsiteUser(HttpUser):\n    host = \"https://api.example.com\"\n\n    @task\n    def index(self):\n        self.client.get(\"/\")",
+    "expected": "",
+    "points": [
+      {
+        "id": "import_user",
+        "text": "from locust import HttpUser, task",
+        "category": "locust_user",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "从 locust 包导入用户基类与任务装饰器的语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "user_class",
+        "text": "class WebsiteUser(HttpUser):",
+        "category": "locust_user",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "定义虚拟用户类并继承用户基类的写法",
+        "fill_type": "text"
+      },
+      {
+        "id": "host_attr",
+        "text": "host = \"https://api.example.com\"",
+        "category": "locust_user",
+        "min_weight": "beginner",
+        "weight_score": 1.5,
+        "hint": "用类属性声明被测服务地址",
+        "fill_type": "text"
+      },
+      {
+        "id": "index_method",
+        "text": "def index(self):",
+        "category": "locust_task",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "定义首页任务方法的函数签名",
+        "fill_type": "text"
+      },
+      {
+        "id": "index_request",
+        "text": "self.client.get(\"/\")",
+        "category": "locust_task",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "用内置客户端访问站点根路径",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 Locust 用用户类描述虚拟用户，压测入口就是这些类。",
+      "level_2": "📖 子类继承用户基类后，用类属性声明被测地址，再在任务方法里通过内置客户端发请求。",
+      "level_3": "👀 共 5 空：① 导入语句；② 用户类定义与继承；③ 被测服务地址；④ 任务方法定义；⑤ 根路径请求。",
+      "level_4": "📝 正确答案：`from locust import HttpUser, task`、`class WebsiteUser(HttpUser):`、`host = \"https://api.example.com\"`、`def index(self):`、`self.client.get(\"/\")`"
+    },
+    "explanation": "HttpUser 的每个实例代表一个虚拟用户，Locust 会并发运行这些实例并汇总 self.client 的请求结果。"
+  },
+  {
+    "id": "locust-002",
+    "title": "标记任务方法",
+    "description": "用 task 装饰器把方法注册为可被调度的任务",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "beginner",
+    "category": "locust_task",
+    "subcategory": "locust",
+    "full_code": "from locust import HttpUser, task\n\n\nclass ApiUser(HttpUser):\n    @task\n    def list_products(self):\n        self.client.get(\"/api/products\")",
+    "expected": "",
+    "points": [
+      {
+        "id": "import_httpuser",
+        "text": "from locust import HttpUser, task",
+        "category": "locust_task",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "导入用户基类与任务装饰器的语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "api_user_class",
+        "text": "class ApiUser(HttpUser):",
+        "category": "locust_user",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "定义接口用户类的写法",
+        "fill_type": "text"
+      },
+      {
+        "id": "task_decorator",
+        "text": "@task",
+        "category": "locust_task",
+        "min_weight": "beginner",
+        "weight_score": 1.5,
+        "hint": "标记任务方法的装饰器",
+        "fill_type": "text"
+      },
+      {
+        "id": "list_method",
+        "text": "def list_products(self):",
+        "category": "locust_task",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "定义商品列表任务方法的函数签名",
+        "fill_type": "text"
+      },
+      {
+        "id": "products_request",
+        "text": "self.client.get(\"/api/products\")",
+        "category": "locust_task",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "拉取商品列表的 GET 请求",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 只有被任务装饰器标记的方法才会进入 Locust 的调度循环。",
+      "level_2": "📖 装饰器写在实例方法上，方法体内通过 self.client 发请求；一个类可以有多个任务。",
+      "level_3": "👀 共 5 空：① 导入语句；② 用户类定义；③ 任务装饰器；④ 任务方法定义；⑤ 商品列表请求。",
+      "level_4": "📝 正确答案：`from locust import HttpUser, task`、`class ApiUser(HttpUser):`、`@task`、`def list_products(self):`、`self.client.get(\"/api/products\")`"
+    },
+    "explanation": "任务装饰器把普通方法注册进 tasks 集合，Locust 会在用户运行期间随机挑一个任务执行。"
+  },
+  {
+    "id": "locust-003",
+    "title": "随机等待时间",
+    "description": "用 between 设置任务之间的随机等待区间",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "easy",
+    "category": "locust_user",
+    "subcategory": "locust",
+    "full_code": "from locust import HttpUser, task, between\n\n\nclass BrowseUser(HttpUser):\n    wait_time = between(1, 3)\n\n    @task\n    def home(self):\n        self.client.get(\"/\")",
+    "expected": "",
+    "points": [
+      {
+        "id": "import_between",
+        "text": "from locust import HttpUser, task, between",
+        "category": "locust_user",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "导入用户基类、任务装饰器与等待函数的语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "wait_between",
+        "text": "wait_time = between(1, 3)",
+        "category": "locust_user",
+        "min_weight": "easy",
+        "weight_score": 2,
+        "hint": "给类属性赋一个 1 到 3 秒的随机等待策略",
+        "fill_type": "text"
+      },
+      {
+        "id": "home_method",
+        "text": "def home(self):",
+        "category": "locust_task",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "定义首页任务方法的函数签名",
+        "fill_type": "text"
+      },
+      {
+        "id": "home_request",
+        "text": "self.client.get(\"/\")",
+        "category": "locust_task",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "访问站点根路径的 GET 请求",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 wait_time 决定虚拟用户两次任务之间的等待时长，避免把服务打满。",
+      "level_2": "📖 between 接收最小和最大秒数，每次随机取值；作为类属性赋值给 wait_time。",
+      "level_3": "👀 共 4 空：① 导入语句；② 等待策略赋值；③ 任务方法定义；④ 根路径请求。",
+      "level_4": "📝 正确答案：`from locust import HttpUser, task, between`、`wait_time = between(1, 3)`、`def home(self):`、`self.client.get(\"/\")`"
+    },
+    "explanation": "wait_time 是类属性，Locust 在每轮任务之间调用它并让用户休眠相应的随机秒数。"
+  },
+  {
+    "id": "locust-004",
+    "title": "固定节奏执行",
+    "description": "用 constant_pacing 让任务按固定间隔重复执行",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "medium",
+    "category": "locust_user",
+    "subcategory": "locust",
+    "full_code": "from locust import HttpUser, task, constant_pacing\n\n\nclass OrderUser(HttpUser):\n    wait_time = constant_pacing(10)\n\n    @task\n    def create_order(self):\n        self.client.post(\"/api/orders\", json={\"sku\": \"A-100\", \"qty\": 1})",
+    "expected": "",
+    "points": [
+      {
+        "id": "import_pacing",
+        "text": "from locust import HttpUser, task, constant_pacing",
+        "category": "locust_user",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "导入用户基类、任务装饰器与节奏控制函数的语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "order_class",
+        "text": "class OrderUser(HttpUser):",
+        "category": "locust_user",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "定义下单用户类的写法",
+        "fill_type": "text"
+      },
+      {
+        "id": "wait_pacing",
+        "text": "wait_time = constant_pacing(10)",
+        "category": "locust_user",
+        "min_weight": "medium",
+        "weight_score": 2,
+        "hint": "把等待策略设为每 10 秒一轮",
+        "fill_type": "text"
+      },
+      {
+        "id": "order_method",
+        "text": "def create_order(self):",
+        "category": "locust_task",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "定义创建订单任务方法的函数签名",
+        "fill_type": "text"
+      },
+      {
+        "id": "order_request",
+        "text": "self.client.post(\"/api/orders\", json={\"sku\": \"A-100\", \"qty\": 1})",
+        "category": "locust_task",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "带 JSON 请求体的创建订单请求",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 constant_pacing 保证每个用户按固定节奏执行任务，不受单次请求耗时影响。",
+      "level_2": "📖 constant_pacing 接收目标间隔秒数：上一轮结束到下一轮开始的间隔会自动补齐。",
+      "level_3": "👀 共 5 空：① 导入语句；② 用户类定义；③ 节奏控制赋值；④ 任务方法定义；⑤ 创建订单的 POST 请求。",
+      "level_4": "📝 正确答案：`from locust import HttpUser, task, constant_pacing`、`class OrderUser(HttpUser):`、`wait_time = constant_pacing(10)`、`def create_order(self):`、`self.client.post(\"/api/orders\", json={\"sku\": \"A-100\", \"qty\": 1})`"
+    },
+    "explanation": "与 constant 不同，constant_pacing 会减去任务执行耗时，用等待把每轮周期锁定为参数指定的秒数。"
+  },
+  {
+    "id": "locust-005",
+    "title": "任务权重",
+    "description": "用带权重的 task 装饰器控制任务被选中的概率",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "beginner",
+    "category": "locust_task",
+    "subcategory": "locust",
+    "full_code": "from locust import HttpUser, task, between\n\n\nclass ShopUser(HttpUser):\n    wait_time = between(1, 2)\n\n    @task(3)\n    def browse(self):\n        self.client.get(\"/api/products\")\n\n    @task(1)\n    def checkout(self):\n        self.client.post(\"/api/checkout\")",
+    "expected": "",
+    "points": [
+      {
+        "id": "import_task",
+        "text": "from locust import HttpUser, task, between",
+        "category": "locust_task",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "导入用户基类、任务装饰器与等待函数的语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "wait_shop",
+        "text": "wait_time = between(1, 2)",
+        "category": "locust_user",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "给类属性赋一个 1 到 2 秒的随机等待策略",
+        "fill_type": "text"
+      },
+      {
+        "id": "task_weight_3",
+        "text": "@task(3)",
+        "category": "locust_task",
+        "min_weight": "beginner",
+        "weight_score": 1.5,
+        "hint": "权重为 3 的任务装饰器写法",
+        "fill_type": "text"
+      },
+      {
+        "id": "task_weight_1",
+        "text": "@task(1)",
+        "category": "locust_task",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "权重为 1 的任务装饰器写法",
+        "fill_type": "text"
+      },
+      {
+        "id": "checkout_request",
+        "text": "self.client.post(\"/api/checkout\")",
+        "category": "locust_task",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "提交结算的 POST 请求",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 给任务设置权重可以控制各任务被选中的相对概率。",
+      "level_2": "📖 task 装饰器接收一个整数权重，默认权重为 1；权重越大被执行得越频繁。",
+      "level_3": "👀 共 5 空：① 导入语句；② 等待策略赋值；③ 权重为 3 的任务装饰器；④ 权重为 1 的任务装饰器；⑤ 结算请求。",
+      "level_4": "📝 正确答案：`from locust import HttpUser, task, between`、`wait_time = between(1, 2)`、`@task(3)`、`@task(1)`、`self.client.post(\"/api/checkout\")`"
+    },
+    "explanation": "权重只影响任务被随机选中的比例，不改变任务内部的实现与统计上报方式。"
+  },
+  {
+    "id": "locust-006",
+    "title": "用户启动初始化",
+    "description": "在 on_start 里登录并保存 token 供后续任务使用",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "beginner",
+    "category": "locust_user",
+    "subcategory": "locust",
+    "full_code": "from locust import HttpUser, task\n\n\nclass ApiUser(HttpUser):\n    def on_start(self):\n        resp = self.client.post(\"/login\", json={\"username\": \"demo\", \"password\": \"secret\"})\n        self.token = resp.json()[\"token\"]\n\n    @task\n    def profile(self):\n        self.client.get(\"/api/profile\", headers={\"Authorization\": \"Bearer \" + self.token})",
+    "expected": "",
+    "points": [
+      {
+        "id": "import_onstart",
+        "text": "from locust import HttpUser, task",
+        "category": "locust_user",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "导入用户基类与任务装饰器的语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "on_start_def",
+        "text": "def on_start(self):",
+        "category": "locust_user",
+        "min_weight": "beginner",
+        "weight_score": 1.5,
+        "hint": "定义用户启动钩子方法的函数签名",
+        "fill_type": "text"
+      },
+      {
+        "id": "login_request",
+        "text": "resp = self.client.post(\"/login\", json={\"username\": \"demo\", \"password\": \"secret\"})",
+        "category": "locust_task",
+        "min_weight": "easy",
+        "weight_score": 2,
+        "hint": "发送登录凭据并接住响应的 POST 请求",
+        "fill_type": "text"
+      },
+      {
+        "id": "save_token",
+        "text": "self.token = resp.json()[\"token\"]",
+        "category": "locust_user",
+        "min_weight": "easy",
+        "weight_score": 1.5,
+        "hint": "把响应体中的令牌保存到实例属性",
+        "fill_type": "text"
+      },
+      {
+        "id": "profile_request",
+        "text": "self.client.get(\"/api/profile\", headers={\"Authorization\": \"Bearer \" + self.token})",
+        "category": "locust_task",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "携带认证头读取个人资料的 GET 请求",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 on_start 在每个虚拟用户开始跑任务前执行一次，适合做登录等初始化。",
+      "level_2": "📖 登录接口返回的 token 存到实例属性上，后续任务再从实例属性读取并使用。",
+      "level_3": "👀 共 5 空：① 导入语句；② 初始化钩子定义；③ 登录 POST 请求；④ 保存 token 的赋值；⑤ 携带认证头的 GET 请求。",
+      "level_4": "📝 正确答案：`from locust import HttpUser, task`、`def on_start(self):`、`resp = self.client.post(\"/login\", json={\"username\": \"demo\", \"password\": \"secret\"})`、`self.token = resp.json()[\"token\"]`、`self.client.get(\"/api/profile\", headers={\"Authorization\": \"Bearer \" + self.token})`"
+    },
+    "explanation": "on_start 在用户加入压测后、进入任务循环前被调用一次，非常适合做登录和准备用户态数据。"
+  },
+  {
+    "id": "locust-007",
+    "title": "发起 GET 请求",
+    "description": "在任务里用 client 发起 GET 并断言状态码",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "beginner",
+    "category": "locust_task",
+    "subcategory": "locust",
+    "full_code": "from locust import HttpUser, task\n\n\nclass ApiUser(HttpUser):\n    @task\n    def list_items(self):\n        resp = self.client.get(\"/api/items\")\n        assert resp.status_code == 200",
+    "expected": "",
+    "points": [
+      {
+        "id": "import_get",
+        "text": "from locust import HttpUser, task",
+        "category": "locust_task",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "导入用户基类与任务装饰器的语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "items_method",
+        "text": "def list_items(self):",
+        "category": "locust_task",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "定义条目列表任务方法的函数签名",
+        "fill_type": "text"
+      },
+      {
+        "id": "items_request",
+        "text": "resp = self.client.get(\"/api/items\")",
+        "category": "locust_task",
+        "min_weight": "beginner",
+        "weight_score": 1.5,
+        "hint": "接住响应的 GET 请求调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "status_assert",
+        "text": "assert resp.status_code == 200",
+        "category": "locust_assert",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "断言请求成功的状态码",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 用内置客户端发起 GET，并通过响应对象的状态码判断请求是否成功。",
+      "level_2": "📖 任务方法里先把返回值接住，再用 assert 校验状态码。",
+      "level_3": "👀 共 4 空：① 导入语句；② 任务方法定义；③ GET 请求调用；④ 状态码断言。",
+      "level_4": "📝 正确答案：`from locust import HttpUser, task`、`def list_items(self):`、`resp = self.client.get(\"/api/items\")`、`assert resp.status_code == 200`"
+    },
+    "explanation": "HttpUser 内置请求会话，self.client 会自动记录请求的成功失败与耗时并上报统计。"
+  },
+  {
+    "id": "locust-008",
+    "title": "发送 JSON 请求体",
+    "description": "用 json 参数提交 JSON 并校验创建结果",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "easy",
+    "category": "locust_task",
+    "subcategory": "locust",
+    "full_code": "from locust import HttpUser, task, between\n\n\nclass OrderUser(HttpUser):\n    wait_time = between(1, 3)\n\n    @task\n    def create_order(self):\n        payload = {\"sku\": \"A-100\", \"qty\": 2}\n        resp = self.client.post(\"/api/orders\", json=payload)\n        assert resp.status_code == 201",
+    "expected": "",
+    "points": [
+      {
+        "id": "import_post",
+        "text": "from locust import HttpUser, task, between",
+        "category": "locust_task",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "导入用户基类、任务装饰器与等待函数的语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "wait_order",
+        "text": "wait_time = between(1, 3)",
+        "category": "locust_user",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "给类属性赋一个 1 到 3 秒的随机等待策略",
+        "fill_type": "text"
+      },
+      {
+        "id": "payload_dict",
+        "text": "payload = {\"sku\": \"A-100\", \"qty\": 2}",
+        "category": "locust_task",
+        "min_weight": "easy",
+        "weight_score": 1.5,
+        "hint": "构造请求体的字典赋值",
+        "fill_type": "text"
+      },
+      {
+        "id": "post_request",
+        "text": "resp = self.client.post(\"/api/orders\", json=payload)",
+        "category": "locust_task",
+        "min_weight": "easy",
+        "weight_score": 2,
+        "hint": "把字典作为 JSON 请求体发送的 POST 调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "created_assert",
+        "text": "assert resp.status_code == 201",
+        "category": "locust_assert",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "断言资源创建成功的状态码",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 POST 请求可以用 json 关键字直接发送 JSON 请求体。",
+      "level_2": "📖 先把要发送的数据放进字典变量，再把它作为 json 参数传给 post；创建成功通常返回 201。",
+      "level_3": "👀 共 5 空：① 导入语句；② 等待策略赋值；③ 请求体字典；④ POST 请求调用；⑤ 状态码断言。",
+      "level_4": "📝 正确答案：`from locust import HttpUser, task, between`、`wait_time = between(1, 3)`、`payload = {\"sku\": \"A-100\", \"qty\": 2}`、`resp = self.client.post(\"/api/orders\", json=payload)`、`assert resp.status_code == 201`"
+    },
+    "explanation": "json 参数会自动序列化字典并设置 Content-Type，避免手工拼接请求体的易错写法。"
+  },
+  {
+    "id": "locust-009",
+    "title": "聚合动态请求名",
+    "description": "用 name 参数把动态路径的统计聚合到同一个名字下",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "easy",
+    "category": "locust_task",
+    "subcategory": "locust",
+    "full_code": "from locust import HttpUser, task, between\n\n\nclass DetailUser(HttpUser):\n    wait_time = between(1, 2)\n\n    @task\n    def view_item(self):\n        self.client.get(\"/api/items/42\", name=\"/api/items/[id]\")",
+    "expected": "",
+    "points": [
+      {
+        "id": "import_name",
+        "text": "from locust import HttpUser, task, between",
+        "category": "locust_task",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "导入用户基类、任务装饰器与等待函数的语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "detail_class",
+        "text": "class DetailUser(HttpUser):",
+        "category": "locust_user",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "定义详情页用户类的写法",
+        "fill_type": "text"
+      },
+      {
+        "id": "wait_detail",
+        "text": "wait_time = between(1, 2)",
+        "category": "locust_user",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "给类属性赋一个 1 到 2 秒的随机等待策略",
+        "fill_type": "text"
+      },
+      {
+        "id": "named_request",
+        "text": "self.client.get(\"/api/items/42\", name=\"/api/items/[id]\")",
+        "category": "locust_task",
+        "min_weight": "easy",
+        "weight_score": 2,
+        "hint": "使用聚合名参数的 GET 请求",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 路径里带 ID 的请求会把每个 ID 统计成不同的名字，导致统计项爆炸。",
+      "level_2": "📖 用 name 参数给动态路径指定一个聚合名，方括号里的占位符是常见写法。",
+      "level_3": "👀 共 4 空：① 导入语句；② 用户类定义；③ 等待策略赋值；④ 带聚合名的 GET 请求。",
+      "level_4": "📝 正确答案：`from locust import HttpUser, task, between`、`class DetailUser(HttpUser):`、`wait_time = between(1, 2)`、`self.client.get(\"/api/items/42\", name=\"/api/items/[id]\")`"
+    },
+    "explanation": "name 参数让所有 /api/items/42、/api/items/7 之类的请求合并到同一个统计行，便于查看整体指标。"
+  },
+  {
+    "id": "locust-010",
+    "title": "手动标记失败",
+    "description": "用 catch_response 拦截 404 并调用 failure 上报失败",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "hard",
+    "category": "locust_task",
+    "subcategory": "locust",
+    "full_code": "from locust import HttpUser, task\n\n\nclass ApiUser(HttpUser):\n    @task\n    def get_missing_item(self):\n        with self.client.get(\"/api/items/999\", catch_response=True) as resp:\n            if resp.status_code == 404:\n                resp.failure(\"item not found\")",
+    "expected": "",
+    "points": [
+      {
+        "id": "import_failure",
+        "text": "from locust import HttpUser, task",
+        "category": "locust_task",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "导入用户基类与任务装饰器的语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "missing_method",
+        "text": "def get_missing_item(self):",
+        "category": "locust_task",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "定义查询不存在条目任务方法的函数签名",
+        "fill_type": "text"
+      },
+      {
+        "id": "caught_get",
+        "text": "with self.client.get(\"/api/items/999\", catch_response=True) as resp:",
+        "category": "locust_task",
+        "min_weight": "hard",
+        "weight_score": 2,
+        "hint": "开启自定义判定并用 with 接住响应的请求",
+        "fill_type": "text"
+      },
+      {
+        "id": "not_found_branch",
+        "text": "if resp.status_code == 404:",
+        "category": "locust_task",
+        "min_weight": "hard",
+        "weight_score": 1.5,
+        "hint": "判断资源不存在的状态码分支",
+        "fill_type": "text"
+      },
+      {
+        "id": "failure_call",
+        "text": "resp.failure(\"item not found\")",
+        "category": "locust_assert",
+        "min_weight": "hard",
+        "weight_score": 2,
+        "hint": "把该请求手动标记为失败的调用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 catch_response 让你自己判断请求成功还是失败，适合 HTTP 状态码不能说明问题的场景。",
+      "level_2": "📖 用 with 包住请求并把 catch_response 设为真，然后在响应对象上调用失败方法并给出原因。",
+      "level_3": "👀 共 5 空：① 导入语句；② 任务方法定义；③ 开启自定义判定的请求；④ 状态码判断分支；⑤ 手动标记失败。",
+      "level_4": "📝 正确答案：`from locust import HttpUser, task`、`def get_missing_item(self):`、`with self.client.get(\"/api/items/999\", catch_response=True) as resp:`、`if resp.status_code == 404:`、`resp.failure(\"item not found\")`"
+    },
+    "explanation": "开启 catch_response 后 Locust 不再自动判定成败，必须自行调用成功或失败方法，否则该请求不计入统计。"
+  },
+  {
+    "id": "locust-011",
+    "title": "手动标记成功",
+    "description": "开启 catch_response 后分别调用 success 与 failure",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "hard",
+    "category": "locust_task",
+    "subcategory": "locust",
+    "full_code": "from locust import HttpUser, task\n\n\nclass LoginUser(HttpUser):\n    @task\n    def login(self):\n        with self.client.post(\"/api/login\", json={\"user\": \"demo\"}, catch_response=True) as resp:\n            if resp.status_code == 200:\n                resp.success()\n            else:\n                resp.failure(\"login failed\")",
+    "expected": "",
+    "points": [
+      {
+        "id": "import_success",
+        "text": "from locust import HttpUser, task",
+        "category": "locust_task",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "导入用户基类与任务装饰器的语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "caught_post",
+        "text": "with self.client.post(\"/api/login\", json={\"user\": \"demo\"}, catch_response=True) as resp:",
+        "category": "locust_task",
+        "min_weight": "hard",
+        "weight_score": 2,
+        "hint": "开启自定义判定的登录请求",
+        "fill_type": "text"
+      },
+      {
+        "id": "ok_branch",
+        "text": "if resp.status_code == 200:",
+        "category": "locust_task",
+        "min_weight": "hard",
+        "weight_score": 1.5,
+        "hint": "判断登录成功的状态码分支",
+        "fill_type": "text"
+      },
+      {
+        "id": "success_call",
+        "text": "resp.success()",
+        "category": "locust_assert",
+        "min_weight": "hard",
+        "weight_score": 1.5,
+        "hint": "把该请求手动标记为成功的调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "login_failure",
+        "text": "resp.failure(\"login failed\")",
+        "category": "locust_assert",
+        "min_weight": "hard",
+        "weight_score": 1.5,
+        "hint": "登录失败时手动标记并附带原因",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 开启 catch_response 后，即使状态码是 4xx/5xx，也要自己调用成功或失败方法给请求定性。",
+      "level_2": "📖 状态码为 200 时调用成功方法，否则调用失败方法并附上原因。",
+      "level_3": "👀 共 5 空：① 导入语句；② 开启自定义判定的 POST 请求；③ 状态码判断分支；④ 成功标记；⑤ 失败标记。",
+      "level_4": "📝 正确答案：`from locust import HttpUser, task`、`with self.client.post(\"/api/login\", json={\"user\": \"demo\"}, catch_response=True) as resp:`、`if resp.status_code == 200:`、`resp.success()`、`resp.failure(\"login failed\")`"
+    },
+    "explanation": "catch_response 上下文退出时若仍未调用成功或失败方法，Locust 会抛出 MissingHttpResponseError 提醒。"
+  },
+  {
+    "id": "locust-012",
+    "title": "压测开始监听器",
+    "description": "用 test_start 事件在压测开始时执行初始化逻辑",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "medium",
+    "category": "locust_events",
+    "subcategory": "locust",
+    "full_code": "from locust import HttpUser, task, events\n\n\n@events.test_start.add_listener\ndef on_test_start(environment, **kwargs):\n    print(\"load test is starting\")\n\n\nclass ApiUser(HttpUser):\n    @task\n    def index(self):\n        self.client.get(\"/\")",
+    "expected": "",
+    "points": [
+      {
+        "id": "import_events",
+        "text": "from locust import HttpUser, task, events",
+        "category": "locust_events",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "导入用户基类、任务装饰器与事件对象的语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "start_listener",
+        "text": "@events.test_start.add_listener",
+        "category": "locust_events",
+        "min_weight": "medium",
+        "weight_score": 2,
+        "hint": "在压测开始事件上挂监听器的装饰器",
+        "fill_type": "text"
+      },
+      {
+        "id": "start_callback",
+        "text": "def on_test_start(environment, **kwargs):",
+        "category": "locust_events",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "开始事件回调函数定义",
+        "fill_type": "text"
+      },
+      {
+        "id": "start_print",
+        "text": "print(\"load test is starting\")",
+        "category": "locust_events",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "打印压测开始信息的调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "start_user_class",
+        "text": "class ApiUser(HttpUser):",
+        "category": "locust_user",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "定义接口用户类的写法",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 事件监听器可以在压测的关键节点插入自定义逻辑。",
+      "level_2": "📖 用 events 上的 test_start 事件注册监听器，回调第一个参数是运行环境，其余用关键字参数兜住。",
+      "level_3": "👀 共 5 空：① 导入语句；② 开始事件监听装饰器；③ 回调函数定义；④ 打印开始信息；⑤ 用户类定义。",
+      "level_4": "📝 正确答案：`from locust import HttpUser, task, events`、`@events.test_start.add_listener`、`def on_test_start(environment, **kwargs):`、`print(\"load test is starting\")`、`class ApiUser(HttpUser):`"
+    },
+    "explanation": "test_start 在压测真正开始（用户开始生成）时触发一次，回调里可以完成数据准备或环境检查。"
+  },
+  {
+    "id": "locust-013",
+    "title": "压测结束监听器",
+    "description": "用 test_stop 事件在压测结束时输出收尾信息",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "easy",
+    "category": "locust_events",
+    "subcategory": "locust",
+    "full_code": "from locust import HttpUser, task, events\n\n\n@events.test_stop.add_listener\ndef on_test_stop(environment, **kwargs):\n    print(\"load test finished\")\n\n\nclass ApiUser(HttpUser):\n    @task\n    def index(self):\n        self.client.get(\"/\")",
+    "expected": "",
+    "points": [
+      {
+        "id": "import_stop",
+        "text": "from locust import HttpUser, task, events",
+        "category": "locust_events",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "导入用户基类、任务装饰器与事件对象的语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "stop_listener",
+        "text": "@events.test_stop.add_listener",
+        "category": "locust_events",
+        "min_weight": "easy",
+        "weight_score": 2,
+        "hint": "在压测结束事件上挂监听器的装饰器",
+        "fill_type": "text"
+      },
+      {
+        "id": "stop_callback",
+        "text": "def on_test_stop(environment, **kwargs):",
+        "category": "locust_events",
+        "min_weight": "easy",
+        "weight_score": 1.5,
+        "hint": "结束事件回调函数定义",
+        "fill_type": "text"
+      },
+      {
+        "id": "stop_print",
+        "text": "print(\"load test finished\")",
+        "category": "locust_events",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "打印压测结束信息的调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "stop_request",
+        "text": "self.client.get(\"/\")",
+        "category": "locust_task",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "访问站点根路径的 GET 请求",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 压测结束时同样可以挂监听器，常用来做清理或汇总输出。",
+      "level_2": "📖 把事件名换成 test_stop，回调签名与开始事件一致；监听器可以定义在用户类外面。",
+      "level_3": "👀 共 5 空：① 导入语句；② 结束事件监听装饰器；③ 回调函数定义；④ 打印结束信息；⑤ 根路径请求。",
+      "level_4": "📝 正确答案：`from locust import HttpUser, task, events`、`@events.test_stop.add_listener`、`def on_test_stop(environment, **kwargs):`、`print(\"load test finished\")`、`self.client.get(\"/\")`"
+    },
+    "explanation": "test_stop 在所有用户停止后触发一次，适合输出自定义汇总、上报结果或释放资源。"
+  },
+  {
+    "id": "locust-014",
+    "title": "顺序任务流",
+    "description": "用 SequentialTaskSet 模拟有先后顺序的下单流程",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "medium",
+    "category": "locust_taskset",
+    "subcategory": "locust",
+    "full_code": "from locust import HttpUser, SequentialTaskSet, task, between\n\n\nclass CheckoutFlow(SequentialTaskSet):\n    @task\n    def open_cart(self):\n        self.client.get(\"/cart\")\n\n    @task\n    def submit_order(self):\n        self.client.post(\"/orders\", json={\"paid\": True})\n\n\nclass ShopUser(HttpUser):\n    tasks = [CheckoutFlow]\n    wait_time = between(1, 2)",
+    "expected": "",
+    "points": [
+      {
+        "id": "import_seq",
+        "text": "from locust import HttpUser, SequentialTaskSet, task, between",
+        "category": "locust_taskset",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "导入用户基类、顺序任务集、任务装饰器与等待函数的语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "flow_class",
+        "text": "class CheckoutFlow(SequentialTaskSet):",
+        "category": "locust_taskset",
+        "min_weight": "medium",
+        "weight_score": 2,
+        "hint": "定义顺序任务集类并继承对应基类",
+        "fill_type": "text"
+      },
+      {
+        "id": "open_method",
+        "text": "def open_cart(self):",
+        "category": "locust_taskset",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "定义打开购物车任务方法的函数签名",
+        "fill_type": "text"
+      },
+      {
+        "id": "submit_method",
+        "text": "def submit_order(self):",
+        "category": "locust_taskset",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "定义提交订单任务方法的函数签名",
+        "fill_type": "text"
+      },
+      {
+        "id": "tasks_attr",
+        "text": "tasks = [CheckoutFlow]",
+        "category": "locust_taskset",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "在用户类里引用顺序任务集的类属性赋值",
+        "fill_type": "text"
+      },
+      {
+        "id": "wait_shop_user",
+        "text": "wait_time = between(1, 2)",
+        "category": "locust_user",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "给用户类赋一个 1 到 2 秒的随机等待策略",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 SequentialTaskSet 让一组任务按定义顺序循环执行，适合模拟下单这类有先后关系的流程。",
+      "level_2": "📖 流程类继承 SequentialTaskSet，用户类用 tasks 属性引用它，整体再配一个等待策略。",
+      "level_3": "👀 共 6 空：① 导入语句；② 流程类定义与继承；③ 第一步任务方法；④ 第二步任务方法；⑤ 用户类引用流程；⑥ 等待策略赋值。",
+      "level_4": "📝 正确答案：`from locust import HttpUser, SequentialTaskSet, task, between`、`class CheckoutFlow(SequentialTaskSet):`、`def open_cart(self):`、`def submit_order(self):`、`tasks = [CheckoutFlow]`、`wait_time = between(1, 2)`"
+    },
+    "explanation": "SequentialTaskSet 会按声明顺序依次执行任务，每轮结束后回到第一个任务，保证业务步骤不被打乱。"
+  },
+  {
+    "id": "locust-015",
+    "title": "给任务打标签",
+    "description": "用 tag 装饰器给任务分组以便按标签过滤运行",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "medium",
+    "category": "locust_tag",
+    "subcategory": "locust",
+    "full_code": "from locust import HttpUser, task, tag\n\n\nclass ApiUser(HttpUser):\n    @tag(\"smoke\")\n    @task\n    def health(self):\n        self.client.get(\"/health\")\n\n    @tag(\"regression\")\n    @task\n    def report(self):\n        self.client.get(\"/api/report\")",
+    "expected": "",
+    "points": [
+      {
+        "id": "import_tag",
+        "text": "from locust import HttpUser, task, tag",
+        "category": "locust_tag",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "导入用户基类、任务装饰器与标签装饰器的语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "smoke_tag",
+        "text": "@tag(\"smoke\")",
+        "category": "locust_tag",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "给健康检查任务打冒烟标签的装饰器",
+        "fill_type": "text"
+      },
+      {
+        "id": "health_method",
+        "text": "def health(self):",
+        "category": "locust_task",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "定义健康检查任务方法的函数签名",
+        "fill_type": "text"
+      },
+      {
+        "id": "regression_tag",
+        "text": "@tag(\"regression\")",
+        "category": "locust_tag",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "给报表任务打回归标签的装饰器",
+        "fill_type": "text"
+      },
+      {
+        "id": "report_method",
+        "text": "def report(self):",
+        "category": "locust_task",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "定义报表任务方法的函数签名",
+        "fill_type": "text"
+      },
+      {
+        "id": "report_request",
+        "text": "self.client.get(\"/api/report\")",
+        "category": "locust_task",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "拉取报表数据的 GET 请求",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 标签用于给任务分组，运行时可以只执行指定标签的任务。",
+      "level_2": "📖 标签装饰器写在任务装饰器上方，接收一个或多个字符串标签名。",
+      "level_3": "👀 共 6 空：① 导入语句；② 冒烟标签装饰器；③ 健康检查任务方法；④ 回归标签装饰器；⑤ 报表任务方法；⑥ 报表请求。",
+      "level_4": "📝 正确答案：`from locust import HttpUser, task, tag`、`@tag(\"smoke\")`、`def health(self):`、`@tag(\"regression\")`、`def report(self):`、`self.client.get(\"/api/report\")`"
+    },
+    "explanation": "标签装饰器叠加在任务装饰器之上，配合命令行标签参数就能只跑冒烟或只跑回归任务。"
+  },
+  {
+    "id": "locust-016",
+    "title": "高吞吐用户",
+    "description": "用 FastHttpUser 降低单用户资源开销提升并发能力",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "expert",
+    "category": "locust_user",
+    "subcategory": "locust",
+    "full_code": "from locust import FastHttpUser, task, between\n\n\nclass HighThroughputUser(FastHttpUser):\n    wait_time = between(0.5, 1)\n\n    @task\n    def ping(self):\n        self.client.get(\"/api/ping\")",
+    "expected": "",
+    "points": [
+      {
+        "id": "import_fast",
+        "text": "from locust import FastHttpUser, task, between",
+        "category": "locust_user",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "导入高吞吐用户基类、任务装饰器与等待函数的语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "fast_class",
+        "text": "class HighThroughputUser(FastHttpUser):",
+        "category": "locust_user",
+        "min_weight": "expert",
+        "weight_score": 2,
+        "hint": "定义高吞吐用户类并继承对应基类的写法",
+        "fill_type": "text"
+      },
+      {
+        "id": "fast_wait",
+        "text": "wait_time = between(0.5, 1)",
+        "category": "locust_user",
+        "min_weight": "expert",
+        "weight_score": 1.5,
+        "hint": "给类属性赋一个 0.5 到 1 秒的随机等待策略",
+        "fill_type": "text"
+      },
+      {
+        "id": "ping_method",
+        "text": "def ping(self):",
+        "category": "locust_task",
+        "min_weight": "expert",
+        "weight_score": 1,
+        "hint": "定义探活任务方法的函数签名",
+        "fill_type": "text"
+      },
+      {
+        "id": "ping_request",
+        "text": "self.client.get(\"/api/ping\")",
+        "category": "locust_task",
+        "min_weight": "expert",
+        "weight_score": 1,
+        "hint": "接口探活的 GET 请求",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 FastHttpUser 用另一种 HTTP 客户端实现，单机能承载的并发用户更多。",
+      "level_2": "📖 只需把用户基类换成 FastHttpUser，其余任务写法不变；等待策略可按需调整。",
+      "level_3": "👀 共 5 空：① 导入语句；② 高吞吐用户类定义与继承；③ 等待策略赋值；④ 任务方法定义；⑤ 探活请求。",
+      "level_4": "📝 正确答案：`from locust import FastHttpUser, task, between`、`class HighThroughputUser(FastHttpUser):`、`wait_time = between(0.5, 1)`、`def ping(self):`、`self.client.get(\"/api/ping\")`"
+    },
+    "explanation": "FastHttpUser 底层使用 geventhttpclient，比基于 requests 的 HttpUser 更省 CPU 与内存，适合超高并发场景。"
+  },
+  {
+    "id": "locust-017",
+    "title": "阶梯压测形状",
+    "description": "用 LoadTestShape 的 tick 方法定义分阶段的用户曲线",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "expert",
+    "category": "locust_shape",
+    "subcategory": "locust",
+    "full_code": "from locust import FastHttpUser, LoadTestShape, task\n\n\nclass StagesShape(LoadTestShape):\n    stages = [\n        {\"duration\": 30, \"users\": 10, \"spawn_rate\": 2},\n        {\"duration\": 60, \"users\": 50, \"spawn_rate\": 5},\n    ]\n\n    def tick(self):\n        run_time = self.get_run_time()\n        for stage in self.stages:\n            if run_time < stage[\"duration\"]:\n                return stage[\"users\"], stage[\"spawn_rate\"]\n        return None\n\n\nclass ApiUser(FastHttpUser):\n    @task\n    def index(self):\n        self.client.get(\"/\")",
+    "expected": "",
+    "points": [
+      {
+        "id": "import_shape",
+        "text": "from locust import FastHttpUser, LoadTestShape, task",
+        "category": "locust_shape",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "导入高吞吐用户基类、压测形状类与任务装饰器的语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "shape_class",
+        "text": "class StagesShape(LoadTestShape):",
+        "category": "locust_shape",
+        "min_weight": "expert",
+        "weight_score": 2,
+        "hint": "定义自定义形状类并继承压测形状基类",
+        "fill_type": "text"
+      },
+      {
+        "id": "tick_method",
+        "text": "def tick(self):",
+        "category": "locust_shape",
+        "min_weight": "expert",
+        "weight_score": 2,
+        "hint": "定义被周期调用以决定压力曲线的步进方法",
+        "fill_type": "text"
+      },
+      {
+        "id": "run_time_read",
+        "text": "run_time = self.get_run_time()",
+        "category": "locust_shape",
+        "min_weight": "expert",
+        "weight_score": 2,
+        "hint": "读取本次压测已运行秒数并保存",
+        "fill_type": "text"
+      },
+      {
+        "id": "tick_return",
+        "text": "return stage[\"users\"], stage[\"spawn_rate\"]",
+        "category": "locust_shape",
+        "min_weight": "expert",
+        "weight_score": 2,
+        "hint": "返回当前阶段的用户数与爬坡速率",
+        "fill_type": "text"
+      },
+      {
+        "id": "tick_none",
+        "text": "return None",
+        "category": "locust_shape",
+        "min_weight": "expert",
+        "weight_score": 1.5,
+        "hint": "所有阶段结束后返回空值停止压测",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 LoadTestShape 用代码定义压测的阶梯曲线，而不是线性爬坡。",
+      "level_2": "📖 tick 方法每次被调用时返回当前阶段的用户数和爬坡速率，所有阶段结束后返回空值让压测收尾。",
+      "level_3": "👀 共 6 空：① 导入语句；② 形状类定义与继承；③ 步进方法定义；④ 读取已运行时长；⑤ 返回当前阶段的用户数与速率；⑥ 结束返回空值。",
+      "level_4": "📝 正确答案：`from locust import FastHttpUser, LoadTestShape, task`、`class StagesShape(LoadTestShape):`、`def tick(self):`、`run_time = self.get_run_time()`、`return stage[\"users\"], stage[\"spawn_rate\"]`、`return None`"
+    },
+    "explanation": "Locust 每秒调用一次 tick，按返回值动态调整用户数量与爬坡速率，返回 None 表示压测结束。"
+  },
+  {
+    "id": "locust-018",
+    "title": "自定义等待类",
+    "description": "用可调用对象实现自定义的随机等待逻辑",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "hard",
+    "category": "locust_user",
+    "subcategory": "locust",
+    "full_code": "import random\n\nfrom locust import HttpUser, task\n\n\nclass RandomWaitTime:\n    def __call__(self, user):\n        return random.uniform(1, 5)\n\n\nclass ApiUser(HttpUser):\n    wait_time = RandomWaitTime()\n\n    @task\n    def index(self):\n        self.client.get(\"/\")",
+    "expected": "",
+    "points": [
+      {
+        "id": "import_random_wait",
+        "text": "import random",
+        "category": "locust_user",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "导入随机数模块的语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "wait_class",
+        "text": "class RandomWaitTime:",
+        "category": "locust_user",
+        "min_weight": "hard",
+        "weight_score": 1.5,
+        "hint": "定义自定义等待类的类名行",
+        "fill_type": "text"
+      },
+      {
+        "id": "wait_call",
+        "text": "def __call__(self, user):",
+        "category": "locust_user",
+        "min_weight": "hard",
+        "weight_score": 2,
+        "hint": "让实例可被调用并接收用户对象的特殊方法定义",
+        "fill_type": "text"
+      },
+      {
+        "id": "wait_return",
+        "text": "return random.uniform(1, 5)",
+        "category": "locust_user",
+        "min_weight": "hard",
+        "weight_score": 2,
+        "hint": "返回 1 到 5 秒随机值的语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "wait_assign",
+        "text": "wait_time = RandomWaitTime()",
+        "category": "locust_user",
+        "min_weight": "hard",
+        "weight_score": 2,
+        "hint": "实例化自定义等待类并赋给类属性",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 wait_time 除了用内置函数，还可以写成可调用对象实现自定义等待逻辑。",
+      "level_2": "📖 定义一个带有 __call__ 方法的类，方法接收用户实例并返回随机等待秒数，再实例化赋给 wait_time。",
+      "level_3": "👀 共 5 空：① 随机模块导入；② 等待类定义；③ 可调用方法定义；④ 返回随机秒数；⑤ 实例化赋值给 wait_time。",
+      "level_4": "📝 正确答案：`import random`、`class RandomWaitTime:`、`def __call__(self, user):`、`return random.uniform(1, 5)`、`wait_time = RandomWaitTime()`"
+    },
+    "explanation": "Locust 每轮任务之间会调用 wait_time 对象，自定义类只需保证可被调用且返回秒数即可完全掌控节奏。"
+  },
+  {
+    "id": "locust-019",
+    "title": "请求埋点监听",
+    "description": "用 request 事件监听每次请求并打印异常信息",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "medium",
+    "category": "locust_events",
+    "subcategory": "locust",
+    "full_code": "from locust import HttpUser, task, events\n\n\n@events.request.add_listener\ndef on_request(request_type, name, response_time, response_length, exception, **kwargs):\n    if exception:\n        print(f\"request failed: {name}\")\n\n\nclass ApiUser(HttpUser):\n    @task\n    def index(self):\n        self.client.get(\"/\")",
+    "expected": "",
+    "points": [
+      {
+        "id": "import_request",
+        "text": "from locust import HttpUser, task, events",
+        "category": "locust_events",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "导入用户基类、任务装饰器与事件对象的语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "request_listener",
+        "text": "@events.request.add_listener",
+        "category": "locust_events",
+        "min_weight": "medium",
+        "weight_score": 2,
+        "hint": "在请求事件上挂监听器的装饰器",
+        "fill_type": "text"
+      },
+      {
+        "id": "request_callback",
+        "text": "def on_request(request_type, name, response_time, response_length, exception, **kwargs):",
+        "category": "locust_events",
+        "min_weight": "medium",
+        "weight_score": 2,
+        "hint": "包含请求类型、名称、耗时、长度与异常参数的回调定义",
+        "fill_type": "text"
+      },
+      {
+        "id": "exception_branch",
+        "text": "if exception:",
+        "category": "locust_events",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "判断请求是否发生异常的语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "exception_print",
+        "text": "print(f\"request failed: {name}\")",
+        "category": "locust_events",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "打印失败请求名称的调用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 request 事件每次请求完成都会触发，适合做统一埋点或失败告警。",
+      "level_2": "📖 监听回调按签名接收请求类型、名称、耗时、响应长度和异常等参数，异常非空时打印日志。",
+      "level_3": "👀 共 5 空：① 导入语句；② 请求事件监听装饰器；③ 回调函数定义；④ 异常判断分支；⑤ 打印失败日志。",
+      "level_4": "📝 正确答案：`from locust import HttpUser, task, events`、`@events.request.add_listener`、`def on_request(request_type, name, response_time, response_length, exception, **kwargs):`、`if exception:`、`print(f\"request failed: {name}\")`"
+    },
+    "explanation": "request 事件在每次请求结束后触发，回调可以拿到耗时、响应长度和异常等字段，用于统一采集指标。"
+  },
+  {
+    "id": "locust-020",
+    "title": "断言响应内容",
+    "description": "解析 JSON 响应体并校验业务字段",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "easy",
+    "category": "locust_assert",
+    "subcategory": "locust",
+    "full_code": "from locust import HttpUser, task\n\n\nclass ApiUser(HttpUser):\n    @task\n    def check_health(self):\n        with self.client.get(\"/api/health\", catch_response=True) as resp:\n            data = resp.json()\n            if data[\"status\"] != \"ok\":\n                resp.failure(\"unhealthy\")",
+    "expected": "",
+    "points": [
+      {
+        "id": "import_json",
+        "text": "from locust import HttpUser, task",
+        "category": "locust_assert",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "导入用户基类与任务装饰器的语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "health_method",
+        "text": "def check_health(self):",
+        "category": "locust_task",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "定义健康检查任务方法的函数签名",
+        "fill_type": "text"
+      },
+      {
+        "id": "health_caught",
+        "text": "with self.client.get(\"/api/health\", catch_response=True) as resp:",
+        "category": "locust_task",
+        "min_weight": "easy",
+        "weight_score": 1.5,
+        "hint": "开启自定义判定的健康检查请求",
+        "fill_type": "text"
+      },
+      {
+        "id": "json_parse",
+        "text": "data = resp.json()",
+        "category": "locust_assert",
+        "min_weight": "easy",
+        "weight_score": 1.5,
+        "hint": "解析响应体为 JSON 并保存",
+        "fill_type": "text"
+      },
+      {
+        "id": "status_branch",
+        "text": "if data[\"status\"] != \"ok\":",
+        "category": "locust_assert",
+        "min_weight": "easy",
+        "weight_score": 2,
+        "hint": "判断业务状态字段是否符合预期的分支",
+        "fill_type": "text"
+      },
+      {
+        "id": "unhealthy_failure",
+        "text": "resp.failure(\"unhealthy\")",
+        "category": "locust_assert",
+        "min_weight": "easy",
+        "weight_score": 1.5,
+        "hint": "业务校验不通过时标记失败",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 状态码 200 不代表业务成功，还需要解析响应体校验内容。",
+      "level_2": "📖 在 catch_response 上下文里解析 JSON，字段值不符合预期时手动标记失败。",
+      "level_3": "👀 共 6 空：① 导入语句；② 任务方法定义；③ 开启自定义判定的请求；④ 解析响应体；⑤ 字段值判断分支；⑥ 手动标记失败。",
+      "level_4": "📝 正确答案：`from locust import HttpUser, task`、`def check_health(self):`、`with self.client.get(\"/api/health\", catch_response=True) as resp:`、`data = resp.json()`、`if data[\"status\"] != \"ok\":`、`resp.failure(\"unhealthy\")`"
+    },
+    "explanation": "把业务断言放进 catch_response 上下文，可以让接口返回 200 但内容异常的情况也计入失败指标。"
+  },
+  {
+    "id": "locust-021",
+    "title": "随机请求参数",
+    "description": "用随机关键字让每次搜索请求带有变化",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "easy",
+    "category": "locust_task",
+    "subcategory": "locust",
+    "full_code": "import random\n\nfrom locust import HttpUser, task, between\n\n\nclass SearchUser(HttpUser):\n    wait_time = between(1, 3)\n\n    @task\n    def search(self):\n        keyword = random.choice([\"laptop\", \"phone\", \"tablet\"])\n        self.client.get(f\"/api/search?q={keyword}\")",
+    "expected": "",
+    "points": [
+      {
+        "id": "import_random",
+        "text": "import random",
+        "category": "locust_task",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "导入随机数模块的语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "wait_search",
+        "text": "wait_time = between(1, 3)",
+        "category": "locust_user",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "给类属性赋一个 1 到 3 秒的随机等待策略",
+        "fill_type": "text"
+      },
+      {
+        "id": "keyword_choice",
+        "text": "keyword = random.choice([\"laptop\", \"phone\", \"tablet\"])",
+        "category": "locust_task",
+        "min_weight": "easy",
+        "weight_score": 2,
+        "hint": "从候选词列表中随机挑一个词",
+        "fill_type": "text"
+      },
+      {
+        "id": "search_request",
+        "text": "self.client.get(f\"/api/search?q={keyword}\")",
+        "category": "locust_task",
+        "min_weight": "easy",
+        "weight_score": 2,
+        "hint": "把关键字拼进查询字符串的 GET 请求",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 压测数据应该有变化，用随机值避免缓存和唯一约束把场景压成同一条请求。",
+      "level_2": "📖 用 random 模块从候选列表里随机挑一个关键字，再拼进请求路径。",
+      "level_3": "👀 共 4 空：① 随机模块导入；② 等待策略赋值；③ 随机关键字赋值；④ 带查询参数的请求。",
+      "level_4": "📝 正确答案：`import random`、`wait_time = between(1, 3)`、`keyword = random.choice([\"laptop\", \"phone\", \"tablet\"])`、`self.client.get(f\"/api/search?q={keyword}\")`"
+    },
+    "explanation": "动态参数让每次请求携带不同数据，能更真实地模拟用户行为并避免结果被缓存掩盖。"
+  },
+  {
+    "id": "locust-022",
+    "title": "主动停止用户",
+    "description": "遇到未授权状态时抛出 StopUser 结束该虚拟用户",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "medium",
+    "category": "locust_user",
+    "subcategory": "locust",
+    "full_code": "from locust import HttpUser, task, StopUser\n\n\nclass ApiUser(HttpUser):\n    @task\n    def safe_endpoint(self):\n        with self.client.get(\"/api/private\", catch_response=True) as resp:\n            if resp.status_code == 401:\n                raise StopUser()\n            resp.success()",
+    "expected": "",
+    "points": [
+      {
+        "id": "import_stopuser",
+        "text": "from locust import HttpUser, task, StopUser",
+        "category": "locust_user",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "导入用户基类、任务装饰器与停止用户异常的语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "safe_method",
+        "text": "def safe_endpoint(self):",
+        "category": "locust_task",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "定义受限接口任务方法的函数签名",
+        "fill_type": "text"
+      },
+      {
+        "id": "private_caught",
+        "text": "with self.client.get(\"/api/private\", catch_response=True) as resp:",
+        "category": "locust_task",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "开启自定义判定的受限接口请求",
+        "fill_type": "text"
+      },
+      {
+        "id": "unauthorized_branch",
+        "text": "if resp.status_code == 401:",
+        "category": "locust_task",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "判断未授权状态码的分支",
+        "fill_type": "text"
+      },
+      {
+        "id": "stop_raise",
+        "text": "raise StopUser()",
+        "category": "locust_user",
+        "min_weight": "medium",
+        "weight_score": 2,
+        "hint": "抛出异常立即结束当前虚拟用户",
+        "fill_type": "text"
+      },
+      {
+        "id": "private_success",
+        "text": "resp.success()",
+        "category": "locust_assert",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "正常响应时把请求标记为成功",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 某些用户遇到权限不足等特定状态时，应该主动退出而不是继续空转。",
+      "level_2": "📖 在开启自定义判定的请求里判断状态码，满足条件就抛出停止用户异常。",
+      "level_3": "👀 共 6 空：① 导入语句；② 任务方法定义；③ 开启自定义判定的请求；④ 状态码判断分支；⑤ 抛出停止用户异常；⑥ 成功标记。",
+      "level_4": "📝 正确答案：`from locust import HttpUser, task, StopUser`、`def safe_endpoint(self):`、`with self.client.get(\"/api/private\", catch_response=True) as resp:`、`if resp.status_code == 401:`、`raise StopUser()`、`resp.success()`"
+    },
+    "explanation": "StopUser 会被 Locust 捕获并让该用户退出任务循环，其余用户不受影响，适合处理登录失效等场景。"
+  },
+  {
+    "id": "locust-023",
+    "title": "指定被测地址启动",
+    "description": "用 -f 指定脚本并直接在命令行给出被测服务地址",
+    "exercise_type": "command",
+    "tech_stack": "testing",
+    "weight": "easy",
+    "category": "locust_cli",
+    "subcategory": "locust",
+    "full_code": "locust -f locustfile.py --host https://api.example.com",
+    "expected": "",
+    "points": [
+      {
+        "id": "cmd_basic",
+        "text": "locust -f locustfile.py",
+        "category": "locust_cli",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "启动命令与指定脚本的短参数",
+        "fill_type": "text"
+      },
+      {
+        "id": "host_flag",
+        "text": "--host",
+        "category": "locust_cli",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "指定被测服务地址的参数名",
+        "fill_type": "text"
+      },
+      {
+        "id": "host_url",
+        "text": "https://api.example.com",
+        "category": "locust_cli",
+        "min_weight": "easy",
+        "weight_score": 1.5,
+        "hint": "被测服务的地址",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 命令行启动 Locust 时用 -f 指定压测脚本，再用参数告诉它打哪个服务。",
+      "level_2": "📖 指定脚本后追加大写 H 对应的长参数和被测地址即可。",
+      "level_3": "👀 共 3 空：① 启动命令与脚本参数；② 指定被测地址的参数名；③ 被测服务地址。",
+      "level_4": "📝 正确答案：`locust -f locustfile.py`、`--host`、`https://api.example.com`"
+    },
+    "explanation": "host 也可以在用户类里用类属性指定，命令行参数会覆盖代码里的默认值。"
+  },
+  {
+    "id": "locust-024",
+    "title": "无界面压测",
+    "description": "用无头模式一次性指定并发数、爬坡速率与运行时长",
+    "exercise_type": "command",
+    "tech_stack": "testing",
+    "weight": "medium",
+    "category": "locust_cli",
+    "subcategory": "locust",
+    "full_code": "locust -f locustfile.py --headless -u 100 -r 10 -t 5m",
+    "expected": "",
+    "points": [
+      {
+        "id": "cmd_headless",
+        "text": "locust -f locustfile.py",
+        "category": "locust_cli",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "启动命令与指定脚本的短参数",
+        "fill_type": "text"
+      },
+      {
+        "id": "headless_flag",
+        "text": "--headless",
+        "category": "locust_cli",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "禁用 Web 界面并立即开始压测的参数",
+        "fill_type": "text"
+      },
+      {
+        "id": "users_arg",
+        "text": "-u 100",
+        "category": "locust_cli",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "把并发用户数设为 100 的短参数",
+        "fill_type": "text"
+      },
+      {
+        "id": "spawn_arg",
+        "text": "-r 10",
+        "category": "locust_cli",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "把每秒启动用户数设为 10 的短参数",
+        "fill_type": "text"
+      },
+      {
+        "id": "runtime_arg",
+        "text": "-t 5m",
+        "category": "locust_cli",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "把运行时长设为 5 分钟的短参数",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 无界面模式适合 CI：一次性给出用户数、爬坡速率和运行时长。",
+      "level_2": "📖 无头参数负责关闭 Web UI，u/r/t 三个短参数分别控制并发数、每秒启动数和运行时长。",
+      "level_3": "👀 共 5 空：① 启动命令与脚本参数；② 无界面参数；③ 并发用户数；④ 每秒爬坡数；⑤ 运行时长。",
+      "level_4": "📝 正确答案：`locust -f locustfile.py`、`--headless`、`-u 100`、`-r 10`、`-t 5m`"
+    },
+    "explanation": "无头模式在 CI 中很常用：不启动 Web UI，跑完指定时长后自动输出统计并退出。"
+  },
+  {
+    "id": "locust-025",
+    "title": "导出压测报告",
+    "description": "用 CSV 与 HTML 参数把压测结果落盘归档",
+    "exercise_type": "command",
+    "tech_stack": "testing",
+    "weight": "medium",
+    "category": "locust_cli",
+    "subcategory": "locust",
+    "full_code": "locust -f locustfile.py --headless -u 50 -r 5 -t 2m --csv=result --html=report.html",
+    "expected": "",
+    "points": [
+      {
+        "id": "cmd_report",
+        "text": "locust -f locustfile.py",
+        "category": "locust_cli",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "启动命令与指定脚本的短参数",
+        "fill_type": "text"
+      },
+      {
+        "id": "headless_report",
+        "text": "--headless",
+        "category": "locust_cli",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "禁用 Web 界面并立即开始压测的参数",
+        "fill_type": "text"
+      },
+      {
+        "id": "runtime_report",
+        "text": "-t 2m",
+        "category": "locust_cli",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "把运行时长设为 2 分钟的短参数",
+        "fill_type": "text"
+      },
+      {
+        "id": "csv_flag",
+        "text": "--csv=result",
+        "category": "locust_cli",
+        "min_weight": "medium",
+        "weight_score": 2,
+        "hint": "把统计结果按指定前缀导出为 CSV 的参数",
+        "fill_type": "text"
+      },
+      {
+        "id": "html_flag",
+        "text": "--html=report.html",
+        "category": "locust_cli",
+        "min_weight": "medium",
+        "weight_score": 2,
+        "hint": "生成指定路径 HTML 报告的参数",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 压测结束后自动落盘汇总文件，方便归档和趋势对比。",
+      "level_2": "📖 两个长参数分别以等号形式指定 CSV 前缀和 HTML 报告路径。",
+      "level_3": "👀 共 5 空：① 启动命令与脚本参数；② 无界面参数；③ 运行时长；④ CSV 输出前缀；⑤ HTML 报告路径。",
+      "level_4": "📝 正确答案：`locust -f locustfile.py`、`--headless`、`-t 2m`、`--csv=result`、`--html=report.html`"
+    },
+    "explanation": "CSV 会按前缀生成多个统计文件，HTML 则是可直接分享的单文件报告，两者常一起使用。"
+  },
+  {
+    "id": "locust-026",
+    "title": "启动主节点",
+    "description": "以主节点身份启动分布式压测并等待指定数量的工作节点",
+    "exercise_type": "command",
+    "tech_stack": "testing",
+    "weight": "hard",
+    "category": "locust_cli",
+    "subcategory": "locust",
+    "full_code": "locust -f locustfile.py --master --expect-workers 2",
+    "expected": "",
+    "points": [
+      {
+        "id": "cmd_master",
+        "text": "locust -f locustfile.py",
+        "category": "locust_cli",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "启动命令与指定脚本的短参数",
+        "fill_type": "text"
+      },
+      {
+        "id": "master_flag",
+        "text": "--master",
+        "category": "locust_cli",
+        "min_weight": "hard",
+        "weight_score": 2,
+        "hint": "把本机作为分布式主节点运行的参数",
+        "fill_type": "text"
+      },
+      {
+        "id": "expect_workers",
+        "text": "--expect-workers 2",
+        "category": "locust_cli",
+        "min_weight": "hard",
+        "weight_score": 2,
+        "hint": "等待指定数量工作节点接入后再开始压测的参数",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 分布式压测的主节点负责统一调度和汇总各工作节点的数据。",
+      "level_2": "📖 主节点参数单独使用时会等待工作节点接入，也可以指定期望的工作节点数量再开始。",
+      "level_3": "👀 共 3 空：① 启动命令与脚本参数；② 主节点参数；③ 期望工作节点数量。",
+      "level_4": "📝 正确答案：`locust -f locustfile.py`、`--master`、`--expect-workers 2`"
+    },
+    "explanation": "主节点只负责调度与汇总，实际施压由各工作节点完成，等待数量到齐后压测才会开始。"
+  },
+  {
+    "id": "locust-027",
+    "title": "启动工作节点",
+    "description": "让工作节点连接到指定地址的主节点",
+    "exercise_type": "command",
+    "tech_stack": "testing",
+    "weight": "hard",
+    "category": "locust_cli",
+    "subcategory": "locust",
+    "full_code": "locust -f locustfile.py --worker --master-host=127.0.0.1",
+    "expected": "",
+    "points": [
+      {
+        "id": "cmd_worker",
+        "text": "locust -f locustfile.py",
+        "category": "locust_cli",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "启动命令与指定脚本的短参数",
+        "fill_type": "text"
+      },
+      {
+        "id": "worker_flag",
+        "text": "--worker",
+        "category": "locust_cli",
+        "min_weight": "hard",
+        "weight_score": 2,
+        "hint": "把本机作为分布式工作节点运行的参数",
+        "fill_type": "text"
+      },
+      {
+        "id": "master_host",
+        "text": "--master-host=127.0.0.1",
+        "category": "locust_cli",
+        "min_weight": "hard",
+        "weight_score": 2,
+        "hint": "指定主节点地址的参数（等号形式）",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 工作节点负责施压，需要连上主节点才能接收调度。",
+      "level_2": "📖 指定工作节点参数的同时，用主节点地址参数告诉它去连哪台机器。",
+      "level_3": "👀 共 3 空：① 启动命令与脚本参数；② 工作节点参数；③ 主节点地址（等号形式）。",
+      "level_4": "📝 正确答案：`locust -f locustfile.py`、`--worker`、`--master-host=127.0.0.1`"
+    },
+    "explanation": "每个工作节点都要能访问到同一份压测脚本，连接主节点后由主节点统一分发任务与汇总结果。"
+  },
+  {
+    "id": "locust-028",
+    "title": "按标签过滤运行",
+    "description": "只运行带指定标签的任务",
+    "exercise_type": "command",
+    "tech_stack": "testing",
+    "weight": "easy",
+    "category": "locust_cli",
+    "subcategory": "locust",
+    "full_code": "locust -f locustfile.py --tags smoke --headless -u 10 -r 2 -t 1m",
+    "expected": "",
+    "points": [
+      {
+        "id": "cmd_tags",
+        "text": "locust -f locustfile.py",
+        "category": "locust_cli",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "启动命令与指定脚本的短参数",
+        "fill_type": "text"
+      },
+      {
+        "id": "tags_filter",
+        "text": "--tags smoke",
+        "category": "locust_cli",
+        "min_weight": "easy",
+        "weight_score": 2,
+        "hint": "只执行带冒烟标签任务的过滤参数",
+        "fill_type": "text"
+      },
+      {
+        "id": "headless_tags",
+        "text": "--headless",
+        "category": "locust_cli",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "禁用 Web 界面并立即开始压测的参数",
+        "fill_type": "text"
+      },
+      {
+        "id": "runtime_tags",
+        "text": "-t 1m",
+        "category": "locust_cli",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "把运行时长设为 1 分钟的短参数",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 只想跑标记过的关键任务时用标签参数过滤，未打标签的任务不会执行。",
+      "level_2": "📖 标签参数后跟标签名，再配合无头模式和少量用户跑一遍冒烟场景。",
+      "level_3": "👀 共 4 空：① 启动命令与脚本参数；② 标签过滤参数；③ 无界面参数；④ 运行时长。",
+      "level_4": "📝 正确答案：`locust -f locustfile.py`、`--tags smoke`、`--headless`、`-t 1m`"
+    },
+    "explanation": "标签过滤让同一份脚本可以承担冒烟、回归等多套场景，无需维护多份文件。"
+  },
+  {
+    "id": "locust-029",
+    "title": "配置文件无头参数",
+    "description": "在 locust.conf 中配置无头模式与并发参数",
+    "exercise_type": "config",
+    "tech_stack": "testing",
+    "weight": "medium",
+    "category": "locust_config",
+    "subcategory": "locust",
+    "full_code": "[locust]\nheadless = true\nusers = 100\nspawn-rate = 10",
+    "expected": "",
+    "points": [
+      {
+        "id": "conf_section",
+        "text": "[locust]",
+        "category": "locust_config",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "配置文件顶部的分组标题行",
+        "fill_type": "text"
+      },
+      {
+        "id": "conf_headless",
+        "text": "headless = true",
+        "category": "locust_config",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "启用无头模式的布尔配置项",
+        "fill_type": "text"
+      },
+      {
+        "id": "conf_users",
+        "text": "users = 100",
+        "category": "locust_config",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "并发用户数的配置项",
+        "fill_type": "text"
+      },
+      {
+        "id": "conf_spawn",
+        "text": "spawn-rate = 10",
+        "category": "locust_config",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "每秒启动用户数的配置项",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 locust.conf 把常用启动参数固化成文件，避免每次手敲长命令。",
+      "level_2": "📖 方括号行是约定俗成的分组标题，下面按 key = value 写参数名（用连字符形式）与取值。",
+      "level_3": "👀 共 4 空：① 分组标题行；② 无界面开关；③ 并发用户数；④ 每秒爬坡数。",
+      "level_4": "📝 正确答案：`[locust]`、`headless = true`、`users = 100`、`spawn-rate = 10`"
+    },
+    "explanation": "配置文件里的键名与命令行长参数一致，Locust 启动时会自动读取当前目录下的 locust.conf。"
+  },
+  {
+    "id": "locust-030",
+    "title": "配置文件运行参数",
+    "description": "在 locust.conf 中配置脚本、地址、时长与标签",
+    "exercise_type": "config",
+    "tech_stack": "testing",
+    "weight": "medium",
+    "category": "locust_config",
+    "subcategory": "locust",
+    "full_code": "[locust]\nlocustfile = locustfile.py\nhost = https://api.example.com\nrun-time = 5m\ntags = [smoke]",
+    "expected": "",
+    "points": [
+      {
+        "id": "conf_locustfile",
+        "text": "locustfile = locustfile.py",
+        "category": "locust_config",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "指定压测脚本路径的配置项",
+        "fill_type": "text"
+      },
+      {
+        "id": "conf_host",
+        "text": "host = https://api.example.com",
+        "category": "locust_config",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "被测服务地址的配置项",
+        "fill_type": "text"
+      },
+      {
+        "id": "conf_runtime",
+        "text": "run-time = 5m",
+        "category": "locust_config",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "运行时长（连字符形式）的配置项",
+        "fill_type": "text"
+      },
+      {
+        "id": "conf_tags",
+        "text": "tags = [smoke]",
+        "category": "locust_config",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "列表写法的标签过滤配置项",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 配置文件里同样能指定脚本、被测地址、运行时长和标签。",
+      "level_2": "📖 参数名与命令行长参数一致，标签用列表写法；配置文件里的键值会覆盖默认值。",
+      "level_3": "👀 共 4 空：① 脚本路径；② 被测服务地址；③ 运行时长；④ 标签列表。",
+      "level_4": "📝 正确答案：`locustfile = locustfile.py`、`host = https://api.example.com`、`run-time = 5m`、`tags = [smoke]`"
+    },
+    "explanation": "命令行参数优先级高于配置文件，因此可以在保留通用配置的同时按需临时覆盖个别参数。"
+  }
+]

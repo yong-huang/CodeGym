@@ -1,0 +1,1581 @@
+[
+  {
+    "id": "os-upgrade-001",
+    "title": "查看服务版本基线与服务状态",
+    "description": "在升级前后执行，记录各服务 API 版本并确认所有服务都在运行",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "beginner",
+    "category": "upgrade_versions",
+    "subcategory": "升级",
+    "full_code": "source ~/stackrc\nopenstack versions show\nopenstack service list",
+    "expected": "",
+    "points": [
+      {
+        "id": "load_rc",
+        "text": "source ~/stackrc",
+        "category": "upgrade_versions",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "加载 undercloud 的认证与 CLI 环境",
+        "fill_type": "text"
+      },
+      {
+        "id": "versions_show_1",
+        "text": "versions",
+        "category": "upgrade_versions",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "列出目录里每个服务对外提供的 API 版本",
+        "fill_type": "text"
+      },
+      {
+        "id": "versions_show_2",
+        "text": "show",
+        "category": "upgrade_versions",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "列出目录里每个服务对外提供的 API 版本",
+        "fill_type": "text"
+      },
+      {
+        "id": "service_list_1",
+        "text": "service",
+        "category": "upgrade_versions",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "确认所有服务都已注册且状态正常",
+        "fill_type": "text"
+      },
+      {
+        "id": "service_list_2",
+        "text": "list",
+        "category": "upgrade_versions",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "确认所有服务都已注册且状态正常",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 升级前先记录版本基线，升级后用同样的命令对比",
+      "level_2": "📖 `openstack versions show` 展示目录中每个服务的 API 版本；`openstack service list` 列出服务注册情况",
+      "level_3": "👀 `openstack versions show` 与 `openstack service list`",
+      "level_4": "📝 正确答案：`source ~/stackrc`、`versions`、`show`、`service`、`list`"
+    },
+    "explanation": "`versions show` 列出目录里各服务的 API 版本，升级前后各执行一次就能确认服务已切到新版本流；`service list` 检查服务是否都处于可用状态。两者都依赖 `source ~/stackrc` 提供的认证与端点。"
+  },
+  {
+    "id": "os-upgrade-002",
+    "title": "切换升级版本流仓库",
+    "description": "把 undercloud 的 yum 源切到目标版本流（wallaby，即 RHOSP 17.1）后更新包",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "beginner",
+    "category": "upgrade_repos",
+    "subcategory": "升级",
+    "full_code": "sudo -E tripleo-repos -b wallaby current-tripleo ceph\nsudo dnf -y update",
+    "expected": "",
+    "points": [
+      {
+        "id": "branch_opt_1",
+        "text": "tripleo-repos",
+        "category": "upgrade_repos",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "用 -b/--branch 指定目标上游分支",
+        "fill_type": "text"
+      },
+      {
+        "id": "branch_opt_2",
+        "text": "-b",
+        "category": "upgrade_repos",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "用 -b/--branch 指定目标上游分支",
+        "fill_type": "text"
+      },
+      {
+        "id": "branch_opt_3",
+        "text": "wallaby",
+        "category": "upgrade_repos",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "用 -b/--branch 指定目标上游分支",
+        "fill_type": "text"
+      },
+      {
+        "id": "repo_streams",
+        "text": "current-tripleo ceph",
+        "category": "upgrade_repos",
+        "min_weight": "beginner",
+        "weight_score": 1.0,
+        "hint": "位置参数列出要启用的仓库流（提升版 RDO Trunk 与 Ceph）",
+        "fill_type": "text"
+      },
+      {
+        "id": "dnf_update_1",
+        "text": "dnf",
+        "category": "upgrade_repos",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "源切好后再更新 undercloud 组件",
+        "fill_type": "text"
+      },
+      {
+        "id": "dnf_update_2",
+        "text": "-y",
+        "category": "upgrade_repos",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "源切好后再更新 undercloud 组件",
+        "fill_type": "text"
+      },
+      {
+        "id": "dnf_update_3",
+        "text": "update",
+        "category": "upgrade_repos",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "源切好后再更新 undercloud 组件",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 大版本升级前，先把 yum 源切到目标版本流",
+      "level_2": "📖 `tripleo-repos` 用 `-b/--branch` 选分支，位置参数列出仓库流；它每次会先删掉自己管理的旧 delorean 仓库，所以所有流必须一次列全；`-E` 让 sudo 保留代理等环境变量",
+      "level_3": "👀 `sudo -E tripleo-repos -b wallaby current-tripleo ceph`，再 `sudo dnf -y update`",
+      "level_4": "📝 正确答案：`tripleo-repos`、`-b`、`wallaby`、`current-tripleo ceph`、`dnf`、`-y`、`update`"
+    },
+    "explanation": "升级先把 undercloud 的 yum 源切到目标版本流：`-b wallaby` 指定上游分支（RHOSP 17.1 对应 wallaby），位置参数 `current-tripleo` 是提升后的 RDO Trunk 仓库、`ceph` 提供 Ceph 包；tripleo-repos 会先清掉自己管理的旧 delorean 仓库，所以必须一次列全；随后 `dnf -y update` 把 undercloud 组件更新到新版本。"
+  },
+  {
+    "id": "os-upgrade-003",
+    "title": "升级前运行预升级验证组",
+    "description": "运行 tripleo-validations 的 pre-upgrade 组检查，并查看单次验证详情",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "easy",
+    "category": "upgrade_validation",
+    "subcategory": "升级",
+    "full_code": "source ~/stackrc\nopenstack tripleo validator run --group pre-upgrade\nopenstack tripleo validator show run --full <UUID>",
+    "expected": "",
+    "points": [
+      {
+        "id": "validator_run_1",
+        "text": "tripleo",
+        "category": "upgrade_validation",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "运行验证的命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "validator_run_2",
+        "text": "validator",
+        "category": "upgrade_validation",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "运行验证的命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "validator_run_3",
+        "text": "run",
+        "category": "upgrade_validation",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "运行验证的命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "group_pre",
+        "text": "--group pre-upgrade",
+        "category": "upgrade_validation",
+        "min_weight": "easy",
+        "weight_score": 1.0,
+        "hint": "指定升级前验证组",
+        "fill_type": "text"
+      },
+      {
+        "id": "show_full_1",
+        "text": "show",
+        "category": "upgrade_validation",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "查看某次验证运行的完整报告",
+        "fill_type": "text"
+      },
+      {
+        "id": "show_full_2",
+        "text": "--full",
+        "category": "upgrade_validation",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "查看某次验证运行的完整报告",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 升级前先跑预升级检查，把问题暴露在动手之前",
+      "level_2": "📖 `--group pre-upgrade` 会执行 check-ram、check-selinux-mode 等预升级验证；`--python-interpreter /usr/libexec/platform-python` 可指定解释器",
+      "level_3": "👀 `openstack tripleo validator run --group pre-upgrade`，再 `openstack tripleo validator show run --full <UUID>`",
+      "level_4": "📝 正确答案：`tripleo`、`validator`、`run`、`--group pre-upgrade`、`show`、`--full`"
+    },
+    "explanation": "`validator run --group pre-upgrade` 运行 tripleo-validations 的预升级检查，把内存、SELinux、服务健康等问题在升级前暴露出来；`show run --full <UUID>` 查看某次运行中单个验证的完整输出。可用 `--extra-vars` 传参，用 `--python-interpreter /usr/libexec/platform-python` 指定节点上的解释器。"
+  },
+  {
+    "id": "os-upgrade-004",
+    "title": "备份数据库并升级 undercloud",
+    "description": "先用 openstack undercloud backup 备份数据库，再执行 undercloud 升级",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "easy",
+    "category": "upgrade_backup",
+    "subcategory": "升级",
+    "full_code": "source ~/stackrc\nopenstack undercloud backup --db-only\nsudo podman exec mysql bash -c \"mysqldump -uroot -p$PASSWORD --opt --all-databases\" > /root/undercloud-all-databases.sql\nopenstack undercloud upgrade",
+    "expected": "",
+    "points": [
+      {
+        "id": "backup_db_only_1",
+        "text": "undercloud",
+        "category": "upgrade_backup",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "只备份数据库，不做整机 ReaR 备份",
+        "fill_type": "text"
+      },
+      {
+        "id": "backup_db_only_2",
+        "text": "backup",
+        "category": "upgrade_backup",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "只备份数据库，不做整机 ReaR 备份",
+        "fill_type": "text"
+      },
+      {
+        "id": "backup_db_only_3",
+        "text": "--db-only",
+        "category": "upgrade_backup",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "只备份数据库，不做整机 ReaR 备份",
+        "fill_type": "text"
+      },
+      {
+        "id": "podman_exec_1",
+        "text": "podman",
+        "category": "upgrade_backup",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "进入 undercloud 的 mysql 容器执行备份",
+        "fill_type": "text"
+      },
+      {
+        "id": "podman_exec_2",
+        "text": "exec",
+        "category": "upgrade_backup",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "进入 undercloud 的 mysql 容器执行备份",
+        "fill_type": "text"
+      },
+      {
+        "id": "podman_exec_3",
+        "text": "mysql",
+        "category": "upgrade_backup",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "进入 undercloud 的 mysql 容器执行备份",
+        "fill_type": "text"
+      },
+      {
+        "id": "mysqldump_all_1",
+        "text": "mysqldump",
+        "category": "upgrade_backup",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "手动备份全部数据库（密码取自 hiera）",
+        "fill_type": "text"
+      },
+      {
+        "id": "mysqldump_all_2",
+        "text": "-uroot",
+        "category": "upgrade_backup",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "手动备份全部数据库（密码取自 hiera）",
+        "fill_type": "text"
+      },
+      {
+        "id": "mysqldump_all_3",
+        "text": "-p$PASSWORD",
+        "category": "upgrade_backup",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "手动备份全部数据库（密码取自 hiera）",
+        "fill_type": "text"
+      },
+      {
+        "id": "mysqldump_all_4",
+        "text": "--opt",
+        "category": "upgrade_backup",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "手动备份全部数据库（密码取自 hiera）",
+        "fill_type": "text"
+      },
+      {
+        "id": "mysqldump_all_5",
+        "text": "--all-databases",
+        "category": "upgrade_backup",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "手动备份全部数据库（密码取自 hiera）",
+        "fill_type": "text"
+      },
+      {
+        "id": "uc_upgrade",
+        "text": "undercloud upgrade",
+        "category": "upgrade_backup",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "更新 undercloud 包并重配服务",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 升级 undercloud 前先备份数据库，再执行升级",
+      "level_2": "📖 `backup --db-only` 用 mysqldump 备份全部库（默认存到 /home/stack）；手动方式可进 mysql 容器执行 mysqldump --all-databases，root 密码用 `/bin/hiera -c /etc/puppet/hiera.yaml mysql::server::root_password` 获取",
+      "level_3": "👀 先 `openstack undercloud backup --db-only` 或 `podman exec mysql ... mysqldump ...`，再 `openstack undercloud upgrade`",
+      "level_4": "📝 正确答案：`undercloud`、`backup`、`--db-only`、`podman`、`exec`、`mysql`、`mysqldump`、`-uroot`、`-p$PASSWORD`、`--opt`、`--all-databases`、`undercloud upgrade`"
+    },
+    "explanation": "`openstack undercloud backup --db-only` 用 mysqldump 备份 undercloud 全部数据库；也可以进 mysql 容器手动执行 `mysqldump --opt --all-databases`，root 密码由 hiera 提供。备份完成后执行 `openstack undercloud upgrade`：它会更新 undercloud 包、用 puppet 应用新配置并重启服务。数据库备份是升级失败后回滚的基础。"
+  },
+  {
+    "id": "os-upgrade-005",
+    "title": "dnf 包升级与版本锁定",
+    "description": "安装 versionlock 插件、更新主机包，并把关键组件锁在指定版本",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "easy",
+    "category": "upgrade_packages",
+    "subcategory": "升级",
+    "full_code": "sudo dnf install -y python3-dnf-plugin-versionlock\nsudo dnf -y update\nsudo dnf versionlock add openstack-nova-compute",
+    "expected": "",
+    "points": [
+      {
+        "id": "plugin_pkg",
+        "text": "python3-dnf-plugin-versionlock",
+        "category": "upgrade_packages",
+        "min_weight": "easy",
+        "weight_score": 1.0,
+        "hint": "提供 dnf versionlock 子命令的插件包",
+        "fill_type": "text"
+      },
+      {
+        "id": "dnf_update_1",
+        "text": "dnf",
+        "category": "upgrade_packages",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "更新全部主机包",
+        "fill_type": "text",
+        "occurrence": 2
+      },
+      {
+        "id": "dnf_update_2",
+        "text": "-y",
+        "category": "upgrade_packages",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "更新全部主机包",
+        "fill_type": "text",
+        "occurrence": 1
+      },
+      {
+        "id": "dnf_update_3",
+        "text": "update",
+        "category": "upgrade_packages",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "更新全部主机包",
+        "fill_type": "text"
+      },
+      {
+        "id": "versionlock_add_1",
+        "text": "versionlock",
+        "category": "upgrade_packages",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "把该包锁定在当前版本",
+        "fill_type": "text",
+        "occurrence": 1
+      },
+      {
+        "id": "versionlock_add_2",
+        "text": "add",
+        "category": "upgrade_packages",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "把该包锁定在当前版本",
+        "fill_type": "text"
+      },
+      {
+        "id": "versionlock_add_3",
+        "text": "openstack-nova-compute",
+        "category": "upgrade_packages",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "把该包锁定在当前版本",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 既要把包升上去，也要能把关键包按住不动",
+      "level_2": "📖 `versionlock` 子命令由 `python3-dnf-plugin-versionlock` 提供：`add` 锁定、`list` 查看、`delete` 解除、`clear` 清空",
+      "level_3": "👀 安装插件 → `sudo dnf -y update` → `sudo dnf versionlock add openstack-nova-compute`",
+      "level_4": "📝 正确答案：`python3-dnf-plugin-versionlock`、`dnf`、`-y`、`update`、`versionlock`、`add`、`openstack-nova-compute`"
+    },
+    "explanation": "`dnf update` 把主机包升到当前仓库流的最新版本；`dnf versionlock` 把关键包锁在指定版本，常用于升级窗口内防止某组件被意外升级。`add` 锁定、`list` 查看、`delete`/`clear` 解除，锁条目最终写入 /etc/dnf/plugins/versionlock.list。"
+  },
+  {
+    "id": "os-upgrade-006",
+    "title": "upgrade prepare 生成升级 playbook",
+    "description": "带全部环境文件运行 upgrade prepare，为后续升级生成 playbook",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "medium",
+    "category": "upgrade_prepare",
+    "subcategory": "升级",
+    "full_code": "source ~/stackrc\nopenstack overcloud upgrade prepare --templates \\\n  -e /home/stack/templates/containers-prepare-parameter.yaml \\\n  -e /home/stack/templates/overcloud-repos.yaml",
+    "expected": "",
+    "points": [
+      {
+        "id": "load_rc",
+        "text": "source ~/stackrc",
+        "category": "upgrade_prepare",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "切换到 undercloud 认证环境",
+        "fill_type": "text"
+      },
+      {
+        "id": "upgrade_prepare_1",
+        "text": "overcloud",
+        "category": "upgrade_prepare",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "生成升级 playbook 的准备阶段",
+        "fill_type": "text"
+      },
+      {
+        "id": "upgrade_prepare_2",
+        "text": "upgrade",
+        "category": "upgrade_prepare",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "生成升级 playbook 的准备阶段",
+        "fill_type": "text"
+      },
+      {
+        "id": "upgrade_prepare_3",
+        "text": "prepare",
+        "category": "upgrade_prepare",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "生成升级 playbook 的准备阶段",
+        "fill_type": "text"
+      },
+      {
+        "id": "upgrade_prepare_4",
+        "text": "--templates",
+        "category": "upgrade_prepare",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "生成升级 playbook 的准备阶段",
+        "fill_type": "text"
+      },
+      {
+        "id": "images_env",
+        "text": "-e /home/stack/templates/containers-prepare-parameter.yaml",
+        "category": "upgrade_prepare",
+        "min_weight": "medium",
+        "weight_score": 1.0,
+        "hint": "指向新版本容器镜像的环境文件",
+        "fill_type": "text"
+      },
+      {
+        "id": "repos_env",
+        "text": "-e /home/stack/templates/overcloud-repos.yaml",
+        "category": "upgrade_prepare",
+        "min_weight": "easy",
+        "weight_score": 1.0,
+        "hint": "节点上切换版本流仓库的环境文件",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 升级 prepare 只生成 playbook，不应用配置，但要带齐部署时的环境文件",
+      "level_2": "📖 该命令是一次 Heat stack update：更新栈与 plan 但不应用 TripleO 配置；除全部部署环境文件外，还要加容器镜像文件与仓库切换文件",
+      "level_3": "👀 `openstack overcloud upgrade prepare --templates -e containers-prepare-parameter.yaml -e overcloud-repos.yaml`",
+      "level_4": "📝 正确答案：`source ~/stackrc`、`overcloud`、`upgrade`、`prepare`、`--templates`、`-e /home/stack/templates/containers-prepare-parameter.yaml`、`-e /home/stack/templates/overcloud-repos.yaml`"
+    },
+    "explanation": "upgrade prepare 是一次 Heat stack update：把栈和 plan 更新到新版本模板但不应用任何 TripleO 配置，只生成后续 config-download 使用的升级 playbook。必须传入部署时用到的全部环境文件，外加指向新版本容器镜像的 containers-prepare-parameter.yaml 和用于切换版本流仓库的 overcloud-repos.yaml。"
+  },
+  {
+    "id": "os-upgrade-007",
+    "title": "按角色升级控制面与计算节点",
+    "description": "控制面整组升级；计算节点先停止调度、升级后再恢复",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "medium",
+    "category": "upgrade_run",
+    "subcategory": "升级",
+    "full_code": "source ~/stackrc\nopenstack overcloud upgrade run --limit Controller\nopenstack compute service set --disable overcloud-compute-0 nova-compute\nopenstack overcloud upgrade run --limit overcloud-compute-0\nopenstack compute service set --enable overcloud-compute-0 nova-compute",
+    "expected": "",
+    "points": [
+      {
+        "id": "run_controller_1",
+        "text": "upgrade",
+        "category": "upgrade_run",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "控制面必须整组一起升级",
+        "fill_type": "text"
+      },
+      {
+        "id": "run_controller_2",
+        "text": "run",
+        "category": "upgrade_run",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "控制面必须整组一起升级",
+        "fill_type": "text"
+      },
+      {
+        "id": "run_controller_3",
+        "text": "--limit",
+        "category": "upgrade_run",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "控制面必须整组一起升级",
+        "fill_type": "text"
+      },
+      {
+        "id": "run_controller_4",
+        "text": "Controller",
+        "category": "upgrade_run",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "控制面必须整组一起升级",
+        "fill_type": "text"
+      },
+      {
+        "id": "disable_compute_1",
+        "text": "service",
+        "category": "upgrade_run",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "升级前停止向该计算节点调度新实例",
+        "fill_type": "text"
+      },
+      {
+        "id": "disable_compute_2",
+        "text": "set",
+        "category": "upgrade_run",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "升级前停止向该计算节点调度新实例",
+        "fill_type": "text"
+      },
+      {
+        "id": "disable_compute_3",
+        "text": "--disable",
+        "category": "upgrade_run",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "升级前停止向该计算节点调度新实例",
+        "fill_type": "text"
+      },
+      {
+        "id": "disable_compute_4",
+        "text": "overcloud-compute-0",
+        "category": "upgrade_run",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "升级前停止向该计算节点调度新实例",
+        "fill_type": "text"
+      },
+      {
+        "id": "disable_compute_5",
+        "text": "nova-compute",
+        "category": "upgrade_run",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "升级前停止向该计算节点调度新实例",
+        "fill_type": "text"
+      },
+      {
+        "id": "enable_compute_1",
+        "text": "--enable",
+        "category": "upgrade_run",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "升级完成后恢复调度",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 控制面一次升完，计算节点逐台升级，并临时停止调度",
+      "level_2": "📖 控制面用 `--limit Controller`（pacemaker 要求整组）；计算节点升级前后用 `openstack compute service set ... --disable/--enable` 控制调度，`--limit` 也接受逗号分隔的多个节点名",
+      "level_3": "👀 `upgrade run --limit Controller` → 禁用 compute 调度 → `upgrade run --limit overcloud-compute-0` → 恢复调度",
+      "level_4": "📝 正确答案：`upgrade`、`run`、`--limit`、`Controller`、`service`、`set`、`--disable`、`overcloud-compute-0`、`nova-compute`、`--enable`"
+    },
+    "explanation": "升级顺序：控制面必须整组一起升级（pacemaker 集群要求），所以用 `--limit Controller`；计算节点可以逐台进行——升级前用 `openstack compute service set --disable <host> nova-compute` 停止新实例调度并迁移实例，升级完成后 `--enable` 恢复。`--limit` 既接受角色名，也接受单个节点名或逗号分隔的多个节点。"
+  },
+  {
+    "id": "os-upgrade-008",
+    "title": "upgrade converge 收敛升级",
+    "description": "升级最后一步：重新应用配置并清除升级专用参数",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "medium",
+    "category": "upgrade_converge",
+    "subcategory": "升级",
+    "full_code": "source ~/stackrc\nopenstack overcloud upgrade converge --templates \\\n  -e /home/stack/templates/containers-prepare-parameter.yaml",
+    "expected": "",
+    "points": [
+      {
+        "id": "load_rc",
+        "text": "source ~/stackrc",
+        "category": "upgrade_converge",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "切换到 undercloud 认证环境",
+        "fill_type": "text"
+      },
+      {
+        "id": "upgrade_converge_1",
+        "text": "upgrade",
+        "category": "upgrade_converge",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "升级流程的收敛阶段",
+        "fill_type": "text"
+      },
+      {
+        "id": "upgrade_converge_2",
+        "text": "converge",
+        "category": "upgrade_converge",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "升级流程的收敛阶段",
+        "fill_type": "text"
+      },
+      {
+        "id": "upgrade_converge_3",
+        "text": "--templates",
+        "category": "upgrade_converge",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "升级流程的收敛阶段",
+        "fill_type": "text"
+      },
+      {
+        "id": "images_env",
+        "text": "-e /home/stack/templates/containers-prepare-parameter.yaml",
+        "category": "upgrade_converge",
+        "min_weight": "easy",
+        "weight_score": 1.0,
+        "hint": "带上全量环境文件（含镜像文件）",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 所有节点升级完成后，还要收敛一次把升级参数清掉",
+      "level_2": "📖 converge 会重新应用全部配置、清除 prepare 注入的 UpgradeInitCommand / UpgradeLevelNovaCompute 等参数；必须带全部环境文件，但不能带仓库切换文件",
+      "level_3": "👀 `openstack overcloud upgrade converge --templates -e containers-prepare-parameter.yaml`",
+      "level_4": "📝 正确答案：`source ~/stackrc`、`upgrade`、`converge`、`--templates`、`-e /home/stack/templates/containers-prepare-parameter.yaml`"
+    },
+    "explanation": "converge 是升级最后一步：通过 Heat stack update 重新映射资源、应用完整配置，并清除 prepare 阶段注入的升级专用参数（UpgradeInitCommand、UpgradeLevelNovaCompute 等），让栈回到可正常管理（如扩容）的状态。执行时要带全部环境文件，但不要带仓库切换类文件。"
+  },
+  {
+    "id": "os-upgrade-009",
+    "title": "小版本更新 prepare 与 run",
+    "description": "不切换版本流，把当前版本更新到最新：prepare、镜像准备、按角色 run",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "medium",
+    "category": "upgrade_update",
+    "subcategory": "升级",
+    "full_code": "source ~/stackrc\nopenstack overcloud update prepare --templates\nopenstack overcloud external-update run --tags container_image_prepare\nopenstack overcloud update run --limit Controller\nopenstack overcloud update run --limit Compute",
+    "expected": "",
+    "points": [
+      {
+        "id": "update_prepare_1",
+        "text": "update",
+        "category": "upgrade_update",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "更新 plan 但不应用配置",
+        "fill_type": "text"
+      },
+      {
+        "id": "update_prepare_2",
+        "text": "prepare",
+        "category": "upgrade_update",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "更新 plan 但不应用配置",
+        "fill_type": "text"
+      },
+      {
+        "id": "update_prepare_3",
+        "text": "--templates",
+        "category": "upgrade_update",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "更新 plan 但不应用配置",
+        "fill_type": "text"
+      },
+      {
+        "id": "external_update_1",
+        "text": "external-update",
+        "category": "upgrade_update",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "把新镜像同步到本地 registry",
+        "fill_type": "text"
+      },
+      {
+        "id": "external_update_2",
+        "text": "run",
+        "category": "upgrade_update",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "把新镜像同步到本地 registry",
+        "fill_type": "text"
+      },
+      {
+        "id": "external_update_3",
+        "text": "--tags",
+        "category": "upgrade_update",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "把新镜像同步到本地 registry",
+        "fill_type": "text"
+      },
+      {
+        "id": "external_update_4",
+        "text": "container_image_prepare",
+        "category": "upgrade_update",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "把新镜像同步到本地 registry",
+        "fill_type": "text"
+      },
+      {
+        "id": "run_controller_1",
+        "text": "--limit",
+        "category": "upgrade_update",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "控制面 API 更新期间保持可用",
+        "fill_type": "text"
+      },
+      {
+        "id": "run_controller_2",
+        "text": "Controller",
+        "category": "upgrade_update",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "控制面 API 更新期间保持可用",
+        "fill_type": "text"
+      },
+      {
+        "id": "run_compute_1",
+        "text": "Compute",
+        "category": "upgrade_update",
+        "min_weight": "easy",
+        "weight_score": 1.0,
+        "hint": "最后更新计算节点",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 小版本更新不换版本流，先 prepare、准备镜像，再按角色 run",
+      "level_2": "📖 `update prepare` 仍是栈更新；镜像用 `external-update run --tags container_image_prepare` 上传；`update run --limit` 分批执行，控制面用 --limit Controller、计算用 --limit Compute",
+      "level_3": "👀 `update prepare` → `external-update run --tags container_image_prepare` → `update run --limit Controller/Compute`",
+      "level_4": "📝 正确答案：`update`、`prepare`、`--templates`、`external-update`、`run`、`--tags`、`container_image_prepare`、`--limit`、`Controller`、`Compute`"
+    },
+    "explanation": "小版本更新不切换版本流，只把当前版本更新到最新：`update prepare` 更新 plan 但不应用配置；`external-update run --tags container_image_prepare` 把新镜像同步到 undercloud 本地 registry；`update run --limit` 分批更新节点，控制面 API 全程可用。Wallaby 起 update converge 已被移除，执行完 update run 即完成。"
+  },
+  {
+    "id": "os-upgrade-010",
+    "title": "准备升级容器镜像",
+    "description": "检查当前镜像 tag、保留回滚标签，并按策略准备新版本镜像",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "medium",
+    "category": "upgrade_images",
+    "subcategory": "升级",
+    "full_code": "source ~/stackrc\nsudo podman images | grep openstack-nova-api\nsudo podman tag 192.168.24.1:8787/tripleowallaby/openstack-nova-api:current-tripleo \\\n  192.168.24.1:8787/tripleowallaby/openstack-nova-api:upgrade-rollback\nopenstack tripleo container image prepare \\\n  -e /home/stack/templates/containers-prepare-parameter.yaml",
+    "expected": "",
+    "points": [
+      {
+        "id": "load_rc",
+        "text": "source ~/stackrc",
+        "category": "upgrade_images",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "切换到 undercloud 认证环境",
+        "fill_type": "text"
+      },
+      {
+        "id": "podman_images_1",
+        "text": "podman",
+        "category": "upgrade_images",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "确认本地镜像当前 tag",
+        "fill_type": "text"
+      },
+      {
+        "id": "podman_images_2",
+        "text": "images",
+        "category": "upgrade_images",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "确认本地镜像当前 tag",
+        "fill_type": "text"
+      },
+      {
+        "id": "podman_images_3",
+        "text": "grep",
+        "category": "upgrade_images",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "确认本地镜像当前 tag",
+        "fill_type": "text"
+      },
+      {
+        "id": "podman_images_4",
+        "text": "openstack-nova-api",
+        "category": "upgrade_images",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "确认本地镜像当前 tag",
+        "fill_type": "text"
+      },
+      {
+        "id": "podman_tag",
+        "text": "podman tag",
+        "category": "upgrade_images",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "给旧镜像留一个回滚标签",
+        "fill_type": "text"
+      },
+      {
+        "id": "image_prepare_1",
+        "text": "tripleo",
+        "category": "upgrade_images",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "按参数文件准备新版本镜像",
+        "fill_type": "text",
+        "occurrence": 3
+      },
+      {
+        "id": "image_prepare_2",
+        "text": "container",
+        "category": "upgrade_images",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "按参数文件准备新版本镜像",
+        "fill_type": "text"
+      },
+      {
+        "id": "image_prepare_3",
+        "text": "image",
+        "category": "upgrade_images",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "按参数文件准备新版本镜像",
+        "fill_type": "text",
+        "occurrence": 1
+      },
+      {
+        "id": "image_prepare_4",
+        "text": "prepare",
+        "category": "upgrade_images",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "按参数文件准备新版本镜像",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 升级镜像前，先看清现在用的是什么 tag，并给旧镜像留后路",
+      "level_2": "📖 用 `podman images` 查 tag，用 `podman tag <src> <dst>` 复制出回滚标签；再用 `openstack tripleo container image prepare -e <参数文件>` 按 ContainerImagePrepare 策略拉取新镜像",
+      "level_3": "👀 `podman images | grep openstack-nova-api`、`podman tag ...:current-tripleo ...:upgrade-rollback`、`openstack tripleo container image prepare -e containers-prepare-parameter.yaml`",
+      "level_4": "📝 正确答案：`source ~/stackrc`、`podman`、`images`、`grep`、`openstack-nova-api`、`podman tag`、`tripleo`、`container`、`image`、`prepare`"
+    },
+    "explanation": "`openstack tripleo container image prepare -e <环境文件>` 按 ContainerImagePrepare 策略把目标版本镜像拉到 undercloud 本地 registry 并打 tag；升级前用 `podman images` 确认当前镜像 tag，并用 `podman tag` 给旧镜像保留 `upgrade-rollback` 这类回滚标签，出问题时能快速指回旧镜像。"
+  },
+  {
+    "id": "os-upgrade-011",
+    "title": "执行外部升级任务",
+    "description": "用 external-upgrade run 的 --tags 执行镜像准备与在线数据迁移",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "hard",
+    "category": "upgrade_external",
+    "subcategory": "升级",
+    "full_code": "source ~/stackrc\nopenstack overcloud external-upgrade run --tags container_image_prepare\nopenstack overcloud external-upgrade run --tags online_upgrade",
+    "expected": "",
+    "points": [
+      {
+        "id": "load_rc",
+        "text": "source ~/stackrc",
+        "category": "upgrade_external",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "切换到 undercloud 认证环境",
+        "fill_type": "text"
+      },
+      {
+        "id": "external_image_1",
+        "text": "external-upgrade",
+        "category": "upgrade_external",
+        "min_weight": "hard",
+        "weight_score": 0.5,
+        "hint": "上传升级所需的新镜像",
+        "fill_type": "text"
+      },
+      {
+        "id": "external_image_2",
+        "text": "run",
+        "category": "upgrade_external",
+        "min_weight": "hard",
+        "weight_score": 0.5,
+        "hint": "上传升级所需的新镜像",
+        "fill_type": "text"
+      },
+      {
+        "id": "external_image_3",
+        "text": "--tags",
+        "category": "upgrade_external",
+        "min_weight": "hard",
+        "weight_score": 0.5,
+        "hint": "上传升级所需的新镜像",
+        "fill_type": "text"
+      },
+      {
+        "id": "external_image_4",
+        "text": "container_image_prepare",
+        "category": "upgrade_external",
+        "min_weight": "hard",
+        "weight_score": 0.5,
+        "hint": "上传升级所需的新镜像",
+        "fill_type": "text"
+      },
+      {
+        "id": "external_online_1",
+        "text": "online_upgrade",
+        "category": "upgrade_external",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "执行业务不中断的在线数据迁移",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 不属于任何节点的升级任务，用 external-upgrade 在 undercloud 上执行",
+      "level_2": "📖 `external-upgrade run` 不更新 Heat 栈、不接受 `-e`；用 `--tags` 限定任务：container_image_prepare 传镜像、online_upgrade 在线数据迁移、ceph 升级外部安装器",
+      "level_3": "👀 `openstack overcloud external-upgrade run --tags container_image_prepare` 与 `--tags online_upgrade`",
+      "level_4": "📝 正确答案：`source ~/stackrc`、`external-upgrade`、`run`、`--tags`、`container_image_prepare`、`online_upgrade`"
+    },
+    "explanation": "`openstack overcloud external-upgrade run` 在 undercloud 侧执行 upgrade prepare 生成的外部升级任务：它不更新 Heat 栈，也不接受 `-e` 环境文件，用 `--tags` 限定范围——`container_image_prepare` 上传新镜像、`online_upgrade` 做在线数据迁移、`ceph` 升级外部安装器管理的服务。"
+  },
+  {
+    "id": "os-upgrade-012",
+    "title": "手动执行数据库 schema 迁移",
+    "description": "在服务容器内用各服务 manage 工具执行数据库升级",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "hard",
+    "category": "upgrade_db_sync",
+    "subcategory": "升级",
+    "full_code": "source ~/stackrc\nsudo podman exec nova_conductor nova-manage db sync\nsudo podman exec keystone keystone-manage db_sync\nsudo podman exec cinder_api cinder-manage db sync",
+    "expected": "",
+    "points": [
+      {
+        "id": "load_rc",
+        "text": "source ~/stackrc",
+        "category": "upgrade_db_sync",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "切换到 undercloud 认证环境",
+        "fill_type": "text"
+      },
+      {
+        "id": "nova_sync_1",
+        "text": "nova-manage",
+        "category": "upgrade_db_sync",
+        "min_weight": "hard",
+        "weight_score": 0.5,
+        "hint": "迁移 nova api/cell 数据库 schema",
+        "fill_type": "text"
+      },
+      {
+        "id": "nova_sync_2",
+        "text": "db",
+        "category": "upgrade_db_sync",
+        "min_weight": "hard",
+        "weight_score": 0.5,
+        "hint": "迁移 nova api/cell 数据库 schema",
+        "fill_type": "text"
+      },
+      {
+        "id": "nova_sync_3",
+        "text": "sync",
+        "category": "upgrade_db_sync",
+        "min_weight": "hard",
+        "weight_score": 0.5,
+        "hint": "迁移 nova api/cell 数据库 schema",
+        "fill_type": "text"
+      },
+      {
+        "id": "keystone_sync",
+        "text": "keystone-manage db_sync",
+        "category": "upgrade_db_sync",
+        "min_weight": "hard",
+        "weight_score": 1.5,
+        "hint": "迁移 keystone 数据库（注意是下划线 db_sync）",
+        "fill_type": "text"
+      },
+      {
+        "id": "cinder_sync_1",
+        "text": "cinder-manage",
+        "category": "upgrade_db_sync",
+        "min_weight": "medium",
+        "weight_score": 1.0,
+        "hint": "迁移 cinder 数据库（注意是空格 db sync）",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 schema 迁移由各服务自己的 manage 工具完成，且命令写法各不相同",
+      "level_2": "📖 nova-manage 用 `db sync`（如有 cell 库需 --config-file）、keystone-manage 用 `db_sync`、cinder-manage 用 `db sync`；容器化部署里 exec 进对应服务容器执行",
+      "level_3": "👀 `podman exec nova_conductor nova-manage db sync`、`podman exec keystone keystone-manage db_sync`、`podman exec cinder_api cinder-manage db sync`",
+      "level_4": "📝 正确答案：`source ~/stackrc`、`nova-manage`、`db`、`sync`、`keystone-manage db_sync`、`cinder-manage`"
+    },
+    "explanation": "数据库 schema 迁移由各服务的 manage 工具完成：`nova-manage db sync`（api/cell 库，cell 用 `--config-file` 指定）、`keystone-manage db_sync`、`cinder-manage db sync`。容器化部署中这些命令跑在一次性容器（nova_api_db_sync、keystone_db_sync、cinder_api_db_sync 等）里，正常升级会自动执行；出问题时可 `podman exec` 进服务容器手动补跑。"
+  },
+  {
+    "id": "os-upgrade-013",
+    "title": "升级失败后的包回滚",
+    "description": "把服务包降级回上一版本并重启对应的容器化服务",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "expert",
+    "category": "upgrade_rollback",
+    "subcategory": "升级",
+    "full_code": "sudo dnf downgrade openstack-nova-common openstack-nova-compute\nsudo systemctl restart tripleo_nova_compute",
+    "expected": "",
+    "points": [
+      {
+        "id": "dnf_downgrade_1",
+        "text": "dnf",
+        "category": "upgrade_rollback",
+        "min_weight": "expert",
+        "weight_score": 0.5,
+        "hint": "把服务包退回上一版本",
+        "fill_type": "text"
+      },
+      {
+        "id": "dnf_downgrade_2",
+        "text": "downgrade",
+        "category": "upgrade_rollback",
+        "min_weight": "expert",
+        "weight_score": 0.5,
+        "hint": "把服务包退回上一版本",
+        "fill_type": "text"
+      },
+      {
+        "id": "dnf_downgrade_3",
+        "text": "openstack-nova-common",
+        "category": "upgrade_rollback",
+        "min_weight": "expert",
+        "weight_score": 0.5,
+        "hint": "把服务包退回上一版本",
+        "fill_type": "text"
+      },
+      {
+        "id": "dnf_downgrade_4",
+        "text": "openstack-nova-compute",
+        "category": "upgrade_rollback",
+        "min_weight": "expert",
+        "weight_score": 0.5,
+        "hint": "把服务包退回上一版本",
+        "fill_type": "text"
+      },
+      {
+        "id": "restart_unit_1",
+        "text": "systemctl",
+        "category": "upgrade_rollback",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "重启该服务的容器化 systemd 单元",
+        "fill_type": "text"
+      },
+      {
+        "id": "restart_unit_2",
+        "text": "restart",
+        "category": "upgrade_rollback",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "重启该服务的容器化 systemd 单元",
+        "fill_type": "text"
+      },
+      {
+        "id": "restart_unit_3",
+        "text": "tripleo_nova_compute",
+        "category": "upgrade_rollback",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "重启该服务的容器化 systemd 单元",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 回滚优先级：快照/备份整体恢复 > 包降级 + 重启服务",
+      "level_2": "📖 包层面用 `dnf downgrade` 退回旧包，再 `systemctl restart tripleo_<service>` 重启容器；更彻底的方式是 LVM 快照 `lvconvert --merge`、Ceph RBD 快照回滚或 ReaR / undercloud backup 恢复",
+      "level_3": "👀 `sudo dnf downgrade openstack-nova-common openstack-nova-compute` 后 `sudo systemctl restart tripleo_nova_compute`",
+      "level_4": "📝 正确答案：`dnf`、`downgrade`、`openstack-nova-common`、`openstack-nova-compute`、`systemctl`、`restart`、`tripleo_nova_compute`"
+    },
+    "explanation": "回滚优先用升级前的快照/备份整体恢复（LVM 快照 `lvconvert --merge`、Ceph RBD 快照回滚、ReaR 或 `openstack undercloud backup` 恢复）；包级别回退用 `dnf downgrade` 把服务包退回上一版本，再 `systemctl restart tripleo_<service>` 重启对应的容器化 systemd 单元。数据库 schema 一旦迁移通常无法简单回退，所以升级前的快照与 mysqldump 才是回滚关键。"
+  },
+  {
+    "id": "os-upgrade-014",
+    "title": "用环境文件切换节点仓库",
+    "description": "在 overcloud 环境文件中用 UpgradeInitCommand 把节点源切到目标版本流",
+    "exercise_type": "config",
+    "tech_stack": "openstack",
+    "weight": "beginner",
+    "category": "upgrade_repo_config",
+    "subcategory": "升级",
+    "full_code": "parameter_defaults:\n  UpgradeInitCommand: |\n    set -e\n    curl -L -o /etc/yum.repos.d/delorean.repo \\\n      https://trunk.rdoproject.org/centos8-wallaby/current-tripleo/delorean.repo\n    dnf clean all",
+    "expected": "",
+    "points": [
+      {
+        "id": "param_defaults",
+        "text": "parameter_defaults:",
+        "category": "upgrade_repo_config",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "环境文件的参数段",
+        "fill_type": "text"
+      },
+      {
+        "id": "upgrade_init",
+        "text": "UpgradeInitCommand: |",
+        "category": "upgrade_repo_config",
+        "min_weight": "beginner",
+        "weight_score": 1.0,
+        "hint": "升级时在节点上最先执行的命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "curl_repo_1",
+        "text": "curl",
+        "category": "upgrade_repo_config",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "下载目标版本流的仓库文件",
+        "fill_type": "text"
+      },
+      {
+        "id": "curl_repo_2",
+        "text": "-L",
+        "category": "upgrade_repo_config",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "下载目标版本流的仓库文件",
+        "fill_type": "text"
+      },
+      {
+        "id": "curl_repo_3",
+        "text": "-o",
+        "category": "upgrade_repo_config",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "下载目标版本流的仓库文件",
+        "fill_type": "text"
+      },
+      {
+        "id": "curl_repo_4",
+        "text": "/etc/yum.repos.d/delorean.repo",
+        "category": "upgrade_repo_config",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "下载目标版本流的仓库文件",
+        "fill_type": "text"
+      },
+      {
+        "id": "dnf_clean_1",
+        "text": "dnf",
+        "category": "upgrade_repo_config",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "清理元数据缓存，让新源立即生效",
+        "fill_type": "text"
+      },
+      {
+        "id": "dnf_clean_2",
+        "text": "clean",
+        "category": "upgrade_repo_config",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "清理元数据缓存，让新源立即生效",
+        "fill_type": "text"
+      },
+      {
+        "id": "dnf_clean_3",
+        "text": "all",
+        "category": "upgrade_repo_config",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "清理元数据缓存，让新源立即生效",
+        "fill_type": "text",
+        "occurrence": 1
+      }
+    ],
+    "hints": {
+      "level_1": "💡 升级 prepare 时把这份环境文件传进去，让节点自己去换源",
+      "level_2": "📖 `UpgradeInitCommand` 会在节点升级任务开始前执行，常用来把 yum 源切到目标版本流（如 centos8-wallaby/current-tripleo）并清理缓存",
+      "level_3": "👀 `parameter_defaults:` 下写 `UpgradeInitCommand: |`，内容为 curl 仓库文件 + `dnf clean all`",
+      "level_4": "📝 正确答案：`parameter_defaults:`、`UpgradeInitCommand: |`、`curl`、`-L`、`-o`、`/etc/yum.repos.d/delorean.repo`、`dnf`、`clean`、`all`"
+    },
+    "explanation": "这份环境文件在 upgrade prepare 时用 `-e` 传给 overcloud：UpgradeInitCommand 会在节点升级任务开始前执行，把节点 yum 源切到目标版本流（示例拉取 17.1 对应的 centos8-wallaby/current-tripleo 仓库）并 `dnf clean all` 清缓存，之后才能装上新版本包。upgrade converge 时不要再带这个文件，否则会把已升级节点的源又切一次。"
+  },
+  {
+    "id": "os-upgrade-015",
+    "title": "versionlock.list 锁定包版本",
+    "description": "在锁文件里把 openstack-nova 系列固定在 23.2（Wallaby）版本",
+    "exercise_type": "config",
+    "tech_stack": "openstack",
+    "weight": "easy",
+    "category": "upgrade_versionlock",
+    "subcategory": "升级",
+    "full_code": "openstack-nova-common-23.2.*\nopenstack-nova-compute-23.2.*\nopenstack-nova-conductor-23.2.*",
+    "expected": "",
+    "points": [
+      {
+        "id": "lock_common",
+        "text": "openstack-nova-common-23.2.*",
+        "category": "upgrade_versionlock",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "锁住公共包（version 允许通配）",
+        "fill_type": "text"
+      },
+      {
+        "id": "lock_compute",
+        "text": "openstack-nova-compute-23.2.*",
+        "category": "upgrade_versionlock",
+        "min_weight": "easy",
+        "weight_score": 1.0,
+        "hint": "锁住计算服务包",
+        "fill_type": "text"
+      },
+      {
+        "id": "lock_conductor",
+        "text": "openstack-nova-conductor-23.2.*",
+        "category": "upgrade_versionlock",
+        "min_weight": "easy",
+        "weight_score": 1.0,
+        "hint": "锁住 conductor 包",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 版本锁文件的位置在 /etc/dnf/plugins/versionlock.list",
+      "level_2": "📖 每行是一个 NEVRA 规格（name-epoch:version-release.arch），version/release 可用通配；`!` 开头的行表示排除而不是锁定",
+      "level_3": "👀 三行分别锁定 openstack-nova-common / compute / conductor 的 23.2 版本",
+      "level_4": "📝 正确答案：`openstack-nova-common-23.2.*`、`openstack-nova-compute-23.2.*`、`openstack-nova-conductor-23.2.*`"
+    },
+    "explanation": "versionlock 插件把锁定的包写入 /etc/dnf/plugins/versionlock.list，每行是 NEVRA 规格并支持通配；示例把 openstack-nova-* 锁在 23.2（Wallaby）版本流，防止升级窗口内被升到其它版本。`!` 开头的行表示排除而非锁定；用 `dnf versionlock list` 可查看当前锁。"
+  },
+  {
+    "id": "os-upgrade-016",
+    "title": "dnf.conf 临时排除升级包",
+    "description": "在 dnf 全局配置中排除指定包并校验签名",
+    "exercise_type": "config",
+    "tech_stack": "openstack",
+    "weight": "easy",
+    "category": "upgrade_dnf_conf",
+    "subcategory": "升级",
+    "full_code": "[main]\ngpgcheck=1\ninstallonly_limit=3\nexclude=openstack-nova-compute",
+    "expected": "",
+    "points": [
+      {
+        "id": "main_section",
+        "text": "[main]",
+        "category": "upgrade_dnf_conf",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "dnf 全局配置段，对所有仓库生效",
+        "fill_type": "text"
+      },
+      {
+        "id": "gpgcheck",
+        "text": "gpgcheck=1",
+        "category": "upgrade_dnf_conf",
+        "min_weight": "easy",
+        "weight_score": 1.0,
+        "hint": "开启 RPM 签名校验",
+        "fill_type": "text"
+      },
+      {
+        "id": "exclude_pkg",
+        "text": "exclude=openstack-nova-compute",
+        "category": "upgrade_dnf_conf",
+        "min_weight": "easy",
+        "weight_score": 1.5,
+        "hint": "升级窗口内让该包不被 dnf 更新",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 dnf 的全局配置文件是 /etc/dnf/dnf.conf",
+      "level_2": "📖 `[main]` 段对所有仓库生效；`exclude` 是软件包级的临时防升级手段，`installonly_limit` 控制保留的内核数量",
+      "level_3": "👀 `[main]` 下的 `gpgcheck=1`、`installonly_limit=3`、`exclude=openstack-nova-compute`",
+      "level_4": "📝 正确答案：`[main]`、`gpgcheck=1`、`exclude=openstack-nova-compute`"
+    },
+    "explanation": "/etc/dnf/dnf.conf 的 `[main]` 段对所有仓库生效：`exclude` 让指定包在升级窗口内不被 dnf 更新（临时防升级），`gpgcheck=1` 开启包签名校验，`installonly_limit=3` 保留最近 3 个内核。修改后可用 `dnf repolist`、`dnf config-manager --dump` 确认配置生效。"
+  },
+  {
+    "id": "os-upgrade-017",
+    "title": "container 镜像参数文件",
+    "description": "配置 ContainerImagePrepare，让升级时按标签选择最新镜像",
+    "exercise_type": "config",
+    "tech_stack": "openstack",
+    "weight": "medium",
+    "category": "upgrade_container_prepare",
+    "subcategory": "升级",
+    "full_code": "parameter_defaults:\n  ContainerImagePrepare:\n    - push_destination: true\n      set:\n        namespace: registry.redhat.io/rhosp-rhel9\n        name_prefix: openstack-\n        name_suffix: ''\n      tag_from_label: '{version}-{release}'",
+    "expected": "",
+    "points": [
+      {
+        "id": "param_defaults",
+        "text": "parameter_defaults:",
+        "category": "upgrade_container_prepare",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "环境文件的参数段",
+        "fill_type": "text"
+      },
+      {
+        "id": "image_prepare",
+        "text": "ContainerImagePrepare",
+        "category": "upgrade_container_prepare",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "定义镜像准备策略的参数",
+        "fill_type": "text"
+      },
+      {
+        "id": "push_destination",
+        "text": "push_destination: true",
+        "category": "upgrade_container_prepare",
+        "min_weight": "easy",
+        "weight_score": 1.0,
+        "hint": "先把镜像推到 undercloud 本地 registry",
+        "fill_type": "text"
+      },
+      {
+        "id": "tag_from_label",
+        "text": "tag_from_label: '{version}-{release}'",
+        "category": "upgrade_container_prepare",
+        "min_weight": "medium",
+        "weight_score": 2.0,
+        "hint": "按镜像 label 生成 tag，自动选最新 release",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 升级时镜像从哪来、用哪个 tag，都由这份参数文件决定",
+      "level_2": "📖 `push_destination: true` 把镜像拉到本地 registry；不写 `tag` 时用 `tag_from_label` 按 version/release label 算出镜像 tag，`tag` 优先于 `tag_from_label`",
+      "level_3": "👀 `ContainerImagePrepare` 下含 `push_destination: true`、`set:` 与 `tag_from_label: '{version}-{release}'`",
+      "level_4": "📝 正确答案：`parameter_defaults:`、`ContainerImagePrepare`、`push_destination: true`、`tag_from_label: '{version}-{release}'`"
+    },
+    "explanation": "ContainerImagePrepare 定义容器镜像准备策略：`push_destination: true` 把镜像先拉到 undercloud 本地 registry，节点再从本地拉取；升级场景用 `tag_from_label: '{version}-{release}'` 让 director 根据镜像 label 自动算出与当前版本匹配的 tag（如 17.1.0-5.161），从而在 update/upgrade 时选到最新 release；一旦显式设置了 `tag`，tag 优先。"
+  },
+  {
+    "id": "os-upgrade-018",
+    "title": "roles_data.yaml 控制更新并发",
+    "description": "设置各角色的 update_serial，控制一次并行更新的节点数",
+    "exercise_type": "config",
+    "tech_stack": "openstack",
+    "weight": "medium",
+    "category": "upgrade_roles_serial",
+    "subcategory": "升级",
+    "full_code": "- name: Controller\n  update_serial: 1\n- name: Compute\n  update_serial: 25",
+    "expected": "",
+    "points": [
+      {
+        "id": "ctrl_serial",
+        "text": "update_serial: 1",
+        "category": "upgrade_roles_serial",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "控制面一次只更新一台",
+        "fill_type": "text"
+      },
+      {
+        "id": "ctrl_name_1",
+        "text": "name:",
+        "category": "upgrade_roles_serial",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "控制面角色定义",
+        "fill_type": "text"
+      },
+      {
+        "id": "ctrl_name_2",
+        "text": "Controller",
+        "category": "upgrade_roles_serial",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "控制面角色定义",
+        "fill_type": "text"
+      },
+      {
+        "id": "compute_serial",
+        "text": "update_serial: 25",
+        "category": "upgrade_roles_serial",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "计算角色默认可并行更新的数量",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 update_serial 决定同一角色一次并行更新多少台",
+      "level_2": "📖 Controller、Ceph Storage 等 pacemaker 角色默认 1；Compute、Block Storage 默认 25；升级窗口想更安全可以把 Compute 也调小到 1",
+      "level_3": "👀 Controller 用 `update_serial: 1`，Compute 用 `update_serial: 25`",
+      "level_4": "📝 正确答案：`update_serial: 1`、`name:`、`Controller`、`update_serial: 25`"
+    },
+    "explanation": "update_serial 决定 `openstack overcloud update run` / `upgrade run` 中该角色一次并行更新的节点数量：Controller、Ceph 等 pacemaker 角色必须为 1（一次一台），Compute/Block Storage 默认 25；升级窗口内想更保守可以把 Compute 也调成 1，逐台升级并验证。"
+  },
+  {
+    "id": "os-upgrade-019",
+    "title": "固定 Nova 计算 RPC 升级级别",
+    "description": "在升级环境文件中设置 UpgradeLevelNovaCompute 与包清理策略",
+    "exercise_type": "config",
+    "tech_stack": "openstack",
+    "weight": "hard",
+    "category": "upgrade_environment",
+    "subcategory": "升级",
+    "full_code": "parameter_defaults:\n  UpgradeLevelNovaCompute: auto\n  UpgradeRemoveUnusedPackages: false",
+    "expected": "",
+    "points": [
+      {
+        "id": "param_defaults",
+        "text": "parameter_defaults:",
+        "category": "upgrade_environment",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "环境文件的参数段",
+        "fill_type": "text"
+      },
+      {
+        "id": "upgrade_level",
+        "text": "UpgradeLevelNovaCompute: auto",
+        "category": "upgrade_environment",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "让 nova 自动选择兼容的 RPC 版本",
+        "fill_type": "text"
+      },
+      {
+        "id": "remove_pkgs",
+        "text": "UpgradeRemoveUnusedPackages: false",
+        "category": "upgrade_environment",
+        "min_weight": "hard",
+        "weight_score": 2.0,
+        "hint": "升级时保留无用包，降低风险",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 控制面先升级、计算后升级时，要让两个版本的 Nova 能通信",
+      "level_2": "📖 `UpgradeLevelNovaCompute` 会写入 nova.conf 的 [upgrade_levels] compute，设为 auto 自动协商 RPC 版本；converge 时置空解除固定。`UpgradeRemoveUnusedPackages` 控制是否清理旧包",
+      "level_3": "👀 `parameter_defaults:` 下写 `UpgradeLevelNovaCompute: auto` 与 `UpgradeRemoveUnusedPackages: false`",
+      "level_4": "📝 正确答案：`parameter_defaults:`、`UpgradeLevelNovaCompute: auto`、`UpgradeRemoveUnusedPackages: false`"
+    },
+    "explanation": "UpgradeLevelNovaCompute 对应 nova.conf 的 `[upgrade_levels] compute`：值为 `auto` 时 nova 自动选择双方都支持的 RPC 版本，保证控制面升级后、尚未升级的旧 nova-compute 仍能与 nova-conductor 通信。upgrade prepare 使用的 lifecycle 环境文件会自动设置它，upgrade converge 时置空解除固定；UpgradeRemoveUnusedPackages 控制升级时是否清理无用包，保守场景保持 false。"
+  },
+  {
+    "id": "os-upgrade-020",
+    "title": "让计算角色独立升级",
+    "description": "通过 roles_data.yaml 把 Compute 角色排除出主升级流程",
+    "exercise_type": "config",
+    "tech_stack": "openstack",
+    "weight": "hard",
+    "category": "upgrade_roles_deploy",
+    "subcategory": "升级",
+    "full_code": "- name: Controller\n  disable_upgrade_deployment: false\n- name: Compute\n  disable_upgrade_deployment: True",
+    "expected": "",
+    "points": [
+      {
+        "id": "ctrl_flag",
+        "text": "disable_upgrade_deployment: false",
+        "category": "upgrade_roles_deploy",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "控制面必须跟随主升级流程",
+        "fill_type": "text"
+      },
+      {
+        "id": "compute_name_1",
+        "text": "name:",
+        "category": "upgrade_roles_deploy",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "计算角色定义",
+        "fill_type": "text",
+        "occurrence": 1
+      },
+      {
+        "id": "compute_name_2",
+        "text": "Compute",
+        "category": "upgrade_roles_deploy",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "计算角色定义",
+        "fill_type": "text"
+      },
+      {
+        "id": "compute_flag",
+        "text": "disable_upgrade_deployment: True",
+        "category": "upgrade_roles_deploy",
+        "min_weight": "hard",
+        "weight_score": 2.0,
+        "hint": "计算角色单独逐节点升级",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 哪些角色跟着主升级走、哪些角色单独升级，由角色文件里的开关决定",
+      "level_2": "📖 默认 Compute 和 ObjectStorage 的 `disable_upgrade_deployment` 为 True，需要逐节点用 `openstack overcloud upgrade run --limit overcloud-compute-0` 升级；Controller 必须是 false 并整组升级",
+      "level_3": "👀 Controller 为 `disable_upgrade_deployment: false`，Compute 为 `disable_upgrade_deployment: True`",
+      "level_4": "📝 正确答案：`disable_upgrade_deployment: false`、`name:`、`Compute`、`disable_upgrade_deployment: True`"
+    },
+    "explanation": "roles_data.yaml 的 `disable_upgrade_deployment: True` 表示该角色不参与主升级流程：默认 Compute 和 ObjectStorage 设为 True，需要逐节点用 `openstack overcloud upgrade run --limit overcloud-compute-0` 单独升级（便于先迁移工作负载）；Controller 必须保持 false 并与其它控制面角色一起升级，以免 pacemaker/Galera 数据不一致。"
+  }
+]

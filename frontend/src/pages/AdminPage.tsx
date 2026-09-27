@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { api, adminToken } from '../api/client';
-import type { Environment, ExerciseDetail, ExerciseListItem } from '../types';
+import type { AdminUser, BankSource, Environment, ExerciseDetail, ExerciseListItem } from '../types';
 
 const EMPTY_EXERCISE: ExerciseDetail = {
   id: '',
@@ -32,11 +32,21 @@ export default function AdminPage() {
   const [envDetail, setEnvDetail] = useState('');
   // admin token（后端启用 -admin-token 时必填）
   const [tokenInput, setTokenInput] = useState(adminToken.get());
+  // 用户管理
+  const [users, setUsers] = useState<AdminUser[]>([]);
+  const [newUsername, setNewUsername] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [newDisplayName, setNewDisplayName] = useState('');
+  // 题库动态加载
+  const [bankSources, setBankSources] = useState<BankSource[]>([]);
+  const [bankName, setBankName] = useState('');
 
   const refresh = () => {
     api.listExercises().then(setExercises).catch(() => undefined);
     api.adminStats().then(setStats).catch(() => undefined);
     api.adminEnvironments().then(setEnvs).catch(() => undefined);
+    api.adminUsers().then(setUsers).catch(() => undefined);
+    api.adminBanks().then(setBankSources).catch(() => undefined);
   };
 
   useEffect(refresh, []);
@@ -150,6 +160,72 @@ export default function AdminPage() {
     }
   };
 
+  // --- 用户管理 ---
+  const createUser = async () => {
+    setMessage(''); setError('');
+    if (!newUsername.trim() || newPassword.length < 6) {
+      setError('用户名必填，密码至少 6 位');
+      return;
+    }
+    try {
+      await api.adminCreateUser({
+        username: newUsername.trim(),
+        password: newPassword,
+        display_name: newDisplayName.trim(),
+      });
+      setNewUsername(''); setNewPassword(''); setNewDisplayName('');
+      toast(`✅ 已创建用户`);
+      refresh();
+    } catch (e) { setError(`创建失败：${String(e)}`); }
+  };
+
+  const toggleUser = async (u: AdminUser) => {
+    setMessage(''); setError('');
+    try {
+      await api.adminUpdateUser(u.id, { disabled: !u.disabled });
+      toast(u.disabled ? `✅ 已启用 ${u.username}` : `🚫 已禁用 ${u.username}`);
+      refresh();
+    } catch (e) { setError(`操作失败：${String(e)}`); }
+  };
+
+  const resetPassword = async (u: AdminUser) => {
+    const pwd = window.prompt(`为 ${u.username} 设置新密码（至少 6 位）`);
+    if (!pwd) return;
+    if (pwd.length < 6) { setError('密码至少 6 位'); return; }
+    try {
+      await api.adminUpdateUser(u.id, { password: pwd });
+      toast(`🔑 已重置 ${u.username} 的密码`);
+    } catch (e) { setError(`重置失败：${String(e)}`); }
+  };
+
+  const removeUser = async (u: AdminUser) => {
+    if (!window.confirm(`确认删除用户 ${u.username}？其进度/收藏/作答记录将一并删除。`)) return;
+    try {
+      await api.adminDeleteUser(u.id);
+      toast(`🗑️ 已删除用户 ${u.username}`);
+      refresh();
+    } catch (e) { setError(`删除失败：${String(e)}`); }
+  };
+
+  // --- 题库动态加载 ---
+  const uploadBank = async (file: File) => {
+    setMessage(''); setError('');
+    const name = (bankName.trim() || file.name.replace(/\.json$/i, '')).replace(/[^A-Za-z0-9_-]/g, '-');
+    try {
+      const content = await file.text();
+      const res = await api.adminUploadBank({ name, content });
+      toast(`✅ 题库 ${res.name} 已加载 ${res.imported} 题，立即可练`);
+      setBankName('');
+      refresh();
+    } catch (e) { setError(`上传失败：${String(e)}`); }
+  };
+
+  const onPickBankFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = '';
+    if (file) void uploadBank(file);
+  };
+
   return (
     <div className="page">
       <section className="panel">
@@ -202,6 +278,80 @@ export default function AdminPage() {
           </div>
         </section>
       )}
+
+      <section className="panel">
+        <div className="panel-title">👥 用户管理</div>
+        <p className="panel-hint">
+          每个用户的进度 / 收藏 / 薄弱点独立保存；用户可在「我的题库」选择练习范围。禁用后无法登录。
+        </p>
+        <div className="admin-list">
+          {users.map((u) => (
+            <div key={u.id} className="admin-row">
+              <span className="admin-id">{u.username}</span>
+              <span className="admin-title">{u.display_name || '-'}</span>
+              <span className="admin-sub">{u.total_attempts} 次作答</span>
+              <span className="admin-sub">完成 {u.completed_count}</span>
+              <span className="admin-sub">🔥 {u.current_streak} 天</span>
+              <span className={`admin-type ${u.disabled ? 'user-disabled' : ''}`}>
+                {u.disabled ? '已禁用' : '正常'}
+              </span>
+              <button className="ghost-btn sm" onClick={() => void toggleUser(u)}>
+                {u.disabled ? '启用' : '禁用'}
+              </button>
+              <button className="ghost-btn sm" onClick={() => void resetPassword(u)}>
+                重置密码
+              </button>
+              <button className="danger-btn" onClick={() => void removeUser(u)}>
+                删除
+              </button>
+            </div>
+          ))}
+          {users.length === 0 && <div className="empty-state">暂无用户</div>}
+          <div className="env-add">
+            <input placeholder="用户名" value={newUsername} onChange={(e) => setNewUsername(e.target.value)} />
+            <input
+              type="password"
+              placeholder="密码（至少 6 位）"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+            />
+            <input placeholder="昵称（可空）" value={newDisplayName} onChange={(e) => setNewDisplayName(e.target.value)} />
+            <button className="primary-btn" onClick={() => void createUser()}>
+              ＋ 添加用户
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section className="panel">
+        <div className="panel-title">📥 题库动态加载</div>
+        <p className="panel-hint">
+          上传题库 JSON（与 data/bank 同格式）立即生效，无需重启；也可以直接把 JSON 文件放进 data/bank
+          目录，后端每 15 秒自动扫描热加载（可用 `-bank-watch` 调整间隔）。
+        </p>
+        <div className="admin-list">
+          {bankSources.map((b) => (
+            <div key={`${b.source}:${b.name}`} className="admin-row">
+              <span className="admin-id">{b.name}</span>
+              <span className="admin-type">{b.source === 'upload' ? '上传' : '目录'}</span>
+              <span className="admin-sub">{b.exercise_count} 题</span>
+              <span className="admin-sub">{new Date(b.updated_at).toLocaleString()}</span>
+            </div>
+          ))}
+          {bankSources.length === 0 && <div className="empty-state">还没有动态加载的题库</div>}
+          <div className="env-add">
+            <input
+              placeholder="题库名（可空，默认取文件名）"
+              value={bankName}
+              onChange={(e) => setBankName(e.target.value)}
+            />
+            <label className="file-btn primary-btn">
+              📂 选择题库 JSON 上传
+              <input type="file" accept=".json,application/json" onChange={onPickBankFile} hidden />
+            </label>
+          </div>
+        </div>
+      </section>
 
       <section className="panel">
         <div className="panel-title">📋 训练动作管理</div>

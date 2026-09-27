@@ -1,0 +1,1647 @@
+[
+  {
+    "id": "os-neutron-001",
+    "title": "创建 VXLAN 租户网络",
+    "description": "用 provider 参数创建一个 VXLAN 类型的 self-service 网络",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "beginner",
+    "category": "neutron_network_create",
+    "subcategory": "Neutron",
+    "full_code": "openstack network create --provider-network-type vxlan \\\n  --provider-segmentation-id 100 tenant-net",
+    "expected": "",
+    "points": [
+      {
+        "id": "network_create",
+        "text": "network create",
+        "category": "neutron_cli",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "创建网络的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "vxlan_type",
+        "text": "--provider-network-type vxlan",
+        "category": "neutron_network",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "self-service 网络常用的类型",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "--provider-network-type=vxlan"
+        ]
+      },
+      {
+        "id": "segmentation_id",
+        "text": "--provider-segmentation-id 100",
+        "category": "neutron_network",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "VXLAN 的 VNI 编号",
+        "fill_type": "text"
+      },
+      {
+        "id": "net_name",
+        "text": "tenant-net",
+        "category": "neutron_network",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "网络名称",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 创建网络用 openstack network create，再补上 provider 相关参数",
+      "level_2": "📖 VXLAN 属于 self-service（租户）网络：--provider-network-type 指定 vxlan，--provider-segmentation-id 指定 VNI；provider 网络才需要 --provider-physical-network",
+      "level_3": "👀 共 4 空：① 创建网络的子命令；② 网络类型参数与类型值；③ VNI 参数与编号；④ 网络名",
+      "level_4": "📝 正确答案：`network create`、`--provider-network-type vxlan`、`--provider-segmentation-id 100`、`tenant-net`"
+    },
+    "explanation": "network create 创建 Neutron 二层网络；VXLAN 网络不绑定物理网卡，由 OVS/Linux Bridge agent 通过隧道承载，segmentation id 即 VNI，用来隔离不同租户的流量。"
+  },
+  {
+    "id": "os-neutron-002",
+    "title": "创建 VLAN 与 Flat provider 网络",
+    "description": "在物理网络 physnet1 上分别创建 VLAN 和 Flat 的 provider 网络",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "easy",
+    "category": "neutron_network_create",
+    "subcategory": "Neutron",
+    "full_code": "openstack network create --provider-network-type vlan --provider-physical-network physnet1 --provider-segmentation-id 101 vlan-net\nopenstack network create --provider-network-type flat --provider-physical-network physnet1 flat-net",
+    "expected": "",
+    "points": [
+      {
+        "id": "vlan_type",
+        "text": "--provider-network-type vlan",
+        "category": "neutron_network",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "VLAN 类型",
+        "fill_type": "text"
+      },
+      {
+        "id": "vlan_seg_id",
+        "text": "--provider-segmentation-id 101",
+        "category": "neutron_network",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "VLAN ID",
+        "fill_type": "text"
+      },
+      {
+        "id": "flat_type",
+        "text": "--provider-network-type flat",
+        "category": "neutron_network",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "Flat 类型（不打 VLAN 标签）",
+        "fill_type": "text"
+      },
+      {
+        "id": "flat_physnet_flag",
+        "text": "--provider-physical-network",
+        "category": "neutron_network",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "第 2 条 Flat 命令里映射物理网络的参数",
+        "fill_type": "text",
+        "occurrence": 1
+      },
+      {
+        "id": "flat_physnet_name",
+        "text": "physnet1",
+        "category": "neutron_network",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "第 2 条命令映射到的物理网络名",
+        "fill_type": "text",
+        "occurrence": 1
+      },
+      {
+        "id": "flat_name",
+        "text": "flat-net",
+        "category": "neutron_network",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "第 2 条命令的 Flat 网络名",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 provider 网络要指定 --provider-network-type 与 --provider-physical-network",
+      "level_2": "📖 VLAN 网络需要 --provider-segmentation-id 作为 VLAN ID；Flat 网络不打标签、直接使用物理网络，所以不需要 segmentation id",
+      "level_3": "👀 共 6 空：① VLAN 网络类型参数；② VLAN ID 参数；③ Flat 网络类型参数；④ Flat 命令里的物理网络参数；⑤ Flat 命令映射的物理网络名；⑥ Flat 网络名",
+      "level_4": "📝 正确答案：`--provider-network-type vlan`、`--provider-segmentation-id 101`、`--provider-network-type flat`、`--provider-physical-network`、`physnet1`、`flat-net`"
+    },
+    "explanation": "provider 网络直接映射物理网络（VLAN/Flat），通常由管理员创建并配合 --external 供外部访问；self-service 网络则用 VXLAN 等隧道类型。"
+  },
+  {
+    "id": "os-neutron-003",
+    "title": "创建 IPv4/IPv6 子网与分配池",
+    "description": "创建带网关和 DNS 的 IPv4 子网，并用 --allocation-pool 限制 IPv6 可分配地址",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "medium",
+    "category": "neutron_subnet_create",
+    "subcategory": "Neutron",
+    "full_code": "openstack subnet create --network tenant-net --subnet-range 10.0.0.0/24 \\\n  --gateway 10.0.0.1 --dns-nameserver 8.8.8.8 tenant-subnet\nopenstack subnet create --network tenant-net --ip-version 6 \\\n  --subnet-range 2001:db8:1::/64 --allocation-pool start=2001:db8:1::100,end=2001:db8:1::1ff v6-subnet",
+    "expected": "",
+    "points": [
+      {
+        "id": "subnet_create",
+        "text": "subnet create",
+        "category": "neutron_cli",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "创建子网的子命令",
+        "fill_type": "text",
+        "occurrence": 0
+      },
+      {
+        "id": "gateway",
+        "text": "--gateway 10.0.0.1",
+        "category": "neutron_subnet",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "IPv4 子网的网关参数与地址",
+        "fill_type": "text"
+      },
+      {
+        "id": "dns",
+        "text": "--dns-nameserver 8.8.8.8",
+        "category": "neutron_subnet",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "子网的 DNS 参数与地址",
+        "fill_type": "text"
+      },
+      {
+        "id": "ip_version_6",
+        "text": "--ip-version 6",
+        "category": "neutron_subnet",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "IPv6 子网",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "--ip-version=6"
+        ]
+      },
+      {
+        "id": "alloc_pool",
+        "text": "--allocation-pool",
+        "category": "neutron_subnet",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "限定可自动分配地址范围的参数",
+        "fill_type": "text"
+      },
+      {
+        "id": "pool_start",
+        "text": "start=2001:db8:1::100",
+        "category": "neutron_subnet",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "分配池的起始地址键值",
+        "fill_type": "text"
+      },
+      {
+        "id": "pool_end",
+        "text": "end=2001:db8:1::1ff",
+        "category": "neutron_subnet",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "分配池的结束地址键值",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 两条命令都是 openstack subnet create，分别补网段、网关、DNS 和分配池",
+      "level_2": "📖 --subnet-range 指定 CIDR，--gateway/--dns-nameserver 下发网关与 DNS；IPv6 子网要 --ip-version 6，--allocation-pool 用 start=,end= 限定可分配范围",
+      "level_3": "👀 共 7 空：① 创建子网的子命令；② IPv4 子网的网关参数；③ 子网的 DNS 参数；④ IPv6 版本参数；⑤ 分配池参数；⑥ 分配池起始地址；⑦ 分配池结束地址",
+      "level_4": "📝 正确答案：`subnet create`、`--gateway 10.0.0.1`、`--dns-nameserver 8.8.8.8`、`--ip-version 6`、`--allocation-pool`、`start=2001:db8:1::100`、`end=2001:db8:1::1ff`"
+    },
+    "explanation": "subnet create 在网络上划分网段；--gateway/--dns-nameserver 会通过 DHCP 下发给实例，--allocation-pool 可避开网关等保留地址。"
+  },
+  {
+    "id": "os-neutron-004",
+    "title": "创建路由器并挂载子网",
+    "description": "创建路由器、设置外部网关，并把子网加入/移出路由器",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "medium",
+    "category": "neutron_router",
+    "subcategory": "Neutron",
+    "full_code": "openstack router create router1\nopenstack router set router1 --external-gateway public\nopenstack router add subnet router1 tenant-subnet\nopenstack router remove subnet router1 old-subnet",
+    "expected": "",
+    "points": [
+      {
+        "id": "router_create",
+        "text": "router create",
+        "category": "neutron_router",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "创建路由器的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "router_name",
+        "text": "router1",
+        "category": "neutron_router",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "路由器名（第 1 条命令）",
+        "fill_type": "text",
+        "occurrence": 0
+      },
+      {
+        "id": "external_gateway",
+        "text": "--external-gateway public",
+        "category": "neutron_router",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "把路由器接到外部网络",
+        "fill_type": "text"
+      },
+      {
+        "id": "router_add",
+        "text": "router add",
+        "category": "neutron_router",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "把子网挂到路由器上的子命令（前两个词）",
+        "fill_type": "text"
+      },
+      {
+        "id": "add_subnet",
+        "text": "tenant-subnet",
+        "category": "neutron_router",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "第 3 条命令要挂载的子网名",
+        "fill_type": "text"
+      },
+      {
+        "id": "router_remove",
+        "text": "router remove",
+        "category": "neutron_router",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "把子网从路由器上摘下的子命令（前两个词）",
+        "fill_type": "text"
+      },
+      {
+        "id": "remove_subnet",
+        "text": "old-subnet",
+        "category": "neutron_router",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "第 4 条命令要摘除的子网名",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 创建、设网关、挂子网、摘子网各是一条 openstack router 命令",
+      "level_2": "📖 router set --external-gateway 把路由器的外部网关接到外部网络，SNAT/浮动 IP 都依赖它；add/remove subnet 控制子网是否走该路由器",
+      "level_3": "👀 共 7 空：① 创建路由器的子命令；② 路由器名；③ 外部网关参数与网络名；④ 挂载子网的子命令；⑤ 要挂载的子网名；⑥ 摘除子网的子命令；⑦ 要摘除的子网名",
+      "level_4": "📝 正确答案：`router create`、`router1`、`--external-gateway public`、`router add`、`tenant-subnet`、`router remove`、`old-subnet`"
+    },
+    "explanation": "路由器把 self-service 子网连到外部网络：--external-gateway 指定外部网络，add/remove subnet 管理其路由的网段。"
+  },
+  {
+    "id": "os-neutron-005",
+    "title": "创建固定 IP 端口并查询端口",
+    "description": "在指定网络上创建带固定 IP 的端口，并列出该网络的所有端口",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "medium",
+    "category": "neutron_port",
+    "subcategory": "Neutron",
+    "full_code": "openstack port create --network tenant-net --fixed-ip subnet=tenant-subnet,ip-address=10.0.0.50 port1\nopenstack port list --network tenant-net",
+    "expected": "",
+    "points": [
+      {
+        "id": "port_create",
+        "text": "port create",
+        "category": "neutron_port",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "创建端口的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "fixed_ip",
+        "text": "--fixed-ip",
+        "category": "neutron_port",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "指定固定 IP 的参数",
+        "fill_type": "text"
+      },
+      {
+        "id": "fixed_ip_subnet",
+        "text": "subnet=tenant-subnet",
+        "category": "neutron_port",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "固定 IP 里的子网键值",
+        "fill_type": "text"
+      },
+      {
+        "id": "fixed_ip_addr",
+        "text": "ip-address=10.0.0.50",
+        "category": "neutron_port",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "固定 IP 里的地址键值",
+        "fill_type": "text"
+      },
+      {
+        "id": "port_list",
+        "text": "port list",
+        "category": "neutron_port",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "查询端口列表的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "list_network",
+        "text": "--network tenant-net",
+        "category": "neutron_port",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "第 2 条命令按网络过滤端口的参数与网络名",
+        "fill_type": "text",
+        "occurrence": 1
+      }
+    ],
+    "hints": {
+      "level_1": "💡 创建端口用 openstack port create，查看用 openstack port list",
+      "level_2": "📖 --fixed-ip subnet=<子网>,ip-address=<IP> 让端口拿到指定地址；port list --network 可以按网络过滤端口",
+      "level_3": "👀 共 6 空：① 创建端口的子命令；② 固定 IP 参数；③ 固定 IP 的子网键值；④ 固定 IP 的地址键值；⑤ 查询端口的子命令；⑥ 查询时按网络过滤的参数",
+      "level_4": "📝 正确答案：`port create`、`--fixed-ip`、`subnet=tenant-subnet`、`ip-address=10.0.0.50`、`port list`、`--network tenant-net`"
+    },
+    "explanation": "port 是网络与实例网卡的连接点；手动指定固定 IP 常用于给 VIP、网关类实例固定地址，port list --network 便于核对地址占用。"
+  },
+  {
+    "id": "os-neutron-006",
+    "title": "创建安全组并放行 SSH",
+    "description": "创建安全组，并添加允许 10.0.0.0/24 访问 TCP 22 的入方向规则",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "easy",
+    "category": "neutron_security_group",
+    "subcategory": "Neutron",
+    "full_code": "openstack security group create web-sg\nopenstack security group rule create --ethertype IPv4 --protocol tcp --dst-port 22 --remote-ip-prefix 10.0.0.0/24 web-sg",
+    "expected": "",
+    "points": [
+      {
+        "id": "sg_create",
+        "text": "security group",
+        "category": "neutron_security_group",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "安全组资源名（第 1 条命令）",
+        "fill_type": "text",
+        "occurrence": 0
+      },
+      {
+        "id": "sg_name",
+        "text": "web-sg",
+        "category": "neutron_security_group",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "安全组名（第 1 条命令）",
+        "fill_type": "text",
+        "occurrence": 0
+      },
+      {
+        "id": "rule_create",
+        "text": "rule create",
+        "category": "neutron_security_group",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "创建安全组规则的子命令（第 2 条命令）",
+        "fill_type": "text"
+      },
+      {
+        "id": "ethertype",
+        "text": "--ethertype IPv4",
+        "category": "neutron_security_group",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "以太网类型参数与值",
+        "fill_type": "text"
+      },
+      {
+        "id": "protocol",
+        "text": "--protocol tcp",
+        "category": "neutron_security_group",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "协议参数与协议名",
+        "fill_type": "text"
+      },
+      {
+        "id": "dst_port",
+        "text": "--dst-port 22",
+        "category": "neutron_security_group",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "目标端口 22（SSH）",
+        "fill_type": "text"
+      },
+      {
+        "id": "remote_prefix",
+        "text": "--remote-ip-prefix 10.0.0.0/24",
+        "category": "neutron_security_group",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "来源网段",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 先建安全组，再加一条入方向规则",
+      "level_2": "📖 security group rule create 用 --ethertype/--protocol/--dst-port 描述流量，--remote-ip-prefix 限定来源网段；不指定来源前缀默认是 0.0.0.0/0",
+      "level_3": "👀 共 7 空：① 安全组资源名（第 1 条命令）；② 安全组名（第 1 条命令）；③ 创建规则的子命令；④ 以太网类型参数；⑤ 协议参数；⑥ 目标端口参数；⑦ 来源网段参数",
+      "level_4": "📝 正确答案：`security group`、`web-sg`、`rule create`、`--ethertype IPv4`、`--protocol tcp`、`--dst-port 22`、`--remote-ip-prefix 10.0.0.0/24`"
+    },
+    "explanation": "安全组是端口级的有状态防火墙；默认只放行出方向，入方向要显式加规则，--remote-ip-prefix 能把访问来源限制在内网。"
+  },
+  {
+    "id": "os-neutron-007",
+    "title": "申请并绑定浮动 IP",
+    "description": "从 public 网络申请浮动 IP，再按端口和固定 IP 绑定",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "hard",
+    "category": "neutron_floating_ip",
+    "subcategory": "Neutron",
+    "full_code": "openstack floating ip create public\nopenstack floating ip set --port port1 --fixed-ip-address 10.0.0.50 203.0.113.10",
+    "expected": "",
+    "points": [
+      {
+        "id": "fip_create",
+        "text": "floating ip",
+        "category": "neutron_floating_ip",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "浮动 IP 命令前缀（第 1 条命令）",
+        "fill_type": "text"
+      },
+      {
+        "id": "fip_net",
+        "text": "public",
+        "category": "neutron_floating_ip",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "第 1 条命令的外部网络名",
+        "fill_type": "text"
+      },
+      {
+        "id": "fip_set_verb",
+        "text": "set",
+        "category": "neutron_floating_ip",
+        "min_weight": "hard",
+        "weight_score": 1.5,
+        "hint": "修改/绑定浮动 IP 的命令动词（第 2 条命令）",
+        "fill_type": "text"
+      },
+      {
+        "id": "fip_port",
+        "text": "--port port1",
+        "category": "neutron_floating_ip",
+        "min_weight": "hard",
+        "weight_score": 2,
+        "hint": "绑定到端口",
+        "fill_type": "text"
+      },
+      {
+        "id": "fip_fixed_ip",
+        "text": "--fixed-ip-address 10.0.0.50",
+        "category": "neutron_floating_ip",
+        "min_weight": "hard",
+        "weight_score": 2,
+        "hint": "端口上的固定 IP",
+        "fill_type": "text"
+      },
+      {
+        "id": "fip_addr",
+        "text": "203.0.113.10",
+        "category": "neutron_floating_ip",
+        "min_weight": "hard",
+        "weight_score": 1.5,
+        "hint": "第 2 条命令要绑定的浮动 IP 地址",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 先从外部网络申请浮动 IP，再把它绑定到端口",
+      "level_2": "📖 floating ip set --port 把浮动 IP 关联到端口，端口有多个 IP 时用 --fixed-ip-address 指定内部地址",
+      "level_3": "👀 共 6 空：① 浮动 IP 命令前缀（第 1 条命令）；② 外部网络名（第 1 条命令）；③ 绑定浮动 IP 的命令动词（第 2 条命令）；④ 绑定到端口的参数；⑤ 端口上的固定 IP 参数；⑥ 要绑定的浮动 IP 地址",
+      "level_4": "📝 正确答案：`floating ip`、`public`、`set`、`--port port1`、`--fixed-ip-address 10.0.0.50`、`203.0.113.10`"
+    },
+    "explanation": "浮动 IP 从外部网络申请，经路由器 NAT 映射到实例的固定 IP；--port 直接绑定端口，比绑实例更精确。"
+  },
+  {
+    "id": "os-neutron-008",
+    "title": "创建 QoS 限速策略",
+    "description": "创建 QoS 策略、添加带宽限制规则并挂载到网络",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "hard",
+    "category": "neutron_qos",
+    "subcategory": "Neutron",
+    "full_code": "openstack network qos policy create bw-limit\nopenstack network qos rule create --type bandwidth-limit --max-kbps 10000 --max-burst-kbits 10000 bw-limit\nopenstack network set --qos-policy bw-limit tenant-net",
+    "expected": "",
+    "points": [
+      {
+        "id": "qos_policy",
+        "text": "network qos",
+        "category": "neutron_qos",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "QoS 命令前缀（第 1 条命令）",
+        "fill_type": "text"
+      },
+      {
+        "id": "policy_create",
+        "text": "policy create",
+        "category": "neutron_qos",
+        "min_weight": "hard",
+        "weight_score": 1.5,
+        "hint": "创建 QoS 策略的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "policy_name",
+        "text": "bw-limit",
+        "category": "neutron_qos",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "QoS 策略名（第 1 条命令）",
+        "fill_type": "text",
+        "occurrence": 0
+      },
+      {
+        "id": "rule_type",
+        "text": "--type bandwidth-limit",
+        "category": "neutron_qos",
+        "min_weight": "hard",
+        "weight_score": 2,
+        "hint": "限速规则类型",
+        "fill_type": "text"
+      },
+      {
+        "id": "max_kbps",
+        "text": "--max-kbps 10000",
+        "category": "neutron_qos",
+        "min_weight": "hard",
+        "weight_score": 2,
+        "hint": "最大带宽（Kbps）",
+        "fill_type": "text"
+      },
+      {
+        "id": "rule_create",
+        "text": "rule create",
+        "category": "neutron_qos",
+        "min_weight": "hard",
+        "weight_score": 1.5,
+        "hint": "创建 QoS 规则的子命令（第 2 条命令）",
+        "fill_type": "text"
+      },
+      {
+        "id": "qos_attach",
+        "text": "--qos-policy bw-limit",
+        "category": "neutron_qos",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "第 3 条命令把策略挂到网络的参数与策略名",
+        "fill_type": "text"
+      },
+      {
+        "id": "attach_net",
+        "text": "tenant-net",
+        "category": "neutron_qos",
+        "min_weight": "medium",
+        "weight_score": 0.75,
+        "hint": "要挂载 QoS 策略的网络名",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 建策略 → 加限速规则 → 挂到网络，三步都是 openstack network qos 相关命令",
+      "level_2": "📖 规则类型是 --type bandwidth-limit，--max-kbps 限制带宽、--max-burst-kbits 允许突发；策略通过 network set --qos-policy 生效",
+      "level_3": "👀 共 8 空：① QoS 命令前缀（第 1 条命令）；② 创建策略的子命令；③ 策略名；④ 规则类型参数；⑤ 最大带宽参数；⑥ 创建规则的子命令；⑦ 把策略挂到网络的参数；⑧ 被挂载的网络名",
+      "level_4": "📝 正确答案：`network qos`、`policy create`、`bw-limit`、`--type bandwidth-limit`、`--max-kbps 10000`、`rule create`、`--qos-policy bw-limit`、`tenant-net`"
+    },
+    "explanation": "QoS 策略由规则组成，bandwidth-limit 规则对网络/端口限速；挂到网络后该网络上的端口都会受策略约束。"
+  },
+  {
+    "id": "os-neutron-009",
+    "title": "查看网络代理状态",
+    "description": "列出 DHCP 类型代理并查看指定代理详情",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "beginner",
+    "category": "neutron_agent",
+    "subcategory": "Neutron",
+    "full_code": "openstack network agent list --agent-type dhcp\nopenstack network agent show d3f2b6e8-9c41-4a7b-8e2d-6f5a1b2c3d4e",
+    "expected": "",
+    "points": [
+      {
+        "id": "agent_list",
+        "text": "network agent",
+        "category": "neutron_agent",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "网络代理命令前缀（第 1 条命令）",
+        "fill_type": "text"
+      },
+      {
+        "id": "agent_list_verb",
+        "text": "list",
+        "category": "neutron_agent",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "列出代理的命令动词",
+        "fill_type": "text"
+      },
+      {
+        "id": "agent_type",
+        "text": "--agent-type dhcp",
+        "category": "neutron_agent",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "只看 DHCP 代理",
+        "fill_type": "text"
+      },
+      {
+        "id": "agent_show",
+        "text": "show",
+        "category": "neutron_agent",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "查看代理详情的命令动词（第 2 条命令）",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 查看 agent 用 openstack network agent list / show",
+      "level_2": "📖 --agent-type 可按 dhcp、openvswitch、l3 等过滤；show 用 agent id 查看它承载的网络与心跳状态",
+      "level_3": "👀 共 4 空：① 网络代理命令前缀（第 1 条命令）；② 列出代理的命令动词；③ 按代理类型过滤的参数；④ 查看详情的命令动词（第 2 条命令）",
+      "level_4": "📝 正确答案：`network agent`、`list`、`--agent-type dhcp`、`show`"
+    },
+    "explanation": "DHCP/OVS/L3 等 agent 负责真正下发网络配置，agent 掉线时对应网络会不可用，所以排障先看 agent 状态。"
+  },
+  {
+    "id": "os-neutron-010",
+    "title": "创建 Trunk 并挂载 Subport",
+    "description": "为父端口创建 trunk，并添加带 VLAN 标签的子端口",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "hard",
+    "category": "neutron_trunk",
+    "subcategory": "Neutron",
+    "full_code": "openstack network trunk create --parent-port port1 trunk1\nopenstack network trunk set --subport port=port2,segmentation-type=vlan,segmentation-id=100 trunk1",
+    "expected": "",
+    "points": [
+      {
+        "id": "trunk_create",
+        "text": "network trunk",
+        "category": "neutron_trunk",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "网络 trunk 命令前缀（第 1 条命令）",
+        "fill_type": "text"
+      },
+      {
+        "id": "parent_port",
+        "text": "--parent-port port1",
+        "category": "neutron_trunk",
+        "min_weight": "hard",
+        "weight_score": 2,
+        "hint": "指定父端口",
+        "fill_type": "text"
+      },
+      {
+        "id": "trunk_set",
+        "text": "trunk set",
+        "category": "neutron_trunk",
+        "min_weight": "hard",
+        "weight_score": 1.5,
+        "hint": "修改 trunk 的子命令（第 2 条命令）",
+        "fill_type": "text"
+      },
+      {
+        "id": "subport",
+        "text": "--subport",
+        "category": "neutron_trunk",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "添加子端口的参数",
+        "fill_type": "text"
+      },
+      {
+        "id": "subport_port",
+        "text": "port=port2",
+        "category": "neutron_trunk",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "子端口的名称键值",
+        "fill_type": "text"
+      },
+      {
+        "id": "subport_type",
+        "text": "segmentation-type=vlan",
+        "category": "neutron_trunk",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "子端口的标签类型键值",
+        "fill_type": "text"
+      },
+      {
+        "id": "subport_id",
+        "text": "segmentation-id=100",
+        "category": "neutron_trunk",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "子端口的 VLAN ID 键值",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 先建 trunk 再挂子端口，都是 openstack network trunk 命令",
+      "level_2": "📖 --parent-port 指定父端口（实例主网卡），--subport 用 port=...,segmentation-type=vlan,segmentation-id=... 添加带标签的子端口",
+      "level_3": "👀 共 7 空：① 网络 trunk 命令前缀（第 1 条命令）；② 指定父端口的参数；③ 修改 trunk 的子命令；④ 添加子端口的参数；⑤ 子端口名称键值；⑥ 子端口标签类型键值；⑦ 子端口 VLAN ID 键值",
+      "level_4": "📝 正确答案：`network trunk`、`--parent-port port1`、`trunk set`、`--subport`、`port=port2`、`segmentation-type=vlan`、`segmentation-id=100`"
+    },
+    "explanation": "Trunk 让一个实例网卡承载多个 VLAN 子端口（如 NFV 场景），父端口 trunk 与子端口 subport 组成一个 trunk 资源。"
+  },
+  {
+    "id": "os-neutron-011",
+    "title": "创建地址范围与子网池",
+    "description": "创建可共享的 address scope，并创建带默认前缀长度的 subnet pool",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "medium",
+    "category": "neutron_address_scope",
+    "subcategory": "Neutron",
+    "full_code": "openstack address scope create --share shared-scope\nopenstack subnet pool create --pool-prefix 10.10.0.0/16 --default-prefix-length 24 --address-scope shared-scope pool1",
+    "expected": "",
+    "points": [
+      {
+        "id": "scope_create",
+        "text": "address scope",
+        "category": "neutron_address_scope",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "创建地址范围的子命令前缀（第 1 条命令）",
+        "fill_type": "text"
+      },
+      {
+        "id": "scope_share",
+        "text": "--share",
+        "category": "neutron_address_scope",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "声明地址范围可共享的参数",
+        "fill_type": "text"
+      },
+      {
+        "id": "scope_name",
+        "text": "shared-scope",
+        "category": "neutron_address_scope",
+        "min_weight": "medium",
+        "weight_score": 0.75,
+        "hint": "地址范围名（第 1 条命令）",
+        "fill_type": "text",
+        "occurrence": 0
+      },
+      {
+        "id": "pool_create",
+        "text": "subnet pool",
+        "category": "neutron_subnet_pool",
+        "min_weight": "medium",
+        "weight_score": 0.75,
+        "hint": "创建子网池的子命令前缀（第 2 条命令）",
+        "fill_type": "text"
+      },
+      {
+        "id": "pool_prefix",
+        "text": "--pool-prefix 10.10.0.0/16",
+        "category": "neutron_subnet_pool",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "池的前缀",
+        "fill_type": "text"
+      },
+      {
+        "id": "default_prefixlen",
+        "text": "--default-prefix-length 24",
+        "category": "neutron_subnet_pool",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "从池分配子网时的默认前缀长度",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "--default-prefixlen 24"
+        ]
+      },
+      {
+        "id": "pool_scope",
+        "text": "--address-scope shared-scope",
+        "category": "neutron_subnet_pool",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "把子网池关联到地址范围的参数与范围名",
+        "fill_type": "text"
+      },
+      {
+        "id": "pool_name",
+        "text": "pool1",
+        "category": "neutron_subnet_pool",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "子网池名称",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 先建 address scope，再建带地址范围的 subnet pool",
+      "level_2": "📖 address scope 把子网池归入同一个可路由域，跨项目路由依赖它；subnet pool 用 --pool-prefix 给地址池、--default-prefix-length 决定默认切分大小",
+      "level_3": "👀 共 8 空：① 创建地址范围的子命令前缀；② 创建时声明共享的参数；③ 地址范围名；④ 创建子网池的子命令前缀；⑤ 池前缀参数；⑥ 默认前缀长度参数；⑦ 关联地址范围的参数；⑧ 子网池名",
+      "level_4": "📝 正确答案：`address scope`、`--share`、`shared-scope`、`subnet pool`、`--pool-prefix 10.10.0.0/16`、`--default-prefix-length 24`、`--address-scope shared-scope`、`pool1`"
+    },
+    "explanation": "subnet pool 集中管理地址段，避免子网重叠；address scope 定义哪些子网池之间可以互访（跨项目路由的前提）。旧版 CLI 的 --default-prefixlen 是 --default-prefix-length 的别名。"
+  },
+  {
+    "id": "os-neutron-012",
+    "title": "数据面排障四连",
+    "description": "检查集成网桥、OVS 数据库、网络命名空间及其内部地址",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "expert",
+    "category": "neutron_troubleshooting",
+    "subcategory": "Neutron",
+    "full_code": "ip a show br-int\novs-vsctl show\nip netns list\nip netns exec qdhcp-tenant-net ip addr show",
+    "expected": "",
+    "points": [
+      {
+        "id": "ip_link",
+        "text": "ip a",
+        "category": "network_troubleshooting",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "查看网卡的命令前缀（第 1 条命令）",
+        "fill_type": "text"
+      },
+      {
+        "id": "ip_show",
+        "text": "show",
+        "category": "network_troubleshooting",
+        "min_weight": "medium",
+        "weight_score": 0.75,
+        "hint": "显示接口状态的命令动词（第 1 条命令）",
+        "fill_type": "text"
+      },
+      {
+        "id": "br_int",
+        "text": "br-int",
+        "category": "network_troubleshooting",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "集成网桥名",
+        "fill_type": "text"
+      },
+      {
+        "id": "ovs_show",
+        "text": "ovs-vsctl show",
+        "category": "network_troubleshooting",
+        "min_weight": "expert",
+        "weight_score": 2,
+        "hint": "查看 OVS 网桥与端口",
+        "fill_type": "text"
+      },
+      {
+        "id": "netns_list",
+        "text": "ip netns",
+        "category": "network_troubleshooting",
+        "min_weight": "medium",
+        "weight_score": 0.75,
+        "hint": "网络命名空间命令前缀（第 3 条命令）",
+        "fill_type": "text"
+      },
+      {
+        "id": "netns_list_verb",
+        "text": "list",
+        "category": "network_troubleshooting",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "列出命名空间的命令动词",
+        "fill_type": "text"
+      },
+      {
+        "id": "netns_exec",
+        "text": "netns exec",
+        "category": "network_troubleshooting",
+        "min_weight": "expert",
+        "weight_score": 1.5,
+        "hint": "在命名空间内执行的子命令（第 4 条命令）",
+        "fill_type": "text"
+      },
+      {
+        "id": "netns_name",
+        "text": "qdhcp-tenant-net",
+        "category": "network_troubleshooting",
+        "min_weight": "expert",
+        "weight_score": 1.5,
+        "hint": "DHCP 代理的命名空间名",
+        "fill_type": "text"
+      },
+      {
+        "id": "addr_show",
+        "text": "addr show",
+        "category": "network_troubleshooting",
+        "min_weight": "expert",
+        "weight_score": 1.5,
+        "hint": "显示地址的命令（第 4 条命令）",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 从网卡、OVS 到命名空间逐层看数据面",
+      "level_2": "📖 br-int 是集成网桥，实例端口都接在上面；DHCP/L3 等用 network namespace 隔离，qdhcp-<网络> 就是 DHCP 命名空间",
+      "level_3": "👀 共 9 空：① 查看网卡的命令前缀（第 1 条命令）；② 显示接口状态的命令动词（第 1 条命令）；③ 集成网桥名；④ OVS 查看命令；⑤ 网络命名空间命令前缀（第 3 条命令）；⑥ 列出命名空间的命令动词；⑦ 在命名空间内执行的子命令；⑧ DHCP 命名空间名；⑨ 显示地址的命令（第 4 条命令）",
+      "level_4": "📝 正确答案：`ip a`、`show`、`br-int`、`ovs-vsctl show`、`ip netns`、`list`、`netns exec`、`qdhcp-tenant-net`、`addr show`"
+    },
+    "explanation": "Neutron 的数据面配置大多落在 OVS 网桥和 network namespace 中；br-int 上看不到实例端口或命名空间里没有地址，通常意味着 agent 没把配置下发成功。"
+  },
+  {
+    "id": "os-neutron-013",
+    "title": "neutron.conf 配置核心插件与消息队列",
+    "description": "配置 ML2 核心插件、路由插件，以及 oslo.messaging 的 RabbitMQ 连接",
+    "exercise_type": "config",
+    "tech_stack": "openstack",
+    "weight": "beginner",
+    "category": "neutron_conf_messaging",
+    "subcategory": "Neutron",
+    "full_code": "[DEFAULT]\ncore_plugin = ml2\nservice_plugins = router\ntransport_url = rabbit://openstack:rabbit_pass@controller:5672//\n\n[oslo_messaging_rabbit]\nrabbit_ha_queues = true",
+    "expected": "",
+    "points": [
+      {
+        "id": "default_section",
+        "text": "[DEFAULT]",
+        "category": "neutron_conf",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "全局默认段",
+        "fill_type": "text"
+      },
+      {
+        "id": "core_plugin",
+        "text": "core_plugin",
+        "category": "neutron_conf",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "核心插件配置键",
+        "fill_type": "text"
+      },
+      {
+        "id": "core_plugin_value",
+        "text": "ml2",
+        "category": "neutron_conf",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "核心插件值",
+        "fill_type": "text"
+      },
+      {
+        "id": "service_plugins",
+        "text": "service_plugins",
+        "category": "neutron_conf",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "服务插件配置键",
+        "fill_type": "text"
+      },
+      {
+        "id": "service_plugin_value",
+        "text": "router",
+        "category": "neutron_conf",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "启用的服务插件值",
+        "fill_type": "text"
+      },
+      {
+        "id": "transport_url",
+        "text": "transport_url",
+        "category": "neutron_conf",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "消息队列连接串配置键",
+        "fill_type": "text"
+      },
+      {
+        "id": "transport_broker",
+        "text": "rabbit://openstack:rabbit_pass",
+        "category": "neutron_conf",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "连接串的协议与账号密码",
+        "fill_type": "text"
+      },
+      {
+        "id": "transport_host",
+        "text": "controller:5672//",
+        "category": "neutron_conf",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "MQ 主机、端口与默认 vhost",
+        "fill_type": "text"
+      },
+      {
+        "id": "rabbit_section",
+        "text": "[oslo_messaging_rabbit]",
+        "category": "neutron_conf",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "RabbitMQ 驱动配置段",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 neutron.conf 的 [DEFAULT] 里配核心插件，消息队列用 oslo.messaging 段",
+      "level_2": "📖 core_plugin 决定用 ML2 还是其他核心插件，service_plugins 启用 router 等扩展；RabbitMQ 可以用 transport_url，或 [oslo_messaging_rabbit] 的 rabbit_* 参数",
+      "level_3": "👀 共 9 空：① 全局默认段；② 核心插件配置键；③ 核心插件值；④ 服务插件配置键；⑤ 启用的服务插件；⑥ 消息队列连接串配置键；⑦ 连接串的协议与账号密码；⑧ MQ 主机端口与 vhost；⑨ RabbitMQ 驱动配置段",
+      "level_4": "📝 正确答案：`[DEFAULT]`、`core_plugin`、`ml2`、`service_plugins`、`router`、`transport_url`、`rabbit://openstack:rabbit_pass`、`controller:5672//`、`[oslo_messaging_rabbit]`"
+    },
+    "explanation": "neutron-server 通过消息队列与各 agent 通信；core_plugin=ml2 是当前标准核心插件，service_plugins=router 启用 L3 路由服务。"
+  },
+  {
+    "id": "os-neutron-014",
+    "title": "ml2_conf.ini 配置 ML2 驱动",
+    "description": "配置 ML2 的类型驱动、租户网络类型与机制驱动",
+    "exercise_type": "config",
+    "tech_stack": "openstack",
+    "weight": "medium",
+    "category": "ml2_conf_drivers",
+    "subcategory": "Neutron",
+    "full_code": "[ml2]\ntype_drivers = flat,vlan,vxlan\ntenant_network_types = vxlan\nmechanism_drivers = openvswitch,l2population",
+    "expected": "",
+    "points": [
+      {
+        "id": "ml2_section",
+        "text": "[ml2]",
+        "category": "ml2_conf",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "ML2 主配置段",
+        "fill_type": "text"
+      },
+      {
+        "id": "type_drivers",
+        "text": "type_drivers",
+        "category": "ml2_conf",
+        "min_weight": "medium",
+        "weight_score": 0.75,
+        "hint": "类型驱动配置键",
+        "fill_type": "text"
+      },
+      {
+        "id": "type_drivers_value",
+        "text": "flat,vlan,vxlan",
+        "category": "ml2_conf",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "启用的网络类型列表",
+        "fill_type": "text"
+      },
+      {
+        "id": "tenant_network_types",
+        "text": "tenant_network_types",
+        "category": "ml2_conf",
+        "min_weight": "medium",
+        "weight_score": 0.75,
+        "hint": "租户网络默认类型配置键",
+        "fill_type": "text"
+      },
+      {
+        "id": "tenant_default",
+        "text": "vxlan",
+        "category": "ml2_conf",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "租户网络默认类型值",
+        "fill_type": "text",
+        "occurrence": 1
+      },
+      {
+        "id": "mechanism_drivers",
+        "text": "mechanism_drivers",
+        "category": "ml2_conf",
+        "min_weight": "medium",
+        "weight_score": 0.75,
+        "hint": "机制驱动配置键",
+        "fill_type": "text"
+      },
+      {
+        "id": "mechanism_drivers_value",
+        "text": "openvswitch,l2population",
+        "category": "ml2_conf",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "启用的机制驱动列表",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 [ml2] 段里三件事：支持哪些类型、租户默认用哪种、用哪个机制驱动",
+      "level_2": "📖 type_drivers 是能力列表（flat,vlan,vxlan 等），tenant_network_types 决定普通用户建网的默认类型，mechanism_drivers 决定下发方式（openvswitch/linuxbridge 等）",
+      "level_3": "👀 共 7 空：① ML2 主配置段；② 类型驱动配置键；③ 启用的类型列表；④ 租户网络默认类型配置键；⑤ 默认类型值；⑥ 机制驱动配置键；⑦ 启用的机制驱动列表",
+      "level_4": "📝 正确答案：`[ml2]`、`type_drivers`、`flat,vlan,vxlan`、`tenant_network_types`、`vxlan`、`mechanism_drivers`、`openvswitch,l2population`"
+    },
+    "explanation": "ML2 通过 type_drivers 支持多种二层类型，tenant_network_types 控制租户网络默认类型，机制驱动负责与具体 agent 配合下发配置。"
+  },
+  {
+    "id": "os-neutron-015",
+    "title": "ml2_conf.ini 配置 VLAN/VXLAN 网段",
+    "description": "配置 VXLAN 的 VNI 范围与 VLAN 的物理网络范围",
+    "exercise_type": "config",
+    "tech_stack": "openstack",
+    "weight": "medium",
+    "category": "ml2_conf_type_ranges",
+    "subcategory": "Neutron",
+    "full_code": "# provider network: flat/vlan on physnet1; self-service network: vxlan\n[ml2_type_vxlan]\nvni_ranges = 1:1000\n\n[ml2_type_vlan]\nnetwork_vlan_ranges = physnet1:100:200",
+    "expected": "",
+    "points": [
+      {
+        "id": "vxlan_section",
+        "text": "[ml2_type_vxlan]",
+        "category": "ml2_conf",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "VXLAN 类型段",
+        "fill_type": "text"
+      },
+      {
+        "id": "vni_ranges",
+        "text": "vni_ranges",
+        "category": "ml2_conf",
+        "min_weight": "medium",
+        "weight_score": 0.75,
+        "hint": "VNI 范围配置键",
+        "fill_type": "text"
+      },
+      {
+        "id": "vni_range_value",
+        "text": "1:1000",
+        "category": "ml2_conf",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "VNI 范围值",
+        "fill_type": "text"
+      },
+      {
+        "id": "vlan_section",
+        "text": "[ml2_type_vlan]",
+        "category": "ml2_conf",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "VLAN 类型段",
+        "fill_type": "text"
+      },
+      {
+        "id": "vlan_ranges",
+        "text": "network_vlan_ranges",
+        "category": "ml2_conf",
+        "min_weight": "medium",
+        "weight_score": 0.75,
+        "hint": "VLAN 范围配置键",
+        "fill_type": "text"
+      },
+      {
+        "id": "vlan_range_value",
+        "text": "physnet1:100:200",
+        "category": "ml2_conf",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "物理网络上的 VLAN 范围值",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 VXLAN 的 VNI 范围和 VLAN 的物理网络范围分别配在各自类型段",
+      "level_2": "📖 vni_ranges 限定可用的 VXLAN 隧道 ID，network_vlan_ranges 格式是 物理网络:VLAN起始:VLAN结束，供 provider 网络和租户 VLAN 使用",
+      "level_3": "👀 共 6 空：① VXLAN 类型段；② VNI 范围配置键；③ VNI 范围值；④ VLAN 类型段；⑤ VLAN 范围配置键；⑥ 物理网络上的 VLAN 范围值",
+      "level_4": "📝 正确答案：`[ml2_type_vxlan]`、`vni_ranges`、`1:1000`、`[ml2_type_vlan]`、`network_vlan_ranges`、`physnet1:100:200`"
+    },
+    "explanation": "provider 网络使用 flat/vlan 直接映射物理网络，self-service 网络常用 vxlan；这里分别声明两种类型可用的网段/隧道号，避免与现网冲突。"
+  },
+  {
+    "id": "os-neutron-016",
+    "title": "ml2_conf.ini 配置安全组驱动",
+    "description": "指定 ML2 使用的安全组防火墙驱动并启用安全组",
+    "exercise_type": "config",
+    "tech_stack": "openstack",
+    "weight": "easy",
+    "category": "ml2_conf_securitygroup",
+    "subcategory": "Neutron",
+    "full_code": "[securitygroup]\nfirewall_driver = openvswitch\nenable_security_group = true",
+    "expected": "",
+    "points": [
+      {
+        "id": "sg_section",
+        "text": "[securitygroup]",
+        "category": "ml2_conf",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "安全组配置段",
+        "fill_type": "text"
+      },
+      {
+        "id": "firewall_driver",
+        "text": "firewall_driver",
+        "category": "ml2_conf",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "防火墙驱动配置键",
+        "fill_type": "text"
+      },
+      {
+        "id": "firewall_driver_value",
+        "text": "openvswitch",
+        "category": "ml2_conf",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "使用 OVS 原生防火墙的驱动值",
+        "fill_type": "text"
+      },
+      {
+        "id": "enable_sg",
+        "text": "enable_security_group",
+        "category": "ml2_conf",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "启用安全组的配置键",
+        "fill_type": "text"
+      },
+      {
+        "id": "enable_sg_value",
+        "text": "true",
+        "category": "ml2_conf",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "启用安全组的值",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 安全组相关配置都在 [securitygroup] 段",
+      "level_2": "📖 firewall_driver = openvswitch 使用 OVS 原生防火墙（也常见 iptables_hybrid），enable_security_group 控制是否启用安全组功能",
+      "level_3": "👀 共 5 空：① 安全组配置段；② 防火墙驱动配置键；③ 防火墙驱动值；④ 启用安全组配置键；⑤ 启用安全组的值",
+      "level_4": "📝 正确答案：`[securitygroup]`、`firewall_driver`、`openvswitch`、`enable_security_group`、`true`"
+    },
+    "explanation": "ML2 的安全组由防火墙驱动实现；OVS 驱动性能更好，iptables_hybrid 兼容性更好但性能较差。"
+  },
+  {
+    "id": "os-neutron-017",
+    "title": "openvswitch_agent.ini 配置 OVS 代理",
+    "description": "配置网桥映射、隧道源地址与隧道类型",
+    "exercise_type": "config",
+    "tech_stack": "openstack",
+    "weight": "medium",
+    "category": "ovs_agent_conf",
+    "subcategory": "Neutron",
+    "full_code": "[ovs]\nbridge_mappings = physnet1:br-ex\nlocal_ip = 192.168.1.10\n\n[agent]\ntunnel_types = vxlan",
+    "expected": "",
+    "points": [
+      {
+        "id": "ovs_section",
+        "text": "[ovs]",
+        "category": "ovs_agent",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "OVS 配置段",
+        "fill_type": "text"
+      },
+      {
+        "id": "bridge_mappings",
+        "text": "bridge_mappings",
+        "category": "ovs_agent",
+        "min_weight": "medium",
+        "weight_score": 0.75,
+        "hint": "网桥映射配置键",
+        "fill_type": "text"
+      },
+      {
+        "id": "bridge_mappings_value",
+        "text": "physnet1:br-ex",
+        "category": "ovs_agent",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "物理网络到网桥的映射值",
+        "fill_type": "text"
+      },
+      {
+        "id": "local_ip",
+        "text": "local_ip",
+        "category": "ovs_agent",
+        "min_weight": "medium",
+        "weight_score": 0.75,
+        "hint": "隧道源地址配置键",
+        "fill_type": "text"
+      },
+      {
+        "id": "local_ip_value",
+        "text": "192.168.1.10",
+        "category": "ovs_agent",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "隧道源地址值",
+        "fill_type": "text"
+      },
+      {
+        "id": "agent_section",
+        "text": "[agent]",
+        "category": "ovs_agent",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "OVS 代理的 agent 段",
+        "fill_type": "text"
+      },
+      {
+        "id": "tunnel_types",
+        "text": "tunnel_types",
+        "category": "ovs_agent",
+        "min_weight": "medium",
+        "weight_score": 0.75,
+        "hint": "隧道类型配置键",
+        "fill_type": "text"
+      },
+      {
+        "id": "tunnel_type_value",
+        "text": "vxlan",
+        "category": "ovs_agent",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "启用的隧道类型值",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 OVS agent 的网桥与隧道参数分别在 [ovs] 和 [agent] 段",
+      "level_2": "📖 bridge_mappings 把物理网络映射到网桥（physnet1:br-ex），local_ip 是 VXLAN 隧道的源地址，tunnel_types 声明启用的隧道类型",
+      "level_3": "👀 共 8 空：① OVS 配置段；② 网桥映射配置键；③ 物理网络到网桥的映射值；④ 隧道源地址配置键；⑤ 隧道源地址值；⑥ OVS 代理的 agent 段；⑦ 隧道类型配置键；⑧ 隧道类型值",
+      "level_4": "📝 正确答案：`[ovs]`、`bridge_mappings`、`physnet1:br-ex`、`local_ip`、`192.168.1.10`、`[agent]`、`tunnel_types`、`vxlan`"
+    },
+    "explanation": "openvswitch_agent.ini 决定 OVS agent 如何接入物理网络与建立隧道；local_ip 必须是节点间可达的隧道网地址。"
+  },
+  {
+    "id": "os-neutron-018",
+    "title": "linuxbridge_agent.ini 配置 Linux Bridge",
+    "description": "配置物理接口映射与 VXLAN 隧道源地址",
+    "exercise_type": "config",
+    "tech_stack": "openstack",
+    "weight": "easy",
+    "category": "linuxbridge_agent_conf",
+    "subcategory": "Neutron",
+    "full_code": "[linux_bridge]\nphysical_interface_mappings = physnet1:eth1\n\n[vxlan]\nlocal_ip = 192.168.1.10",
+    "expected": "",
+    "points": [
+      {
+        "id": "linux_bridge_section",
+        "text": "[linux_bridge]",
+        "category": "linuxbridge_agent",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "Linux Bridge 配置段",
+        "fill_type": "text"
+      },
+      {
+        "id": "iface_mappings",
+        "text": "physical_interface_mappings",
+        "category": "linuxbridge_agent",
+        "min_weight": "easy",
+        "weight_score": 0.75,
+        "hint": "物理接口映射配置键",
+        "fill_type": "text"
+      },
+      {
+        "id": "iface_mappings_value",
+        "text": "physnet1:eth1",
+        "category": "linuxbridge_agent",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "物理网络到网卡的映射值",
+        "fill_type": "text"
+      },
+      {
+        "id": "vxlan_section",
+        "text": "[vxlan]",
+        "category": "linuxbridge_agent",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "VXLAN 配置段",
+        "fill_type": "text"
+      },
+      {
+        "id": "local_ip",
+        "text": "local_ip",
+        "category": "linuxbridge_agent",
+        "min_weight": "easy",
+        "weight_score": 0.75,
+        "hint": "隧道源地址配置键",
+        "fill_type": "text"
+      },
+      {
+        "id": "local_ip_value",
+        "text": "192.168.1.10",
+        "category": "linuxbridge_agent",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "隧道源地址值",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 Linux Bridge agent 用 [linux_bridge] 映射网卡，[vxlan] 配隧道地址",
+      "level_2": "📖 physical_interface_mappings 格式是 物理网络:网卡（physnet1:eth1），local_ip 是 VXLAN 隧道源地址",
+      "level_3": "👀 共 6 空：① Linux Bridge 配置段；② 物理接口映射配置键；③ 物理网络到网卡的映射值；④ VXLAN 配置段；⑤ 隧道源地址配置键；⑥ 隧道源地址值",
+      "level_4": "📝 正确答案：`[linux_bridge]`、`physical_interface_mappings`、`physnet1:eth1`、`[vxlan]`、`local_ip`、`192.168.1.10`"
+    },
+    "explanation": "Linux Bridge 是最简单的二层后端：物理网卡直连网桥承载 provider 网络，VXLAN 隧道同样需要 local_ip 作为源地址。"
+  },
+  {
+    "id": "os-neutron-019",
+    "title": "L3 高可用/DVR 配置",
+    "description": "配置 L3 代理运行模式，并在 OVS 代理上启用分布式路由",
+    "exercise_type": "config",
+    "tech_stack": "openstack",
+    "weight": "hard",
+    "category": "l3_dvr_conf",
+    "subcategory": "Neutron",
+    "full_code": "# /etc/neutron/l3_agent.ini\n[DEFAULT]\nagent_mode = dvr_snat\n\n# /etc/neutron/plugins/ml2/openvswitch_agent.ini\n[agent]\nenable_distributed_routing = true",
+    "expected": "",
+    "points": [
+      {
+        "id": "default_section",
+        "text": "[DEFAULT]",
+        "category": "l3_agent",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "L3 代理默认段",
+        "fill_type": "text"
+      },
+      {
+        "id": "agent_mode",
+        "text": "agent_mode",
+        "category": "l3_agent",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "代理运行模式配置键",
+        "fill_type": "text"
+      },
+      {
+        "id": "agent_mode_value",
+        "text": "dvr_snat",
+        "category": "l3_agent",
+        "min_weight": "hard",
+        "weight_score": 1.5,
+        "hint": "控制节点只做 SNAT 的运行模式值",
+        "fill_type": "text"
+      },
+      {
+        "id": "agent_section",
+        "text": "[agent]",
+        "category": "ovs_agent",
+        "min_weight": "hard",
+        "weight_score": 2,
+        "hint": "OVS 代理的 agent 段",
+        "fill_type": "text"
+      },
+      {
+        "id": "distributed_routing",
+        "text": "enable_distributed_routing",
+        "category": "ovs_agent",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "分布式路由开关配置键",
+        "fill_type": "text"
+      },
+      {
+        "id": "distributed_routing_value",
+        "text": "true",
+        "category": "ovs_agent",
+        "min_weight": "hard",
+        "weight_score": 0.75,
+        "hint": "开启分布式路由的值",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 L3 agent 的 agent_mode 决定它做集中式还是 DVR 路由",
+      "level_2": "📖 dvr_snat 表示该节点只处理 SNAT（通常是控制/网络节点），计算节点用 dvr；enable_distributed_routing 配在 OVS agent 的 [agent] 段",
+      "level_3": "👀 共 6 空：① L3 代理的全局段；② 代理运行模式配置键；③ 运行模式值；④ OVS 代理的 agent 段；⑤ 分布式路由开关配置键；⑥ 分布式路由开关值",
+      "level_4": "📝 正确答案：`[DEFAULT]`、`agent_mode`、`dvr_snat`、`[agent]`、`enable_distributed_routing`、`true`"
+    },
+    "explanation": "DVR 把路由分布到计算节点，东西向与浮动 IP 流量不必绕行网络节点；SNAT 仍集中在 agent_mode=dvr_snat 的节点上。"
+  },
+  {
+    "id": "os-neutron-020",
+    "title": "dhcp_agent.ini 配置 DHCP 代理",
+    "description": "配置接口驱动、dnsmasq 驱动与隔离网络元数据",
+    "exercise_type": "config",
+    "tech_stack": "openstack",
+    "weight": "easy",
+    "category": "dhcp_agent_conf",
+    "subcategory": "Neutron",
+    "full_code": "[DEFAULT]\ninterface_driver = openvswitch\ndhcp_driver = neutron.agent.linux.dhcp.Dnsmasq\nenable_isolated_metadata = true",
+    "expected": "",
+    "points": [
+      {
+        "id": "default_section",
+        "text": "[DEFAULT]",
+        "category": "dhcp_agent",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "DHCP 代理默认段",
+        "fill_type": "text"
+      },
+      {
+        "id": "interface_driver",
+        "text": "interface_driver",
+        "category": "dhcp_agent",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "接口驱动配置键",
+        "fill_type": "text"
+      },
+      {
+        "id": "interface_driver_value",
+        "text": "openvswitch",
+        "category": "dhcp_agent",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "接口驱动值",
+        "fill_type": "text"
+      },
+      {
+        "id": "dhcp_driver",
+        "text": "dhcp_driver",
+        "category": "dhcp_agent",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "dnsmasq 驱动配置键",
+        "fill_type": "text"
+      },
+      {
+        "id": "dhcp_driver_module",
+        "text": "neutron.agent.linux",
+        "category": "dhcp_agent",
+        "min_weight": "easy",
+        "weight_score": 0.75,
+        "hint": "驱动类路径的前半段",
+        "fill_type": "text"
+      },
+      {
+        "id": "dhcp_driver_class",
+        "text": "dhcp.Dnsmasq",
+        "category": "dhcp_agent",
+        "min_weight": "easy",
+        "weight_score": 0.75,
+        "hint": "驱动模块与类名部分",
+        "fill_type": "text"
+      },
+      {
+        "id": "isolated_metadata",
+        "text": "enable_isolated_metadata",
+        "category": "dhcp_agent",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "为隔离网络提供元数据的配置键",
+        "fill_type": "text"
+      },
+      {
+        "id": "isolated_metadata_value",
+        "text": "true",
+        "category": "dhcp_agent",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "为隔离网络提供元数据的值",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 DHCP agent 的配置基本都在 [DEFAULT] 段",
+      "level_2": "📖 interface_driver 指定接入方式（openvswitch/linuxbridge），dhcp_driver 固定为 Dnsmasq，enable_isolated_metadata 让隔离网络也能拿到元数据",
+      "level_3": "👀 共 8 空：① DHCP 代理全局段；② 接口驱动配置键；③ 接口驱动值；④ dnsmasq 驱动配置键；⑤ 驱动模块路径前半段；⑥ 驱动类名部分；⑦ 隔离网络元数据配置键；⑧ 开关值",
+      "level_4": "📝 正确答案：`[DEFAULT]`、`interface_driver`、`openvswitch`、`dhcp_driver`、`neutron.agent.linux`、`dhcp.Dnsmasq`、`enable_isolated_metadata`、`true`"
+    },
+    "explanation": "DHCP agent 用 dnsmasq 在 qdhcp-<网络> 命名空间里提供 DHCP/DNS；enable_isolated_metadata 解决无路由网络访问元数据服务的问题。"
+  }
+]

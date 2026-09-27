@@ -5,6 +5,12 @@
 ## [Unreleased]
 
 ### Added
+- 用户体系：注册 / 登录（PBKDF2-HMAC-SHA256 密码哈希 + 30 天会话 token）、退出登录、修改昵称 / 密码；进度、收藏、薄弱点、连续打卡按用户隔离
+- 我的题库：用户勾选要练的 `tech::subcategory` 范围并持久化，首页与侧边栏按所选范围过滤（不选 = 全部）
+- 题库动态加载：教练端 `POST /api/v1/admin/banks` 上传题库 JSON 即时生效；`data/bank` 目录热扫描（`-bank-watch`，默认 15s）自动加载新增 / 修改的题库文件
+- 教练端用户管理：用户列表（作答 / 完成 / 连续天数）、创建、禁用 / 启用（禁用后无法登录）、重置密码（旧会话失效）、删除（级联清理进度 / 收藏 / 作答记录）
+- 测试框架题库（180 题，6 个子库各 30 题，代码填空/命令/配置补全 + 答案匹配判题）：pytest（断言·raises·approx/fixture·yield·scope·params/conftest/parametrize·indirect/tmp_path/monkeypatch/capsys/mock/skip·xfail/pytest.ini·pyproject·CLI）、unittest（TestCase·断言族/setUp·tearDown/subTest/skip·expectedFailure/TestSuite·TestLoader·TextTestRunner/mock·patch·autospec/side_effect/assert_called_once_with·assert_has_calls/addCleanup/CLI）、selenium（Chrome 启动/By 定位/元素操作/implicitly_wait·WebDriverWait·EC/ActionChains/iframe·多窗口·alert/execute_script/headless/Remote Grid/cookies/Selenium Manager·Grid·docker-selenium 命令）、playwright（TS：getByRole·TestId·Text·Label/expect 断言族/route·fulfill·abort/storageState/beforeEach·test.step/soft 断言/request API/frameLocator/下载/playwright.config.ts/npx CLI）、cypress（JS：cy.visit·get·contains·within/type·click·check·select/should 断言族/intercept·as·wait/fixture·request·session/wrap·invoke·then/clock·tick/origin/Cypress.Commands.add/cypress.config.js/npx CLI）、locust（HttpUser·@task/wait_time·constant_pacing/on_start/client get·post/name·catch_response/events 监听/SequentialTaskSet·tag/FastHttpUser/LoadTestShape·tick/StopUser/headless·master·worker·csv·html CLI/locust.conf）
+- OpenStack 题库（200 题，10 个子库各 20 题，命令/配置补全 + 答案匹配判题）：Nova（实例生命周期/迁移/配额/nova.conf）、Neutron（网络·子网·路由/安全组/Floating IP/ML2·OVS·L3 配置）、Cinder（卷·快照·备份/类型与 QoS/LVM·Ceph 后端）、Swift（上传下载/大对象/临时 URL/ring/中间件 pipeline）、TripleO（undercloud/overcloud 部署/节点自省/roles_data/升级更新）、Keystone（token/项目·用户·角色/catalog/endpoint/fernet/policy）、Glance（镜像导入导出/共享/格式/多后端/缓存）、运维（服务巡检/日志/DB·MQ/高可用/故障疏散/备份）、升级（版本流/三阶段升级/DB 迁移/镜像 tag/回滚）、Ceph（集群状态/pool·RBD/CRUSH/认证/与 Cinder·Glance·Nova 对接）
 - Python 进阶题库（90 题，6 个子分类各 15 题，全部真实执行判题）：装饰器（wraps/带参装饰器/叠加顺序/类装饰器/lru_cache/singledispatch/property/重试）、迭代器与生成器（iter·next/自定义可迭代与迭代器/yield/yield from/send/throw/close/islice/groupby）、描述符（__get__·__set__·__delete__/__set_name__/数据与非数据优先级/惰性缓存/classmethod 原理）、上下文管理器（__enter__·__exit__/异常抑制/contextmanager/suppress/closing/redirect_stdout/ExitStack）、元类与类机制（type() 动态建类/元类 __new__·__init__/__init_subclass__/MRO·super/__slots__/ABCMeta/__instancecheck__）、魔术方法（__repr__·__str__/__eq__·__hash__/__len__·__bool__/__getitem__·__contains__/__call__/__getattr__·__getattribute__/运算符重载/total_ordering/__missing__）
 - 数据结构系列题库（60 题，Python，6 个子分类各 10 题）：数组（双指针/二分/前缀和/差分/滑动窗口）、链表（反转/快慢指针/合并/环检测/两数相加）、栈与队列（括号匹配/逆波兰/最小栈/循环队列/单调栈与单调队列）、哈希表（手写哈希/两数之和/异位词分组/开放寻址/LRU 缓存）、树（遍历/BST 插入查找/验证/翻转/路径总和/最小堆/Trie）、图（邻接表/BFS/DFS/连通分量/最短路/拓扑排序/环检测/并查集/岛屿数量/Dijkstra），全部真实执行判题
 - Go 类型系统题库（30 题，Go 子分类「类型系统」）：零值与类型推断/iota/定义类型与别名/显式转换/rune 与字节/类型断言与 type switch/结构体方法集/嵌入与标签/接口隐式实现/nil 接口陷阱/any/error/接口组合/泛型约束/指针与引用语义，真实 `go run` 执行判题
@@ -21,6 +27,10 @@
 - GitHub Actions CI：后端 -race 测试、前端测试与构建、题库审计
 
 ### Changed
+- 用户身份解析由 `X-User-Id` 请求头改为会话 token（`Authorization: Bearer`），未登录请求回退到共享的 demo 用户；e2e 测试同步改为注册 / 登录后携带 token
+- OpenStack 题库训练点全部细化为「小空」：原先一个空要输入整条命令（最长 11 个词），现拆成子命令/参数/配置键值等单元（每个空 ≤2 个词，1300 个训练点），各难度抽空数恢复为入门 1-2、简单 2-3、中等 3-4、困难 4-6、专家 6-10
+- Python 进阶题库 90 题全部扩充为每题 6 个训练点（2 入门 + 1 简单 + 1 中等 + 1 困难 + 1 专家），入门到专家各难度档都有足够空位可练
+- Go 并发专项（50 题）拆分为 3 个子库：通信机制（25：goroutine/WaitGroup/channel/select/缓冲死锁）、同步与原子（13：Mutex·RWMutex/Once/atomic/Cond/Pool/数据竞争与并发 map 修复）、并发模式（12：生成器/Worker Pool/Fan-in·out/Pipeline/生产者消费者/context/Ticker/优雅关闭），题目内容不变
 - Bug 修复题型训练点提示改用题目级四级辅助（原按类别生成的提示与填空内容错位）
 - channel 类训练点 L2 提示补充 comma-ok 说明；新增 map_write/critical_section 等类别映射
 

@@ -33,17 +33,44 @@
         "id": "exit_method",
         "text": "def __exit__(self, exc_type, exc_val, exc_tb):",
         "category": "exit_method",
-        "min_weight": "beginner",
-        "weight_score": 1,
+        "min_weight": "hard",
+        "weight_score": 2,
         "hint": "离开 with 块时被调用的魔术方法",
+        "fill_type": "text"
+      },
+      {
+        "id": "enter_body",
+        "text": "print(\"enter\")",
+        "category": "enter_body",
+        "min_weight": "easy",
+        "weight_score": 1.5,
+        "hint": "进入 with 块时先执行的打印",
+        "fill_type": "text"
+      },
+      {
+        "id": "exit_body",
+        "text": "print(\"exit\")",
+        "category": "exit_body",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "离开 with 块时执行的打印",
+        "fill_type": "text"
+      },
+      {
+        "id": "enter_return",
+        "text": "return self",
+        "category": "enter_return",
+        "min_weight": "expert",
+        "weight_score": 2,
+        "hint": "让 as 变量拿到实例本身",
         "fill_type": "text"
       }
     ],
     "hints": {
       "level_1": "💡 with 块前后各要执行一段代码，它们分别写在类的哪个方法里？",
       "level_2": "📖 类实现 `__enter__(self)` 与 `__exit__(self, exc_type, exc_val, exc_tb)` 即可被 with 驱动：进入时调前者，退出时调后者",
-      "level_3": "👀 `with Greeter():` 块会触发 `def __enter__` 与 `def __exit__`",
-      "level_4": "📝 正确答案：`with Greeter():`、`def __enter__(self):` 与 `def __exit__(self, exc_type, exc_val, exc_tb):`"
+      "level_3": "👀 `with Greeter():` 触发 `def __enter__(self):`：先 `print(\"enter\")` 再 `return self`；退出时 `def __exit__(self, exc_type, exc_val, exc_tb):` 打印 `print(\"exit\")`",
+      "level_4": "📝 正确答案：`with Greeter():`、`def __enter__(self):`、`def __exit__(self, exc_type, exc_val, exc_tb):`、`print(\"enter\")`、`print(\"exit\")` 与 `return self`"
     },
     "explanation": "with 先调用 `__enter__`，再执行语句块，最后无论是否发生异常都调用 `__exit__`，这构成了上下文管理器协议。"
   },
@@ -63,8 +90,8 @@
         "id": "suppress_return",
         "text": "return True",
         "category": "suppress_return",
-        "min_weight": "beginner",
-        "weight_score": 1,
+        "min_weight": "expert",
+        "weight_score": 2,
         "hint": "返回真值告诉解释器异常已处理",
         "fill_type": "text"
       },
@@ -72,7 +99,7 @@
         "id": "raised_error",
         "text": "raise ValueError(\"boom\")",
         "category": "raised_error",
-        "min_weight": "easy",
+        "min_weight": "medium",
         "weight_score": 1.5,
         "hint": "在 with 块内主动抛出异常",
         "fill_type": "text"
@@ -82,16 +109,43 @@
         "text": "print(\"after\")",
         "category": "after_print",
         "min_weight": "easy",
-        "weight_score": 1,
+        "weight_score": 1.5,
         "hint": "异常被抑制后仍会执行的那行输出",
+        "fill_type": "text"
+      },
+      {
+        "id": "suppressed_print",
+        "text": "print(\"suppressed\")",
+        "category": "suppressed_print",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "__exit__ 中表示异常已被处理的打印",
+        "fill_type": "text"
+      },
+      {
+        "id": "suppressor_with",
+        "text": "with Suppressor():",
+        "category": "suppressor_with",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "进入会抑制异常的上下文",
+        "fill_type": "text"
+      },
+      {
+        "id": "exit_signature",
+        "text": "def __exit__(self, exc_type, exc_val, exc_tb):",
+        "category": "exit_signature",
+        "min_weight": "hard",
+        "weight_score": 2,
+        "hint": "异常信息传入的魔术方法签名",
         "fill_type": "text"
       }
     ],
     "hints": {
       "level_1": "💡 块里抛出的 ValueError 为什么没有让程序崩溃？",
       "level_2": "📖 `__exit__` 返回真值时表示异常已被处理，解释器不再向外抛出",
-      "level_3": "👀 `__exit__` 末尾的 `return True` 就是抑制开关",
-      "level_4": "📝 正确答案：`return True`、`raise ValueError(\"boom\")` 与 `print(\"after\")`"
+      "level_3": "👀 `def __exit__(self, exc_type, exc_val, exc_tb):` 中先 `print(\"suppressed\")` 再 `return True`；`with Suppressor():` 块里 `raise ValueError(\"boom\")` 被吞掉，`print(\"after\")` 照常执行",
+      "level_4": "📝 正确答案：`return True`、`raise ValueError(\"boom\")`、`print(\"after\")`、`print(\"suppressed\")`、`with Suppressor():` 与 `def __exit__(self, exc_type, exc_val, exc_tb):`"
     },
     "explanation": "`__exit__` 的返回值决定异常去留：返回 True 视为已处理并清除异常，返回 False/None 则继续传播。"
   },
@@ -111,8 +165,8 @@
         "id": "exit_return_false",
         "text": "return False",
         "category": "exit_return_false",
-        "min_weight": "beginner",
-        "weight_score": 1,
+        "min_weight": "expert",
+        "weight_score": 2,
         "hint": "放行异常，让它继续向外传播",
         "fill_type": "text"
       },
@@ -120,8 +174,8 @@
         "id": "exc_type_name",
         "text": "exc_type.__name__",
         "category": "exc_type_name",
-        "min_weight": "beginner",
-        "weight_score": 1,
+        "min_weight": "hard",
+        "weight_score": 2,
         "hint": "异常类名从这里取",
         "fill_type": "text"
       },
@@ -129,17 +183,44 @@
         "id": "raised_keyerror",
         "text": "raise KeyError(\"missing\")",
         "category": "raised_keyerror",
-        "min_weight": "easy",
+        "min_weight": "medium",
         "weight_score": 1.5,
         "hint": "块内制造一个 KeyError 供 __exit__ 观察",
+        "fill_type": "text"
+      },
+      {
+        "id": "watcher_with",
+        "text": "with Watcher():",
+        "category": "watcher_with",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "进入 Watcher 上下文",
+        "fill_type": "text"
+      },
+      {
+        "id": "value_print",
+        "text": "print(\"value:\", exc_val)",
+        "category": "value_print",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "打印异常实例的内容",
+        "fill_type": "text"
+      },
+      {
+        "id": "caught_keyerror",
+        "text": "except KeyError as e:",
+        "category": "caught_keyerror",
+        "min_weight": "easy",
+        "weight_score": 1.5,
+        "hint": "外层接住被放行的 KeyError",
         "fill_type": "text"
       }
     ],
     "hints": {
       "level_1": "💡 出了异常，`__exit__` 如何知道异常的类型和内容？",
       "level_2": "📖 三个参数依次是异常类、异常实例和 traceback；返回 False 会让异常继续传播",
-      "level_3": "👀 `exc_type.__name__` 打印类名，`return False` 放行",
-      "level_4": "📝 正确答案：`return False`、`exc_type.__name__` 与 `raise KeyError(\"missing\")`"
+      "level_3": "👀 `with Watcher():` 里 `raise KeyError(\"missing\")` 后，`__exit__` 中 `print(\"value:\", exc_val)` 与 `exc_type.__name__` 读出信息，`return False` 放行，外层 `except KeyError as e:` 接住",
+      "level_4": "📝 正确答案：`return False`、`exc_type.__name__`、`raise KeyError(\"missing\")`、`with Watcher():`、`print(\"value:\", exc_val)` 与 `except KeyError as e:`"
     },
     "explanation": "`exc_type` 是异常类，`exc_val` 是异常实例；返回 False（或 None）时原异常继续向上传播，被外层 try 捕获。"
   },
@@ -168,8 +249,8 @@
         "id": "enter_return",
         "text": "return self.value",
         "category": "enter_return",
-        "min_weight": "beginner",
-        "weight_score": 1,
+        "min_weight": "expert",
+        "weight_score": 2,
         "hint": "__enter__ 的返回值就是 as 拿到的东西",
         "fill_type": "text"
       },
@@ -177,17 +258,44 @@
         "id": "state_increment",
         "text": "self.value += 1",
         "category": "state_increment",
-        "min_weight": "beginner",
+        "min_weight": "medium",
         "weight_score": 1.5,
         "hint": "进入时先把计数加一",
+        "fill_type": "text"
+      },
+      {
+        "id": "count_print",
+        "text": "print(\"count:\", count)",
+        "category": "count_print",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "块内使用 as 拿到的值",
+        "fill_type": "text"
+      },
+      {
+        "id": "final_print",
+        "text": "print(\"final:\", self.value)",
+        "category": "final_print",
+        "min_weight": "easy",
+        "weight_score": 1.5,
+        "hint": "退出时回看计数器的值",
+        "fill_type": "text"
+      },
+      {
+        "id": "exit_signature",
+        "text": "def __exit__(self, exc_type, exc_val, exc_tb):",
+        "category": "exit_signature",
+        "min_weight": "hard",
+        "weight_score": 2,
+        "hint": "退出时被调用的魔术方法签名",
         "fill_type": "text"
       }
     ],
     "hints": {
       "level_1": "💡 with 后面跟的变量从哪里拿到值？",
       "level_2": "📖 `with C() as x` 会把 `__enter__` 的返回值绑定给 x",
-      "level_3": "👀 `return self.value` 交给 `as count`",
-      "level_4": "📝 正确答案：`as count`、`return self.value` 与 `self.value += 1`"
+      "level_3": "👀 `def __exit__(self, exc_type, exc_val, exc_tb):` 里 `print(\"final:\", self.value)`；`__enter__` 中 `self.value += 1` 后 `return self.value`，`as count` 接住并 `print(\"count:\", count)`",
+      "level_4": "📝 正确答案：`as count`、`return self.value`、`self.value += 1`、`print(\"count:\", count)`、`print(\"final:\", self.value)` 与 `def __exit__(self, exc_type, exc_val, exc_tb):`"
     },
     "explanation": "`as` 不是 new 一个对象，而是接收 `__enter__` 的返回值；返回 self 时 with 内外操作的就是同一个实例。"
   },
@@ -207,8 +315,8 @@
         "id": "contextmanager_decorator",
         "text": "@contextmanager",
         "category": "contextmanager_decorator",
-        "min_weight": "easy",
-        "weight_score": 1,
+        "min_weight": "medium",
+        "weight_score": 1.5,
         "hint": "把生成器函数装饰成上下文管理器的装饰器",
         "fill_type": "text"
       },
@@ -225,17 +333,44 @@
         "id": "yield_value",
         "text": "yield name.upper()",
         "category": "yield_value",
-        "min_weight": "medium",
-        "weight_score": 1.5,
+        "min_weight": "expert",
+        "weight_score": 2,
         "hint": "yield 的值会作为 as 的目标",
+        "fill_type": "text"
+      },
+      {
+        "id": "import_line",
+        "text": "from contextlib import contextmanager",
+        "category": "import_line",
+        "min_weight": "easy",
+        "weight_score": 1.5,
+        "hint": "从标准库导入装饰器",
+        "fill_type": "text"
+      },
+      {
+        "id": "start_print",
+        "text": "print(\"start\", name)",
+        "category": "start_print",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "yield 之前进入阶段的打印",
+        "fill_type": "text"
+      },
+      {
+        "id": "stage_with",
+        "text": "with stage(\"build\") as current:",
+        "category": "stage_with",
+        "min_weight": "hard",
+        "weight_score": 2,
+        "hint": "把生成器函数当上下文管理器使用",
         "fill_type": "text"
       }
     ],
     "hints": {
       "level_1": "💡 不想写类，如何用生成器实现一个上下文管理器？",
       "level_2": "📖 `@contextmanager` 下，yield 之前相当于 `__enter__`，yield 之后（finally 中）相当于 `__exit__`",
-      "level_3": "👀 `@contextmanager` + `yield name.upper()` + `finally:`",
-      "level_4": "📝 正确答案：`@contextmanager`、`finally:` 与 `yield name.upper()`"
+      "level_3": "👀 `from contextlib import contextmanager` 与 `@contextmanager` 装饰生成器：`print(\"start\", name)` 后 `yield name.upper()`，`finally:` 中打印结束；`with stage(\"build\") as current:` 的 current 拿到 BUILD",
+      "level_4": "📝 正确答案：`@contextmanager`、`finally:`、`yield name.upper()`、`from contextlib import contextmanager`、`print(\"start\", name)` 与 `with stage(\"build\") as current:`"
     },
     "explanation": "生成器只 yield 一次：yield 的值即 `__enter__` 的返回值；即使块内抛异常，finally 也保证清理代码执行。"
   },
@@ -255,8 +390,8 @@
         "id": "exit_print",
         "text": "print(\"close\")",
         "category": "exit_print",
-        "min_weight": "beginner",
-        "weight_score": 1,
+        "min_weight": "hard",
+        "weight_score": 2,
         "hint": "清理动作写在 __exit__ 里",
         "fill_type": "text"
       },
@@ -273,17 +408,44 @@
         "id": "early_return",
         "text": "return \"result\"",
         "category": "early_return",
-        "min_weight": "medium",
+        "min_weight": "expert",
         "weight_score": 2,
         "hint": "在块内提前返回，观察清理是否仍执行",
+        "fill_type": "text"
+      },
+      {
+        "id": "inside_print",
+        "text": "print(\"inside\")",
+        "category": "inside_print",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "with 块主体的打印",
+        "fill_type": "text"
+      },
+      {
+        "id": "run_print",
+        "text": "print(run())",
+        "category": "run_print",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "打印函数的返回结果",
+        "fill_type": "text"
+      },
+      {
+        "id": "run_def",
+        "text": "def run():",
+        "category": "run_def",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "把 with 包进函数以测试 return 时的清理",
         "fill_type": "text"
       }
     ],
     "hints": {
       "level_1": "💡 函数在 with 块里提前 return，close 还会打印吗？",
       "level_2": "📖 return/break/continue 离开 with 块时同样触发 `__exit__`，清理不会跳过",
-      "level_3": "👀 `print(\"close\")` 在 `return \"result\"` 之前输出",
-      "level_4": "📝 正确答案：`print(\"close\")`、`with Cleaner():` 与 `return \"result\"`"
+      "level_3": "👀 `def run():` 中 `with Cleaner():` 先 `print(\"inside\")`，再 `return \"result\"`；返回前仍执行 `print(\"close\")`，最后 `print(run())`",
+      "level_4": "📝 正确答案：`print(\"close\")`、`with Cleaner():`、`return \"result\"`、`print(\"inside\")`、`print(run())` 与 `def run():`"
     },
     "explanation": "with 的退出路径不止正常结束：return、break、异常都会触发 `__exit__`，这正是资源清理可靠的原因。"
   },
@@ -303,8 +465,8 @@
         "id": "enter_print",
         "text": "print(\"enter\", self.name)",
         "category": "enter_print",
-        "min_weight": "beginner",
-        "weight_score": 1,
+        "min_weight": "easy",
+        "weight_score": 1.5,
         "hint": "进入时打印名字",
         "fill_type": "text"
       },
@@ -312,8 +474,8 @@
         "id": "exit_print",
         "text": "print(\"exit\", self.name)",
         "category": "exit_print",
-        "min_weight": "easy",
-        "weight_score": 1,
+        "min_weight": "medium",
+        "weight_score": 1.5,
         "hint": "退出时打印名字",
         "fill_type": "text"
       },
@@ -321,17 +483,44 @@
         "id": "multi_managers",
         "text": "with Box(\"a\") as a, Box(\"b\") as b:",
         "category": "multi_managers",
-        "min_weight": "medium",
+        "min_weight": "expert",
         "weight_score": 2,
         "hint": "一行 with 同时管理两个 Box",
+        "fill_type": "text"
+      },
+      {
+        "id": "body_print",
+        "text": "print(\"body\", a, b)",
+        "category": "body_print",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "块内同时使用两个 as 变量",
+        "fill_type": "text"
+      },
+      {
+        "id": "enter_def",
+        "text": "def __enter__(self):",
+        "category": "enter_def",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "进入时打印名字的方法",
+        "fill_type": "text"
+      },
+      {
+        "id": "exit_def",
+        "text": "def __exit__(self, exc_type, exc_val, exc_tb):",
+        "category": "exit_def",
+        "min_weight": "hard",
+        "weight_score": 2,
+        "hint": "退出时打印名字的方法签名",
         "fill_type": "text"
       }
     ],
     "hints": {
       "level_1": "💡 两个管理器写在同一行 with 里，谁先进入、谁先退出？",
       "level_2": "📖 多个管理器按从左到右进入，退出时按从右到左（LIFO）逆序",
-      "level_3": "👀 `with Box(\"a\") as a, Box(\"b\") as b:` 的打印顺序",
-      "level_4": "📝 正确答案：`print(\"enter\", self.name)`、`print(\"exit\", self.name)` 与 `with Box(\"a\") as a, Box(\"b\") as b:`"
+      "level_3": "👀 `def __enter__(self):` 里 `print(\"enter\", self.name)`，`def __exit__(self, exc_type, exc_val, exc_tb):` 里 `print(\"exit\", self.name)`；`with Box(\"a\") as a, Box(\"b\") as b:` 进入后 `print(\"body\", a, b)`，退出按 LIFO 逆序",
+      "level_4": "📝 正确答案：`print(\"enter\", self.name)`、`print(\"exit\", self.name)`、`with Box(\"a\") as a, Box(\"b\") as b:`、`print(\"body\", a, b)`、`def __enter__(self):` 与 `def __exit__(self, exc_type, exc_val, exc_tb):`"
     },
     "explanation": "多管理器等价于嵌套 with：先进入的后退出，所以 b 的清理先于 a 执行。"
   },
@@ -351,8 +540,8 @@
         "id": "suppress_import",
         "text": "from contextlib import suppress",
         "category": "suppress_import",
-        "min_weight": "beginner",
-        "weight_score": 1,
+        "min_weight": "hard",
+        "weight_score": 2,
         "hint": "从标准库导入 suppress",
         "fill_type": "text"
       },
@@ -360,8 +549,8 @@
         "id": "suppress_call",
         "text": "with suppress(KeyError):",
         "category": "suppress_call",
-        "min_weight": "easy",
-        "weight_score": 1.5,
+        "min_weight": "expert",
+        "weight_score": 2,
         "hint": "只忽略 KeyError 这一种异常",
         "fill_type": "text"
       },
@@ -369,17 +558,44 @@
         "id": "missing_key",
         "text": "print(values[\"b\"])",
         "category": "missing_key",
-        "min_weight": "easy",
-        "weight_score": 1,
+        "min_weight": "medium",
+        "weight_score": 1.5,
         "hint": "这行会触发被忽略的 KeyError",
+        "fill_type": "text"
+      },
+      {
+        "id": "values_def",
+        "text": "values = {\"a\": 1}",
+        "category": "values_def",
+        "min_weight": "easy",
+        "weight_score": 1.5,
+        "hint": "只含 a 键的字典",
+        "fill_type": "text"
+      },
+      {
+        "id": "existing_key",
+        "text": "print(values[\"a\"])",
+        "category": "existing_key",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "访问存在的键，正常输出",
+        "fill_type": "text"
+      },
+      {
+        "id": "done_print",
+        "text": "print(\"done\")",
+        "category": "done_print",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "异常被吞掉后继续执行",
         "fill_type": "text"
       }
     ],
     "hints": {
       "level_1": "💡 只缺少 b 键，怎样忽略这个 KeyError 又不吞掉别的异常？",
       "level_2": "📖 `suppress(异常类)` 等价于只对指定异常返回 True 的 `__exit__`",
-      "level_3": "👀 `from contextlib import suppress` 后用 `with suppress(KeyError):`",
-      "level_4": "📝 正确答案：`from contextlib import suppress`、`with suppress(KeyError):` 与 `print(values[\"b\"])`"
+      "level_3": "👀 `from contextlib import suppress` 后建 `values = {\"a\": 1}`；`with suppress(KeyError):` 内 `print(values[\"a\"])` 正常、`print(values[\"b\"])` 被吞，最后 `print(\"done\")`",
+      "level_4": "📝 正确答案：`from contextlib import suppress`、`with suppress(KeyError):`、`print(values[\"b\"])`、`values = {\"a\": 1}`、`print(values[\"a\"])` 与 `print(\"done\")`"
     },
     "explanation": "suppress 是带过滤的异常抑制：只有列表中的异常会被吞掉，其他异常照常传播。"
   },
@@ -399,8 +615,8 @@
         "id": "close_method",
         "text": "def close(self):",
         "category": "close_method",
-        "min_weight": "beginner",
-        "weight_score": 1,
+        "min_weight": "hard",
+        "weight_score": 2,
         "hint": "对象自带的关闭方法",
         "fill_type": "text"
       },
@@ -408,8 +624,8 @@
         "id": "closing_call",
         "text": "with closing(conn):",
         "category": "closing_call",
-        "min_weight": "easy",
-        "weight_score": 1.5,
+        "min_weight": "expert",
+        "weight_score": 2,
         "hint": "退出 with 时自动调用 conn.close()",
         "fill_type": "text"
       },
@@ -417,17 +633,44 @@
         "id": "closed_check",
         "text": "print(\"open:\", conn.open)",
         "category": "closed_check",
-        "min_weight": "easy",
-        "weight_score": 1,
+        "min_weight": "medium",
+        "weight_score": 1.5,
         "hint": "检查对象是否已被关闭",
+        "fill_type": "text"
+      },
+      {
+        "id": "using_print",
+        "text": "print(\"using\", conn.name)",
+        "category": "using_print",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "块内使用连接对象",
+        "fill_type": "text"
+      },
+      {
+        "id": "closed_print",
+        "text": "print(\"closed\", self.name)",
+        "category": "closed_print",
+        "min_weight": "easy",
+        "weight_score": 1.5,
+        "hint": "close 被调用时打印",
+        "fill_type": "text"
+      },
+      {
+        "id": "open_reset",
+        "text": "self.open = False",
+        "category": "open_reset",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "把打开标记置为 False",
         "fill_type": "text"
       }
     ],
     "hints": {
       "level_1": "💡 Connection 不是上下文管理器，怎么用 with 自动调用它的 close？",
       "level_2": "📖 `closing(obj)` 在退出时调用 `obj.close()`，不需要对象实现上下文协议",
-      "level_3": "👀 `with closing(conn):` 自动触发 `def close(self):`",
-      "level_4": "📝 正确答案：`def close(self):`、`with closing(conn):` 与 `print(\"open:\", conn.open)`"
+      "level_3": "👀 `def close(self):` 里 `self.open = False` 并 `print(\"closed\", self.name)`；`with closing(conn):` 内 `print(\"using\", conn.name)`，退出后 `print(\"open:\", conn.open)`",
+      "level_4": "📝 正确答案：`def close(self):`、`with closing(conn):`、`print(\"open:\", conn.open)`、`print(\"using\", conn.name)`、`print(\"closed\", self.name)` 与 `self.open = False`"
     },
     "explanation": "closing 是适配器：把只有 close() 的老对象包装成上下文管理器，避免手动 try/finally。"
   },
@@ -447,8 +690,8 @@
         "id": "stringio_buffer",
         "text": "io.StringIO()",
         "category": "stringio_buffer",
-        "min_weight": "beginner",
-        "weight_score": 1,
+        "min_weight": "easy",
+        "weight_score": 1.5,
         "hint": "创建内存中的文本缓冲区",
         "fill_type": "text"
       },
@@ -456,8 +699,8 @@
         "id": "redirect_call",
         "text": "redirect_stdout(buffer)",
         "category": "redirect_call",
-        "min_weight": "medium",
-        "weight_score": 1.5,
+        "min_weight": "expert",
+        "weight_score": 2,
         "hint": "在块内把标准输出指向缓冲区",
         "fill_type": "text"
       },
@@ -465,17 +708,44 @@
         "id": "getvalue_read",
         "text": "buffer.getvalue()",
         "category": "getvalue_read",
-        "min_weight": "easy",
-        "weight_score": 1,
+        "min_weight": "medium",
+        "weight_score": 1.5,
         "hint": "取出缓冲区里的全部文本",
+        "fill_type": "text"
+      },
+      {
+        "id": "redirect_import",
+        "text": "from contextlib import redirect_stdout",
+        "category": "redirect_import",
+        "min_weight": "hard",
+        "weight_score": 2,
+        "hint": "导入重定向标准输出的工具",
+        "fill_type": "text"
+      },
+      {
+        "id": "captured_print",
+        "text": "print(\"captured line\")",
+        "category": "captured_print",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "被捕获的第一行输出",
+        "fill_type": "text"
+      },
+      {
+        "id": "second_print",
+        "text": "print(\"second line\")",
+        "category": "second_print",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "被捕获的第二行输出",
         "fill_type": "text"
       }
     ],
     "hints": {
       "level_1": "💡 想截获块内所有 print 的内容，该把它重定向到哪里？",
       "level_2": "📖 `redirect_stdout(buffer)` 在块内替换 sys.stdout，退出后自动还原",
-      "level_3": "👀 `io.StringIO()` 接收输出，`buffer.getvalue()` 取回文本",
-      "level_4": "📝 正确答案：`io.StringIO()`、`redirect_stdout(buffer)` 与 `buffer.getvalue()`"
+      "level_3": "👀 `from contextlib import redirect_stdout` 配合 `io.StringIO()`；`redirect_stdout(buffer)` 块内 `print(\"captured line\")` 与 `print(\"second line\")` 都进缓冲区，最后由 `buffer.getvalue()` 取回",
+      "level_4": "📝 正确答案：`io.StringIO()`、`redirect_stdout(buffer)`、`buffer.getvalue()`、`from contextlib import redirect_stdout`、`print(\"captured line\")` 与 `print(\"second line\")`"
     },
     "explanation": "redirect_stdout 进入时替换 `sys.stdout`，退出时还原原对象，是测试 print 行为的常用手段。"
   },
@@ -513,17 +783,44 @@
         "id": "exitstack_with",
         "text": "with ExitStack() as stack:",
         "category": "exitstack_with",
-        "min_weight": "hard",
+        "min_weight": "expert",
         "weight_score": 2,
         "hint": "用 ExitStack 承载不确定数量的清理",
+        "fill_type": "text"
+      },
+      {
+        "id": "import_exitstack",
+        "text": "from contextlib import ExitStack",
+        "category": "import_exitstack",
+        "min_weight": "hard",
+        "weight_score": 2,
+        "hint": "导入动态清理栈",
+        "fill_type": "text"
+      },
+      {
+        "id": "loop_line",
+        "text": "for name in [\"a\", \"b\", \"c\"]:",
+        "category": "loop_line",
+        "min_weight": "easy",
+        "weight_score": 1.5,
+        "hint": "循环注册三个资源",
+        "fill_type": "text"
+      },
+      {
+        "id": "cleanup_print",
+        "text": "print(\"close\", name)",
+        "category": "cleanup_print",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "回调里打印关闭信息",
         "fill_type": "text"
       }
     ],
     "hints": {
       "level_1": "💡 管理器数量在运行时由循环决定，怎么把它们都挂到 with 上？",
       "level_2": "📖 `ExitStack.callback(fn)` 推入清理函数，退出时逆序全部调用",
-      "level_3": "👀 循环里 `stack.callback(make(name))`，退出时 close 逆序打印",
-      "level_4": "📝 正确答案：`print(\"body\")`、`stack.callback(make(name))` 与 `with ExitStack() as stack:`"
+      "level_3": "👀 `from contextlib import ExitStack` 后 `with ExitStack() as stack:`；`for name in [\"a\", \"b\", \"c\"]:` 里 `stack.callback(make(name))` 注册回调，退出时逆序 `print(\"close\", name)`，块内 `print(\"body\")`",
+      "level_4": "📝 正确答案：`print(\"body\")`、`stack.callback(make(name))`、`with ExitStack() as stack:`、`from contextlib import ExitStack`、`for name in [\"a\", \"b\", \"c\"]:` 与 `print(\"close\", name)`"
     },
     "explanation": "ExitStack 用栈保存回调，退出时 LIFO 执行，适合数量在运行时才确定的资源清理。"
   },
@@ -543,8 +840,8 @@
         "id": "busy_set",
         "text": "self.busy = True",
         "category": "busy_set",
-        "min_weight": "beginner",
-        "weight_score": 1,
+        "min_weight": "medium",
+        "weight_score": 1.5,
         "hint": "进入时把状态标记为占用",
         "fill_type": "text"
       },
@@ -552,7 +849,7 @@
         "id": "busy_raise",
         "text": "raise RuntimeError(\"busy\")",
         "category": "busy_raise",
-        "min_weight": "hard",
+        "min_weight": "expert",
         "weight_score": 2,
         "hint": "已经占用时拒绝第二次进入",
         "fill_type": "text"
@@ -561,17 +858,44 @@
         "id": "busy_catch",
         "text": "except RuntimeError as e:",
         "category": "busy_catch",
-        "min_weight": "medium",
+        "min_weight": "easy",
         "weight_score": 1.5,
         "hint": "捕获重入被拒绝的异常",
+        "fill_type": "text"
+      },
+      {
+        "id": "busy_if",
+        "text": "if self.busy:",
+        "category": "busy_if",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "检查是否已被占用",
+        "fill_type": "text"
+      },
+      {
+        "id": "busy_reset",
+        "text": "self.busy = False",
+        "category": "busy_reset",
+        "min_weight": "hard",
+        "weight_score": 2,
+        "hint": "退出时复位占用标记",
+        "fill_type": "text"
+      },
+      {
+        "id": "released_print",
+        "text": "print(\"released:\", lock.busy)",
+        "category": "released_print",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "查看锁最终是否释放",
         "fill_type": "text"
       }
     ],
     "hints": {
       "level_1": "💡 同一个 Lock 再进一次时，`if self.busy:` 会走哪条分支？",
       "level_2": "📖 busy 为 True 说明已在使用，`__enter__` 抛异常阻止重入；`__exit__` 再把状态复位",
-      "level_3": "👀 `self.busy = True` 占坑，`raise RuntimeError(\"busy\")` 拒绝第二次进入",
-      "level_4": "📝 正确答案：`self.busy = True`、`raise RuntimeError(\"busy\")` 与 `except RuntimeError as e:`"
+      "level_3": "👀 `if self.busy:` 为真时 `raise RuntimeError(\"busy\")`；正常进入则 `self.busy = True`，`__exit__` 里 `self.busy = False`；外层 `except RuntimeError as e:` 捕获，最后 `print(\"released:\", lock.busy)`",
+      "level_4": "📝 正确答案：`self.busy = True`、`raise RuntimeError(\"busy\")`、`except RuntimeError as e:`、`if self.busy:`、`self.busy = False` 与 `print(\"released:\", lock.busy)`"
     },
     "explanation": "非可重入管理器用布尔状态防止嵌套；若想支持重入，需要记录进入深度而不是单一标记。"
   },
@@ -600,8 +924,8 @@
         "id": "write_mode",
         "text": "with open(path, \"w\", encoding=\"utf-8\") as f:",
         "category": "write_mode",
-        "min_weight": "beginner",
-        "weight_score": 1.5,
+        "min_weight": "hard",
+        "weight_score": 2,
         "hint": "写模式打开文件",
         "fill_type": "text"
       },
@@ -609,17 +933,44 @@
         "id": "read_mode",
         "text": "with open(path, \"r\", encoding=\"utf-8\") as f:",
         "category": "read_mode",
-        "min_weight": "beginner",
-        "weight_score": 1.5,
+        "min_weight": "expert",
+        "weight_score": 2,
         "hint": "读模式打开文件",
+        "fill_type": "text"
+      },
+      {
+        "id": "read_lines",
+        "text": "lines = f.read().splitlines()",
+        "category": "read_lines",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "读出的内容按行切分",
+        "fill_type": "text"
+      },
+      {
+        "id": "len_print",
+        "text": "print(len(lines), lines[0], lines[1])",
+        "category": "len_print",
+        "min_weight": "easy",
+        "weight_score": 1.5,
+        "hint": "打印行数与前两行",
+        "fill_type": "text"
+      },
+      {
+        "id": "remove_file",
+        "text": "os.remove(path)",
+        "category": "remove_file",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "测试结束删除临时文件",
         "fill_type": "text"
       }
     ],
     "hints": {
       "level_1": "💡 离开 with 块后，文件对象还需要手动 close 吗？",
       "level_2": "📖 `with open(...) as f` 在退出时自动调用 `f.close()`，即使读取中途抛异常",
-      "level_3": "👀 写模式与读模式各用一个 `with open(...)`，最后 `print(f.closed)`",
-      "level_4": "📝 正确答案：`print(f.closed)`、`with open(path, \"w\", encoding=\"utf-8\") as f:` 与 `with open(path, \"r\", encoding=\"utf-8\") as f:`"
+      "level_3": "👀 先 `with open(path, \"w\", encoding=\"utf-8\") as f:` 写入，再 `with open(path, \"r\", encoding=\"utf-8\") as f:` 读出 `lines = f.read().splitlines()`；`print(len(lines), lines[0], lines[1])` 后 `print(f.closed)` 验证已关闭，最后 `os.remove(path)`",
+      "level_4": "📝 正确答案：`print(f.closed)`、`with open(path, \"w\", encoding=\"utf-8\") as f:`、`with open(path, \"r\", encoding=\"utf-8\") as f:`、`lines = f.read().splitlines()`、`print(len(lines), lines[0], lines[1])` 与 `os.remove(path)`"
     },
     "explanation": "文件对象本身就是上下文管理器，退出时自动 close；即使块内抛异常也不会泄漏文件句柄。"
   },
@@ -639,8 +990,8 @@
         "id": "exit_print",
         "text": "print(\"exit\")",
         "category": "exit_print",
-        "min_weight": "beginner",
-        "weight_score": 1,
+        "min_weight": "medium",
+        "weight_score": 1.5,
         "hint": "这段代码最终没有机会执行",
         "fill_type": "text"
       },
@@ -648,8 +999,8 @@
         "id": "enter_raise",
         "text": "raise RuntimeError(\"boom\")",
         "category": "enter_raise",
-        "min_weight": "medium",
-        "weight_score": 1.5,
+        "min_weight": "expert",
+        "weight_score": 2,
         "hint": "在进入阶段就抛出异常",
         "fill_type": "text"
       },
@@ -658,16 +1009,43 @@
         "text": "print(\"caught:\", e)",
         "category": "caught_print",
         "min_weight": "easy",
-        "weight_score": 1,
+        "weight_score": 1.5,
         "hint": "外层捕获进入阶段的异常",
+        "fill_type": "text"
+      },
+      {
+        "id": "guard_with",
+        "text": "with Guard():",
+        "category": "guard_with",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "进入会在 __enter__ 抛异常的上下文",
+        "fill_type": "text"
+      },
+      {
+        "id": "body_print",
+        "text": "print(\"body\")",
+        "category": "body_print",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "因进入失败而没机会执行的块主体",
+        "fill_type": "text"
+      },
+      {
+        "id": "caught_clause",
+        "text": "except RuntimeError as e:",
+        "category": "caught_clause",
+        "min_weight": "hard",
+        "weight_score": 2,
+        "hint": "外层接住进入阶段的异常",
         "fill_type": "text"
       }
     ],
     "hints": {
       "level_1": "💡 还没真正进入 with 块就报错了，exit 会打印吗？",
       "level_2": "📖 只有 `__enter__` 成功返回，解释器才会登记并稍后调用 `__exit__`",
-      "level_3": "👀 只看到 enter 与 caught，`print(\"exit\")` 不会执行",
-      "level_4": "📝 正确答案：`print(\"exit\")`、`raise RuntimeError(\"boom\")` 与 `print(\"caught:\", e)`"
+      "level_3": "👀 `with Guard():` 还没执行 `print(\"body\")`，`raise RuntimeError(\"boom\")` 就在 `__enter__` 里抛出；外层 `except RuntimeError as e:` 接住并 `print(\"caught:\", e)`，`print(\"exit\")` 不会执行",
+      "level_4": "📝 正确答案：`print(\"exit\")`、`raise RuntimeError(\"boom\")`、`print(\"caught:\", e)`、`with Guard():`、`print(\"body\")` 与 `except RuntimeError as e:`"
     },
     "explanation": "`__enter__` 失败意味着资源并未建立，因此没有清理义务，`__exit__` 不会被调用，异常直接沿调用栈传播。"
   },
@@ -687,8 +1065,8 @@
         "id": "insert_op",
         "text": "tx.ops.append(\"insert\")",
         "category": "insert_op",
-        "min_weight": "beginner",
-        "weight_score": 1,
+        "min_weight": "easy",
+        "weight_score": 1.5,
         "hint": "事务内记录一步操作",
         "fill_type": "text"
       },
@@ -709,13 +1087,40 @@
         "weight_score": 2,
         "hint": "用异常参数判断提交还是回滚",
         "fill_type": "text"
+      },
+      {
+        "id": "after_commit",
+        "text": "print(\"after commit\")",
+        "category": "after_commit",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "提交分支之后的打印",
+        "fill_type": "text"
+      },
+      {
+        "id": "after_rollback",
+        "text": "print(\"after rollback\")",
+        "category": "after_rollback",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "回滚分支之后的打印",
+        "fill_type": "text"
+      },
+      {
+        "id": "exit_return_false",
+        "text": "return False",
+        "category": "exit_return_false",
+        "min_weight": "hard",
+        "weight_score": 2,
+        "hint": "回滚时让异常继续向外传播",
+        "fill_type": "text"
       }
     ],
     "hints": {
       "level_1": "💡 怎么在 `__exit__` 里判断这次事务该提交还是回滚？",
       "level_2": "📖 `exc_type is None` 表示块内无异常，走提交分支；否则打印回滚并放行异常",
-      "level_3": "👀 `if exc_type is None:` 决定 commit 还是 rollback，`raise ValueError(\"conflict\")` 触发回滚",
-      "level_4": "📝 正确答案：`tx.ops.append(\"insert\")`、`raise ValueError(\"conflict\")` 与 `if exc_type is None:`"
+      "level_3": "👀 `if exc_type is None:` 走 commit；`tx.ops.append(\"insert\")` 后正常退出打印 `print(\"after commit\")`；`raise ValueError(\"conflict\")` 触发 rollback，`return False` 放行异常，最后 `print(\"after rollback\")`",
+      "level_4": "📝 正确答案：`tx.ops.append(\"insert\")`、`raise ValueError(\"conflict\")`、`if exc_type is None:`、`print(\"after commit\")`、`print(\"after rollback\")` 与 `return False`"
     },
     "explanation": "事务语义依赖 `__exit__` 的异常参数：正常退出提交，异常退出回滚，再由返回值决定异常是否继续传播。"
   }

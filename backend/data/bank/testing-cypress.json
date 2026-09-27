@@ -1,0 +1,1694 @@
+[
+  {
+    "id": "cypress-001",
+    "title": "describe 与 it 基本结构",
+    "description": "用 describe 和 it 组织一个最简单的加法测试",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "beginner",
+    "category": "cypress_structure",
+    "subcategory": "cypress",
+    "full_code": "describe('calculator', () => {\n  it('adds two numbers', () => {\n    expect(2 + 2).to.equal(4);\n  });\n});",
+    "expected": "",
+    "points": [
+      {
+        "id": "describe_block",
+        "text": "describe('calculator', () => {",
+        "category": "cypress_structure",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "声明测试套件并接收回调的函数头",
+        "fill_type": "text"
+      },
+      {
+        "id": "it_case",
+        "text": "it('adds two numbers', () => {",
+        "category": "cypress_structure",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "声明单条用例并接收回调的函数头",
+        "fill_type": "text"
+      },
+      {
+        "id": "expect_equal",
+        "text": "expect(2 + 2).to.equal(4)",
+        "category": "cypress_assert",
+        "min_weight": "easy",
+        "weight_score": 1.5,
+        "hint": "用内置断言库比较两个值的调用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 套件用 describe 包裹，单条用例写在 it 回调里，断言直接使用 expect。",
+      "level_2": "📖 describe 与 it 的第一个参数分别是套件名和用例名，回调不需要 async。",
+      "level_3": "👀 共 3 空：① 套件声明行；② 单条用例声明行；③ 数值相等断言。",
+      "level_4": "📝 正确答案：`describe('calculator', () => {`、`it('adds two numbers', () => {`、`expect(2 + 2).to.equal(4)`"
+    },
+    "explanation": "describe 负责分组、it 定义单条用例，Cypress 按声明顺序收集执行；断言失败即用例失败。"
+  },
+  {
+    "id": "cypress-002",
+    "title": "cy.visit 打开页面",
+    "description": "用 cy.visit 打开站点并检查导航栏可见",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "beginner",
+    "category": "cypress_command",
+    "subcategory": "cypress",
+    "full_code": "describe('home page', () => {\n  it('opens the site', () => {\n    cy.visit('https://example.cypress.io');\n    cy.get('.navbar').should('be.visible');\n  });\n});",
+    "expected": "",
+    "points": [
+      {
+        "id": "visit_site",
+        "text": "cy.visit('https://example.cypress.io')",
+        "category": "cypress_command",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "打开指定网址的命令调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "navbar_selector",
+        "text": "cy.get('.navbar')",
+        "category": "cypress_command",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "按类名定位导航栏的命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "visible_assert",
+        "text": "should('be.visible')",
+        "category": "cypress_assert",
+        "min_weight": "easy",
+        "weight_score": 1.5,
+        "hint": "断言元素出现在页面中可见的链式调用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 先用 visit 打开页面，再用 get 找到导航栏并断言可见。",
+      "level_2": "📖 cy.visit 接收完整 URL；be.visible 断言元素出现在视口中。",
+      "level_3": "👀 共 3 空：① 打开站点的命令；② 按类名定位导航栏；③ 可见性断言。",
+      "level_4": "📝 正确答案：`cy.visit('https://example.cypress.io')`、`cy.get('.navbar')`、`should('be.visible')`"
+    },
+    "explanation": "cy.visit 会等页面加载完成后才继续后续命令，should 断言自带重试，元素稍晚出现也能通过。"
+  },
+  {
+    "id": "cypress-003",
+    "title": "cy.get 选择器定位",
+    "description": "用 id 与后代选择器定位登录表单元素",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "beginner",
+    "category": "cypress_command",
+    "subcategory": "cypress",
+    "full_code": "it('locates elements by selector', () => {\n  cy.visit('/login');\n  cy.get('#email').type('user@example.com');\n  cy.get('.login-form button').click();\n});",
+    "expected": "",
+    "points": [
+      {
+        "id": "visit_login",
+        "text": "cy.visit('/login')",
+        "category": "cypress_command",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "用相对路径打开登录页的命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "email_selector",
+        "text": "cy.get('#email')",
+        "category": "cypress_command",
+        "min_weight": "beginner",
+        "weight_score": 1.5,
+        "hint": "按 id 选择器定位邮箱输入框的命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "type_email",
+        "text": "type('user@example.com')",
+        "category": "cypress_command",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "向定位到的输入框输入邮箱的链式调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "submit_click",
+        "text": "cy.get('.login-form button').click()",
+        "category": "cypress_command",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "用后代选择器定位按钮并点击的整行",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 定位元素后可以直接在链上继续输入或点击。",
+      "level_2": "📖 id 选择器以 # 开头，类名以 . 开头，后代选择器用空格分隔。",
+      "level_3": "👀 共 4 空：① 打开登录页；② 按 id 定位邮箱输入框；③ 输入邮箱的链式调用；④ 定位表单里的按钮并点击。",
+      "level_4": "📝 正确答案：`cy.visit('/login')`、`cy.get('#email')`、`type('user@example.com')`、`cy.get('.login-form button').click()`"
+    },
+    "explanation": "cy.get 支持标准 CSS 选择器，返回的元素可以继续链式输入或点击，命令会自动等待元素出现。"
+  },
+  {
+    "id": "cypress-004",
+    "title": "cy.contains 按文本查找",
+    "description": "按可见文本找到按钮与卡片元素",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "easy",
+    "category": "cypress_command",
+    "subcategory": "cypress",
+    "full_code": "it('finds elements by their text', () => {\n  cy.visit('/products');\n  cy.contains('Add to cart').click();\n  cy.contains('.card', 'Wireless Mouse').should('be.visible');\n});",
+    "expected": "",
+    "points": [
+      {
+        "id": "visit_products",
+        "text": "cy.visit('/products')",
+        "category": "cypress_command",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "打开商品列表页的命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "add_to_cart",
+        "text": "cy.contains('Add to cart').click()",
+        "category": "cypress_command",
+        "min_weight": "easy",
+        "weight_score": 1.5,
+        "hint": "按按钮文本定位后点击的整行",
+        "fill_type": "text"
+      },
+      {
+        "id": "card_by_text",
+        "text": "cy.contains('.card', 'Wireless Mouse')",
+        "category": "cypress_command",
+        "min_weight": "easy",
+        "weight_score": 1.5,
+        "hint": "在卡片范围内按文本定位的两个参数调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "visible_assert",
+        "text": "should('be.visible')",
+        "category": "cypress_assert",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "断言卡片可见的链式调用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 contains 既可按文本找元素，也可在给定父元素里按文本找。",
+      "level_2": "📖 两个参数时第一个是选择器、第二个是期望文本；找到后可以继续链式点击或断言。",
+      "level_3": "👀 共 4 空：① 打开商品页；② 按文本找到按钮并点击；③ 在卡片范围内按文本定位；④ 可见性断言。",
+      "level_4": "📝 正确答案：`cy.visit('/products')`、`cy.contains('Add to cart').click()`、`cy.contains('.card', 'Wireless Mouse')`、`should('be.visible')`"
+    },
+    "explanation": "cy.contains 优先匹配文本最接近的最内层元素，两个参数时先在指定父元素范围内查找。"
+  },
+  {
+    "id": "cypress-005",
+    "title": "cy.find 与 cy.within 范围查找",
+    "description": "在父元素内部查找条目并在表单范围内操作",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "easy",
+    "category": "cypress_command",
+    "subcategory": "cypress",
+    "full_code": "it('searches inside a container', () => {\n  cy.visit('/todos');\n  cy.get('.todo-list').find('li').should('have.length', 3);\n  cy.get('form').within(() => {\n    cy.get('input').type('Buy milk');\n  });\n});",
+    "expected": "",
+    "points": [
+      {
+        "id": "visit_todos",
+        "text": "cy.visit('/todos')",
+        "category": "cypress_command",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "打开待办列表页的命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "find_items",
+        "text": "cy.get('.todo-list').find('li')",
+        "category": "cypress_command",
+        "min_weight": "easy",
+        "weight_score": 1.5,
+        "hint": "在列表容器内查找条目的链式调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "length_assert",
+        "text": "should('have.length', 3)",
+        "category": "cypress_assert",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "断言匹配元素数量的链式调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "form_within",
+        "text": "cy.get('form').within(() => {",
+        "category": "cypress_command",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "定位表单并进入其作用域的回调开头",
+        "fill_type": "text"
+      },
+      {
+        "id": "input_type",
+        "text": "cy.get('input').type('Buy milk')",
+        "category": "cypress_command",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "在限定范围内定位输入框并输入的整行",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 find 在已定位的父元素内部查找，within 把后续命令限定在范围内。",
+      "level_2": "📖 find 接收子元素选择器；within 接收回调，回调里的命令都作用于该容器。",
+      "level_3": "👀 共 5 空：① 打开待办页；② 在列表内查找条目；③ 条目数量断言；④ 进入表单范围；⑤ 范围内输入文本。",
+      "level_4": "📝 正确答案：`cy.visit('/todos')`、`cy.get('.todo-list').find('li')`、`should('have.length', 3)`、`cy.get('form').within(() => {`、`cy.get('input').type('Buy milk')`"
+    },
+    "explanation": "find 局限于父元素的后代，within 则切换后续命令的作用域，都能避免在全局选择器里碰运气。"
+  },
+  {
+    "id": "cypress-006",
+    "title": "cy.type 输入文本",
+    "description": "在搜索框输入关键字并断言输入值",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "easy",
+    "category": "cypress_command",
+    "subcategory": "cypress",
+    "full_code": "it('types a search term', () => {\n  cy.visit('/search');\n  cy.get('#query').type('cypress');\n  cy.get('#query').should('have.value', 'cypress');\n});",
+    "expected": "",
+    "points": [
+      {
+        "id": "visit_search",
+        "text": "cy.visit('/search')",
+        "category": "cypress_command",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "打开搜索页的命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "type_term",
+        "text": "cy.get('#query').type('cypress')",
+        "category": "cypress_command",
+        "min_weight": "easy",
+        "weight_score": 1.5,
+        "hint": "定位搜索框并输入关键字的整行",
+        "fill_type": "text"
+      },
+      {
+        "id": "value_assert",
+        "text": "should('have.value', 'cypress')",
+        "category": "cypress_assert",
+        "min_weight": "easy",
+        "weight_score": 1.5,
+        "hint": "断言输入框当前值的链式调用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 type 把文本敲进输入框，随后可以直接断言输入框的值。",
+      "level_2": "📖 have.value 断言输入元素的当前值，不需要手动读取属性。",
+      "level_3": "👀 共 3 空：① 打开搜索页；② 定位搜索框并输入关键字；③ 输入值断言。",
+      "level_4": "📝 正确答案：`cy.visit('/search')`、`cy.get('#query').type('cypress')`、`should('have.value', 'cypress')`"
+    },
+    "explanation": "type 会聚焦元素并模拟真实键盘输入，have.value 断言会自动重试直到输入值符合预期。"
+  },
+  {
+    "id": "cypress-007",
+    "title": "cy.click 点击元素",
+    "description": "点击注册按钮并确认欢迎提示出现",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "easy",
+    "category": "cypress_command",
+    "subcategory": "cypress",
+    "full_code": "it('clicks the submit button', () => {\n  cy.visit('/signup');\n  cy.contains('button', 'Create account').click();\n  cy.get('#welcome').should('be.visible');\n});",
+    "expected": "",
+    "points": [
+      {
+        "id": "visit_signup",
+        "text": "cy.visit('/signup')",
+        "category": "cypress_command",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "打开注册页的命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "create_account_click",
+        "text": "cy.contains('button', 'Create account').click()",
+        "category": "cypress_command",
+        "min_weight": "easy",
+        "weight_score": 1.5,
+        "hint": "按文本定位按钮并点击的整行",
+        "fill_type": "text"
+      },
+      {
+        "id": "welcome_selector",
+        "text": "cy.get('#welcome')",
+        "category": "cypress_command",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "按 id 定位欢迎提示元素的命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "visible_assert",
+        "text": "should('be.visible')",
+        "category": "cypress_assert",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "断言欢迎提示可见的链式调用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 点击按钮后通常会跳转或渲染新内容，用断言确认结果。",
+      "level_2": "📖 click 会滚动到元素并模拟真实点击；contains 支持选择器加文本两个参数。",
+      "level_3": "👀 共 4 空：① 打开注册页；② 按文本找到按钮并点击；③ 定位欢迎提示元素；④ 可见性断言。",
+      "level_4": "📝 正确答案：`cy.visit('/signup')`、`cy.contains('button', 'Create account').click()`、`cy.get('#welcome')`、`should('be.visible')`"
+    },
+    "explanation": "click 会等元素可交互后再模拟点击，配合 contains 可以按可见文本精确定位按钮。"
+  },
+  {
+    "id": "cypress-008",
+    "title": "cy.check、cy.uncheck 与 cy.clear",
+    "description": "勾选、取消勾选复选框并清空输入框",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "easy",
+    "category": "cypress_command",
+    "subcategory": "cypress",
+    "full_code": "it('toggles the newsletter option', () => {\n  cy.visit('/settings');\n  cy.get('#newsletter').check();\n  cy.get('#newsletter').uncheck();\n  cy.get('#email').clear();\n});",
+    "expected": "",
+    "points": [
+      {
+        "id": "visit_settings",
+        "text": "cy.visit('/settings')",
+        "category": "cypress_command",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "打开设置页的命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "newsletter_check",
+        "text": "cy.get('#newsletter').check()",
+        "category": "cypress_command",
+        "min_weight": "easy",
+        "weight_score": 1.5,
+        "hint": "确保复选框被勾选的整行",
+        "fill_type": "text"
+      },
+      {
+        "id": "newsletter_uncheck",
+        "text": "cy.get('#newsletter').uncheck()",
+        "category": "cypress_command",
+        "min_weight": "easy",
+        "weight_score": 1.5,
+        "hint": "确保复选框被取消勾选的整行",
+        "fill_type": "text"
+      },
+      {
+        "id": "email_clear",
+        "text": "cy.get('#email').clear()",
+        "category": "cypress_command",
+        "min_weight": "easy",
+        "weight_score": 1.5,
+        "hint": "清空输入框内容的整行",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 复选框和输入框各有一组专用命令，比 click 更贴近真实操作。",
+      "level_2": "📖 check/uncheck 专门操作复选框；clear 清空输入框已有内容。",
+      "level_3": "👀 共 4 空：① 打开设置页；② 勾选订阅选项；③ 取消勾选；④ 清空邮箱输入框。",
+      "level_4": "📝 正确答案：`cy.visit('/settings')`、`cy.get('#newsletter').check()`、`cy.get('#newsletter').uncheck()`、`cy.get('#email').clear()`"
+    },
+    "explanation": "check 与 uncheck 会确保复选框达到目标状态而不是盲目切换，clear 则清空输入框已有内容。"
+  },
+  {
+    "id": "cypress-009",
+    "title": "cy.select 操作下拉框",
+    "description": "在下拉框中选择角色并验证选中值",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "easy",
+    "category": "cypress_command",
+    "subcategory": "cypress",
+    "full_code": "it('selects a role from the dropdown', () => {\n  cy.visit('/users/new');\n  cy.get('#role').select('admin');\n  cy.get('#role').should('have.value', 'admin');\n});",
+    "expected": "",
+    "points": [
+      {
+        "id": "visit_new_user",
+        "text": "cy.visit('/users/new')",
+        "category": "cypress_command",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "打开新建用户页的命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "role_select",
+        "text": "cy.get('#role').select('admin')",
+        "category": "cypress_command",
+        "min_weight": "easy",
+        "weight_score": 1.5,
+        "hint": "定位下拉框并选择角色的整行",
+        "fill_type": "text"
+      },
+      {
+        "id": "value_assert",
+        "text": "should('have.value', 'admin')",
+        "category": "cypress_assert",
+        "min_weight": "easy",
+        "weight_score": 1.5,
+        "hint": "断言下拉框当前选中值的链式调用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 下拉框用 select 选值，再用 have.value 验证选中结果。",
+      "level_2": "📖 select 接收 option 的 value 或可见文本；have.value 读取当前选中的值。",
+      "level_3": "👀 共 3 空：① 打开新建用户页；② 在下拉框中选择角色；③ 选中值断言。",
+      "level_4": "📝 正确答案：`cy.visit('/users/new')`、`cy.get('#role').select('admin')`、`should('have.value', 'admin')`"
+    },
+    "explanation": "select 传入 option 的 value 或可见文本即可选中，have.value 用来确认最终选中结果。"
+  },
+  {
+    "id": "cypress-010",
+    "title": "should('be.visible') 可见性断言",
+    "description": "断言错误横幅可见并显示指定文本",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "beginner",
+    "category": "cypress_assert",
+    "subcategory": "cypress",
+    "full_code": "it('shows the error banner', () => {\n  cy.visit('/checkout');\n  cy.get('.error-banner').should('be.visible');\n  cy.get('.error-banner').should('have.text', 'Payment failed');\n});",
+    "expected": "",
+    "points": [
+      {
+        "id": "visit_checkout",
+        "text": "cy.visit('/checkout')",
+        "category": "cypress_command",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "打开结算页的命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "visible_assert",
+        "text": "cy.get('.error-banner').should('be.visible')",
+        "category": "cypress_assert",
+        "min_weight": "beginner",
+        "weight_score": 1.5,
+        "hint": "定位横幅并断言可见的整行",
+        "fill_type": "text"
+      },
+      {
+        "id": "text_assert",
+        "text": "should('have.text', 'Payment failed')",
+        "category": "cypress_assert",
+        "min_weight": "easy",
+        "weight_score": 1.5,
+        "hint": "断言横幅完整文本的链式调用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 可见性断言会等待元素出现，避免自己写睡眠等待。",
+      "level_2": "📖 be.visible 判断元素在页面中可见；have.text 断言元素的完整文本。",
+      "level_3": "👀 共 3 空：① 打开结算页；② 可见性断言整行；③ 文本内容断言。",
+      "level_4": "📝 正确答案：`cy.visit('/checkout')`、`cy.get('.error-banner').should('be.visible')`、`should('have.text', 'Payment failed')`"
+    },
+    "explanation": "be.visible 检查元素存在、可见且未被隐藏，Cypress 默认会重试断言直到超时。"
+  },
+  {
+    "id": "cypress-011",
+    "title": "should('have.text') 文本断言",
+    "description": "断言购物车总价并确认文本不为空",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "easy",
+    "category": "cypress_assert",
+    "subcategory": "cypress",
+    "full_code": "it('renders the total price', () => {\n  cy.visit('/cart');\n  cy.get('#total').should('have.text', '$42.00');\n  cy.get('#total').should('not.have.text', '');\n});",
+    "expected": "",
+    "points": [
+      {
+        "id": "visit_cart",
+        "text": "cy.visit('/cart')",
+        "category": "cypress_command",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "打开购物车页的命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "text_assert",
+        "text": "should('have.text', '$42.00')",
+        "category": "cypress_assert",
+        "min_weight": "easy",
+        "weight_score": 1.5,
+        "hint": "断言总价完整文本的链式调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "not_text_assert",
+        "text": "should('not.have.text', '')",
+        "category": "cypress_assert",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "断言文本内容非空的取反链式调用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 文本断言可以直接比较完整内容，也可以断言不满足某条件。",
+      "level_2": "📖 should 里加 not 表示取反，not.have.text 用于确认文本不为空。",
+      "level_3": "👀 共 3 空：① 打开购物车；② 完整文本相等断言；③ 文本非空断言。",
+      "level_4": "📝 正确答案：`cy.visit('/cart')`、`should('have.text', '$42.00')`、`should('not.have.text', '')`"
+    },
+    "explanation": "have.text 精确比较元素文本，加上 not 可以断言内容不满足某条件，例如不为空。"
+  },
+  {
+    "id": "cypress-012",
+    "title": "should('have.length', 3) 数量断言",
+    "description": "断言商品卡片数量并检查第一个卡片内容",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "medium",
+    "category": "cypress_assert",
+    "subcategory": "cypress",
+    "full_code": "it('renders three featured products', () => {\n  cy.visit('/');\n  cy.get('.product-card').should('have.length', 3);\n  cy.get('.product-card').first().should('contain', 'Pro');\n});",
+    "expected": "",
+    "points": [
+      {
+        "id": "visit_home",
+        "text": "cy.visit('/')",
+        "category": "cypress_command",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "打开站点根路径的命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "length_assert",
+        "text": "cy.get('.product-card').should('have.length', 3)",
+        "category": "cypress_assert",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "定位卡片集合并断言数量的整行",
+        "fill_type": "text"
+      },
+      {
+        "id": "first_contain",
+        "text": ".first().should('contain', 'Pro')",
+        "category": "cypress_assert",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "取集合第一个元素并断言包含文字的链式调用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 have.length 用来断言匹配元素的个数。",
+      "level_2": "📖 集合断言应作用在 cy.get 返回的多个元素上；first 取第一个继续断言。",
+      "level_3": "👀 共 3 空：① 打开首页；② 断言商品卡片数量；③ 取第一个卡片并断言包含文字。",
+      "level_4": "📝 正确答案：`cy.visit('/')`、`cy.get('.product-card').should('have.length', 3)`、`.first().should('contain', 'Pro')`"
+    },
+    "explanation": "have.length 断言匹配元素的数量，适合验证列表渲染条数；first 取集合第一个元素继续断言。"
+  },
+  {
+    "id": "cypress-013",
+    "title": "cy.intercept 与 cy.wait 等待请求",
+    "description": "拦截用户列表请求并等待响应返回",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "medium",
+    "category": "cypress_network",
+    "subcategory": "cypress",
+    "full_code": "it('waits for the users request', () => {\n  cy.intercept('GET', '/api/users').as('getUsers');\n  cy.visit('/users');\n  cy.wait('@getUsers').its('response.statusCode').should('eq', 200);\n});",
+    "expected": "",
+    "points": [
+      {
+        "id": "intercept_users",
+        "text": "cy.intercept('GET', '/api/users').as('getUsers')",
+        "category": "cypress_network",
+        "min_weight": "medium",
+        "weight_score": 2,
+        "hint": "拦截 GET 请求并起别名的整行",
+        "fill_type": "text"
+      },
+      {
+        "id": "visit_users",
+        "text": "cy.visit('/users')",
+        "category": "cypress_command",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "打开用户列表页的命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "wait_alias",
+        "text": "cy.wait('@getUsers')",
+        "category": "cypress_network",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "等待别名对应请求完成的命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "status_its",
+        "text": ".its('response.statusCode')",
+        "category": "cypress_network",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "从拦截结果中读取状态码属性的链式调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "status_assert",
+        "text": "should('eq', 200)",
+        "category": "cypress_assert",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "断言状态码相等的链式调用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 先拦截并给请求起别名，再触发页面动作，最后等待该别名。",
+      "level_2": "📖 intercept 的第一个参数是方法、第二个是 URL；as 起别名，wait 等待别名对应的请求完成。",
+      "level_3": "👀 共 5 空：① 拦截用户列表请求并起别名；② 打开用户页；③ 等待别名请求；④ 读取响应状态码；⑤ 状态码断言。",
+      "level_4": "📝 正确答案：`cy.intercept('GET', '/api/users').as('getUsers')`、`cy.visit('/users')`、`cy.wait('@getUsers')`、`.its('response.statusCode')`、`should('eq', 200)`"
+    },
+    "explanation": "intercept 先给请求起别名再等待，能确保断言发生在响应回来之后，避免竞态。"
+  },
+  {
+    "id": "cypress-014",
+    "title": "cy.intercept 与 req.reply 伪造响应",
+    "description": "拦截资料请求并用自定义响应体替换",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "hard",
+    "category": "cypress_network",
+    "subcategory": "cypress",
+    "full_code": "it('stubs the profile response', () => {\n  cy.intercept('GET', '/api/profile', (req) => {\n    req.reply({ statusCode: 200, body: { name: 'Ada' } });\n  }).as('getProfile');\n  cy.visit('/profile');\n  cy.wait('@getProfile');\n});",
+    "expected": "",
+    "points": [
+      {
+        "id": "intercept_profile",
+        "text": "cy.intercept('GET', '/api/profile', (req) => {",
+        "category": "cypress_network",
+        "min_weight": "hard",
+        "weight_score": 2,
+        "hint": "拦截资料请求并接收 req 的回调开头",
+        "fill_type": "text"
+      },
+      {
+        "id": "reply_body",
+        "text": "req.reply({ statusCode: 200, body: { name: 'Ada' } })",
+        "category": "cypress_network",
+        "min_weight": "hard",
+        "weight_score": 2,
+        "hint": "用自定义状态码与响应体作答的调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "alias_profile",
+        "text": ".as('getProfile')",
+        "category": "cypress_network",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "给拦截起别名的链式调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "visit_profile",
+        "text": "cy.visit('/profile')",
+        "category": "cypress_command",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "打开资料页的命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "wait_profile",
+        "text": "cy.wait('@getProfile')",
+        "category": "cypress_network",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "等待别名请求完成的命令",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 路由处理函数里可以用 req.reply 自定义返回内容。",
+      "level_2": "📖 reply 接收对象时可指定 statusCode 与 body；拦截器末尾仍可用 as 起别名供 wait 使用。",
+      "level_3": "👀 共 5 空：① 拦截资料请求并接收 req 的函数头；② 构造自定义响应；③ 给拦截起别名；④ 打开资料页；⑤ 等待别名请求。",
+      "level_4": "📝 正确答案：`cy.intercept('GET', '/api/profile', (req) => {`、`req.reply({ statusCode: 200, body: { name: 'Ada' } })`、`.as('getProfile')`、`cy.visit('/profile')`、`cy.wait('@getProfile')`"
+    },
+    "explanation": "在路由处理函数里调用 req.reply 可以伪造状态码和响应体，让前端测试不依赖真实后端。"
+  },
+  {
+    "id": "cypress-015",
+    "title": "cy.fixture 读取固定数据",
+    "description": "从 fixture 文件读取用户数据并断言渲染条数",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "medium",
+    "category": "cypress_fixture",
+    "subcategory": "cypress",
+    "full_code": "it('loads users from a fixture', () => {\n  cy.fixture('users.json').then((users) => {\n    cy.visit('/users');\n    cy.get('.user-row').should('have.length', users.length);\n  });\n});",
+    "expected": "",
+    "points": [
+      {
+        "id": "fixture_users",
+        "text": "cy.fixture('users.json').then((users) => {",
+        "category": "cypress_fixture",
+        "min_weight": "medium",
+        "weight_score": 2,
+        "hint": "读取固定数据文件并接收解析结果的整行",
+        "fill_type": "text"
+      },
+      {
+        "id": "visit_users",
+        "text": "cy.visit('/users')",
+        "category": "cypress_command",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "打开用户列表页的命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "user_row",
+        "text": "cy.get('.user-row')",
+        "category": "cypress_command",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "按类名定位用户行的命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "fixture_length",
+        "text": "should('have.length', users.length)",
+        "category": "cypress_assert",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "用数据长度断言渲染数量的链式调用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 fixture 从固定文件读取数据，回调参数里拿到解析后的内容。",
+      "level_2": "📖 cy.fixture 默认读取 cypress/fixtures 目录下的文件，支持 json。",
+      "level_3": "👀 共 4 空：① 读取固定数据并接收结果；② 打开用户页；③ 定位用户行；④ 用数据长度做数量断言。",
+      "level_4": "📝 正确答案：`cy.fixture('users.json').then((users) => {`、`cy.visit('/users')`、`cy.get('.user-row')`、`should('have.length', users.length)`"
+    },
+    "explanation": "fixture 把测试数据与用例分离，修改数据文件即可覆盖不同场景，无需改动测试代码。"
+  },
+  {
+    "id": "cypress-016",
+    "title": "cy.request 直接调用接口",
+    "description": "直接发请求创建用户并断言响应",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "hard",
+    "category": "cypress_network",
+    "subcategory": "cypress",
+    "full_code": "it('creates a user through the API', () => {\n  cy.request('POST', '/api/users', { name: 'Grace', role: 'admin' }).then((response) => {\n    expect(response.status).to.eq(201);\n    expect(response.body.name).to.eq('Grace');\n  });\n});",
+    "expected": "",
+    "points": [
+      {
+        "id": "request_create",
+        "text": "cy.request('POST', '/api/users', { name: 'Grace', role: 'admin' })",
+        "category": "cypress_network",
+        "min_weight": "hard",
+        "weight_score": 2,
+        "hint": "带方法、URL 与请求体创建用户的调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "then_response",
+        "text": ".then((response) => {",
+        "category": "cypress_network",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "处理响应结果的回调开头",
+        "fill_type": "text"
+      },
+      {
+        "id": "status_assert",
+        "text": "expect(response.status).to.eq(201)",
+        "category": "cypress_assert",
+        "min_weight": "beginner",
+        "weight_score": 1.5,
+        "hint": "断言创建成功状态码的整行",
+        "fill_type": "text"
+      },
+      {
+        "id": "body_assert",
+        "text": "expect(response.body.name).to.eq('Grace')",
+        "category": "cypress_assert",
+        "min_weight": "hard",
+        "weight_score": 1.5,
+        "hint": "断言响应体字段取值的整行",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 request 直接在后端发 HTTP 请求，比走 UI 更快且稳定。",
+      "level_2": "📖 cy.request 支持方法、URL 与请求体三个参数，回调里能读到 status 和 body。",
+      "level_3": "👀 共 4 空：① 发起创建用户的请求；② 处理响应回调；③ 状态码断言；④ 响应体的字段断言。",
+      "level_4": "📝 正确答案：`cy.request('POST', '/api/users', { name: 'Grace', role: 'admin' })`、`.then((response) => {`、`expect(response.status).to.eq(201)`、`expect(response.body.name).to.eq('Grace')`"
+    },
+    "explanation": "cy.request 直接在 Node 侧发请求，还能复用浏览器 cookie，常用于登录或准备测试数据。"
+  },
+  {
+    "id": "cypress-017",
+    "title": "cy.session 缓存登录态",
+    "description": "在钩子里缓存登录会话供每条用例复用",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "hard",
+    "category": "cypress_session",
+    "subcategory": "cypress",
+    "full_code": "beforeEach(() => {\n  cy.session('admin', () => {\n    cy.request('POST', '/api/login', {\n      email: 'admin@example.com',\n      password: 'secret',\n    }).then((response) => {\n      window.localStorage.setItem('token', response.body.token);\n    });\n  });\n  cy.visit('/dashboard');\n});",
+    "expected": "",
+    "points": [
+      {
+        "id": "hook_before_each",
+        "text": "beforeEach(() => {",
+        "category": "cypress_hooks",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "每条用例前执行的前置钩子开头",
+        "fill_type": "text"
+      },
+      {
+        "id": "session_admin",
+        "text": "cy.session('admin', () => {",
+        "category": "cypress_session",
+        "min_weight": "hard",
+        "weight_score": 2,
+        "hint": "按缓存键复用会话的回调开头",
+        "fill_type": "text"
+      },
+      {
+        "id": "request_login",
+        "text": "cy.request('POST', '/api/login', {",
+        "category": "cypress_session",
+        "min_weight": "hard",
+        "weight_score": 1.5,
+        "hint": "在会话回调里发送登录请求的整行",
+        "fill_type": "text"
+      },
+      {
+        "id": "store_token",
+        "text": "window.localStorage.setItem('token', response.body.token)",
+        "category": "cypress_session",
+        "min_weight": "hard",
+        "weight_score": 1.5,
+        "hint": "把令牌写入本地存储的整行",
+        "fill_type": "text"
+      },
+      {
+        "id": "visit_dashboard",
+        "text": "cy.visit('/dashboard')",
+        "category": "cypress_command",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "打开仪表盘页的命令",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 把登录流程放进 session，缓存的会话在多个用例间复用。",
+      "level_2": "📖 cy.session 第一个参数是缓存键，第二个回调只在没有缓存时执行；用 request 登录后写入 token。",
+      "level_3": "👀 共 5 空：① 用例前置钩子；② 开启 session 缓存并接收回调；③ 发送登录请求；④ 把令牌写入本地存储；⑤ 打开仪表盘。",
+      "level_4": "📝 正确答案：`beforeEach(() => {`、`cy.session('admin', () => {`、`cy.request('POST', '/api/login', {`、`window.localStorage.setItem('token', response.body.token)`、`cy.visit('/dashboard')`"
+    },
+    "explanation": "cy.session 会按缓存键复用登录态，在 beforeEach 中调用可避免每条用例重复走登录界面。"
+  },
+  {
+    "id": "cypress-018",
+    "title": "Cypress.Commands.add 自定义命令",
+    "description": "把登录流程封装成可复用的自定义命令",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "hard",
+    "category": "cypress_commands",
+    "subcategory": "cypress",
+    "full_code": "Cypress.Commands.add('login', (email, password) => {\n  cy.session(email, () => {\n    cy.visit('/login');\n    cy.get('#email').type(email);\n    cy.get('#password').type(password);\n  });\n});",
+    "expected": "",
+    "points": [
+      {
+        "id": "add_login_cmd",
+        "text": "Cypress.Commands.add('login', (email, password) => {",
+        "category": "cypress_commands",
+        "min_weight": "hard",
+        "weight_score": 2,
+        "hint": "注册自定义命令的函数头",
+        "fill_type": "text"
+      },
+      {
+        "id": "session_email",
+        "text": "cy.session(email, () => {",
+        "category": "cypress_session",
+        "min_weight": "hard",
+        "weight_score": 2,
+        "hint": "在命令内部按参数开启会话缓存的回调开头",
+        "fill_type": "text"
+      },
+      {
+        "id": "visit_login",
+        "text": "cy.visit('/login')",
+        "category": "cypress_command",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "打开登录页的命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "type_email",
+        "text": "cy.get('#email').type(email)",
+        "category": "cypress_command",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "定位邮箱输入框并填入参数的整行",
+        "fill_type": "text"
+      },
+      {
+        "id": "type_password",
+        "text": "cy.get('#password').type(password)",
+        "category": "cypress_command",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "定位密码输入框并填入参数的整行",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 把重复的登录步骤封装成自定义命令，测试里直接调用。",
+      "level_2": "📖 Cypress.Commands.add 注册全局命令；配合 session 缓存后，多处复用不会重复登录。",
+      "level_3": "👀 共 5 空：① 注册自定义命令的函数头；② 在命令内部开启会话缓存；③ 打开登录页；④ 填邮箱；⑤ 填密码。",
+      "level_4": "📝 正确答案：`Cypress.Commands.add('login', (email, password) => {`、`cy.session(email, () => {`、`cy.visit('/login')`、`cy.get('#email').type(email)`、`cy.get('#password').type(password)`"
+    },
+    "explanation": "Cypress.Commands.add 把常用操作抽成命令，业务用例读起来更接近自然语言。"
+  },
+  {
+    "id": "cypress-019",
+    "title": "beforeEach 每个用例前执行",
+    "description": "用 beforeEach 准备登录态再运行断言用例",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "medium",
+    "category": "cypress_hooks",
+    "subcategory": "cypress",
+    "full_code": "describe('dashboard', () => {\n  beforeEach(() => {\n    cy.visit('/login');\n    cy.get('#email').type('user@example.com');\n    cy.get('#password').type('secret');\n    cy.contains('button', 'Log in').click();\n  });\n\n  it('shows the stats panel', () => {\n    cy.get('.stats').should('be.visible');\n  });\n});",
+    "expected": "",
+    "points": [
+      {
+        "id": "hook_before_each",
+        "text": "beforeEach(() => {",
+        "category": "cypress_hooks",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "每条用例前执行的前置钩子开头",
+        "fill_type": "text"
+      },
+      {
+        "id": "visit_login",
+        "text": "cy.visit('/login')",
+        "category": "cypress_command",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "打开登录页的命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "login_click",
+        "text": "cy.contains('button', 'Log in').click()",
+        "category": "cypress_command",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "按文本定位登录按钮并点击的整行",
+        "fill_type": "text"
+      },
+      {
+        "id": "stats_case",
+        "text": "it('shows the stats panel', () => {",
+        "category": "cypress_structure",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "用例声明并接收回调的函数头",
+        "fill_type": "text"
+      },
+      {
+        "id": "stats_visible",
+        "text": "cy.get('.stats').should('be.visible')",
+        "category": "cypress_assert",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "定位统计面板并断言可见的整行",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 每个用例都要先登录时，把公共步骤放进 beforeEach。",
+      "level_2": "📖 beforeEach 在所属 describe 下的每条用例前执行，适合准备登录态。",
+      "level_3": "👀 共 5 空：① 前置钩子声明；② 打开登录页；③ 提交登录；④ 用例声明行；⑤ 面板可见性断言。",
+      "level_4": "📝 正确答案：`beforeEach(() => {`、`cy.visit('/login')`、`cy.contains('button', 'Log in').click()`、`it('shows the stats panel', () => {`、`cy.get('.stats').should('be.visible')`"
+    },
+    "explanation": "beforeEach 钩子在每条用例前执行，适合登录、访问页面等公共准备工作。"
+  },
+  {
+    "id": "cypress-020",
+    "title": "cy.viewport 设置视口",
+    "description": "切换到移动端视口并验证菜单显示",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "easy",
+    "category": "cypress_command",
+    "subcategory": "cypress",
+    "full_code": "it('renders the mobile layout', () => {\n  cy.viewport('iphone-x');\n  cy.visit('/');\n  cy.get('.mobile-menu').should('be.visible');\n});",
+    "expected": "",
+    "points": [
+      {
+        "id": "mobile_case",
+        "text": "it('renders the mobile layout', () => {",
+        "category": "cypress_structure",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "用例声明并接收回调的函数头",
+        "fill_type": "text"
+      },
+      {
+        "id": "set_viewport",
+        "text": "cy.viewport('iphone-x')",
+        "category": "cypress_command",
+        "min_weight": "easy",
+        "weight_score": 1.5,
+        "hint": "用预设名切换移动端视口的命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "visit_home",
+        "text": "cy.visit('/')",
+        "category": "cypress_command",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "打开站点根路径的命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "menu_visible",
+        "text": "cy.get('.mobile-menu').should('be.visible')",
+        "category": "cypress_assert",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "定位移动端菜单并断言可见的整行",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 用 viewport 在用例里切换设备尺寸，验证响应式布局。",
+      "level_2": "📖 cy.viewport 既接受宽高数字，也接受 iphone-x 这类预设名。",
+      "level_3": "👀 共 4 空：① 用例声明行；② 设置移动端视口；③ 打开首页；④ 移动端菜单可见性断言。",
+      "level_4": "📝 正确答案：`it('renders the mobile layout', () => {`、`cy.viewport('iphone-x')`、`cy.visit('/')`、`cy.get('.mobile-menu').should('be.visible')`"
+    },
+    "explanation": "cy.viewport 按预设或自定义尺寸修改视口，用来验证响应式布局在移动端表现。"
+  },
+  {
+    "id": "cypress-021",
+    "title": "cy.clock 与 cy.tick 控制时间",
+    "description": "冻结时钟并快进时间触发倒计时逻辑",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "medium",
+    "category": "cypress_time",
+    "subcategory": "cypress",
+    "full_code": "it('advances the countdown timer', () => {\n  cy.clock();\n  cy.visit('/flash-sale');\n  cy.tick(60000);\n  cy.get('#timer').should('have.text', '00:00');\n});",
+    "expected": "",
+    "points": [
+      {
+        "id": "freeze_clock",
+        "text": "cy.clock()",
+        "category": "cypress_time",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "接管系统时间与定时器的命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "visit_sale",
+        "text": "cy.visit('/flash-sale')",
+        "category": "cypress_command",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "打开活动页的命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "advance_tick",
+        "text": "cy.tick(60000)",
+        "category": "cypress_time",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "瞬间推进指定毫秒数的命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "timer_text",
+        "text": "cy.get('#timer').should('have.text', '00:00')",
+        "category": "cypress_assert",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "定位倒计时并断言文本的整行",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 冻结虚拟时钟后，用 tick 快进时间触发定时逻辑。",
+      "level_2": "📖 cy.clock 接管 Date 与定时器，cy.tick 推进指定毫秒数，不会真的等待。",
+      "level_3": "👀 共 4 空：① 冻结虚拟时钟；② 打开活动页；③ 快进一分钟；④ 倒计时文本断言。",
+      "level_4": "📝 正确答案：`cy.clock()`、`cy.visit('/flash-sale')`、`cy.tick(60000)`、`cy.get('#timer').should('have.text', '00:00')`"
+    },
+    "explanation": "cy.clock 冻结时间后，cy.tick 会瞬间推进定时器，测试倒计时类逻辑无需真的等待。"
+  },
+  {
+    "id": "cypress-022",
+    "title": "cy.wrap 与 invoke 读取内容",
+    "description": "用 then 拿到元素后包装并调用取文本方法",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "medium",
+    "category": "cypress_command",
+    "subcategory": "cypress",
+    "full_code": "it('reads the text of a button', () => {\n  cy.visit('/cart');\n  cy.get('#checkout').then(($btn) => {\n    cy.wrap($btn).invoke('text').should('contain', 'Checkout');\n  });\n});",
+    "expected": "",
+    "points": [
+      {
+        "id": "visit_cart",
+        "text": "cy.visit('/cart')",
+        "category": "cypress_command",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "打开购物车页的命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "then_button",
+        "text": "cy.get('#checkout').then(($btn) => {",
+        "category": "cypress_command",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "定位按钮并处理其元素的回调开头",
+        "fill_type": "text"
+      },
+      {
+        "id": "wrap_invoke",
+        "text": "cy.wrap($btn).invoke('text')",
+        "category": "cypress_command",
+        "min_weight": "medium",
+        "weight_score": 2,
+        "hint": "包装元素并调用取文本方法的链式调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "contain_assert",
+        "text": "should('contain', 'Checkout')",
+        "category": "cypress_assert",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "断言文本包含子串的链式调用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 then 回调里拿到的是 jQuery 元素，可以用 wrap 重新包装成 Cypress 对象。",
+      "level_2": "📖 cy.wrap 把普通值或 jQuery 元素变成可链式操作的对象，invoke 调用其方法。",
+      "level_3": "👀 共 4 空：① 打开购物车；② 取元素并处理结果的链；③ 包装元素并调用取文本方法；④ 文本包含断言。",
+      "level_4": "📝 正确答案：`cy.visit('/cart')`、`cy.get('#checkout').then(($btn) => {`、`cy.wrap($btn).invoke('text')`、`should('contain', 'Checkout')`"
+    },
+    "explanation": "then 回调拿到的是原生 jQuery 元素，用 cy.wrap 包装后可以继续使用 Cypress 命令链。"
+  },
+  {
+    "id": "cypress-023",
+    "title": "cy.then 处理前一个命令结果",
+    "description": "在 then 回调中计算总价并断言数值范围",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "medium",
+    "category": "cypress_command",
+    "subcategory": "cypress",
+    "full_code": "it('compares the total with a computed value', () => {\n  cy.visit('/cart');\n  cy.get('#total').then(($el) => {\n    const total = Number($el.text().replace('$', ''));\n    expect(total).to.be.greaterThan(20);\n  });\n});",
+    "expected": "",
+    "points": [
+      {
+        "id": "visit_cart",
+        "text": "cy.visit('/cart')",
+        "category": "cypress_command",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "打开购物车页的命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "then_total",
+        "text": "cy.get('#total').then(($el) => {",
+        "category": "cypress_command",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "定位总价并处理其元素的回调开头",
+        "fill_type": "text"
+      },
+      {
+        "id": "compute_total",
+        "text": "const total = Number($el.text().replace('$', ''))",
+        "category": "cypress_command",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "清洗文本并转换出数字的声明语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "total_assert",
+        "text": "expect(total).to.be.greaterThan(20)",
+        "category": "cypress_assert",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "断言数值大于阈值的整行",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 需要在前一个命令的结果上做计算时，用 then 进入回调处理。",
+      "level_2": "📖 then 回调接收上一步产生的 subject，可写普通 JS 逻辑再断言。",
+      "level_3": "👀 共 4 空：① 打开购物车；② 取总价并处理结果；③ 字符串清洗后转数字；④ 数值大小断言。",
+      "level_4": "📝 正确答案：`cy.visit('/cart')`、`cy.get('#total').then(($el) => {`、`const total = Number($el.text().replace('$', ''))`、`expect(total).to.be.greaterThan(20)`"
+    },
+    "explanation": "cy.then 让你在前一个命令的结果上执行任意 JS 计算，再用 expect 断言计算后的值。"
+  },
+  {
+    "id": "cypress-024",
+    "title": "cy.origin 跨域访问",
+    "description": "在第三方认证域上用 origin 回调完成登录",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "expert",
+    "category": "cypress_origin",
+    "subcategory": "cypress",
+    "full_code": "it('logs in on the auth domain', () => {\n  cy.visit('/');\n  cy.contains('Sign in').click();\n  cy.origin('https://auth.example.com', () => {\n    cy.get('#username').type('ada');\n    cy.get('#password').type('secret');\n  });\n});",
+    "expected": "",
+    "points": [
+      {
+        "id": "visit_home",
+        "text": "cy.visit('/')",
+        "category": "cypress_command",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "打开站点根路径的命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "sign_in_click",
+        "text": "cy.contains('Sign in').click()",
+        "category": "cypress_command",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "按文本找到登录入口并点击的整行",
+        "fill_type": "text"
+      },
+      {
+        "id": "origin_auth",
+        "text": "cy.origin('https://auth.example.com', () => {",
+        "category": "cypress_origin",
+        "min_weight": "expert",
+        "weight_score": 2,
+        "hint": "声明目标源与跨域回调的函数头",
+        "fill_type": "text"
+      },
+      {
+        "id": "type_username",
+        "text": "cy.get('#username').type('ada')",
+        "category": "cypress_origin",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "在目标源回调里填写用户名的整行",
+        "fill_type": "text"
+      },
+      {
+        "id": "type_password",
+        "text": "cy.get('#password').type('secret')",
+        "category": "cypress_origin",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "在目标源回调里填写密码的整行",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 跨域页面上的操作要放进 cy.origin 的回调里执行。",
+      "level_2": "📖 cy.origin 第一个参数是目标源，回调内的命令在该源的上下文执行，不能引用外部变量。",
+      "level_3": "👀 共 5 空：① 打开当前站点；② 点击登录入口；③ 声明目标源与回调；④ 填用户名；⑤ 填密码。",
+      "level_4": "📝 正确答案：`cy.visit('/')`、`cy.contains('Sign in').click()`、`cy.origin('https://auth.example.com', () => {`、`cy.get('#username').type('ada')`、`cy.get('#password').type('secret')`"
+    },
+    "explanation": "cy.origin 让命令在指定源的上下文里执行，解决跨域登录等场景下 Cypress 的同源限制。"
+  },
+  {
+    "id": "cypress-025",
+    "title": "只运行指定用例文件",
+    "description": "用 npx cypress run 配合 --spec 运行登录用例",
+    "exercise_type": "command",
+    "tech_stack": "testing",
+    "weight": "medium",
+    "category": "cypress_cli",
+    "subcategory": "cypress",
+    "full_code": "npx cypress run --spec \"cypress/e2e/login.cy.js\"",
+    "expected": "",
+    "points": [
+      {
+        "id": "run_command",
+        "text": "npx cypress run",
+        "category": "cypress_cli",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "无头运行整个套件的命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "spec_flag",
+        "text": "--spec",
+        "category": "cypress_cli",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "指定用例文件的参数名",
+        "fill_type": "text"
+      },
+      {
+        "id": "spec_path",
+        "text": "\"cypress/e2e/login.cy.js\"",
+        "category": "cypress_cli",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "被引号包住的用例文件路径",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 只跑单个文件时，用 run 子命令配合 spec 参数指定路径。",
+      "level_2": "📖 --spec 接收用例文件的路径或 glob，路径要用引号包住。",
+      "level_3": "👀 共 3 空：① 无头运行整个套件的子命令；② 指定用例文件的参数名；③ 文件路径。",
+      "level_4": "📝 正确答案：`npx cypress run`、`--spec`、`\"cypress/e2e/login.cy.js\"`"
+    },
+    "explanation": "--spec 只运行匹配的用例文件，适合本地调试或 CI 中按需拆分执行。"
+  },
+  {
+    "id": "cypress-026",
+    "title": "指定浏览器与有头模式",
+    "description": "用 chrome 浏览器有头模式运行 Cypress",
+    "exercise_type": "command",
+    "tech_stack": "testing",
+    "weight": "medium",
+    "category": "cypress_cli",
+    "subcategory": "cypress",
+    "full_code": "npx cypress run --browser chrome --headed",
+    "expected": "",
+    "points": [
+      {
+        "id": "run_command",
+        "text": "npx cypress run",
+        "category": "cypress_cli",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "无头运行整个套件的命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "browser_flag",
+        "text": "--browser chrome",
+        "category": "cypress_cli",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "选择浏览器的参数及取值",
+        "fill_type": "text"
+      },
+      {
+        "id": "headed_flag",
+        "text": "--headed",
+        "category": "cypress_cli",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "让浏览器窗口可见的参数",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 想观察浏览器实际执行过程，可以指定浏览器并开启有头模式。",
+      "level_2": "📖 --browser 选择浏览器，--headed 保留可见窗口，默认则是无头。",
+      "level_3": "👀 共 3 空：① 运行子命令；② 选择浏览器；③ 开启有头模式。",
+      "level_4": "📝 正确答案：`npx cypress run`、`--browser chrome`、`--headed`"
+    },
+    "explanation": "--browser 指定浏览器，--headed 保留界面可见，便于观察执行细节。"
+  },
+  {
+    "id": "cypress-027",
+    "title": "打开交互式运行器",
+    "description": "用 npx cypress open 启动图形化测试运行器",
+    "exercise_type": "command",
+    "tech_stack": "testing",
+    "weight": "beginner",
+    "category": "cypress_cli",
+    "subcategory": "cypress",
+    "full_code": "npx cypress open",
+    "expected": "",
+    "points": [
+      {
+        "id": "npx_prefix",
+        "text": "npx",
+        "category": "cypress_cli",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "调用本地包运行器的前缀",
+        "fill_type": "text"
+      },
+      {
+        "id": "cypress_cmd",
+        "text": "cypress",
+        "category": "cypress_cli",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "测试工具的命令名",
+        "fill_type": "text"
+      },
+      {
+        "id": "open_subcmd",
+        "text": "open",
+        "category": "cypress_cli",
+        "min_weight": "beginner",
+        "weight_score": 1.5,
+        "hint": "启动图形化运行器的子命令",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 交互式调试用 open，无头批量执行用 run。",
+      "level_2": "📖 npx 调用本地安装的 cypress 可执行文件，open 启动图形化的测试运行器。",
+      "level_3": "👀 共 3 空：① 包运行器前缀；② 工具命令名；③ 打开交互式运行器的子命令。",
+      "level_4": "📝 正确答案：`npx`、`cypress`、`open`"
+    },
+    "explanation": "open 启动交互式运行器可选择浏览器与文件，而 run 更适合无头批量执行。"
+  },
+  {
+    "id": "cypress-028",
+    "title": "配置 baseUrl 与 video",
+    "description": "在 cypress.config.js 中设置基准地址并关闭录像",
+    "exercise_type": "config",
+    "tech_stack": "testing",
+    "weight": "medium",
+    "category": "cypress_config",
+    "subcategory": "cypress",
+    "full_code": "const { defineConfig } = require('cypress');\n\nmodule.exports = defineConfig({\n  e2e: {\n    baseUrl: 'http://localhost:3000',\n    video: false,\n  },\n});",
+    "expected": "",
+    "points": [
+      {
+        "id": "import_config",
+        "text": "const { defineConfig } = require('cypress');",
+        "category": "cypress_config",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "从测试包导入配置函数的整行",
+        "fill_type": "text"
+      },
+      {
+        "id": "export_config",
+        "text": "module.exports = defineConfig({",
+        "category": "cypress_config",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "导出默认配置对象的开头",
+        "fill_type": "text"
+      },
+      {
+        "id": "e2e_section",
+        "text": "e2e: {",
+        "category": "cypress_config",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "端到端测试配置段的开头",
+        "fill_type": "text"
+      },
+      {
+        "id": "base_url",
+        "text": "baseUrl: 'http://localhost:3000',",
+        "category": "cypress_config",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "指定基准地址的配置项",
+        "fill_type": "text"
+      },
+      {
+        "id": "video_flag",
+        "text": "video: false,",
+        "category": "cypress_config",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "关闭录像的配置项",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 配置从 cypress 包导入 defineConfig，并在默认导出里声明。",
+      "level_2": "📖 e2e 段配置端到端测试，baseUrl 让 visit('/') 可省略域名，video 控制是否录像。",
+      "level_3": "👀 共 5 空：① 导入配置函数；② 默认导出配置对象；③ 端到端配置段；④ 基准地址；⑤ 关闭录像。",
+      "level_4": "📝 正确答案：`const { defineConfig } = require('cypress');`、`module.exports = defineConfig({`、`e2e: {`、`baseUrl: 'http://localhost:3000',`、`video: false,`"
+    },
+    "explanation": "baseUrl 让测试中的相对地址自动补全，video 设为 false 可减少 CI 产物体积。"
+  },
+  {
+    "id": "cypress-029",
+    "title": "配置 specPattern 与 excludeSpecPattern",
+    "description": "指定用例收集范围并排除示例文件",
+    "exercise_type": "config",
+    "tech_stack": "testing",
+    "weight": "hard",
+    "category": "cypress_config",
+    "subcategory": "cypress",
+    "full_code": "const { defineConfig } = require('cypress');\n\nmodule.exports = defineConfig({\n  e2e: {\n    specPattern: 'cypress/e2e/**/*.cy.js',\n    excludeSpecPattern: ['**/examples/**', '**/*.skip.cy.js'],\n  },\n});",
+    "expected": "",
+    "points": [
+      {
+        "id": "export_config",
+        "text": "module.exports = defineConfig({",
+        "category": "cypress_config",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "导出默认配置对象的开头",
+        "fill_type": "text"
+      },
+      {
+        "id": "e2e_section",
+        "text": "e2e: {",
+        "category": "cypress_config",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "端到端测试配置段的开头",
+        "fill_type": "text"
+      },
+      {
+        "id": "spec_pattern",
+        "text": "specPattern: 'cypress/e2e/**/*.cy.js',",
+        "category": "cypress_config",
+        "min_weight": "hard",
+        "weight_score": 2,
+        "hint": "收集用例文件的匹配模式配置项",
+        "fill_type": "text"
+      },
+      {
+        "id": "exclude_pattern",
+        "text": "excludeSpecPattern: ['**/examples/**', '**/*.skip.cy.js'],",
+        "category": "cypress_config",
+        "min_weight": "hard",
+        "weight_score": 2,
+        "hint": "排除文件的匹配模式配置项",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 specPattern 决定收集哪些用例，excludeSpecPattern 排除不想跑的文件。",
+      "level_2": "📖 两个配置项都写在 e2e 段内，excludeSpecPattern 接收数组或字符串。",
+      "level_3": "👀 共 4 空：① 默认导出配置对象；② 端到端配置段；③ 收集用例的匹配模式；④ 排除文件的匹配模式。",
+      "level_4": "📝 正确答案：`module.exports = defineConfig({`、`e2e: {`、`specPattern: 'cypress/e2e/**/*.cy.js',`、`excludeSpecPattern: ['**/examples/**', '**/*.skip.cy.js'],`"
+    },
+    "explanation": "specPattern 定义用例收集范围，excludeSpecPattern 精确排除示例或临时文件。"
+  },
+  {
+    "id": "cypress-030",
+    "title": "配置 retries 与 defaultCommandTimeout",
+    "description": "为运行模式设置重试并放宽命令超时",
+    "exercise_type": "config",
+    "tech_stack": "testing",
+    "weight": "expert",
+    "category": "cypress_config",
+    "subcategory": "cypress",
+    "full_code": "const { defineConfig } = require('cypress');\n\nmodule.exports = defineConfig({\n  e2e: {\n    retries: { runMode: 2, openMode: 0 },\n    defaultCommandTimeout: 10000,\n  },\n});",
+    "expected": "",
+    "points": [
+      {
+        "id": "export_config",
+        "text": "module.exports = defineConfig({",
+        "category": "cypress_config",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "导出默认配置对象的开头",
+        "fill_type": "text"
+      },
+      {
+        "id": "e2e_section",
+        "text": "e2e: {",
+        "category": "cypress_config",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "端到端测试配置段的开头",
+        "fill_type": "text"
+      },
+      {
+        "id": "retries_config",
+        "text": "retries: { runMode: 2, openMode: 0 },",
+        "category": "cypress_config",
+        "min_weight": "expert",
+        "weight_score": 2,
+        "hint": "区分运行与交互模式的重试配置项",
+        "fill_type": "text"
+      },
+      {
+        "id": "timeout_config",
+        "text": "defaultCommandTimeout: 10000,",
+        "category": "cypress_config",
+        "min_weight": "expert",
+        "weight_score": 2,
+        "hint": "命令默认超时时间的配置项",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 不稳定的用例可以配置重试，命令超时也可以按需放长。",
+      "level_2": "📖 retries 区分 runMode 与 openMode；defaultCommandTimeout 单位是毫秒。",
+      "level_3": "👀 共 4 空：① 默认导出配置对象；② 端到端配置段；③ 重试次数配置；④ 命令超时配置。",
+      "level_4": "📝 正确答案：`module.exports = defineConfig({`、`e2e: {`、`retries: { runMode: 2, openMode: 0 },`、`defaultCommandTimeout: 10000,`"
+    },
+    "explanation": "重试能降低网络抖动导致的偶发失败，defaultCommandTimeout 控制命令等待元素的最长时间。"
+  }
+]

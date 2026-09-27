@@ -24,7 +24,7 @@
         "id": "wraps_decorator",
         "text": "@functools.wraps(func)",
         "category": "functools_wraps",
-        "min_weight": "beginner",
+        "min_weight": "medium",
         "weight_score": 1.5,
         "hint": "把原函数的 __name__ 等元信息复制到 wrapper 上",
         "fill_type": "text"
@@ -37,13 +37,40 @@
         "weight_score": 1,
         "hint": "在 wrapper 内部调用被包装的原函数",
         "fill_type": "text"
+      },
+      {
+        "id": "at_logger",
+        "text": "@logger",
+        "category": "decorator_usage",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "用 @ 语法把 hello 交给 logger 包装，等价于 hello = logger(hello)",
+        "fill_type": "text"
+      },
+      {
+        "id": "wrapper_def",
+        "text": "def wrapper():",
+        "category": "wrapper_body",
+        "min_weight": "hard",
+        "weight_score": 1.5,
+        "hint": "装饰器内部真正被返回的替换函数，调用 hello() 实际执行它",
+        "fill_type": "text"
+      },
+      {
+        "id": "name_check",
+        "text": "print(hello.__name__)",
+        "category": "metadata_check",
+        "min_weight": "expert",
+        "weight_score": 2,
+        "hint": "验证 wraps 生效：这里应打印 hello 而不是 wrapper",
+        "fill_type": "text"
       }
     ],
     "hints": {
       "level_1": "💡 装饰器是接收函数、返回函数的高阶函数；想想怎么让 hello() 前后都打印日志。",
       "level_2": "📖 `logger(func)` 内部定义 `wrapper()`，调用 `func()` 后 `return wrapper`；`@logger` 把 hello 换成 wrapper。",
-      "level_3": "👀 `import functools` … `@functools.wraps(func)` … `func()`",
-      "level_4": "📝 正确答案：`import functools`、`@functools.wraps(func)` 与 `func()`"
+      "level_3": "👀 `import functools` … `@functools.wraps(func)` … `func()` … `@logger` … `def wrapper():` … `print(hello.__name__)`",
+      "level_4": "📝 正确答案：`import functools`、`@functools.wraps(func)`、`func()`、`@logger`、`def wrapper():` 与 `print(hello.__name__)`"
     },
     "explanation": "装饰器 `logger` 接收函数并返回包装后的函数；`functools.wraps` 把原函数的 `__name__`、`__doc__` 等复制到 wrapper，避免 `hello.__name__` 变成 `wrapper`。"
   },
@@ -72,7 +99,7 @@
         "id": "manual_apply",
         "text": "report = deco(report)",
         "category": "manual_apply",
-        "min_weight": "beginner",
+        "min_weight": "medium",
         "weight_score": 1.5,
         "hint": "手动应用装饰器：用包装结果覆盖原名",
         "fill_type": "text"
@@ -85,13 +112,40 @@
         "weight_score": 1,
         "hint": "包装函数里转调原函数并返回其结果",
         "fill_type": "text"
+      },
+      {
+        "id": "deco_def",
+        "text": "def deco(func):",
+        "category": "decorator_def",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "装饰器函数定义：接收函数作为参数",
+        "fill_type": "text"
+      },
+      {
+        "id": "return_inner",
+        "text": "return inner",
+        "category": "return_wrapper",
+        "min_weight": "hard",
+        "weight_score": 1.5,
+        "hint": "把内部包装函数返回出去替换原函数",
+        "fill_type": "text"
+      },
+      {
+        "id": "name_print",
+        "text": "print(report.__name__)",
+        "category": "metadata_check",
+        "min_weight": "expert",
+        "weight_score": 2,
+        "hint": "装饰后 __name__ 变成 inner，正是元信息丢失的证据",
+        "fill_type": "text"
       }
     ],
     "hints": {
       "level_1": "💡 打印两次 __name__ 的差异，说明了装饰器改动了什么？",
       "level_2": "📖 装饰后 report 实际指向 `inner`，没有 wraps 时名字自然变成 `inner`。",
-      "level_3": "👀 `report = deco(report)` 之后 `report.__name__` 就是 `inner`",
-      "level_4": "📝 正确答案：`def inner():`、`report = deco(report)` 与 `return func()`"
+      "level_3": "👀 `def deco(func):` … `def inner():` … `return func()` … `return inner` … `report = deco(report)` … `print(report.__name__)`",
+      "level_4": "📝 正确答案：`def deco(func):`、`def inner():`、`return func()`、`return inner`、`report = deco(report)` 与 `print(report.__name__)`"
     },
     "explanation": "装饰器本质上用新函数替换旧名字，元信息不会自动继承；这正是 `functools.wraps` 存在的意义。"
   },
@@ -129,17 +183,44 @@
         "id": "deco_layer",
         "text": "def deco(func):",
         "category": "decorator_factory",
-        "min_weight": "beginner",
+        "min_weight": "medium",
         "weight_score": 1.5,
         "hint": "最外层收参数、中间层收函数",
+        "fill_type": "text"
+      },
+      {
+        "id": "factory_def",
+        "text": "def repeat(times):",
+        "category": "decorator_factory",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "最外层工厂：先接收重复次数参数",
+        "fill_type": "text"
+      },
+      {
+        "id": "return_wrapper",
+        "text": "return wrapper",
+        "category": "return_wrapper",
+        "min_weight": "hard",
+        "weight_score": 1.5,
+        "hint": "deco 收下 func 后返回包装好的 wrapper",
+        "fill_type": "text"
+      },
+      {
+        "id": "return_deco",
+        "text": "return deco",
+        "category": "factory_return",
+        "min_weight": "expert",
+        "weight_score": 2,
+        "hint": "工厂层交回真正的装饰器 deco，而不是直接调用它",
         "fill_type": "text"
       }
     ],
     "hints": {
       "level_1": "💡 装饰器本身要接收 2 这个参数，需要比无参版多包一层。",
       "level_2": "📖 三层结构：`repeat(times)` → `deco(func)` → `wrapper()`，闭包让 wrapper 记住 times。",
-      "level_3": "👀 `def deco(func):` … `@repeat(2)` … `for _ in range(times):`",
-      "level_4": "📝 正确答案：`@repeat(2)`、`for _ in range(times):` 与 `def deco(func):`"
+      "level_3": "👀 `def repeat(times):` … `def deco(func):` … `for _ in range(times):` … `return wrapper` … `@repeat(2)` … `return deco`",
+      "level_4": "📝 正确答案：`def repeat(times):`、`def deco(func):`、`for _ in range(times):`、`return wrapper`、`@repeat(2)` 与 `return deco`"
     },
     "explanation": "带参数装饰器靠装饰器工厂实现：外层收集参数并返回真正的装饰器，闭包使 wrapper 能读到 times。"
   },
@@ -168,7 +249,7 @@
         "id": "manual_apply",
         "text": "b = tag(b)",
         "category": "manual_apply",
-        "min_weight": "easy",
+        "min_weight": "medium",
         "weight_score": 1.5,
         "hint": "等价写法：把装饰结果重新赋给 b",
         "fill_type": "text"
@@ -177,17 +258,44 @@
         "id": "wrapper_def",
         "text": "def wrapper():",
         "category": "wrapper_body",
-        "min_weight": "easy",
+        "min_weight": "beginner",
         "weight_score": 1,
         "hint": "装饰器内部返回的替代函数",
+        "fill_type": "text"
+      },
+      {
+        "id": "tag_def",
+        "text": "def tag(func):",
+        "category": "decorator_def",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "装饰器定义：接收被装饰的函数",
+        "fill_type": "text"
+      },
+      {
+        "id": "return_wrapper",
+        "text": "return wrapper",
+        "category": "return_wrapper",
+        "min_weight": "hard",
+        "weight_score": 1.5,
+        "hint": "返回替代函数，@tag 才能生效",
+        "fill_type": "text"
+      },
+      {
+        "id": "decorating_print",
+        "text": "print(\"decorating\", func.__name__)",
+        "category": "decorate_time",
+        "min_weight": "expert",
+        "weight_score": 2,
+        "hint": "它在函数定义时立即执行，是装饰时机的最好证明",
         "fill_type": "text"
       }
     ],
     "hints": {
       "level_1": "💡 两行 decorating 都出现在 a()、b() 调用之前，这说明装饰发生在什么时候？",
       "level_2": "📖 `@tag` 等价于 `a = tag(a)`，在 def 语句执行完立即运行；手动 `b = tag(b)` 同样立即执行。",
-      "level_3": "👀 `@tag` 与 `b = tag(b)` 是同一件事的两种写法",
-      "level_4": "📝 正确答案：`@tag`、`b = tag(b)` 与 `def wrapper():`"
+      "level_3": "👀 `def tag(func):` … `print(\"decorating\", func.__name__)` … `def wrapper():` … `return wrapper` … `@tag` … `b = tag(b)`",
+      "level_4": "📝 正确答案：`def tag(func):`、`print(\"decorating\", func.__name__)`、`def wrapper():`、`return wrapper`、`@tag` 与 `b = tag(b)`"
     },
     "explanation": "`@tag` 只是语法糖，等价于定义后立即执行 `a = tag(a)`；所以 decorating 输出发生在函数调用之前。"
   },
@@ -225,17 +333,44 @@
         "id": "target_body",
         "text": "print(\"core\")",
         "category": "target_body",
-        "min_weight": "medium",
+        "min_weight": "beginner",
         "weight_score": 1,
         "hint": "被装饰函数本身打印的内容",
+        "fill_type": "text"
+      },
+      {
+        "id": "core_def",
+        "text": "def core():",
+        "category": "target_def",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "被两层装饰器包裹的核心函数定义",
+        "fill_type": "text"
+      },
+      {
+        "id": "second_def",
+        "text": "def second(func):",
+        "category": "inner_decorator",
+        "min_weight": "hard",
+        "weight_score": 1.5,
+        "hint": "紧贴 core 的内层装饰器，先完成包装",
+        "fill_type": "text"
+      },
+      {
+        "id": "first_before_print",
+        "text": "print(\"first before\")",
+        "category": "execution_order",
+        "min_weight": "expert",
+        "weight_score": 2,
+        "hint": "外层 first 的 wrapper 最先执行，它是输出的第一行",
         "fill_type": "text"
       }
     ],
     "hints": {
       "level_1": "💡 靠近 def 的 @second 先包装，整体等价于 `core = first(second(core))`。",
       "level_2": "📖 包装自下而上，执行自上而下：外层 wrapper 先打印，再进入内层，最后回到外层。",
-      "level_3": "👀 `@first` 在上、`@second` 在下，中间夹着 `def core():`",
-      "level_4": "📝 正确答案：`@second`、`@first` 与 `print(\"core\")`"
+      "level_3": "👀 `print(\"first before\")` … `def second(func):` … `@first` … `@second` … `def core():` … `print(\"core\")`",
+      "level_4": "📝 正确答案：`print(\"first before\")`、`def second(func):`、`@first`、`@second`、`def core():` 与 `print(\"core\")`"
     },
     "explanation": "装饰顺序等价于 `core = first(second(core))`：second 先包装；调用时 first 的 wrapper 最先执行，最后才到核心函数。"
   },
@@ -273,17 +408,44 @@
         "id": "count_increment",
         "text": "self.calls += 1",
         "category": "state_update",
-        "min_weight": "medium",
+        "min_weight": "hard",
         "weight_score": 1.5,
         "hint": "每次调用累加计数，状态保存在实例上",
+        "fill_type": "text"
+      },
+      {
+        "id": "init_def",
+        "text": "def __init__(self, func):",
+        "category": "instance_init",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "装饰时把原函数保存为实例属性",
+        "fill_type": "text"
+      },
+      {
+        "id": "return_calls",
+        "text": "return self.calls",
+        "category": "state_read",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "show() 返回实例上累计的调用次数",
+        "fill_type": "text"
+      },
+      {
+        "id": "show_print",
+        "text": "print(run.show())",
+        "category": "state_check",
+        "min_weight": "expert",
+        "weight_score": 2,
+        "hint": "通过实例上的普通方法读取计数，输出 2",
         "fill_type": "text"
       }
     ],
     "hints": {
       "level_1": "💡 类实例也可以当装饰器，只要实现了 __call__。",
       "level_2": "📖 `@Counter` 把 run 变成 Counter 实例；调用 run() 实际走 `__call__`，计数存在实例属性上。",
-      "level_3": "👀 `def __call__(self):` 与 `self.calls += 1`",
-      "level_4": "📝 正确答案：`@Counter`、`def __call__(self):` 与 `self.calls += 1`"
+      "level_3": "👀 `def __init__(self, func):` … `def __call__(self):` … `self.calls += 1` … `return self.calls` … `@Counter` … `print(run.show())`",
+      "level_4": "📝 正确答案：`def __init__(self, func):`、`def __call__(self):`、`self.calls += 1`、`return self.calls`、`@Counter` 与 `print(run.show())`"
     },
     "explanation": "装饰器不必是函数，任何可调用对象都行；类实例把状态保存在属性中，比闭包更直观。"
   },
@@ -312,7 +474,7 @@
         "id": "cls_param",
         "text": "def add_repr(cls):",
         "category": "decorator_def",
-        "min_weight": "easy",
+        "min_weight": "beginner",
         "weight_score": 1,
         "hint": "装饰类时接收的是类对象本身",
         "fill_type": "text"
@@ -321,17 +483,44 @@
         "id": "return_cls",
         "text": "return cls",
         "category": "return_class",
-        "min_weight": "easy",
+        "min_weight": "medium",
         "weight_score": 1.5,
         "hint": "原地增强后必须把同一个类返回",
+        "fill_type": "text"
+      },
+      {
+        "id": "describe_print",
+        "text": "print(d.describe())",
+        "category": "dynamic_method_call",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "调用装饰器动态挂到类上的 describe 方法",
+        "fill_type": "text"
+      },
+      {
+        "id": "woof_return",
+        "text": "return \"woof\"",
+        "category": "method_body",
+        "min_weight": "hard",
+        "weight_score": 1.5,
+        "hint": "Dog.speak 的返回值，证明原类方法没被破坏",
+        "fill_type": "text"
+      },
+      {
+        "id": "lambda_attach",
+        "text": "cls.describe = lambda self:",
+        "category": "class_enhance",
+        "min_weight": "expert",
+        "weight_score": 2,
+        "hint": "给类动态挂上 describe 方法，lambda 的 self 即实例",
         "fill_type": "text"
       }
     ],
     "hints": {
       "level_1": "💡 装饰类时，装饰器拿到的是类本身，可以给它加方法再还回去。",
       "level_2": "📖 `@add_repr` 等价于 `Dog = add_repr(Dog)`：挂上 describe 后 `return cls`。",
-      "level_3": "👀 `def add_repr(cls):` … `return cls`",
-      "level_4": "📝 正确答案：`@add_repr`、`return cls` 与 `def add_repr(cls):`"
+      "level_3": "👀 `def add_repr(cls):` … `cls.describe = lambda self:` … `return cls` … `@add_repr` … `return \"woof\"` … `print(d.describe())`",
+      "level_4": "📝 正确答案：`def add_repr(cls):`、`cls.describe = lambda self:`、`return cls`、`@add_repr`、`return \"woof\"` 与 `print(d.describe())`"
     },
     "explanation": "类装饰器接收类、修改类并返回类；若忘记 return，原类名会被替换成 None。"
   },
@@ -369,17 +558,44 @@
         "id": "self_forward",
         "text": "return func(self, *args, **kwargs)",
         "category": "self_forward",
-        "min_weight": "medium",
+        "min_weight": "expert",
         "weight_score": 2,
         "hint": "把 self 和其他参数原样转交给原方法",
+        "fill_type": "text"
+      },
+      {
+        "id": "trace_def",
+        "text": "def trace(func):",
+        "category": "decorator_def",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "装饰器函数定义，接收被包装的方法",
+        "fill_type": "text"
+      },
+      {
+        "id": "call_print",
+        "text": "print(\"call\", func.__name__)",
+        "category": "trace_output",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "每次调用前打印被装饰方法的名字",
+        "fill_type": "text"
+      },
+      {
+        "id": "add_print",
+        "text": "print(c.add(5))",
+        "category": "method_call",
+        "min_weight": "hard",
+        "weight_score": 1.5,
+        "hint": "通过实例调用被装饰方法，输出 call add 与 15",
         "fill_type": "text"
       }
     ],
     "hints": {
       "level_1": "💡 方法被装饰后仍是普通函数，通过实例调用时第一个实参是实例本身。",
       "level_2": "📖 `c.add(5)` 变成 `wrapper(c, 5)`，所以 wrapper 要显式声明 self 并转发给原方法。",
-      "level_3": "👀 `def wrapper(self, *args, **kwargs):` 与 `return func(self, *args, **kwargs)`",
-      "level_4": "📝 正确答案：`@trace`、`def wrapper(self, *args, **kwargs):` 与 `return func(self, *args, **kwargs)`"
+      "level_3": "👀 `def trace(func):` … `def wrapper(self, *args, **kwargs):` … `print(\"call\", func.__name__)` … `return func(self, *args, **kwargs)` … `@trace` … `print(c.add(5))`",
+      "level_4": "📝 正确答案：`def trace(func):`、`def wrapper(self, *args, **kwargs):`、`print(\"call\", func.__name__)`、`return func(self, *args, **kwargs)`、`@trace` 与 `print(c.add(5))`"
     },
     "explanation": "函数装饰器包装实例方法时不会自动获得 self，必须在 wrapper 签名中显式接收并转发，否则 self 会被当成普通参数。"
   },
@@ -399,7 +615,7 @@
         "id": "cache_decorator",
         "text": "@functools.lru_cache(maxsize=None)",
         "category": "cache_decorator",
-        "min_weight": "beginner",
+        "min_weight": "expert",
         "weight_score": 2,
         "hint": "开启无上限的结果缓存",
         "fill_type": "text"
@@ -408,7 +624,7 @@
         "id": "cache_miss",
         "text": "calls.append(n)",
         "category": "cache_miss",
-        "min_weight": "easy",
+        "min_weight": "beginner",
         "weight_score": 1,
         "hint": "这行只在真正计算（缓存未命中）时执行",
         "fill_type": "text"
@@ -421,13 +637,40 @@
         "weight_score": 1,
         "hint": "递归调用同样会命中缓存",
         "fill_type": "text"
+      },
+      {
+        "id": "fib_def",
+        "text": "def fib(n):",
+        "category": "function_def",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "被缓存的递归函数定义",
+        "fill_type": "text"
+      },
+      {
+        "id": "base_case",
+        "text": "if n < 2:",
+        "category": "base_case",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "递归基准：n 为 0 或 1 时直接返回",
+        "fill_type": "text"
+      },
+      {
+        "id": "len_print",
+        "text": "print(len(calls))",
+        "category": "cache_check",
+        "min_weight": "hard",
+        "weight_score": 1.5,
+        "hint": "打印真实计算次数，验证缓存让每个 n 只算一次",
+        "fill_type": "text"
       }
     ],
     "hints": {
       "level_1": "💡 缓存让相同的 n 只真正计算一次；数一数 append 被触发几次。",
       "level_2": "📖 `lru_cache` 以参数为键缓存返回值；n=0..10 每个值各 miss 一次。",
-      "level_3": "👀 `@functools.lru_cache(maxsize=None)` 与 `calls.append(n)`",
-      "level_4": "📝 正确答案：`@functools.lru_cache(maxsize=None)`、`calls.append(n)` 与 `return fib(n - 1) + fib(n - 2)`"
+      "level_3": "👀 `@functools.lru_cache(maxsize=None)` … `def fib(n):` … `calls.append(n)` … `if n < 2:` … `return fib(n - 1) + fib(n - 2)` … `print(len(calls))`",
+      "level_4": "📝 正确答案：`@functools.lru_cache(maxsize=None)`、`def fib(n):`、`calls.append(n)`、`if n < 2:`、`return fib(n - 1) + fib(n - 2)` 与 `print(len(calls))`"
     },
     "explanation": "fib(10) 的结果是 55；由于缓存，n=0..10 各只计算一次，所以 len(calls) 为 11，而不是庞大的递归调用总数。"
   },
@@ -447,7 +690,7 @@
         "id": "base_dispatch",
         "text": "@functools.singledispatch",
         "category": "singledispatch_base",
-        "min_weight": "beginner",
+        "min_weight": "medium",
         "weight_score": 1.5,
         "hint": "声明按第一个参数类型分派的总入口",
         "fill_type": "text"
@@ -456,7 +699,7 @@
         "id": "default_branch",
         "text": "return \"unknown\"",
         "category": "default_branch",
-        "min_weight": "medium",
+        "min_weight": "beginner",
         "weight_score": 1,
         "hint": "没有匹配类型时的兜底实现",
         "fill_type": "text"
@@ -465,17 +708,44 @@
         "id": "int_branch",
         "text": "def _(value: int):",
         "category": "typed_register",
-        "min_weight": "medium",
+        "min_weight": "hard",
         "weight_score": 1.5,
         "hint": "用类型注解注册 int 分支",
+        "fill_type": "text"
+      },
+      {
+        "id": "import_functools",
+        "text": "import functools",
+        "category": "stdlib_import",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "导入提供 singledispatch 的 functools 模块",
+        "fill_type": "text"
+      },
+      {
+        "id": "describe_def",
+        "text": "def describe(value):",
+        "category": "base_function",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "被分派的总入口，也是默认实现",
+        "fill_type": "text"
+      },
+      {
+        "id": "float_print",
+        "text": "print(describe(1.5))",
+        "category": "fallback_check",
+        "min_weight": "expert",
+        "weight_score": 2,
+        "hint": "float 没有注册分支，回落到基函数打印 unknown",
         "fill_type": "text"
       }
     ],
     "hints": {
       "level_1": "💡 根据参数类型选择不同实现，这就是 singledispatch。",
       "level_2": "📖 基函数处理默认情况；`@describe.register` 配合类型注解注册分支，float 没有分支所以回落。",
-      "level_3": "👀 `@functools.singledispatch`、`def _(value: int):` 与 `return \"unknown\"`",
-      "level_4": "📝 正确答案：`@functools.singledispatch`、`return \"unknown\"` 与 `def _(value: int):`"
+      "level_3": "👀 `import functools` … `@functools.singledispatch` … `def describe(value):` … `return \"unknown\"` … `def _(value: int):` … `print(describe(1.5))`",
+      "level_4": "📝 正确答案：`import functools`、`@functools.singledispatch`、`def describe(value):`、`return \"unknown\"`、`def _(value: int):` 与 `print(describe(1.5))`"
     },
     "explanation": "singledispatch 按第一个参数的实际类型查找注册的函数；1.5 是 float，没有注册分支，于是回落到基函数返回 unknown。"
   },
@@ -495,7 +765,7 @@
         "id": "wraps_call",
         "text": "@functools.wraps(func)",
         "category": "functools_wraps",
-        "min_weight": "beginner",
+        "min_weight": "medium",
         "weight_score": 1.5,
         "hint": "保留被包装函数的元信息",
         "fill_type": "text"
@@ -504,7 +774,7 @@
         "id": "form_check",
         "text": "if len(args) == 1 and callable(args[0]) and not kwargs:",
         "category": "optional_args",
-        "min_weight": "hard",
+        "min_weight": "expert",
         "weight_score": 2,
         "hint": "判断本次是 @log 直用还是 @log(prefix) 传参",
         "fill_type": "text"
@@ -517,13 +787,40 @@
         "weight_score": 2,
         "hint": "有参取参数、无参用默认前缀",
         "fill_type": "text"
+      },
+      {
+        "id": "import_functools",
+        "text": "import functools",
+        "category": "stdlib_import",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "导入 functools 以便使用 wraps",
+        "fill_type": "text"
+      },
+      {
+        "id": "log_def",
+        "text": "def log(*args, **kwargs):",
+        "category": "flexible_entry",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "用 *args 同时接收函数或前缀参数",
+        "fill_type": "text"
+      },
+      {
+        "id": "at_log_x",
+        "text": "@log(\"X\")",
+        "category": "decorator_usage",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "带参用法：先调用 log(\"X\") 拿到 deco",
+        "fill_type": "text"
       }
     ],
     "hints": {
       "level_1": "💡 @log 与 @log(\"X\") 两种用法，装饰器得先判断 args[0] 是函数还是字符串。",
       "level_2": "📖 直接装饰时 `log(a)` 的 args[0] 可调用，于是转成 `log()(a)`；带参时正常返回 deco。",
-      "level_3": "👀 `if len(args) == 1 and callable(args[0]) and not kwargs:` 与 `prefix = args[0] if args else \"LOG\"`",
-      "level_4": "📝 正确答案：`@functools.wraps(func)`、`if len(args) == 1 and callable(args[0]) and not kwargs:` 与 `prefix = args[0] if args else \"LOG\"`"
+      "level_3": "👀 `import functools` … `def log(*args, **kwargs):` … `if len(args) == 1 and callable(args[0]) and not kwargs:` … `prefix = args[0] if args else \"LOG\"` … `@functools.wraps(func)` … `@log(\"X\")`",
+      "level_4": "📝 正确答案：`import functools`、`def log(*args, **kwargs):`、`if len(args) == 1 and callable(args[0]) and not kwargs:`、`prefix = args[0] if args else \"LOG\"`、`@functools.wraps(func)` 与 `@log(\"X\")`"
     },
     "explanation": "用一个 *args 入口同时支持两种形态：第一个位置参数可调用说明是无参装饰，否则按前缀参数处理并返回真正的装饰器。"
   },
@@ -561,17 +858,44 @@
         "id": "count_increment",
         "text": "self.count += 1",
         "category": "state_update",
-        "min_weight": "medium",
+        "min_weight": "hard",
         "weight_score": 1.5,
         "hint": "每次调用先累加计数",
+        "fill_type": "text"
+      },
+      {
+        "id": "init_def",
+        "text": "def __init__(self, func):",
+        "category": "instance_init",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "装饰时保存原函数并初始化计数",
+        "fill_type": "text"
+      },
+      {
+        "id": "power_def",
+        "text": "def power(base, exp):",
+        "category": "function_def",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "被装饰的带参数函数定义",
+        "fill_type": "text"
+      },
+      {
+        "id": "forward_call",
+        "text": "return self.func(*args, **kwargs)",
+        "category": "argument_forward",
+        "min_weight": "expert",
+        "weight_score": 2,
+        "hint": "把任意参数原样转发给保存的原函数并返回结果",
         "fill_type": "text"
       }
     ],
     "hints": {
       "level_1": "💡 计数要保存在实例属性里，每次调用都加一。",
       "level_2": "📖 装饰后 power 是 CountCalls 实例；调用它进入 __call__，再原样转发参数给原函数。",
-      "level_3": "👀 `def __call__(self, *args, **kwargs):` 与 `self.count += 1`",
-      "level_4": "📝 正确答案：`@CountCalls`、`def __call__(self, *args, **kwargs):` 与 `self.count += 1`"
+      "level_3": "👀 `def __init__(self, func):` … `def __call__(self, *args, **kwargs):` … `self.count += 1` … `return self.func(*args, **kwargs)` … `@CountCalls` … `def power(base, exp):`",
+      "level_4": "📝 正确答案：`def __init__(self, func):`、`def __call__(self, *args, **kwargs):`、`self.count += 1`、`return self.func(*args, **kwargs)`、`@CountCalls` 与 `def power(base, exp):`"
     },
     "explanation": "可调用类实例天然适合做有状态装饰器：count 存放在实例上，`*args, **kwargs` 保证任意签名的函数都能被包装。"
   },
@@ -609,17 +933,44 @@
         "id": "signature_print",
         "text": "print(inspect.signature(add))",
         "category": "signature_check",
-        "min_weight": "hard",
+        "min_weight": "expert",
         "weight_score": 2,
         "hint": "打印包装后 add 的签名",
+        "fill_type": "text"
+      },
+      {
+        "id": "logged_def",
+        "text": "def logged(func):",
+        "category": "decorator_def",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "装饰器函数定义，接收被包装函数",
+        "fill_type": "text"
+      },
+      {
+        "id": "add_def",
+        "text": "def add(a, b=1):",
+        "category": "signature_def",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "带默认值参数的被装饰函数，签名是考察重点",
+        "fill_type": "text"
+      },
+      {
+        "id": "add_print",
+        "text": "print(add(2, b=3))",
+        "category": "keyword_call",
+        "min_weight": "hard",
+        "weight_score": 1.5,
+        "hint": "用关键字参数调用，验证包装后调用依然正常",
         "fill_type": "text"
       }
     ],
     "hints": {
       "level_1": "💡 不加 wraps 时签名会变成 (*args, **kwargs)，加上后 signature 显示什么？",
       "level_2": "📖 `functools.wraps` 会设置 `__wrapped__`，inspect 沿它回溯到原函数签名。",
-      "level_3": "👀 `import inspect` … `@functools.wraps(func)` … `print(inspect.signature(add))`",
-      "level_4": "📝 正确答案：`import inspect`、`@functools.wraps(func)` 与 `print(inspect.signature(add))`"
+      "level_3": "👀 `import inspect` … `def logged(func):` … `@functools.wraps(func)` … `def add(a, b=1):` … `print(inspect.signature(add))` … `print(add(2, b=3))`",
+      "level_4": "📝 正确答案：`import inspect`、`def logged(func):`、`@functools.wraps(func)`、`def add(a, b=1):`、`print(inspect.signature(add))` 与 `print(add(2, b=3))`"
     },
     "explanation": "wraps 设置 `__wrapped__` 属性，`inspect.signature` 会沿它回溯原函数，因此打印 `(a, b=1)` 而不是 `(*args, **kwargs)`。"
   },
@@ -639,7 +990,7 @@
         "id": "setter_decorator",
         "text": "@celsius.setter",
         "category": "property_setter",
-        "min_weight": "beginner",
+        "min_weight": "medium",
         "weight_score": 1.5,
         "hint": "为 celsius 注册写操作的 setter",
         "fill_type": "text"
@@ -648,7 +999,7 @@
         "id": "fahrenheit_getter",
         "text": "def fahrenheit(self):",
         "category": "property_getter",
-        "min_weight": "easy",
+        "min_weight": "beginner",
         "weight_score": 1,
         "hint": "只读派生属性用 @property 实现",
         "fill_type": "text"
@@ -661,13 +1012,40 @@
         "weight_score": 1,
         "hint": "setter 内部把新值写进私有属性",
         "fill_type": "text"
+      },
+      {
+        "id": "celsius_getter",
+        "text": "def celsius(self):",
+        "category": "property_getter",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "celsius 的 getter，读取时返回私有属性",
+        "fill_type": "text"
+      },
+      {
+        "id": "celsius_assign",
+        "text": "t.celsius = 0",
+        "category": "setter_trigger",
+        "min_weight": "hard",
+        "weight_score": 1.5,
+        "hint": "这行赋值会走 @celsius.setter，而不是直接改属性",
+        "fill_type": "text"
+      },
+      {
+        "id": "formula",
+        "text": "return self._celsius * 9 / 5 + 32",
+        "category": "derived_property",
+        "min_weight": "expert",
+        "weight_score": 2,
+        "hint": "华氏度派生属性的计算式，每次读取都按当前值重算",
+        "fill_type": "text"
       }
     ],
     "hints": {
       "level_1": "💡 属性既能赋值又能在读取时计算，需要 property 装饰器家族配合。",
       "level_2": "📖 `@property` 把方法变成读属性；`@celsius.setter` 注册同名写属性；fahrenheit 每次读取都按当前值计算。",
-      "level_3": "👀 `@celsius.setter` … `def fahrenheit(self):` … `self._celsius = value`",
-      "level_4": "📝 正确答案：`@celsius.setter`、`def fahrenheit(self):` 与 `self._celsius = value`"
+      "level_3": "👀 `def celsius(self):` … `@celsius.setter` … `self._celsius = value` … `def fahrenheit(self):` … `return self._celsius * 9 / 5 + 32` … `t.celsius = 0`",
+      "level_4": "📝 正确答案：`def celsius(self):`、`@celsius.setter`、`self._celsius = value`、`def fahrenheit(self):`、`return self._celsius * 9 / 5 + 32` 与 `t.celsius = 0`"
     },
     "explanation": "property 是内置的装饰器家族：getter 用 @property 声明，setter 用 @x.setter 注册，读取与赋值因此能走不同逻辑。"
   },
@@ -709,13 +1087,40 @@
         "weight_score": 2,
         "hint": "前两次返回 again，第三次才返回 ok",
         "fill_type": "text"
+      },
+      {
+        "id": "retry_def",
+        "text": "def retry(times):",
+        "category": "retry_factory",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "最外层工厂，接收最大尝试次数",
+        "fill_type": "text"
+      },
+      {
+        "id": "failed_return",
+        "text": "return \"failed\"",
+        "category": "failure_return",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "循环内始终没拿到 ok 时的兜底返回值",
+        "fill_type": "text"
+      },
+      {
+        "id": "attempt_loop",
+        "text": "for i in range(times):",
+        "category": "attempt_loop",
+        "min_weight": "hard",
+        "weight_score": 1.5,
+        "hint": "最多尝试 times 次，每次先记录再调用原函数",
+        "fill_type": "text"
       }
     ],
     "hints": {
       "level_1": "💡 第一次返回 again，第二次仍然是 again；看看 attempts 的长度如何影响返回结果。",
       "level_2": "📖 `@retry(3)` 最多循环 3 次，每次先 append 再调用函数；unstable 靠 attempts 长度决定返回值。",
-      "level_3": "👀 `attempts.append(i)` 位于 `for i in range(times):` 循环内，unstable 里是 `if len(attempts) < 2:`",
-      "level_4": "📝 正确答案：`@retry(3)`、`attempts.append(i)` 与 `if len(attempts) < 2:`"
+      "level_3": "👀 `def retry(times):` … `for i in range(times):` … `attempts.append(i)` … `return \"failed\"` … `@retry(3)` … `if len(attempts) < 2:`",
+      "level_4": "📝 正确答案：`def retry(times):`、`for i in range(times):`、`attempts.append(i)`、`return \"failed\"`、`@retry(3)` 与 `if len(attempts) < 2:`"
     },
     "explanation": "重试装饰器循环调用原函数直到返回 ok：第 2 次尝试时 attempts 长度达到 2，函数成功返回，因此只记录 2 次尝试。"
   }

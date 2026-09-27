@@ -1,0 +1,1658 @@
+[
+  {
+    "id": "pytest-001",
+    "title": "相等断言",
+    "description": "用 assert 与 == 断言两个整数相加的结果",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "beginner",
+    "category": "pytest_assert",
+    "subcategory": "pytest",
+    "full_code": "from calc import add\n\n\ndef test_add_returns_sum():\n    assert add(1, 2) == 3\n\n\ndef test_add_negative():\n    assert add(-1, -2) == -3",
+    "expected": "",
+    "points": [
+      {
+        "id": "import_add",
+        "text": "from calc import add",
+        "category": "pytest_assert",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "从被测模块导入待测函数的语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "assert_sum",
+        "text": "assert add(1, 2) == 3",
+        "category": "pytest_assert",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "正整数相加后用 == 断言相等",
+        "fill_type": "text"
+      },
+      {
+        "id": "assert_negative",
+        "text": "assert add(-1, -2) == -3",
+        "category": "pytest_assert",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "负数相加后用 == 断言相等",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 plain assert 是 pytest 的首选断言方式，失败时 pytest 会自动给出详细对比。",
+      "level_2": "📖 先导入被测函数，再用 `assert 实际 == 期望` 直接断言相等，不需要任何断言方法。",
+      "level_3": "👀 共 3 空：① 导入被测函数的语句；② 正整数相加的相等断言；③ 负整数相加的相等断言。",
+      "level_4": "📝 正确答案：`from calc import add`、`assert add(1, 2) == 3`、`assert add(-1, -2) == -3`"
+    },
+    "explanation": "pytest 直接复用 Python 的 assert，失败时通过断言重写输出实际值与期望值的对比。"
+  },
+  {
+    "id": "pytest-002",
+    "title": "断言异常",
+    "description": "用 pytest.raises 验证除零并校验异常消息",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "beginner",
+    "category": "pytest_raises",
+    "subcategory": "pytest",
+    "full_code": "import pytest\n\nfrom calc import divide\n\n\ndef test_divide_by_zero():\n    with pytest.raises(ZeroDivisionError):\n        divide(1, 0)\n\n\ndef test_divide_message():\n    with pytest.raises(ZeroDivisionError, match=\"division by zero\"):\n        divide(5, 0)",
+    "expected": "",
+    "points": [
+      {
+        "id": "import_pytest",
+        "text": "import pytest",
+        "category": "pytest_raises",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "导入测试框架的语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "raises_zero",
+        "text": "with pytest.raises(ZeroDivisionError):",
+        "category": "pytest_raises",
+        "min_weight": "beginner",
+        "weight_score": 1.5,
+        "hint": "只校验异常类型的上下文管理器写法",
+        "fill_type": "text"
+      },
+      {
+        "id": "call_divide",
+        "text": "divide(1, 0)",
+        "category": "pytest_raises",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "触发除零错误的被调函数",
+        "fill_type": "text"
+      },
+      {
+        "id": "raises_match",
+        "text": "with pytest.raises(ZeroDivisionError, match=\"division by zero\"):",
+        "category": "pytest_raises",
+        "min_weight": "beginner",
+        "weight_score": 2,
+        "hint": "同时用 match 正则校验异常消息的写法",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 验证代码是否抛出异常，用 pytest.raises 作为上下文管理器包住调用。",
+      "level_2": "📖 with pytest.raises(异常类型): 只有抛出该类型才通过；再加 match=正则 还能校验异常消息。",
+      "level_3": "👀 共 4 空：① 导入 pytest；② 只校验异常类型的 with 语句；③ 触发除零的调用；④ 同时校验异常消息的 with 语句。",
+      "level_4": "📝 正确答案：`import pytest`、`with pytest.raises(ZeroDivisionError):`、`divide(1, 0)`、`with pytest.raises(ZeroDivisionError, match=\"division by zero\"):`"
+    },
+    "explanation": "pytest.raises 是上下文管理器：代码块未抛出指定异常则测试失败，match 参数用 re.search 匹配异常文本。"
+  },
+  {
+    "id": "pytest-003",
+    "title": "浮点近似",
+    "description": "用 pytest.approx 比较带容差的浮点结果",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "easy",
+    "category": "pytest_approx",
+    "subcategory": "pytest",
+    "full_code": "import pytest\n\nfrom calc import average\n\n\ndef test_average_is_close():\n    assert average([1, 2, 4]) == pytest.approx(2.333, rel=1e-3)\n\n\ndef test_near_zero():\n    assert average([0.1, -0.1]) == pytest.approx(0.0, abs=1e-9)",
+    "expected": "",
+    "points": [
+      {
+        "id": "import_pytest",
+        "text": "import pytest",
+        "category": "pytest_approx",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "导入测试框架的语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "approx_rel",
+        "text": "pytest.approx(2.333, rel=1e-3)",
+        "category": "pytest_approx",
+        "min_weight": "easy",
+        "weight_score": 1.5,
+        "hint": "以 2.333 为期望值、使用相对容差的近似比较",
+        "fill_type": "text"
+      },
+      {
+        "id": "approx_abs",
+        "text": "pytest.approx(0.0, abs=1e-9)",
+        "category": "pytest_approx",
+        "min_weight": "easy",
+        "weight_score": 1.5,
+        "hint": "以 0.0 为期望值、使用绝对容差的近似比较",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 浮点数不要用 == 直接比较，pytest.approx 提供了容差近似比较。",
+      "level_2": "📖 相对容差用 rel=，绝对容差用 abs=；把期望值包在 pytest.approx(...) 里再比较。",
+      "level_3": "👀 共 3 空：① 导入 pytest；② 带相对容差的近似比较；③ 带绝对容差的近似比较。",
+      "level_4": "📝 正确答案：`import pytest`、`pytest.approx(2.333, rel=1e-3)`、`pytest.approx(0.0, abs=1e-9)`"
+    },
+    "explanation": "pytest.approx 用 rel（相对）与 abs（绝对）两种容差比较浮点数，默认 rel=1e-6。"
+  },
+  {
+    "id": "pytest-004",
+    "title": "运行单个测试",
+    "description": "用节点 ID 精确运行一个测试函数",
+    "exercise_type": "command",
+    "tech_stack": "testing",
+    "weight": "easy",
+    "category": "pytest_cli",
+    "subcategory": "pytest",
+    "full_code": "pytest tests/test_login.py::test_login_ok -q",
+    "expected": "",
+    "points": [
+      {
+        "id": "pytest_cmd",
+        "text": "pytest",
+        "category": "pytest_cli",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "pytest 可执行命令本身",
+        "fill_type": "text"
+      },
+      {
+        "id": "node_id",
+        "text": "tests/test_login.py::test_login_ok",
+        "category": "pytest_cli",
+        "min_weight": "easy",
+        "weight_score": 1.5,
+        "hint": "用 :: 精确到单个测试函数的节点 ID",
+        "fill_type": "text"
+      },
+      {
+        "id": "quiet_flag",
+        "text": "-q",
+        "category": "pytest_cli",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "安静模式短选项",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 pytest 支持按节点 ID 只跑一个测试。",
+      "level_2": "📖 `路径::测试名` 是节点 ID，-q 减少输出噪音。",
+      "level_3": "👀 共 3 空：① pytest 命令；② 单个测试的节点 ID；③ 安静模式选项。",
+      "level_4": "📝 正确答案：`pytest`、`tests/test_login.py::test_login_ok`、`-q`"
+    },
+    "explanation": "节点 ID 由文件路径、可选类名和测试函数名用 :: 连接，pytest 只收集并运行该节点。"
+  },
+  {
+    "id": "pytest-005",
+    "title": "关键字筛选",
+    "description": "用 -k 表达式筛选名称匹配的测试",
+    "exercise_type": "command",
+    "tech_stack": "testing",
+    "weight": "easy",
+    "category": "pytest_cli",
+    "subcategory": "pytest",
+    "full_code": "pytest -k \"login and not slow\" tests/",
+    "expected": "",
+    "points": [
+      {
+        "id": "pytest_cmd",
+        "text": "pytest",
+        "category": "pytest_cli",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "pytest 可执行命令本身",
+        "fill_type": "text"
+      },
+      {
+        "id": "keyword_flag",
+        "text": "-k",
+        "category": "pytest_cli",
+        "min_weight": "easy",
+        "weight_score": 1.5,
+        "hint": "按名称关键字筛选的短选项",
+        "fill_type": "text"
+      },
+      {
+        "id": "keyword_expr",
+        "text": "\"login and not slow\"",
+        "category": "pytest_cli",
+        "min_weight": "easy",
+        "weight_score": 1.5,
+        "hint": "包含 and、not 的关键字表达式字符串",
+        "fill_type": "text"
+      },
+      {
+        "id": "tests_dir",
+        "text": "tests/",
+        "category": "pytest_cli",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "限定收集范围的目录参数",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 用 -k 按测试名关键字筛选，支持 and/or/not 表达式。",
+      "level_2": "📖 关键字筛选选项后接表达式字符串，最后可以再指定收集目录。",
+      "level_3": "👀 共 4 空：① pytest 命令；② 关键字筛选选项；③ 表达式字符串；④ 收集目录。",
+      "level_4": "📝 正确答案：`pytest`、`-k`、`\"login and not slow\"`、`tests/`"
+    },
+    "explanation": "pytest -k 对测试节点 ID 做子串匹配，支持 and/or/not 组合，适合快速定位相关用例。"
+  },
+  {
+    "id": "pytest-006",
+    "title": "按标记筛选",
+    "description": "用 -m 表达式筛选带标记的测试",
+    "exercise_type": "command",
+    "tech_stack": "testing",
+    "weight": "medium",
+    "category": "pytest_cli",
+    "subcategory": "pytest",
+    "full_code": "pytest -m \"slow or integration\" tests/",
+    "expected": "",
+    "points": [
+      {
+        "id": "pytest_cmd",
+        "text": "pytest",
+        "category": "pytest_cli",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "pytest 可执行命令本身",
+        "fill_type": "text"
+      },
+      {
+        "id": "marker_flag",
+        "text": "-m",
+        "category": "pytest_cli",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "按标记筛选的短选项",
+        "fill_type": "text"
+      },
+      {
+        "id": "marker_expr",
+        "text": "\"slow or integration\"",
+        "category": "pytest_cli",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "包含 or 的标记表达式字符串",
+        "fill_type": "text"
+      },
+      {
+        "id": "tests_dir",
+        "text": "tests/",
+        "category": "pytest_cli",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "限定收集范围的目录参数",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 用 -m 按 marker 筛选测试，比关键字筛选更语义化。",
+      "level_2": "📖 标记筛选选项后接表达式；未注册的 marker 会触发 PytestUnknownMarkWarning。",
+      "level_3": "👀 共 4 空：① pytest 命令；② 标记筛选选项；③ 标记表达式；④ 收集目录。",
+      "level_4": "📝 正确答案：`pytest`、`-m`、`\"slow or integration\"`、`tests/`"
+    },
+    "explanation": "pytest -m 按已注册的标记表达式筛选测试，未注册标记会在收集时产生未知标记警告。"
+  },
+  {
+    "id": "pytest-007",
+    "title": "失败即停",
+    "description": "让 pytest 在累计若干失败后立即停止",
+    "exercise_type": "command",
+    "tech_stack": "testing",
+    "weight": "easy",
+    "category": "pytest_cli",
+    "subcategory": "pytest",
+    "full_code": "pytest --maxfail=3 -q tests/",
+    "expected": "",
+    "points": [
+      {
+        "id": "pytest_cmd",
+        "text": "pytest",
+        "category": "pytest_cli",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "pytest 可执行命令本身",
+        "fill_type": "text"
+      },
+      {
+        "id": "maxfail_opt",
+        "text": "--maxfail=3",
+        "category": "pytest_cli",
+        "min_weight": "easy",
+        "weight_score": 1.5,
+        "hint": "累计到指定失败数就停止的长选项",
+        "fill_type": "text"
+      },
+      {
+        "id": "quiet_flag",
+        "text": "-q",
+        "category": "pytest_cli",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "安静模式短选项",
+        "fill_type": "text"
+      },
+      {
+        "id": "tests_dir",
+        "text": "tests/",
+        "category": "pytest_cli",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "限定收集范围的目录参数",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 失败就停能快速暴露第一个问题；--maxfail=N 指定最多失败 N 个后停止。",
+      "level_2": "📖 该长选项的值为数字阈值；-x 是它在阈值为 1 时的快捷写法。",
+      "level_3": "👀 共 4 空：① pytest 命令；② 失败阈值选项；③ 安静模式；④ 收集目录。",
+      "level_4": "📝 正确答案：`pytest`、`--maxfail=3`、`-q`、`tests/`"
+    },
+    "explanation": "pytest 收集完全部用例后执行，--maxfail=N 在累计 N 个失败或错误后结束本次运行，-x 等价于 --maxfail=1。"
+  },
+  {
+    "id": "pytest-008",
+    "title": "详细输出与 print",
+    "description": "开启详细输出并显示测试中的 print",
+    "exercise_type": "command",
+    "tech_stack": "testing",
+    "weight": "easy",
+    "category": "pytest_cli",
+    "subcategory": "pytest",
+    "full_code": "pytest -v -s tests/test_report.py",
+    "expected": "",
+    "points": [
+      {
+        "id": "pytest_cmd",
+        "text": "pytest",
+        "category": "pytest_cli",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "pytest 可执行命令本身",
+        "fill_type": "text"
+      },
+      {
+        "id": "verbose_flag",
+        "text": "-v",
+        "category": "pytest_cli",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "提高输出详细程度的短选项",
+        "fill_type": "text"
+      },
+      {
+        "id": "capture_flag",
+        "text": "-s",
+        "category": "pytest_cli",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "关闭输出捕获的短选项",
+        "fill_type": "text"
+      },
+      {
+        "id": "test_file",
+        "text": "tests/test_report.py",
+        "category": "pytest_cli",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "待执行测试文件的路径",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 -v 输出每个测试名与结果，-s 关闭输出捕获、让 print 直接显示。",
+      "level_2": "📖 调试时常用 -v 与 -s 组合，前者提升详细度，后者等价于 --capture=no。",
+      "level_3": "👀 共 4 空：① pytest 命令；② 详细输出选项；③ 显示 print 的选项；④ 单个测试文件路径。",
+      "level_4": "📝 正确答案：`pytest`、`-v`、`-s`、`tests/test_report.py`"
+    },
+    "explanation": "-v 提升每个测试的输出级别，-s 让 pytest 不再捕获标准输出，测试里的 print 会实时打印到终端。"
+  },
+  {
+    "id": "pytest-009",
+    "title": "只重跑失败用例",
+    "description": "只重新运行上一次失败的测试",
+    "exercise_type": "command",
+    "tech_stack": "testing",
+    "weight": "medium",
+    "category": "pytest_cli",
+    "subcategory": "pytest",
+    "full_code": "pytest --lf tests/",
+    "expected": "",
+    "points": [
+      {
+        "id": "pytest_cmd",
+        "text": "pytest",
+        "category": "pytest_cli",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "pytest 可执行命令本身",
+        "fill_type": "text"
+      },
+      {
+        "id": "last_failed_flag",
+        "text": "--lf",
+        "category": "pytest_cli",
+        "min_weight": "medium",
+        "weight_score": 2,
+        "hint": "只重跑上次失败用例的长选项缩写",
+        "fill_type": "text"
+      },
+      {
+        "id": "tests_dir",
+        "text": "tests/",
+        "category": "pytest_cli",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "限定收集范围的目录参数",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 --lf 只重跑上次失败的测试，依据缓存目录里的记录。",
+      "level_2": "📖 该选项是 --last-failed 的缩写；首次运行没有缓存时会跑全部用例。",
+      "level_3": "👀 共 3 空：① pytest 命令；② 只跑上次失败的选项；③ 收集目录。",
+      "level_4": "📝 正确答案：`pytest`、`--lf`、`tests/`"
+    },
+    "explanation": "pytest 把上次失败的用例记录在 .pytest_cache 中，--lf 读取后只重跑这些用例，适合修复后的快速回归。"
+  },
+  {
+    "id": "pytest-010",
+    "title": "生成 JUnit 报告",
+    "description": "把测试结果输出为 JUnit XML 报告",
+    "exercise_type": "command",
+    "tech_stack": "testing",
+    "weight": "medium",
+    "category": "pytest_cli",
+    "subcategory": "pytest",
+    "full_code": "pytest --junitxml=reports/results.xml tests/",
+    "expected": "",
+    "points": [
+      {
+        "id": "pytest_cmd",
+        "text": "pytest",
+        "category": "pytest_cli",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "pytest 可执行命令本身",
+        "fill_type": "text"
+      },
+      {
+        "id": "junit_opt",
+        "text": "--junitxml=reports/results.xml",
+        "category": "pytest_cli",
+        "min_weight": "medium",
+        "weight_score": 2,
+        "hint": "指定 JUnit XML 报告输出路径的选项",
+        "fill_type": "text"
+      },
+      {
+        "id": "tests_dir",
+        "text": "tests/",
+        "category": "pytest_cli",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "限定收集范围的目录参数",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 该选项把结果写成 JUnit XML，供 CI 系统解析展示。",
+      "level_2": "📖 选项等号后面直接写报告文件路径，输出目录需要已存在。",
+      "level_3": "👀 共 3 空：① pytest 命令；② 生成 JUnit 报告的选项；③ 收集目录。",
+      "level_4": "📝 正确答案：`pytest`、`--junitxml=reports/results.xml`、`tests/`"
+    },
+    "explanation": "pytest 内置了 JUnit XML 报告插件，--junitxml=路径 生成的 XML 能被主流 CI 平台直接解析。"
+  },
+  {
+    "id": "pytest-011",
+    "title": "pytest.ini 基础配置",
+    "description": "在 pytest.ini 中设置收集目录与默认参数",
+    "exercise_type": "config",
+    "tech_stack": "testing",
+    "weight": "medium",
+    "category": "pytest_config",
+    "subcategory": "pytest",
+    "full_code": "[pytest]\ntestpaths = tests\naddopts = -ra -q\npython_files = test_*.py",
+    "expected": "",
+    "points": [
+      {
+        "id": "ini_header",
+        "text": "[pytest]",
+        "category": "pytest_config",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "pytest.ini 的配置段头",
+        "fill_type": "text"
+      },
+      {
+        "id": "testpaths_opt",
+        "text": "testpaths = tests",
+        "category": "pytest_config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "指定默认收集目录的配置键",
+        "fill_type": "text"
+      },
+      {
+        "id": "addopts_opt",
+        "text": "addopts = -ra -q",
+        "category": "pytest_config",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "追加默认命令行参数的配置键",
+        "fill_type": "text"
+      },
+      {
+        "id": "python_files_opt",
+        "text": "python_files = test_*.py",
+        "category": "pytest_config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "自定义测试文件命名模式的配置键",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 pytest.ini 用 [pytest] 段做项目级配置，无需在命令行重复传参。",
+      "level_2": "📖 testpaths 指定默认收集目录；addopts 追加默认命令行参数；python_files 定义测试文件命名模式。",
+      "level_3": "👀 共 4 空：① 配置文件段头；② 默认收集目录；③ 默认附加参数；④ 测试文件匹配模式。",
+      "level_4": "📝 正确答案：`[pytest]`、`testpaths = tests`、`addopts = -ra -q`、`python_files = test_*.py`"
+    },
+    "explanation": "pytest.ini 必须以 [pytest] 开头；testpaths 限定未在命令行指定路径时的收集范围，addopts 把常用参数固化为默认值。"
+  },
+  {
+    "id": "pytest-012",
+    "title": "注册自定义 marker",
+    "description": "在 pytest.ini 中注册 slow 与 integration 标记",
+    "exercise_type": "config",
+    "tech_stack": "testing",
+    "weight": "hard",
+    "category": "pytest_config",
+    "subcategory": "pytest",
+    "full_code": "[pytest]\nmarkers =\n    slow: marks tests as slow\n    integration: marks tests that need external services",
+    "expected": "",
+    "points": [
+      {
+        "id": "ini_header",
+        "text": "[pytest]",
+        "category": "pytest_config",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "pytest.ini 的配置段头",
+        "fill_type": "text"
+      },
+      {
+        "id": "markers_opt",
+        "text": "markers =",
+        "category": "pytest_config",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "注册自定义标记的配置键",
+        "fill_type": "text"
+      },
+      {
+        "id": "slow_marker",
+        "text": "slow: marks tests as slow",
+        "category": "pytest_config",
+        "min_weight": "hard",
+        "weight_score": 1.5,
+        "hint": "登记 slow 标记及其描述的行",
+        "fill_type": "text"
+      },
+      {
+        "id": "integration_marker",
+        "text": "integration: marks tests that need external services",
+        "category": "pytest_config",
+        "min_weight": "hard",
+        "weight_score": 1.5,
+        "hint": "登记 integration 标记及其描述的行",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 自定义 marker 必须在配置中注册，否则 pytest 会给出未知标记警告。",
+      "level_2": "📖 [pytest] 下的 markers 配置项用「名称: 描述」逐行登记，描述会出现在 --markers 帮助里。",
+      "level_3": "👀 共 4 空：① 段头；② 注册标记的配置键；③ slow 标记的登记行；④ integration 标记的登记行。",
+      "level_4": "📝 正确答案：`[pytest]`、`markers =`、`slow: marks tests as slow`、`integration: marks tests that need external services`"
+    },
+    "explanation": "markers 配置项每行一个「名称: 描述」完成注册，注册后 -m 筛选不再产生 PytestUnknownMarkWarning。"
+  },
+  {
+    "id": "pytest-013",
+    "title": "pyproject.toml 配置",
+    "description": "用 pyproject.toml 配置 pytest 选项",
+    "exercise_type": "config",
+    "tech_stack": "testing",
+    "weight": "medium",
+    "category": "pytest_config",
+    "subcategory": "pytest",
+    "full_code": "[tool.pytest.ini_options]\nminversion = \"7.0\"\ntestpaths = [\"tests\"]\naddopts = \"-ra -q\"",
+    "expected": "",
+    "points": [
+      {
+        "id": "toml_header",
+        "text": "[tool.pytest.ini_options]",
+        "category": "pytest_config",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "pyproject.toml 中 pytest 配置的段头",
+        "fill_type": "text"
+      },
+      {
+        "id": "minversion_opt",
+        "text": "minversion = \"7.0\"",
+        "category": "pytest_config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "要求 pytest 最低版本的配置键",
+        "fill_type": "text"
+      },
+      {
+        "id": "testpaths_opt",
+        "text": "testpaths = [\"tests\"]",
+        "category": "pytest_config",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "数组字面量形式的默认收集目录",
+        "fill_type": "text"
+      },
+      {
+        "id": "addopts_opt",
+        "text": "addopts = \"-ra -q\"",
+        "category": "pytest_config",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "字符串形式的默认附加参数",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 pyproject.toml 也能配置 pytest，段名是 [tool.pytest.ini_options]。",
+      "level_2": "📖 TOML 里字符串要加引号，testpaths 用数组字面量；键名与 pytest.ini 保持一致。",
+      "level_3": "👀 共 4 空：① TOML 段头；② 最低版本要求；③ 收集目录数组；④ 默认附加参数。",
+      "level_4": "📝 正确答案：`[tool.pytest.ini_options]`、`minversion = \"7.0\"`、`testpaths = [\"tests\"]`、`addopts = \"-ra -q\"`"
+    },
+    "explanation": "pyproject.toml 的 [tool.pytest.ini_options] 与 pytest.ini 的配置键一一对应，只是值要符合 TOML 语法。"
+  },
+  {
+    "id": "pytest-014",
+    "title": "统计测试覆盖率",
+    "description": "用 pytest-cov 统计并报告测试覆盖率",
+    "exercise_type": "command",
+    "tech_stack": "testing",
+    "weight": "hard",
+    "category": "pytest_cli",
+    "subcategory": "pytest",
+    "full_code": "pytest --cov=myapp --cov-report=term-missing tests/",
+    "expected": "",
+    "points": [
+      {
+        "id": "pytest_cmd",
+        "text": "pytest",
+        "category": "pytest_cli",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "pytest 可执行命令本身",
+        "fill_type": "text"
+      },
+      {
+        "id": "cov_opt",
+        "text": "--cov=myapp",
+        "category": "pytest_cli",
+        "min_weight": "hard",
+        "weight_score": 2,
+        "hint": "指定被测包的覆盖率选项",
+        "fill_type": "text"
+      },
+      {
+        "id": "cov_report_opt",
+        "text": "--cov-report=term-missing",
+        "category": "pytest_cli",
+        "min_weight": "hard",
+        "weight_score": 1.5,
+        "hint": "要求终端报告列出未覆盖行的选项",
+        "fill_type": "text"
+      },
+      {
+        "id": "tests_dir",
+        "text": "tests/",
+        "category": "pytest_cli",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "限定收集范围的目录参数",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 覆盖率统计需要 pytest-cov 插件，用它指定被测包。",
+      "level_2": "📖 开启统计的选项带包名，报告的选项用等号选择 term-missing 形式。",
+      "level_3": "👀 共 4 空：① pytest 命令；② 统计目标的选项；③ 终端缺行报告的选项；④ 收集目录。",
+      "level_4": "📝 正确答案：`pytest`、`--cov=myapp`、`--cov-report=term-missing`、`tests/`"
+    },
+    "explanation": "--cov=myapp 由 pytest-cov 插件提供，--cov-report=term-missing 在终端报告末尾列出未被覆盖的行号。"
+  },
+  {
+    "id": "pytest-015",
+    "title": "定义 fixture",
+    "description": "定义并注入一个返回对象的 fixture",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "beginner",
+    "category": "pytest_fixture",
+    "subcategory": "pytest",
+    "full_code": "import pytest\n\n\nclass Cart:\n    def __init__(self):\n        self.items = []\n\n\n@pytest.fixture\ndef cart():\n    return Cart()\n\n\ndef test_add_item(cart):\n    cart.items.append(\"book\")\n    assert cart.items == [\"book\"]",
+    "expected": "",
+    "points": [
+      {
+        "id": "fixture_decorator",
+        "text": "@pytest.fixture",
+        "category": "pytest_fixture",
+        "min_weight": "beginner",
+        "weight_score": 1.5,
+        "hint": "把函数注册为夹具的装饰器",
+        "fill_type": "text"
+      },
+      {
+        "id": "fixture_def",
+        "text": "def cart():",
+        "category": "pytest_fixture",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "夹具函数的定义行",
+        "fill_type": "text"
+      },
+      {
+        "id": "test_param",
+        "text": "test_add_item(cart)",
+        "category": "pytest_fixture",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "把夹具名写进参数列表的测试函数签名",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 fixture 用装饰器标记一个函数，测试把 fixture 名作为参数即可拿到返回值。",
+      "level_2": "📖 装饰器把普通函数变成夹具；测试函数的同名参数由 pytest 自动注入，无需手动调用。",
+      "level_3": "👀 共 3 空：① fixture 装饰器；② fixture 函数定义；③ 声明使用 fixture 的测试函数签名。",
+      "level_4": "📝 正确答案：`@pytest.fixture`、`def cart():`、`test_add_item(cart)`"
+    },
+    "explanation": "@pytest.fixture 把函数注册为夹具，测试函数以同名参数声明依赖，pytest 在调用前自动注入其返回值。"
+  },
+  {
+    "id": "pytest-016",
+    "title": "yield 清理",
+    "description": "用 yield fixture 在测试后清理临时文件",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "medium",
+    "category": "pytest_fixture",
+    "subcategory": "pytest",
+    "full_code": "import pytest\n\n\n@pytest.fixture\ndef temp_file(tmp_path):\n    path = tmp_path / \"data.txt\"\n    path.write_text(\"hello\")\n    yield path\n    path.unlink()\n\n\ndef test_read(temp_file):\n    assert temp_file.read_text() == \"hello\"",
+    "expected": "",
+    "points": [
+      {
+        "id": "fixture_def",
+        "text": "def temp_file(tmp_path):",
+        "category": "pytest_fixture",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "接收临时目录夹具的参数名写在签名里的定义行",
+        "fill_type": "text"
+      },
+      {
+        "id": "fixture_yield",
+        "text": "yield path",
+        "category": "pytest_fixture",
+        "min_weight": "medium",
+        "weight_score": 2,
+        "hint": "交出文件路径并把清理代码留在后面的关键字行",
+        "fill_type": "text"
+      },
+      {
+        "id": "fixture_cleanup",
+        "text": "path.unlink()",
+        "category": "pytest_fixture",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "测试结束后的清理调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "test_param",
+        "text": "def test_read(temp_file):",
+        "category": "pytest_fixture",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "使用该夹具的测试函数签名",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 需要清理资源的 fixture 用 yield 分界：yield 前是准备，yield 后是收尾。",
+      "level_2": "📖 pytest 在测试结束后继续执行 yield 之后的代码，即使测试失败也会执行清理。",
+      "level_3": "👀 共 4 空：① fixture 函数签名（接收 tmp_path）；② 交出资源的关键字行；③ 测试后的清理调用；④ 使用该 fixture 的测试签名。",
+      "level_4": "📝 正确答案：`def temp_file(tmp_path):`、`yield path`、`path.unlink()`、`def test_read(temp_file):`"
+    },
+    "explanation": "yield fixture 在 yield 处暂停并交出资源，测试结束后继续执行其后代码完成清理，等价于 setup/teardown。"
+  },
+  {
+    "id": "pytest-017",
+    "title": "模块级作用域",
+    "description": "让 fixture 在模块内只创建一次并被复用",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "medium",
+    "category": "pytest_fixture",
+    "subcategory": "pytest",
+    "full_code": "import pytest\n\n\n@pytest.fixture(scope=\"module\")\ndef db_conn():\n    conn = {\"connected\": True}\n    yield conn\n    conn[\"connected\"] = False\n\n\ndef test_conn_ok(db_conn):\n    assert db_conn[\"connected\"]\n\n\ndef test_conn_reuse(db_conn):\n    assert db_conn[\"connected\"] is True",
+    "expected": "",
+    "points": [
+      {
+        "id": "fixture_scope",
+        "text": "scope=\"module\"",
+        "category": "pytest_fixture",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "让夹具在整个模块内只创建一次的参数",
+        "fill_type": "text"
+      },
+      {
+        "id": "fixture_yield",
+        "text": "yield conn",
+        "category": "pytest_fixture",
+        "min_weight": "beginner",
+        "weight_score": 1.5,
+        "hint": "交出连接对象的关键字行",
+        "fill_type": "text"
+      },
+      {
+        "id": "test_one",
+        "text": "def test_conn_ok(db_conn):",
+        "category": "pytest_fixture",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "第一个使用该夹具的测试定义",
+        "fill_type": "text"
+      },
+      {
+        "id": "test_two",
+        "text": "def test_conn_reuse(db_conn):",
+        "category": "pytest_fixture",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "第二个使用该夹具的测试定义",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 fixture 的 scope 决定缓存与复用范围，module 表示每个模块只创建一次。",
+      "level_2": "📖 把 module 作为作用域参数传给 fixture 装饰器，同模块内多个测试共享同一实例。",
+      "level_3": "👀 共 4 空：① 作用域参数；② 交出连接对象的关键字行；③ 第一个使用它的测试；④ 第二个使用它的测试。",
+      "level_4": "📝 正确答案：`scope=\"module\"`、`yield conn`、`def test_conn_ok(db_conn):`、`def test_conn_reuse(db_conn):`"
+    },
+    "explanation": "scope=\"module\" 的 fixture 在整个模块内只执行一次，多个测试复用同一实例，加快执行并共享状态。"
+  },
+  {
+    "id": "pytest-018",
+    "title": "fixture 参数化",
+    "description": "用 fixture 的 params 生成多组参数用例",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "hard",
+    "category": "pytest_fixture",
+    "subcategory": "pytest",
+    "full_code": "import pytest\n\n\n@pytest.fixture(params=[1, 2, 3])\ndef number(request):\n    return request.param\n\n\ndef test_number_positive(number):\n    assert number > 0",
+    "expected": "",
+    "points": [
+      {
+        "id": "fixture_params",
+        "text": "params=[1, 2, 3]",
+        "category": "pytest_fixture",
+        "min_weight": "hard",
+        "weight_score": 2,
+        "hint": "为夹具提供多组参数的参数赋值",
+        "fill_type": "text"
+      },
+      {
+        "id": "fixture_def",
+        "text": "def number(request):",
+        "category": "pytest_fixture",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "接收内置 request 对象的夹具定义行",
+        "fill_type": "text"
+      },
+      {
+        "id": "fixture_request",
+        "text": "return request.param",
+        "category": "pytest_fixture",
+        "min_weight": "hard",
+        "weight_score": 2,
+        "hint": "从 request 取出当前参数值的返回语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "test_param",
+        "text": "def test_number_positive(number):",
+        "category": "pytest_fixture",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "依赖该参数化夹具的测试签名",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 fixture 加 params 后，每个参数值都会让依赖它的测试各跑一遍。",
+      "level_2": "📖 参数值通过内置 request 对象的 param 属性取到，报表里会出现多条带序号的用例。",
+      "level_3": "👀 共 4 空：① params 参数列表；② 接收 request 的夹具定义；③ 读取当前参数值；④ 依赖该夹具的测试签名。",
+      "level_4": "📝 正确答案：`params=[1, 2, 3]`、`def number(request):`、`return request.param`、`def test_number_positive(number):`"
+    },
+    "explanation": "params 让 fixture 成为参数化数据源，pytest 为每个参数值生成一条独立用例，fixture 里用 request.param 取值。"
+  },
+  {
+    "id": "pytest-019",
+    "title": "conftest.py 共享",
+    "description": "在 conftest.py 定义跨文件共享的 fixture",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "medium",
+    "category": "pytest_conftest",
+    "subcategory": "pytest",
+    "full_code": "# conftest.py\nimport pytest\n\n\n@pytest.fixture\ndef api_url():\n    return \"https://api.example.com\"\n\n\n# tests/test_users.py\ndef test_users(api_url):\n    assert api_url.startswith(\"https\")",
+    "expected": "",
+    "points": [
+      {
+        "id": "conftest_header",
+        "text": "# conftest.py",
+        "category": "pytest_conftest",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "标明当前片段属于 conftest.py 的注释",
+        "fill_type": "text"
+      },
+      {
+        "id": "fixture_decorator",
+        "text": "@pytest.fixture",
+        "category": "pytest_conftest",
+        "min_weight": "beginner",
+        "weight_score": 1.5,
+        "hint": "把函数注册为夹具的装饰器",
+        "fill_type": "text"
+      },
+      {
+        "id": "fixture_def",
+        "text": "def api_url():",
+        "category": "pytest_conftest",
+        "min_weight": "easy",
+        "weight_score": 1.5,
+        "hint": "共享夹具函数的定义行",
+        "fill_type": "text"
+      },
+      {
+        "id": "test_file_header",
+        "text": "# tests/test_users.py",
+        "category": "pytest_conftest",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "标明测试文件路径的注释",
+        "fill_type": "text"
+      },
+      {
+        "id": "test_param",
+        "text": "def test_users(api_url):",
+        "category": "pytest_conftest",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "直接使用共享夹具的测试函数签名",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 conftest.py 里的 fixture 会被同目录及子目录的测试自动发现，无需 import。",
+      "level_2": "📖 pytest 按目录从下往上收集 conftest.py；测试只需在参数里写 fixture 名。",
+      "level_3": "👀 共 5 空：① 指明 conftest.py 的注释；② fixture 装饰器；③ 共享 fixture 定义；④ 指明测试文件的注释；⑤ 使用共享 fixture 的测试签名。",
+      "level_4": "📝 正确答案：`# conftest.py`、`@pytest.fixture`、`def api_url():`、`# tests/test_users.py`、`def test_users(api_url):`"
+    },
+    "explanation": "conftest.py 无需导入即可被 pytest 自动加载，其中的 fixture 对同目录及子目录下的测试可用。"
+  },
+  {
+    "id": "pytest-020",
+    "title": "用例参数化",
+    "description": "用 parametrize 为测试批量传入数据",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "easy",
+    "category": "pytest_parametrize",
+    "subcategory": "pytest",
+    "full_code": "import pytest\n\n\ndef is_palindrome(s):\n    return s == s[::-1]\n\n\n@pytest.mark.parametrize(\"word, expected\", [(\"level\", True), (\"hello\", False)])\ndef test_is_palindrome(word, expected):\n    assert is_palindrome(word) is expected",
+    "expected": "",
+    "points": [
+      {
+        "id": "parametrize_decorator",
+        "text": "@pytest.mark.parametrize(\"word, expected\", [(\"level\", True), (\"hello\", False)])",
+        "category": "pytest_parametrize",
+        "min_weight": "easy",
+        "weight_score": 1.5,
+        "hint": "为测试注入多组参数的装饰器整行",
+        "fill_type": "text"
+      },
+      {
+        "id": "test_def",
+        "text": "def test_is_palindrome(word, expected):",
+        "category": "pytest_parametrize",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "带两个形参的测试函数定义",
+        "fill_type": "text"
+      },
+      {
+        "id": "assert_expr",
+        "text": "assert is_palindrome(word) is expected",
+        "category": "pytest_parametrize",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "把两个形参代入被测函数的断言表达式",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 @pytest.mark.parametrize 可以为同一测试函数批量生成数据驱动的用例。",
+      "level_2": "📖 第一个参数是逗号分隔的形参名字符串，第二个参数是用例数据，每个元组对应一条用例。",
+      "level_3": "👀 共 3 空：① 参数化装饰器完整行；② 带两个形参的测试函数定义；③ 用形参做断言的表达式。",
+      "level_4": "📝 正确答案：`@pytest.mark.parametrize(\"word, expected\", [(\"level\", True), (\"hello\", False)])`、`def test_is_palindrome(word, expected):`、`assert is_palindrome(word) is expected`"
+    },
+    "explanation": "@pytest.mark.parametrize 把数据与测试代码分离，每组参数生成一条用例，报表里会显示参数后缀。"
+  },
+  {
+    "id": "pytest-021",
+    "title": "参数化可读 ids",
+    "description": "给参数化用例附加可读的 ids",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "hard",
+    "category": "pytest_parametrize",
+    "subcategory": "pytest",
+    "full_code": "import pytest\n\n\n@pytest.mark.parametrize(\n    \"value, expected\",\n    [(2, 4), (3, 9), (-1, 1)],\n    ids=[\"two\", \"three\", \"negative one\"],\n)\ndef test_square(value, expected):\n    assert value ** 2 == expected",
+    "expected": "",
+    "points": [
+      {
+        "id": "param_names",
+        "text": "\"value, expected\",",
+        "category": "pytest_parametrize",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "逗号分隔形参名字符串",
+        "fill_type": "text"
+      },
+      {
+        "id": "param_ids",
+        "text": "ids=[\"two\", \"three\", \"negative one\"],",
+        "category": "pytest_parametrize",
+        "min_weight": "hard",
+        "weight_score": 2,
+        "hint": "给每组参数起可读名字的列表参数",
+        "fill_type": "text"
+      },
+      {
+        "id": "test_def",
+        "text": "def test_square(value, expected):",
+        "category": "pytest_parametrize",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "带两个形参的测试函数定义",
+        "fill_type": "text"
+      },
+      {
+        "id": "assert_expr",
+        "text": "assert value ** 2 == expected",
+        "category": "pytest_parametrize",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "计算平方并比较的断言表达式",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 用例数据多时参数化可以折行书写，再给每组数据起可读名字。",
+      "level_2": "📖 可读标识参数的值是字符串列表，与数据顺序一一对应，会显示在用例的方括号后缀里。",
+      "level_3": "👀 共 4 空：① 形参名字符串；② 可读标识列表；③ 测试函数定义；④ 平方断言表达式。",
+      "level_4": "📝 正确答案：`\"value, expected\",`、`ids=[\"two\", \"three\", \"negative one\"],`、`def test_square(value, expected):`、`assert value ** 2 == expected`"
+    },
+    "explanation": "ids 与参数数据一一对应，为每组数据指定可读名称，失败时能一眼看出是哪组输入。"
+  },
+  {
+    "id": "pytest-022",
+    "title": "间接参数化",
+    "description": "用 indirect=True 让参数先经过 fixture 加工",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "expert",
+    "category": "pytest_parametrize",
+    "subcategory": "pytest",
+    "full_code": "import pytest\n\n\n@pytest.fixture\ndef user(request):\n    return {\"name\": request.param}\n\n\n@pytest.mark.parametrize(\"user\", [\"alice\", \"bob\"], indirect=True)\ndef test_user_name(user):\n    assert user[\"name\"] in {\"alice\", \"bob\"}",
+    "expected": "",
+    "points": [
+      {
+        "id": "fixture_def",
+        "text": "def user(request):",
+        "category": "pytest_parametrize",
+        "min_weight": "hard",
+        "weight_score": 1.5,
+        "hint": "接收内置 request 对象的夹具定义行",
+        "fill_type": "text"
+      },
+      {
+        "id": "fixture_request",
+        "text": "return {\"name\": request.param}",
+        "category": "pytest_parametrize",
+        "min_weight": "expert",
+        "weight_score": 2,
+        "hint": "用当前参数值构造返回字典的语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "indirect_flag",
+        "text": "indirect=True",
+        "category": "pytest_parametrize",
+        "min_weight": "expert",
+        "weight_score": 2,
+        "hint": "让参数化改走同名夹具的装饰器参数",
+        "fill_type": "text"
+      },
+      {
+        "id": "test_def",
+        "text": "def test_user_name(user):",
+        "category": "pytest_parametrize",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "接收夹具返回值的测试函数定义",
+        "fill_type": "text"
+      },
+      {
+        "id": "assert_expr",
+        "text": "assert user[\"name\"] in {\"alice\", \"bob\"}",
+        "category": "pytest_parametrize",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "断言名字属于候选集合的表达式",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 indirect=True 时，参数化的名字不再直接传给测试，而是先交给同名 fixture 加工。",
+      "level_2": "📖 fixture 通过内置 request 对象的参数属性读取当前值，测试拿到的始终是 fixture 的返回值。",
+      "level_3": "👀 共 5 空：① 接收 request 的夹具定义；② 用参数值构造返回值的语句；③ 开启间接参数化的装饰器参数；④ 测试函数定义；⑤ 成员断言表达式。",
+      "level_4": "📝 正确答案：`def user(request):`、`return {\"name\": request.param}`、`indirect=True`、`def test_user_name(user):`、`assert user[\"name\"] in {\"alice\", \"bob\"}`"
+    },
+    "explanation": "indirect=True 把参数化名称交给同名 fixture 间接处理，fixture 用 request.param 取当前值后再构造依赖。"
+  },
+  {
+    "id": "pytest-023",
+    "title": "临时目录",
+    "description": "用内置 tmp_path 写入并读取临时文件",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "beginner",
+    "category": "pytest_tmp_path",
+    "subcategory": "pytest",
+    "full_code": "def test_write_file(tmp_path):\n    path = tmp_path / \"note.txt\"\n    path.write_text(\"hi\")\n    assert path.read_text() == \"hi\"",
+    "expected": "",
+    "points": [
+      {
+        "id": "test_def",
+        "text": "def test_write_file(tmp_path):",
+        "category": "pytest_tmp_path",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "声明使用临时目录夹具的测试签名",
+        "fill_type": "text"
+      },
+      {
+        "id": "tmp_file",
+        "text": "tmp_path / \"note.txt\"",
+        "category": "pytest_tmp_path",
+        "min_weight": "beginner",
+        "weight_score": 1.5,
+        "hint": "在该目录下构造文件路径的表达式",
+        "fill_type": "text"
+      },
+      {
+        "id": "write_call",
+        "text": "path.write_text(\"hi\")",
+        "category": "pytest_tmp_path",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "向文件写入内容的方法调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "read_assert",
+        "text": "assert path.read_text() == \"hi\"",
+        "category": "pytest_tmp_path",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "读回文件并断言内容的语句",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 tmp_path 是 pytest 内置 fixture，每个测试独享一个临时目录。",
+      "level_2": "📖 它是 pathlib.Path 对象，用 / 运算符拼接文件路径，写入后可以直接读回断言。",
+      "level_3": "👀 共 4 空：① 声明使用 tmp_path 的测试签名；② 在临时目录下构造文件路径；③ 写入内容；④ 读回并断言内容。",
+      "level_4": "📝 正确答案：`def test_write_file(tmp_path):`、`tmp_path / \"note.txt\"`、`path.write_text(\"hi\")`、`assert path.read_text() == \"hi\"`"
+    },
+    "explanation": "tmp_path 由 pytest 为每个测试创建唯一的临时目录，基于 pathlib.Path，测试结束后自动清理。"
+  },
+  {
+    "id": "pytest-024",
+    "title": "打补丁 monkeypatch",
+    "description": "用 monkeypatch.setattr 替换外部依赖",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "expert",
+    "category": "pytest_monkeypatch",
+    "subcategory": "pytest",
+    "full_code": "from app import weather\n\n\ndef test_weather_offline(monkeypatch):\n    monkeypatch.setattr(weather, \"fetch_temp\", lambda city: 20)\n    assert weather.fetch_temp(\"beijing\") == 20",
+    "expected": "",
+    "points": [
+      {
+        "id": "test_def",
+        "text": "def test_weather_offline(monkeypatch):",
+        "category": "pytest_monkeypatch",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "接收补丁夹具的测试函数签名",
+        "fill_type": "text"
+      },
+      {
+        "id": "setattr_call",
+        "text": "monkeypatch.setattr(weather, \"fetch_temp\", lambda city: 20)",
+        "category": "pytest_monkeypatch",
+        "min_weight": "expert",
+        "weight_score": 2,
+        "hint": "把目标函数替换为替身的完整调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "assert_expr",
+        "text": "assert weather.fetch_temp(\"beijing\") == 20",
+        "category": "pytest_monkeypatch",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "调用替身后断言其返回值的表达式",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 monkeypatch 是内置 fixture，用于在测试期间安全地替换属性或函数。",
+      "level_2": "📖 用它能替换模块对象的属性或函数，测试结束后 pytest 自动还原原实现。",
+      "level_3": "👀 共 3 空：① 接收补丁夹具的测试签名；② 替换 fetch_temp 的完整调用；③ 用替身返回值做断言的表达式。",
+      "level_4": "📝 正确答案：`def test_weather_offline(monkeypatch):`、`monkeypatch.setattr(weather, \"fetch_temp\", lambda city: 20)`、`assert weather.fetch_temp(\"beijing\") == 20`"
+    },
+    "explanation": "monkeypatch.setattr 在测试期间替换属性或函数，测试结束自动撤销，避免用例之间互相污染。"
+  },
+  {
+    "id": "pytest-025",
+    "title": "捕获输出 capsys",
+    "description": "用 capsys 捕获测试的标准输出",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "hard",
+    "category": "pytest_capsys",
+    "subcategory": "pytest",
+    "full_code": "def test_greeting_output(capsys):\n    print(\"hello pytest\")\n    captured = capsys.readouterr()\n    assert captured.out == \"hello pytest\\n\"",
+    "expected": "",
+    "points": [
+      {
+        "id": "test_def",
+        "text": "def test_greeting_output(capsys):",
+        "category": "pytest_capsys",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "接收输出捕获夹具的测试签名",
+        "fill_type": "text"
+      },
+      {
+        "id": "readouterr_call",
+        "text": "captured = capsys.readouterr()",
+        "category": "pytest_capsys",
+        "min_weight": "hard",
+        "weight_score": 2,
+        "hint": "读取捕获结果并保存的调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "assert_expr",
+        "text": "assert captured.out == \"hello pytest\\n\"",
+        "category": "pytest_capsys",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "断言标准输出内容的表达式",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 capsys 能捕获测试里写入标准输出与标准错误的内容。",
+      "level_2": "📖 调用它的读取方法拿到捕获结果，再通过 out 或 err 属性与期望文本比较。",
+      "level_3": "👀 共 3 空：① 接收 capsys 的测试签名；② 读取捕获结果的调用；③ 断言标准输出内容的表达式。",
+      "level_4": "📝 正确答案：`def test_greeting_output(capsys):`、`captured = capsys.readouterr()`、`assert captured.out == \"hello pytest\\n\"`"
+    },
+    "explanation": "capsys 捕获标准输出与标准错误，readouterr() 返回 CapturedIO，其 out/err 属性为捕获到的文本。"
+  },
+  {
+    "id": "pytest-026",
+    "title": "Mock 模拟",
+    "description": "用 Mock 设置固定返回值与顺序返回值",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "medium",
+    "category": "pytest_mock",
+    "subcategory": "pytest",
+    "full_code": "from unittest.mock import Mock\n\n\ndef test_mock_return_value():\n    m = Mock()\n    m.get.return_value = 200\n    assert m.get(\"url\") == 200\n\n\ndef test_mock_side_effect():\n    m = Mock()\n    m.run.side_effect = [1, 2]\n    assert m.run() == 1\n    assert m.run() == 2",
+    "expected": "",
+    "points": [
+      {
+        "id": "mock_import",
+        "text": "from unittest.mock import Mock",
+        "category": "pytest_mock",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "从标准库导入 Mock 的语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "return_value",
+        "text": "m.get.return_value = 200",
+        "category": "pytest_mock",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "给方法设置固定返回值的赋值",
+        "fill_type": "text"
+      },
+      {
+        "id": "side_effect",
+        "text": "m.run.side_effect = [1, 2]",
+        "category": "pytest_mock",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "给方法设置按序返回序列的赋值",
+        "fill_type": "text"
+      },
+      {
+        "id": "assert_expr",
+        "text": "assert m.get(\"url\") == 200",
+        "category": "pytest_mock",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "校验固定返回值的断言表达式",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 Mock 可以伪造外部依赖，固定返回值与顺序返回值是两种常用配置。",
+      "level_2": "📖 给 mock 方法的 return_value 属性赋值后调用总返回该值；side_effect 为列表时按调用次序依次返回。",
+      "level_3": "👀 共 4 空：① 导入 Mock 的语句；② 设置固定返回值的赋值；③ 设置顺序返回值的赋值；④ 校验固定返回值的断言。",
+      "level_4": "📝 正确答案：`from unittest.mock import Mock`、`m.get.return_value = 200`、`m.run.side_effect = [1, 2]`、`assert m.get(\"url\") == 200`"
+    },
+    "explanation": "return_value 决定 mock 方法的固定返回值；side_effect 为可迭代对象时按调用次序依次返回。"
+  },
+  {
+    "id": "pytest-027",
+    "title": "跳过测试",
+    "description": "按平台跳过测试、按版本条件跳过",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "easy",
+    "category": "pytest_skip",
+    "subcategory": "pytest",
+    "full_code": "import sys\n\nimport pytest\n\n\ndef test_on_windows_only():\n    if sys.platform != \"win32\":\n        pytest.skip(\"windows only\")\n    assert sys.platform == \"win32\"\n\n\n@pytest.mark.skipif(sys.version_info < (3, 10), reason=\"needs 3.10+\")\ndef test_needs_new_python():\n    assert sys.version_info >= (3, 10)",
+    "expected": "",
+    "points": [
+      {
+        "id": "import_pytest",
+        "text": "import pytest",
+        "category": "pytest_skip",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "导入测试框架的语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "skip_call",
+        "text": "pytest.skip(\"windows only\")",
+        "category": "pytest_skip",
+        "min_weight": "easy",
+        "weight_score": 1.5,
+        "hint": "在测试体内运行时跳过并附原因的调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "skipif_decorator",
+        "text": "@pytest.mark.skipif(sys.version_info < (3, 10), reason=\"needs 3.10+\")",
+        "category": "pytest_skip",
+        "min_weight": "easy",
+        "weight_score": 1.5,
+        "hint": "按解释器版本条件跳过的装饰器整行",
+        "fill_type": "text"
+      },
+      {
+        "id": "test_def",
+        "text": "def test_needs_new_python():",
+        "category": "pytest_skip",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "被条件装饰器标记的测试函数定义",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 运行时条件不满足用 pytest.skip 跳过当前用例；skipif 则在收集阶段按条件跳过。",
+      "level_2": "📖 pytest.skip(reason) 写在测试体内；@pytest.mark.skipif(条件, reason=...) 装饰整个测试函数。",
+      "level_3": "👀 共 4 空：① 导入 pytest；② 运行时跳过调用；③ 条件跳过装饰器；④ 被装饰的测试函数定义。",
+      "level_4": "📝 正确答案：`import pytest`、`pytest.skip(\"windows only\")`、`@pytest.mark.skipif(sys.version_info < (3, 10), reason=\"needs 3.10+\")`、`def test_needs_new_python():`"
+    },
+    "explanation": "pytest.skip 在测试体内随时跳过；skipif 在收集阶段按条件跳过，两者都会在报告中标记为 skipped。"
+  },
+  {
+    "id": "pytest-028",
+    "title": "预期失败",
+    "description": "用 xfail 标记预期失败的测试",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "easy",
+    "category": "pytest_xfail",
+    "subcategory": "pytest",
+    "full_code": "import pytest\n\nfrom parser import parse\n\n\n@pytest.mark.xfail(reason=\"known bug #42\")\ndef test_broken_parser():\n    assert parse(\"x\") == 1\n\n\n@pytest.mark.xfail(raises=ValueError)\ndef test_xfail_raises():\n    int(\"not-a-number\")",
+    "expected": "",
+    "points": [
+      {
+        "id": "import_parse",
+        "text": "from parser import parse",
+        "category": "pytest_xfail",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "从模块导入待测函数的语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "xfail_reason",
+        "text": "@pytest.mark.xfail(reason=\"known bug #42\")",
+        "category": "pytest_xfail",
+        "min_weight": "easy",
+        "weight_score": 1.5,
+        "hint": "带原因说明的预期失败装饰器",
+        "fill_type": "text"
+      },
+      {
+        "id": "test_def",
+        "text": "def test_broken_parser():",
+        "category": "pytest_xfail",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "已知会失败的测试函数定义",
+        "fill_type": "text"
+      },
+      {
+        "id": "xfail_raises",
+        "text": "@pytest.mark.xfail(raises=ValueError)",
+        "category": "pytest_xfail",
+        "min_weight": "easy",
+        "weight_score": 1.5,
+        "hint": "限定预期异常类型的装饰器",
+        "fill_type": "text"
+      },
+      {
+        "id": "failing_call",
+        "text": "int(\"not-a-number\")",
+        "category": "pytest_xfail",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "会抛出 ValueError 的调用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 xfail 标记已知会失败的测试：失败记为 XFAIL，不再让整个测试会话变红。",
+      "level_2": "📖 reason 描述原因；raises 限定预期异常类型，只有抛出该异常才算按预期失败。",
+      "level_3": "👀 共 5 空：① 导入被测函数；② 带原因说明的预期失败装饰器；③ 已知会失败的测试定义；④ 限定异常类型的装饰器；⑤ 触发 ValueError 的调用。",
+      "level_4": "📝 正确答案：`from parser import parse`、`@pytest.mark.xfail(reason=\"known bug #42\")`、`def test_broken_parser():`、`@pytest.mark.xfail(raises=ValueError)`、`int(\"not-a-number\")`"
+    },
+    "explanation": "xfail 声明预期失败：抛出 raises 指定的异常记为 XFAIL，未失败则记为 XPASS。"
+  },
+  {
+    "id": "pytest-029",
+    "title": "自动生效 fixture",
+    "description": "让 fixture 对所有测试自动生效",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "medium",
+    "category": "pytest_autouse",
+    "subcategory": "pytest",
+    "full_code": "import pytest\n\n\n@pytest.fixture(autouse=True)\ndef log_test_name(request):\n    print(f\"running {request.node.name}\")\n\n\ndef test_alpha():\n    assert True\n\n\ndef test_beta():\n    assert True",
+    "expected": "",
+    "points": [
+      {
+        "id": "autouse_flag",
+        "text": "autouse=True",
+        "category": "pytest_autouse",
+        "min_weight": "medium",
+        "weight_score": 2,
+        "hint": "让夹具自动生效的装饰器参数",
+        "fill_type": "text"
+      },
+      {
+        "id": "fixture_def",
+        "text": "def log_test_name(request):",
+        "category": "pytest_autouse",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "接收 request 对象的夹具定义行",
+        "fill_type": "text"
+      },
+      {
+        "id": "print_call",
+        "text": "print(f\"running {request.node.name}\")",
+        "category": "pytest_autouse",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "打印当前测试名的调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "test_alpha",
+        "text": "def test_alpha():",
+        "category": "pytest_autouse",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "第一个测试函数定义",
+        "fill_type": "text"
+      },
+      {
+        "id": "test_beta",
+        "text": "def test_beta():",
+        "category": "pytest_autouse",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "第二个测试函数定义",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 自动生效的 fixture 不需要在测试参数里声明，作用域内每个测试都会执行它。",
+      "level_2": "📖 给装饰器传入自动生效参数；夹具仍可接收 request，用 request.node.name 拿到当前测试名。",
+      "level_3": "👀 共 5 空：① 自动生效参数；② 夹具函数定义；③ 打印当前测试名的调用；④ 第一个测试定义；⑤ 第二个测试定义。",
+      "level_4": "📝 正确答案：`autouse=True`、`def log_test_name(request):`、`print(f\"running {request.node.name}\")`、`def test_alpha():`、`def test_beta():`"
+    },
+    "explanation": "autouse fixture 对作用域内所有测试自动执行，常用来做统一的日志、环境变量或数据库准备。"
+  },
+  {
+    "id": "pytest-030",
+    "title": "成员断言",
+    "description": "用 in 与 not in 断言元素是否属于列表",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "beginner",
+    "category": "pytest_assert",
+    "subcategory": "pytest",
+    "full_code": "def test_membership():\n    fruits = [\"apple\", \"banana\", \"cherry\"]\n    assert \"apple\" in fruits\n    assert \"grape\" not in fruits",
+    "expected": "",
+    "points": [
+      {
+        "id": "data_setup",
+        "text": "fruits = [\"apple\", \"banana\", \"cherry\"]",
+        "category": "pytest_assert",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "准备水果列表的赋值语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "assert_in",
+        "text": "assert \"apple\" in fruits",
+        "category": "pytest_assert",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "断言元素存在于列表的语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "assert_not_in",
+        "text": "assert \"grape\" not in fruits",
+        "category": "pytest_assert",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "断言元素不在列表中的语句",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 成员资格用 in / not in 断言，比 == 更贴合集合与列表的语义。",
+      "level_2": "📖 断言元素在集合里用 in，断言元素不在集合里用 not in，两个方向都要覆盖。",
+      "level_3": "👀 共 3 空：① 准备水果列表；② 断言元素存在；③ 断言元素不存在。",
+      "level_4": "📝 正确答案：`fruits = [\"apple\", \"banana\", \"cherry\"]`、`assert \"apple\" in fruits`、`assert \"grape\" not in fruits`"
+    },
+    "explanation": "in / not in 直接复用 Python 成员运算符，pytest 失败时会打印被检查的容器内容，便于定位。"
+  }
+]

@@ -117,8 +117,33 @@ func (s *Store) migrate() error {
 			key TEXT PRIMARY KEY,
 			value TEXT
 		)`,
+		`CREATE TABLE IF NOT EXISTS users (
+			id TEXT PRIMARY KEY,
+			username TEXT NOT NULL UNIQUE COLLATE NOCASE,
+			password_hash TEXT NOT NULL,
+			display_name TEXT,
+			disabled INTEGER DEFAULT 0,
+			selected_banks TEXT DEFAULT '[]',
+			created_at TEXT,
+			updated_at TEXT
+		)`,
+		`CREATE TABLE IF NOT EXISTS sessions (
+			token TEXT PRIMARY KEY,
+			user_id TEXT NOT NULL,
+			created_at TEXT,
+			expires_at TEXT
+		)`,
+		`CREATE TABLE IF NOT EXISTS bank_sources (
+			name TEXT NOT NULL,
+			source TEXT NOT NULL,
+			exercise_count INTEGER DEFAULT 0,
+			content TEXT,
+			updated_at TEXT,
+			PRIMARY KEY (name, source)
+		)`,
 		`CREATE INDEX IF NOT EXISTS idx_attempts_exercise ON attempt_records(exercise_id)`,
 		`CREATE INDEX IF NOT EXISTS idx_attempts_user ON attempt_records(user_id)`,
+		`CREATE INDEX IF NOT EXISTS idx_sessions_user ON sessions(user_id)`,
 	}
 	for _, st := range stmts {
 		if _, err := s.db.Exec(st); err != nil {

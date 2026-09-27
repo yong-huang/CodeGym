@@ -3,12 +3,14 @@ package api_test
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
 	"net/http/httptest"
 	"path/filepath"
 	"strings"
 	"testing"
+	"time"
 
 	"codegym/backend/internal/api"
 	"codegym/backend/internal/engine"
@@ -53,11 +55,11 @@ func newTestServer(t *testing.T) *httptest.Server {
 
 func doJSON(t *testing.T, method, url string, body any, out any) *http.Response {
 	t.Helper()
-	return doJSONUser(t, method, url, body, out, "")
+	return doJSONAuth(t, method, url, body, out, "")
 }
 
-// doJSONUser is doJSON with an extra header (e.g. X-User-Id).
-func doJSONUser(t *testing.T, method, url string, body any, out any, userID string) *http.Response {
+// doJSONAuth is doJSON with a session token (Authorization: Bearer).
+func doJSONAuth(t *testing.T, method, url string, body any, out any, token string) *http.Response {
 	t.Helper()
 	var rd io.Reader
 	if body != nil {
@@ -74,8 +76,8 @@ func doJSONUser(t *testing.T, method, url string, body any, out any, userID stri
 	if body != nil {
 		req.Header.Set("Content-Type", "application/json")
 	}
-	if userID != "" {
-		req.Header.Set("X-User-Id", userID)
+	if token != "" {
+		req.Header.Set("Authorization", "Bearer "+token)
 	}
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
@@ -92,6 +94,27 @@ func doJSONUser(t *testing.T, method, url string, body any, out any, userID stri
 		resp.Body.Close()
 	}
 	return resp
+}
+
+// registerUser registers a fresh trainee and returns (user id, session token).
+func registerUser(t *testing.T, ts *httptest.Server) (string, string) {
+	t.Helper()
+	var out struct {
+		Token string `json:"token"`
+		User  struct {
+			ID string `json:"id"`
+		} `json:"user"`
+	}
+	username := fmt.Sprintf("u%d", time.Now().UnixNano()%1_000_000_000_000)
+	resp := doJSON(t, "POST", ts.URL+"/api/v1/auth/register",
+		map[string]any{"username": username, "password": "secret123"}, &out)
+	if resp.StatusCode != http.StatusCreated {
+		t.Fatalf("register %s: status %d", username, resp.StatusCode)
+	}
+	if out.Token == "" || out.User.ID == "" {
+		t.Fatalf("register returned empty token/user: %+v", out)
+	}
+	return out.User.ID, out.Token
 }
 
 func TestE2E_BareAnswerKeysAccepted(t *testing.T) {
@@ -301,28 +324,28 @@ func TestE2E_Categories(t *testing.T) {
 func TestE2E_Favorites(t *testing.T) {
 	ts := newTestServer(t)
 	base := ts.URL + "/api/v1"
-	user := "fav-user"
+	_, token := registerUser(t, ts)
 
 	// toggle on
 	var ack struct {
 		Favorited bool `json:"favorited"`
 	}
-	doJSONUser(t, "POST", base+"/favorites", map[string]any{"exercise_id": "go-basics-001"}, &ack, user)
+	doJSONAuth(t, "POST", base+"/favorites", map[string]any{"exercise_id": "go-basics-001"}, &ack, token)
 	if !ack.Favorited {
 		t.Error("first toggle should favorite")
 	}
 	// toggle off
-	doJSONUser(t, "POST", base+"/favorites", map[string]any{"exercise_id": "go-basics-001"}, &ack, user)
+	doJSONAuth(t, "POST", base+"/favorites", map[string]any{"exercise_id": "go-basics-001"}, &ack, token)
 	if ack.Favorited {
 		t.Error("second toggle should unfavorite")
 	}
 	// favorite two, then list
-	doJSONUser(t, "POST", base+"/favorites", map[string]any{"exercise_id": "go-basics-001"}, &ack, user)
-	doJSONUser(t, "POST", base+"/favorites", map[string]any{"exercise_id": "py-lc-001"}, &ack, user)
+	doJSONAuth(t, "POST", base+"/favorites", map[string]any{"exercise_id": "go-basics-001"}, &ack, token)
+	doJSONAuth(t, "POST", base+"/favorites", map[string]any{"exercise_id": "py-lc-001"}, &ack, token)
 
-	// list must honor the X-User-Id header (per-user isolation)
+	// list must honor the session token (per-user isolation)
 	req, _ := http.NewRequest("GET", base+"/favorites", nil)
-	req.Header.Set("X-User-Id", user)
+	req.Header.Set("Authorization", "Bearer "+token)
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		t.Fatal(err)
@@ -346,8 +369,9 @@ func TestE2E_Favorites(t *testing.T) {
 	}
 
 	// a different user must see no favorites (isolation)
+	_, otherToken := registerUser(t, ts)
 	req2, _ := http.NewRequest("GET", base+"/favorites", nil)
-	req2.Header.Set("X-User-Id", "other-user")
+	req2.Header.Set("Authorization", "Bearer "+otherToken)
 	resp2, err := http.DefaultClient.Do(req2)
 	if err != nil {
 		t.Fatalf("get other-user favorites: %v", err)
@@ -373,8 +397,8 @@ func TestE2E_ExerciseListAndVariant(t *testing.T) {
 		PointCount   int    `json:"point_count"`
 	}
 	doJSON(t, "GET", base+"/exercises", nil, &list)
-	if len(list) != 1086 {
-		t.Fatalf("expected 1086 exercises (816 + 180 AWS + 90 Python 进阶), got %d", len(list))
+	if len(list) != 1466 {
+		t.Fatalf("expected 1466 exercises (816 + 180 AWS + 90 Python 进阶 + 200 OpenStack + 180 测试框架), got %d", len(list))
 	}
 	var ids []string
 	for _, ex := range list {
@@ -688,20 +712,20 @@ func TestE2E_CommandAndConfigAnswerMatch(t *testing.T) {
 func TestE2E_ProgressAndWeakPoints(t *testing.T) {
 	ts := newTestServer(t)
 	base := ts.URL + "/api/v1"
-	user := "tester-e2e"
+	_, token := registerUser(t, ts)
 
 	// wrong attempt first
-	doJSONUser(t, "POST", base+"/execute", map[string]any{
+	doJSONAuth(t, "POST", base+"/execute", map[string]any{
 		"exercise_id":  "py-lc-001",
 		"weight_level": "easy",
 		"fill_answers": map[string]string{"FILL_expr": "x*2", "FILL_iter": "numbers"},
-	}, nil, user)
+	}, nil, token)
 	// then correct
-	doJSONUser(t, "POST", base+"/execute", map[string]any{
+	doJSONAuth(t, "POST", base+"/execute", map[string]any{
 		"exercise_id":  "py-lc-001",
 		"weight_level": "easy",
 		"fill_answers": map[string]string{"FILL_expr": "x**2", "FILL_iter": "numbers"},
-	}, nil, user)
+	}, nil, token)
 
 	var prog struct {
 		Progress struct {
@@ -717,7 +741,7 @@ func TestE2E_ProgressAndWeakPoints(t *testing.T) {
 		} `json:"recent_attempts"`
 	}
 	req, _ := http.NewRequest("GET", base+"/progress", nil)
-	req.Header.Set("X-User-Id", user)
+	req.Header.Set("Authorization", "Bearer "+token)
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		t.Fatal(err)
@@ -748,7 +772,7 @@ func TestE2E_ProgressAndWeakPoints(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	req2.Header.Set("X-User-Id", user)
+	req2.Header.Set("Authorization", "Bearer "+token)
 	resp2, err := http.DefaultClient.Do(req2)
 	if err != nil {
 		t.Fatal(err)
@@ -1106,8 +1130,8 @@ func TestE2E_ExportImport(t *testing.T) {
 	if err := json.NewDecoder(resp.Body).Decode(&exported); err != nil {
 		t.Fatal(err)
 	}
-	if len(exported) != 1086 {
-		t.Fatalf("export count = %d, want 1086", len(exported))
+	if len(exported) != 1466 {
+		t.Fatalf("export count = %d, want 1466", len(exported))
 	}
 
 	// import: delete one exercise, then restore it from the exported blob
@@ -1325,5 +1349,227 @@ func TestE2E_AdminTokenAuth(t *testing.T) {
 	}
 	if code := status("/api/v1/environments", nil); code != http.StatusOK {
 		t.Errorf("student endpoint with token configured => %d, want 200", code)
+	}
+}
+
+// --- 用户体系 / 题库选择 / 动态加载 ---
+
+func TestE2E_AuthFlow(t *testing.T) {
+	ts := newTestServer(t)
+	base := ts.URL + "/api/v1"
+
+	// register + duplicate + validation
+	userID, token := registerUser(t, ts)
+	var me struct {
+		User model.User `json:"user"`
+	}
+	if resp := doJSONAuth(t, "GET", base+"/auth/me", nil, &me, token); resp.StatusCode != http.StatusOK {
+		t.Fatalf("me => %d", resp.StatusCode)
+	}
+	if me.User.ID != userID || me.User.Username == "" {
+		t.Fatalf("me user = %+v", me.User)
+	}
+	if resp := doJSON(t, "GET", base+"/auth/me", nil, nil); resp.StatusCode != http.StatusUnauthorized {
+		t.Errorf("anonymous me => %d, want 401", resp.StatusCode)
+	}
+	if resp := doJSON(t, "POST", base+"/auth/register",
+		map[string]any{"username": "ab", "password": "secret123"}, nil); resp.StatusCode != http.StatusBadRequest {
+		t.Errorf("short username => %d, want 400", resp.StatusCode)
+	}
+	if resp := doJSON(t, "POST", base+"/auth/register",
+		map[string]any{"username": "e2e_dup_user", "password": "secret123"}, nil); resp.StatusCode != http.StatusCreated {
+		t.Fatalf("first register of e2e_dup_user failed")
+	}
+	if resp := doJSON(t, "POST", base+"/auth/register",
+		map[string]any{"username": "E2E_DUP_USER", "password": "secret123"}, nil); resp.StatusCode != http.StatusConflict {
+		t.Errorf("duplicate register => %d, want 409", resp.StatusCode)
+	}
+
+	// wrong password then successful login issues a new token
+	if resp := doJSON(t, "POST", base+"/auth/login",
+		map[string]any{"username": "e2e_dup_user", "password": "wrong-pass"}, nil); resp.StatusCode != http.StatusUnauthorized {
+		t.Errorf("wrong password => %d, want 401", resp.StatusCode)
+	}
+	var login struct {
+		Token string `json:"token"`
+	}
+	if resp := doJSON(t, "POST", base+"/auth/login",
+		map[string]any{"username": "e2e_dup_user", "password": "secret123"}, &login); resp.StatusCode != http.StatusOK {
+		t.Fatalf("login => %d", resp.StatusCode)
+	}
+	if login.Token == "" {
+		t.Fatal("login returned empty token")
+	}
+
+	// logout revokes the token
+	if resp := doJSONAuth(t, "POST", base+"/auth/logout", nil, nil, login.Token); resp.StatusCode != http.StatusOK {
+		t.Fatalf("logout => %d", resp.StatusCode)
+	}
+	if resp := doJSONAuth(t, "GET", base+"/auth/me", nil, nil, login.Token); resp.StatusCode != http.StatusUnauthorized {
+		t.Errorf("me after logout => %d, want 401", resp.StatusCode)
+	}
+
+	// change password: old token stays valid, old password stops working
+	var login2 struct {
+		Token string `json:"token"`
+	}
+	if resp := doJSON(t, "POST", base+"/auth/login",
+		map[string]any{"username": "e2e_dup_user", "password": "secret123"}, &login2); resp.StatusCode != http.StatusOK {
+		t.Fatalf("second login => %d", resp.StatusCode)
+	}
+	if resp := doJSONAuth(t, "PUT", base+"/auth/me",
+		map[string]any{"old_password": "secret123", "new_password": "brand-new-pass"}, nil, login2.Token); resp.StatusCode != http.StatusOK {
+		t.Fatalf("update me => %d", resp.StatusCode)
+	}
+	if resp := doJSONAuth(t, "GET", base+"/auth/me", nil, nil, login2.Token); resp.StatusCode != http.StatusOK {
+		t.Errorf("current token after password change => %d, want 200", resp.StatusCode)
+	}
+	if resp := doJSON(t, "POST", base+"/auth/login",
+		map[string]any{"username": "e2e_dup_user", "password": "secret123"}, nil); resp.StatusCode != http.StatusUnauthorized {
+		t.Errorf("old password after change => %d, want 401", resp.StatusCode)
+	}
+	if resp := doJSON(t, "POST", base+"/auth/login",
+		map[string]any{"username": "e2e_dup_user", "password": "brand-new-pass"}, nil); resp.StatusCode != http.StatusOK {
+		t.Errorf("new password login => %d, want 200", resp.StatusCode)
+	}
+}
+
+func TestE2E_UserIsolationAndBankSelection(t *testing.T) {
+	ts := newTestServer(t)
+	base := ts.URL + "/api/v1"
+	_, tokenA := registerUser(t, ts)
+	_, tokenB := registerUser(t, ts)
+
+	// A completes one exercise; B's progress must stay empty
+	doJSONAuth(t, "POST", base+"/execute", map[string]any{
+		"exercise_id":  "py-lc-001",
+		"weight_level": "easy",
+		"fill_answers": map[string]string{"FILL_expr": "x**2", "FILL_iter": "numbers"},
+	}, nil, tokenA)
+
+	type progressResp struct {
+		Progress struct {
+			TotalAttempts int `json:"total_attempts"`
+		} `json:"progress"`
+	}
+	var pa, pb progressResp
+	doJSONAuth(t, "GET", base+"/progress", nil, &pa, tokenA)
+	doJSONAuth(t, "GET", base+"/progress", nil, &pb, tokenB)
+	if pa.Progress.TotalAttempts != 1 {
+		t.Errorf("user A attempts = %d, want 1", pa.Progress.TotalAttempts)
+	}
+	if pb.Progress.TotalAttempts != 0 {
+		t.Errorf("user B attempts = %d, want 0 (isolation)", pb.Progress.TotalAttempts)
+	}
+
+	// bank picker: available list + persisted selection, invalid keys dropped
+	var banks struct {
+		Available []model.BankInfo `json:"available"`
+		Selected  []string         `json:"selected"`
+	}
+	if resp := doJSONAuth(t, "GET", base+"/me/banks", nil, &banks, tokenA); resp.StatusCode != http.StatusOK {
+		t.Fatalf("my banks => %d", resp.StatusCode)
+	}
+	if len(banks.Available) < 5 || banks.Available[0].ExerciseCount == 0 {
+		t.Fatalf("available banks look wrong: %+v", banks.Available[:1])
+	}
+	var saved struct {
+		Selected []string `json:"selected"`
+	}
+	doJSONAuth(t, "PUT", base+"/me/banks",
+		map[string]any{"selected": []string{"testing::pytest", "nope::nope", "testing::pytest"}}, &saved, tokenA)
+	if len(saved.Selected) != 1 || saved.Selected[0] != "testing::pytest" {
+		t.Fatalf("saved selection = %v", saved.Selected)
+	}
+	doJSONAuth(t, "GET", base+"/me/banks", nil, &banks, tokenA)
+	if len(banks.Selected) != 1 {
+		t.Fatalf("selection not persisted: %v", banks.Selected)
+	}
+	doJSONAuth(t, "GET", base+"/me/banks", nil, &banks, tokenB)
+	if len(banks.Selected) != 0 {
+		t.Errorf("user B selection = %v, want empty (isolation)", banks.Selected)
+	}
+}
+
+func TestE2E_AdminUsersAndBankUpload(t *testing.T) {
+	ts := newTestServer(t)
+	base := ts.URL + "/api/v1"
+
+	// admin creates a user
+	var created model.User
+	if resp := doJSON(t, "POST", base+"/admin/users",
+		map[string]any{"username": "coach_made", "password": "secret123", "display_name": "教练建的"}, &created); resp.StatusCode != http.StatusCreated {
+		t.Fatalf("admin create user => %d", resp.StatusCode)
+	}
+	var users []model.AdminUser
+	doJSON(t, "GET", base+"/admin/users", nil, &users)
+	found := false
+	for _, u := range users {
+		if u.ID == created.ID {
+			found = true
+		}
+	}
+	if !found {
+		t.Fatalf("created user %s not listed", created.ID)
+	}
+
+	// disable blocks login, re-enable restores it
+	doJSON(t, "PUT", base+"/admin/users/"+created.ID, map[string]any{"disabled": true}, nil)
+	if resp := doJSON(t, "POST", base+"/auth/login",
+		map[string]any{"username": "coach_made", "password": "secret123"}, nil); resp.StatusCode != http.StatusForbidden {
+		t.Errorf("disabled login => %d, want 403", resp.StatusCode)
+	}
+	doJSON(t, "PUT", base+"/admin/users/"+created.ID, map[string]any{"disabled": false, "password": "reset-pass-1"}, nil)
+	if resp := doJSON(t, "POST", base+"/auth/login",
+		map[string]any{"username": "coach_made", "password": "reset-pass-1"}, nil); resp.StatusCode != http.StatusOK {
+		t.Errorf("reset password login => %d, want 200", resp.StatusCode)
+	}
+	doJSON(t, "DELETE", base+"/admin/users/"+created.ID, nil, nil)
+	if resp := doJSON(t, "POST", base+"/auth/login",
+		map[string]any{"username": "coach_made", "password": "reset-pass-1"}, nil); resp.StatusCode != http.StatusUnauthorized {
+		t.Errorf("deleted user login => %d, want 401", resp.StatusCode)
+	}
+
+	// dynamic bank upload: valid bank becomes practiceable immediately
+	bank := `[{
+		"id": "e2e-upload-001", "title": "上传题", "description": "d",
+		"exercise_type": "fill", "tech_stack": "testing", "weight": "easy",
+		"category": "c", "subcategory": "pytest", "full_code": "print(1)",
+		"expected": "", "points": [{"id": "p1", "text": "print(1)", "category": "c",
+		"min_weight": "beginner", "weight_score": 1, "hint": "h", "fill_type": "text"}],
+		"hints": {"level_1": "a", "level_2": "b", "level_3": "c", "level_4": "d"},
+		"explanation": "e"
+	}]`
+	var up struct {
+		Name     string `json:"name"`
+		Imported int    `json:"imported"`
+	}
+	if resp := doJSON(t, "POST", base+"/admin/banks",
+		map[string]any{"name": "e2e-hot-bank", "content": bank}, &up); resp.StatusCode != http.StatusOK {
+		t.Fatalf("upload bank => %d", resp.StatusCode)
+	}
+	if up.Imported != 1 {
+		t.Fatalf("imported = %d, want 1", up.Imported)
+	}
+	var ex model.Exercise
+	if resp := doJSON(t, "GET", base+"/exercises/e2e-upload-001", nil, &ex); resp.StatusCode != http.StatusOK {
+		t.Fatalf("uploaded exercise not served: %d", resp.StatusCode)
+	}
+	if ex.TechStack != "testing" || ex.Subcategory != "pytest" {
+		t.Errorf("uploaded exercise = %+v", ex)
+	}
+	var sources []model.BankSource
+	doJSON(t, "GET", base+"/admin/banks", nil, &sources)
+	if len(sources) != 1 || sources[0].Name != "e2e-hot-bank" || sources[0].Source != "upload" {
+		t.Fatalf("bank sources = %+v", sources)
+	}
+	// invalid payloads rejected
+	if resp := doJSON(t, "POST", base+"/admin/banks",
+		map[string]any{"name": "bad name", "content": bank}, nil); resp.StatusCode != http.StatusBadRequest {
+		t.Errorf("bad bank name => %d, want 400", resp.StatusCode)
+	}
+	if resp := doJSON(t, "POST", base+"/admin/banks",
+		map[string]any{"name": "e2e-broken", "content": "{not json"}, nil); resp.StatusCode != http.StatusBadRequest {
+		t.Errorf("broken bank => %d, want 400", resp.StatusCode)
 	}
 }

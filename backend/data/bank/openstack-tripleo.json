@@ -1,0 +1,1374 @@
+[
+  {
+    "id": "os-tripleo-001",
+    "title": "安装 TripleO 仓库",
+    "description": "安装 tripleo-repos 工具，并为 wallaby 分支启用 RDO Trunk 仓库与 ceph 仓库",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "beginner",
+    "category": "tripleo_repos",
+    "subcategory": "TripleO",
+    "full_code": "sudo dnf install -y python3-tripleo-repos\nsudo tripleo-repos -b wallaby current-tripleo ceph\nsudo dnf -y update",
+    "expected": "",
+    "points": [
+      {
+        "id": "repo_pkg",
+        "text": "python3-tripleo-repos",
+        "category": "tripleo_repos",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "提供 tripleo-repos 命令的软件包",
+        "fill_type": "text"
+      },
+      {
+        "id": "branch_opt",
+        "text": "-b wallaby",
+        "category": "tripleo_repos",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "用 -b/--branch 指定要使用的版本分支",
+        "fill_type": "text"
+      },
+      {
+        "id": "repo_streams",
+        "text": "current-tripleo ceph",
+        "category": "tripleo_repos",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "位置参数列出要启用的仓库名（RDO Trunk 与 Ceph）",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 先用 dnf 安装 tripleo-repos，再用它启用版本对应的仓库",
+      "level_2": "📖 tripleo-repos 用 -b/--branch 选择版本分支（如 wallaby），仓库名（current-tripleo、ceph）作为位置参数传入；它会先清掉自己管理的旧仓库，所以所有仓库必须在一次调用里列全",
+      "level_3": "👀 sudo tripleo-repos -b wallaby current-tripleo ceph",
+      "level_4": "📝 正确答案：`python3-tripleo-repos`、`-b wallaby`、`current-tripleo ceph`"
+    },
+    "explanation": "tripleo-repos 是 TripleO 的仓库引导工具：-b 选分支，位置参数给出要启用的仓库流（current-tripleo 是 RDO Trunk 提升仓库，ceph 是 Ceph 仓库），之后 dnf update 才能装到对应版本的 director 组件。"
+  },
+  {
+    "id": "os-tripleo-002",
+    "title": "安装 undercloud",
+    "description": "加载 stackrc 凭据后执行 openstack undercloud install，安装过程读取 ~/undercloud.conf",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "beginner",
+    "category": "tripleo_undercloud_install",
+    "subcategory": "TripleO",
+    "full_code": "source ~/stackrc\nopenstack undercloud install",
+    "expected": "",
+    "points": [
+      {
+        "id": "load_stackrc",
+        "text": "source ~/stackrc",
+        "category": "tripleo_cli",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "加载 undercloud 的认证信息与 CLI 环境",
+        "fill_type": "text"
+      },
+      {
+        "id": "undercloud_install",
+        "text": "undercloud install",
+        "category": "tripleo_undercloud",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "安装并配置 undercloud 的子命令",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 安装 undercloud 分两步：先加载环境，再执行安装",
+      "level_2": "📖 source ~/stackrc 会设置 OS_* 认证变量，openstack undercloud install 读取 ~/undercloud.conf 并安装 director",
+      "level_3": "👀 source ~/stackrc 后执行 openstack undercloud install",
+      "level_4": "📝 正确答案：`source ~/stackrc`、`undercloud install`"
+    },
+    "explanation": "undercloud install 按 ~/undercloud.conf 的配置安装容器化的 undercloud 服务（Ironic、Heat、Mistral 等）；执行前必须先 source ~/stackrc，让 openstack CLI 拿到认证与端点。"
+  },
+  {
+    "id": "os-tripleo-003",
+    "title": "undercloud.conf 配置本地网络",
+    "description": "在 [DEFAULT] 段设置 undercloud 的本地 IP 和 provisioning 网段",
+    "exercise_type": "config",
+    "tech_stack": "openstack",
+    "weight": "beginner",
+    "category": "undercloud_conf_default",
+    "subcategory": "TripleO",
+    "full_code": "[DEFAULT]\nlocal_ip = 192.168.24.1/24\nnetwork_cidr = 192.168.24.0/24",
+    "expected": "",
+    "points": [
+      {
+        "id": "default_section",
+        "text": "[DEFAULT]",
+        "category": "undercloud_conf",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "undercloud.conf 的全局配置段",
+        "fill_type": "text"
+      },
+      {
+        "id": "local_ip_opt_1",
+        "text": "local_ip",
+        "category": "undercloud_conf",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "undercloud 在 provisioning 网络上的 IP（带掩码）",
+        "fill_type": "text"
+      },
+      {
+        "id": "local_ip_opt_2",
+        "text": "192.168.24.1/24",
+        "category": "undercloud_conf",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "undercloud 在 provisioning 网络上的 IP（带掩码）",
+        "fill_type": "text"
+      },
+      {
+        "id": "network_cidr_opt_1",
+        "text": "network_cidr",
+        "category": "undercloud_conf",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "provisioning 网络的 CIDR",
+        "fill_type": "text"
+      },
+      {
+        "id": "network_cidr_opt_2",
+        "text": "192.168.24.0/24",
+        "category": "undercloud_conf",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "provisioning 网络的 CIDR",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 undercloud.conf 的 [DEFAULT] 段描述 undercloud 自己的网络",
+      "level_2": "📖 local_ip 是 undercloud 在 provisioning 网络上的地址（带掩码），network_cidr 是同一网络的 CIDR，DHCP 与网关都基于它",
+      "level_3": "👀 [DEFAULT] local_ip = 192.168.24.1/24 / network_cidr = 192.168.24.0/24",
+      "level_4": "📝 正确答案：`[DEFAULT]`、`local_ip`、`192.168.24.1/24`、`network_cidr`、`192.168.24.0/24`"
+    },
+    "explanation": "local_ip 决定 undercloud 在 provisioning 网络（ctlplane）上的地址，network_cidr 定义该网络范围；两者是后续 network_gateway、DHCP 与 Ironic 部署网络的基础。"
+  },
+  {
+    "id": "os-tripleo-004",
+    "title": "undercloud.conf 配置网关与网卡",
+    "description": "指定 provisioning 网络的网关和承载它的物理网卡",
+    "exercise_type": "config",
+    "tech_stack": "openstack",
+    "weight": "easy",
+    "category": "undercloud_conf_network",
+    "subcategory": "TripleO",
+    "full_code": "[DEFAULT]\nnetwork_gateway = 192.168.24.1\nlocal_interface = eth1",
+    "expected": "",
+    "points": [
+      {
+        "id": "gateway_opt_1",
+        "text": "network_gateway",
+        "category": "undercloud_conf",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "provisioning 网络的默认网关",
+        "fill_type": "text"
+      },
+      {
+        "id": "gateway_opt_2",
+        "text": "192.168.24.1",
+        "category": "undercloud_conf",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "provisioning 网络的默认网关",
+        "fill_type": "text"
+      },
+      {
+        "id": "local_interface_opt_1",
+        "text": "local_interface",
+        "category": "undercloud_conf",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "处理 PXE/DHCP 的物理网卡",
+        "fill_type": "text"
+      },
+      {
+        "id": "local_interface_opt_2",
+        "text": "eth1",
+        "category": "undercloud_conf",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "处理 PXE/DHCP 的物理网卡",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 网关和网卡分别对应 network_gateway 与 local_interface",
+      "level_2": "📖 network_gateway 是 provisioning 网络的出口网关，local_interface 是 undercloud 承载 DHCP/PXE 的物理接口（新版本可自动探测，但仍常显式配置）",
+      "level_3": "👀 [DEFAULT] network_gateway = ... / local_interface = eth1",
+      "level_4": "📝 正确答案：`network_gateway`、`192.168.24.1`、`local_interface`、`eth1`"
+    },
+    "explanation": "network_gateway 让 undercloud 上的节点能经 provisioning 网络访问外部；local_interface 指定哪个网卡加入 br-ctlplane 网桥，负责 PXE 引导和 DHCP。"
+  },
+  {
+    "id": "os-tripleo-005",
+    "title": "undercloud.conf 配置主机名与自省网桥",
+    "description": "设置 undercloud 主机名，并指定 Ironic Inspector 用于自省的网桥",
+    "exercise_type": "config",
+    "tech_stack": "openstack",
+    "weight": "easy",
+    "category": "undercloud_conf_inspection",
+    "subcategory": "TripleO",
+    "full_code": "[DEFAULT]\nundercloud_hostname = undercloud.example.com\ninspection_interface = br-ctlplane\ninspection_runbench = false",
+    "expected": "",
+    "points": [
+      {
+        "id": "hostname_opt_1",
+        "text": "undercloud_hostname",
+        "category": "undercloud_conf",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "undercloud 的 FQDN",
+        "fill_type": "text"
+      },
+      {
+        "id": "hostname_opt_2",
+        "text": "undercloud.example.com",
+        "category": "undercloud_conf",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "undercloud 的 FQDN",
+        "fill_type": "text"
+      },
+      {
+        "id": "inspection_interface_opt_1",
+        "text": "inspection_interface",
+        "category": "undercloud_conf",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "节点自省使用的网桥",
+        "fill_type": "text"
+      },
+      {
+        "id": "inspection_interface_opt_2",
+        "text": "br-ctlplane",
+        "category": "undercloud_conf",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "节点自省使用的网桥",
+        "fill_type": "text"
+      },
+      {
+        "id": "runbench_opt_1",
+        "text": "inspection_runbench",
+        "category": "undercloud_conf",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "自省时是否运行基准测试",
+        "fill_type": "text"
+      },
+      {
+        "id": "runbench_opt_2",
+        "text": "false",
+        "category": "undercloud_conf",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "自省时是否运行基准测试",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 主机名、自省网桥、自省基准测试都在 [DEFAULT] 段",
+      "level_2": "📖 undercloud_hostname 设置 undercloud 的 FQDN；inspection_interface 默认是 br-ctlplane，自省流量走它；inspection_runbench 控制是否运行 benchmark 收集额外硬件数据",
+      "level_3": "👀 [DEFAULT] undercloud_hostname = ... / inspection_interface = br-ctlplane",
+      "level_4": "📝 正确答案：`undercloud_hostname`、`undercloud.example.com`、`inspection_interface`、`br-ctlplane`、`inspection_runbench`、`false`"
+    },
+    "explanation": "undercloud_hostname 让各服务用固定域名互相访问；inspection_interface 决定 Inspector 在哪个网桥上监听 PXE 自省；inspection_runbench 开启后会收集磁盘/CPU 基准数据，自省耗时更长。"
+  },
+  {
+    "id": "os-tripleo-006",
+    "title": "undercloud.conf 启用 UI 与自动签发证书",
+    "description": "启用 director Web UI，并在安装时用本地 CA 自动生成服务证书",
+    "exercise_type": "config",
+    "tech_stack": "openstack",
+    "weight": "easy",
+    "category": "undercloud_conf_cert",
+    "subcategory": "TripleO",
+    "full_code": "[DEFAULT]\nenable_ui = true\ngenerate_service_certificate = true\ncertificate_generation_ca = local",
+    "expected": "",
+    "points": [
+      {
+        "id": "enable_ui_opt_1",
+        "text": "enable_ui",
+        "category": "undercloud_conf",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "启用 director Web UI",
+        "fill_type": "text"
+      },
+      {
+        "id": "enable_ui_opt_2",
+        "text": "true",
+        "category": "undercloud_conf",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "启用 director Web UI",
+        "fill_type": "text"
+      },
+      {
+        "id": "generate_cert_opt_1",
+        "text": "generate_service_certificate",
+        "category": "undercloud_conf",
+        "min_weight": "easy",
+        "weight_score": 1.0,
+        "hint": "安装时自动生成服务证书",
+        "fill_type": "text"
+      },
+      {
+        "id": "cert_ca_opt_1",
+        "text": "certificate_generation_ca",
+        "category": "undercloud_conf",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "指定签发证书的 CA",
+        "fill_type": "text"
+      },
+      {
+        "id": "cert_ca_opt_2",
+        "text": "local",
+        "category": "undercloud_conf",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "指定签发证书的 CA",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 UI 开关和证书生成是 [DEFAULT] 里两个独立的选项",
+      "level_2": "📖 enable_ui 启用 director 的 Web UI；generate_service_certificate 让安装过程自动签发 API 证书，certificate_generation_ca = local 表示使用 certmonger 本地 CA",
+      "level_3": "👀 [DEFAULT] enable_ui = true / generate_service_certificate = true / certificate_generation_ca = local",
+      "level_4": "📝 正确答案：`enable_ui`、`true`、`generate_service_certificate`、`certificate_generation_ca`、`local`"
+    },
+    "explanation": "enable_ui 开启 director 图形界面；generate_service_certificate 在 undercloud 安装时自动签发 TLS 证书（写入 /etc/pki/tls/private/overcloud_endpoint.pem），CA 由 certificate_generation_ca 选择，local 表示使用 certmonger 本地 CA。"
+  },
+  {
+    "id": "os-tripleo-007",
+    "title": "导入裸金属节点清单",
+    "description": "先用 --validate-only 校验 instances.yaml，再真正导入节点",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "easy",
+    "category": "tripleo_node_import",
+    "subcategory": "TripleO",
+    "full_code": "openstack overcloud node import --validate-only ~/instances.yaml\nopenstack overcloud node import ~/instances.yaml",
+    "expected": "",
+    "points": [
+      {
+        "id": "node_import_1",
+        "text": "overcloud",
+        "category": "tripleo_node",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "把节点清单导入 Ironic 的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "node_import_2",
+        "text": "node",
+        "category": "tripleo_node",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "把节点清单导入 Ironic 的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "node_import_3",
+        "text": "import",
+        "category": "tripleo_node",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "把节点清单导入 Ironic 的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "validate_only",
+        "text": "--validate-only",
+        "category": "tripleo_node",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "只校验清单文件，不真正导入",
+        "fill_type": "text"
+      },
+      {
+        "id": "env_file",
+        "text": "~/instances.yaml",
+        "category": "tripleo_node",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "节点清单文件（第二处出现才是真正的导入命令）",
+        "fill_type": "text",
+        "occurrence": 1
+      }
+    ],
+    "hints": {
+      "level_1": "💡 导入节点前先校验清单，再执行导入",
+      "level_2": "📖 instances.yaml 描述节点的 BMC 地址、账号和网卡等信息；--validate-only 只做字段校验，不加它才会真正注册到 Ironic",
+      "level_3": "👀 openstack overcloud node import --validate-only ~/instances.yaml，然后 openstack overcloud node import ~/instances.yaml",
+      "level_4": "📝 正确答案：`overcloud`、`node`、`import`、`--validate-only`、`~/instances.yaml`"
+    },
+    "explanation": "node import 把 instances.yaml 中的节点注册进 Ironic（默认置为 manageable 状态）；--validate-only 可提前发现清单错误，避免导入到一半失败。"
+  },
+  {
+    "id": "os-tripleo-008",
+    "title": "硬件自省",
+    "description": "对所有 manageable 状态的节点执行自省，完成后置为 available",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "easy",
+    "category": "tripleo_node_introspect",
+    "subcategory": "TripleO",
+    "full_code": "openstack overcloud node introspect --all-manageable --provide",
+    "expected": "",
+    "points": [
+      {
+        "id": "node_introspect_1",
+        "text": "overcloud",
+        "category": "tripleo_node",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "触发硬件自省的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "node_introspect_2",
+        "text": "node",
+        "category": "tripleo_node",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "触发硬件自省的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "node_introspect_3",
+        "text": "introspect",
+        "category": "tripleo_node",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "触发硬件自省的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "all_manageable",
+        "text": "--all-manageable",
+        "category": "tripleo_node",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "对所有 manageable 节点操作",
+        "fill_type": "text"
+      },
+      {
+        "id": "provide_flag",
+        "text": "--provide",
+        "category": "tripleo_node",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "自省完成后把节点置为 available",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 自省命令要指定节点范围，并决定自省后节点的状态",
+      "level_2": "📖 --all-manageable 选中所有 manageable 节点（也可直接给 UUID）；--provide 在自省完成后把节点置为 available，供后续 provision 使用",
+      "level_3": "👀 openstack overcloud node introspect --all-manageable --provide",
+      "level_4": "📝 正确答案：`overcloud`、`node`、`introspect`、`--all-manageable`、`--provide`"
+    },
+    "explanation": "introspect 让 Ironic Inspector 通过 PXE 启动内存系统收集 CPU、内存、磁盘和网卡信息，结果写入节点 properties；--provide 让节点直接进入 available 状态，省去手动 provide。"
+  },
+  {
+    "id": "os-tripleo-009",
+    "title": "置备节点并导出部署文件",
+    "description": "把节点置为 available，并用 node provision 生成 overcloud-baremetal-deployed.yaml",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "medium",
+    "category": "tripleo_node_provision",
+    "subcategory": "TripleO",
+    "full_code": "openstack overcloud node provide --all-manageable\nopenstack overcloud node provision --output ~/overcloud-baremetal-deployed.yaml ~/overcloud-baremetal-deploy.yaml",
+    "expected": "",
+    "points": [
+      {
+        "id": "node_provide_1",
+        "text": "node",
+        "category": "tripleo_node",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "把自省完成的节点置为 available",
+        "fill_type": "text"
+      },
+      {
+        "id": "node_provide_2",
+        "text": "provide",
+        "category": "tripleo_node",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "把自省完成的节点置为 available",
+        "fill_type": "text"
+      },
+      {
+        "id": "node_provide_3",
+        "text": "--all-manageable",
+        "category": "tripleo_node",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "把自省完成的节点置为 available",
+        "fill_type": "text"
+      },
+      {
+        "id": "node_provision",
+        "text": "node provision",
+        "category": "tripleo_node",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "按部署文件置备节点的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "output_opt",
+        "text": "--output ~/overcloud-baremetal-deployed.yaml",
+        "category": "tripleo_node",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "生成的已置备部署文件路径",
+        "fill_type": "text"
+      },
+      {
+        "id": "deploy_file",
+        "text": "~/overcloud-baremetal-deploy.yaml",
+        "category": "tripleo_node",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "描述各角色节点数量的输入文件",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 先把节点 provide，再用 node provision 按文件置备",
+      "level_2": "📖 node provide --all-manageable 把 manageable 节点变为 available；node provision 读取 overcloud-baremetal-deploy.yaml 里的角色与数量，实际部署节点，并把结果写到 --output 指定的 overcloud-baremetal-deployed.yaml",
+      "level_3": "👀 openstack overcloud node provision --output ~/overcloud-baremetal-deployed.yaml ~/overcloud-baremetal-deploy.yaml",
+      "level_4": "📝 正确答案：`node`、`provide`、`--all-manageable`、`node provision`、`--output ~/overcloud-baremetal-deployed.yaml`、`~/overcloud-baremetal-deploy.yaml`"
+    },
+    "explanation": "provide 让节点可被调度；provision 真正把节点部署成 overcloud 角色（写 Ironic 配置、分配网络端口），输出的 overcloud-baremetal-deployed.yaml 要在 deploy 时用 -e 引入。"
+  },
+  {
+    "id": "os-tripleo-010",
+    "title": "部署 overcloud",
+    "description": "用 --templates 指定模板目录，并用 -r/-e 引入 roles_data 与网络隔离等环境文件",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "medium",
+    "category": "tripleo_deploy",
+    "subcategory": "TripleO",
+    "full_code": "openstack overcloud deploy --templates \\\n  -r /home/stack/templates/roles_data.yaml \\\n  -e /home/stack/templates/network-isolation.yaml \\\n  -e /home/stack/templates/environment.yaml",
+    "expected": "",
+    "points": [
+      {
+        "id": "deploy_cmd",
+        "text": "overcloud deploy",
+        "category": "tripleo_deploy",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "部署 overcloud 的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "templates_opt",
+        "text": "--templates",
+        "category": "tripleo_deploy",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "使用 Heat 模板目录（默认 /usr/share/openstack-tripleo-heat-templates）",
+        "fill_type": "text"
+      },
+      {
+        "id": "roles_file_opt",
+        "text": "-r /home/stack/templates/roles_data.yaml",
+        "category": "tripleo_deploy",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "自定义角色定义文件",
+        "fill_type": "text"
+      },
+      {
+        "id": "env_file_opt",
+        "text": "-e /home/stack/templates/network-isolation.yaml",
+        "category": "tripleo_deploy",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "网络隔离环境文件",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 overcloud deploy 用 --templates 指定模板，-r 指定角色文件，-e 叠加环境文件",
+      "level_2": "📖 --templates 不带值默认使用 /usr/share/openstack-tripleo-heat-templates；-r/--roles-file 覆盖 roles_data.yaml；-e/--environment-file 可多次出现，按顺序叠加环境文件",
+      "level_3": "👀 openstack overcloud deploy --templates -r roles_data.yaml -e network-isolation.yaml -e environment.yaml",
+      "level_4": "📝 正确答案：`overcloud deploy`、`--templates`、`-r /home/stack/templates/roles_data.yaml`、`-e /home/stack/templates/network-isolation.yaml`"
+    },
+    "explanation": "overcloud deploy 是 TripleO 的主部署入口：--templates 提供模板，-r 用自定义 roles_data.yaml 定义角色，-e 依次叠加环境文件（network-isolation.yaml 启用网络隔离，environment.yaml 覆盖参数）。"
+  },
+  {
+    "id": "os-tripleo-011",
+    "title": "roles_data.yaml 定义角色",
+    "description": "定义 Controller、Compute 与自定义 CephStorage 角色及默认数量",
+    "exercise_type": "config",
+    "tech_stack": "openstack",
+    "weight": "medium",
+    "category": "tripleo_roles",
+    "subcategory": "TripleO",
+    "full_code": "- name: Controller\n  CountDefault: 1\n  networks:\n    - External\n- name: Compute\n  CountDefault: 2\n  networks:\n    - Tenant\n- name: CephStorage\n  CountDefault: 1\n  networks:\n    - Storage",
+    "expected": "",
+    "points": [
+      {
+        "id": "controller_role",
+        "text": "name: Controller",
+        "category": "tripleo_roles",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "Controller 角色名",
+        "fill_type": "text"
+      },
+      {
+        "id": "count_default",
+        "text": "CountDefault: 1",
+        "category": "tripleo_roles",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "角色默认节点数",
+        "fill_type": "text",
+        "occurrence": 0
+      },
+      {
+        "id": "compute_role",
+        "text": "name: Compute",
+        "category": "tripleo_roles",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "Compute 角色名",
+        "fill_type": "text"
+      },
+      {
+        "id": "custom_role",
+        "text": "name: CephStorage",
+        "category": "tripleo_roles",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "自定义角色同样用 name 声明",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 roles_data.yaml 是一个角色列表，每个角色有 name 和 CountDefault",
+      "level_2": "📖 name 是角色名（Controller/Compute/自定义如 CephStorage），CountDefault 是该角色的默认节点数量，networks 列出角色使用的网络",
+      "level_3": "👀 - name: Controller / CountDefault: 1 ... - name: Compute / CountDefault: 2",
+      "level_4": "📝 正确答案：`name: Controller`、`CountDefault: 1`、`name: Compute`、`name: CephStorage`"
+    },
+    "explanation": "roles_data.yaml 定义可组合角色：Controller/Compute 是内置角色，CephStorage 这类自定义角色按同样格式声明；CountDefault 决定该角色默认部署几个节点，可在环境文件里用 <Role>Count 覆盖。"
+  },
+  {
+    "id": "os-tripleo-012",
+    "title": "network_data.yaml 定义网络",
+    "description": "定义 External 与 InternalApi 网络，包含 VIP、VLAN 与网段",
+    "exercise_type": "config",
+    "tech_stack": "openstack",
+    "weight": "medium",
+    "category": "tripleo_network_data",
+    "subcategory": "TripleO",
+    "full_code": "- name: External\n  vip: true\n  vlan: 10\n  ip_subnet: '10.0.0.0/24'\n- name: InternalApi\n  vip: true\n  vlan: 20\n  ip_subnet: '172.16.2.0/24'",
+    "expected": "",
+    "points": [
+      {
+        "id": "external_net",
+        "text": "name: External",
+        "category": "tripleo_network_data",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "外部网络名",
+        "fill_type": "text"
+      },
+      {
+        "id": "vip_flag",
+        "text": "vip: true",
+        "category": "tripleo_network_data",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "在该网络创建虚拟 IP",
+        "fill_type": "text",
+        "occurrence": 0
+      },
+      {
+        "id": "vlan_external",
+        "text": "vlan: 10",
+        "category": "tripleo_network_data",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "External 网络的 VLAN ID",
+        "fill_type": "text"
+      },
+      {
+        "id": "subnet_internal",
+        "text": "ip_subnet: '172.16.2.0/24'",
+        "category": "tripleo_network_data",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "InternalApi 的网段",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 network_data.yaml 列出每个网络的 name、vip、vlan、ip_subnet",
+      "level_2": "📖 vip: true 表示在该网络上创建 VIP（如 External 的公共 VIP）；vlan 是物理网络上的 VLAN ID；ip_subnet 是该网络的 CIDR",
+      "level_3": "👀 - name: External / vip: true / vlan: 10 / ip_subnet: '10.0.0.0/24'",
+      "level_4": "📝 正确答案：`name: External`、`vip: true`、`vlan: 10`、`ip_subnet: '172.16.2.0/24'`"
+    },
+    "explanation": "network_data.yaml 描述 overcloud 的每个网络（External、InternalApi、Storage 等），deploy 时用 -n 引入并生成网络隔离配置；vip 决定是否在该网络生成虚拟 IP，vlan/ip_subnet 决定二层与三层配置。"
+  },
+  {
+    "id": "os-tripleo-013",
+    "title": "环境文件覆盖参数",
+    "description": "在 parameter_defaults 中覆盖 Neutron 网桥映射、Flat 网络和 Compute 数量",
+    "exercise_type": "config",
+    "tech_stack": "openstack",
+    "weight": "medium",
+    "category": "tripleo_parameters",
+    "subcategory": "TripleO",
+    "full_code": "parameter_defaults:\n  NeutronBridgeMappings: 'datacentre:br-ex'\n  NeutronFlatNetworks: 'datacentre'\n  ComputeCount: 2",
+    "expected": "",
+    "points": [
+      {
+        "id": "parameter_defaults",
+        "text": "parameter_defaults:",
+        "category": "tripleo_parameters",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "环境文件覆盖参数的顶层键",
+        "fill_type": "text"
+      },
+      {
+        "id": "bridge_mappings",
+        "text": "NeutronBridgeMappings: 'datacentre:br-ex'",
+        "category": "tripleo_parameters",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "逻辑网络名到网桥的映射",
+        "fill_type": "text"
+      },
+      {
+        "id": "flat_networks",
+        "text": "NeutronFlatNetworks: 'datacentre'",
+        "category": "tripleo_parameters",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "允许的 Flat 网络列表",
+        "fill_type": "text"
+      },
+      {
+        "id": "compute_count",
+        "text": "ComputeCount: 2",
+        "category": "tripleo_parameters",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "Compute 角色节点数",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 环境文件用 parameter_defaults 覆盖 Heat 参数",
+      "level_2": "📖 NeutronBridgeMappings 把逻辑网络（datacentre）映射到 OVS 网桥（br-ex），NeutronFlatNetworks 声明可用的 Flat 网络；ComputeCount 直接覆盖 Compute 角色数量",
+      "level_3": "👀 parameter_defaults: NeutronBridgeMappings: 'datacentre:br-ex' / ComputeCount: 2",
+      "level_4": "📝 正确答案：`parameter_defaults:`、`NeutronBridgeMappings: 'datacentre:br-ex'`、`NeutronFlatNetworks: 'datacentre'`、`ComputeCount: 2`"
+    },
+    "explanation": "环境文件用 parameter_defaults 覆盖模板参数：NeutronBridgeMappings/NeutronFlatNetworks 决定 provider 网络如何落到网桥，ComputeCount 这类 <Role>Count 参数控制角色规模，无需改动 roles_data.yaml。"
+  },
+  {
+    "id": "os-tripleo-014",
+    "title": "生成容器镜像准备文件",
+    "description": "用 tripleo container image prepare default 生成带本地 registry 推送的 container-prepare-parameter.yaml",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "medium",
+    "category": "tripleo_container_image",
+    "subcategory": "TripleO",
+    "full_code": "openstack tripleo container image prepare default \\\n  --local-push-destination \\\n  --output-env-file /home/stack/templates/container-prepare-parameter.yaml",
+    "expected": "",
+    "points": [
+      {
+        "id": "prepare_default_1",
+        "text": "tripleo",
+        "category": "tripleo_container_image",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "生成默认镜像准备参数的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "prepare_default_2",
+        "text": "container",
+        "category": "tripleo_container_image",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "生成默认镜像准备参数的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "prepare_default_3",
+        "text": "image",
+        "category": "tripleo_container_image",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "生成默认镜像准备参数的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "prepare_default_4",
+        "text": "prepare",
+        "category": "tripleo_container_image",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "生成默认镜像准备参数的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "prepare_default_5",
+        "text": "default",
+        "category": "tripleo_container_image",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "生成默认镜像准备参数的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "local_push",
+        "text": "--local-push-destination",
+        "category": "tripleo_container_image",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "让镜像推送到 undercloud 本地 registry",
+        "fill_type": "text"
+      },
+      {
+        "id": "output_env",
+        "text": "--output-env-file",
+        "category": "tripleo_container_image",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "把生成的参数写入环境文件",
+        "fill_type": "text"
+      },
+      {
+        "id": "prepare_file",
+        "text": "container-prepare-parameter.yaml",
+        "category": "tripleo_container_image",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "生成的容器镜像准备文件",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 prepare default 生成默认镜像参数，--local-push-destination 启用本地 registry",
+      "level_2": "📖 tripleo container image prepare default 输出 ContainerImagePrepare 参数；--local-push-destination 让镜像被推送到 undercloud 的 8787 本地 registry；--output-env-file 指定输出文件",
+      "level_3": "👀 openstack tripleo container image prepare default --local-push-destination --output-env-file ...",
+      "level_4": "📝 正确答案：`tripleo`、`container`、`image`、`prepare`、`default`、`--local-push-destination`、`--output-env-file`、`container-prepare-parameter.yaml`"
+    },
+    "explanation": "该命令生成容器镜像准备参数（ContainerImagePrepare）；--local-push-destination 会在 prepare 时把镜像推到 undercloud 本地 registry（<local_ip>:8787），overcloud 节点再从本地拉取，减少外网依赖。"
+  },
+  {
+    "id": "os-tripleo-015",
+    "title": "container-prepare-parameter.yaml 配置镜像",
+    "description": "用 ContainerImagePrepare 指定镜像命名空间与 tag，并开启 push_destination 推送到本地 registry",
+    "exercise_type": "config",
+    "tech_stack": "openstack",
+    "weight": "medium",
+    "category": "tripleo_container_prepare",
+    "subcategory": "TripleO",
+    "full_code": "parameter_defaults:\n  ContainerImagePrepare:\n    - push_destination: true\n      set:\n        namespace: quay.io/tripleowallaby\n        name_prefix: openstack-\n        name_suffix: ''\n        tag: current-tripleo",
+    "expected": "",
+    "points": [
+      {
+        "id": "cip_key",
+        "text": "ContainerImagePrepare:",
+        "category": "tripleo_container_prepare",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "容器镜像准备参数的键",
+        "fill_type": "text"
+      },
+      {
+        "id": "push_destination",
+        "text": "push_destination: true",
+        "category": "tripleo_container_prepare",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "把镜像推送到 undercloud 本地 registry",
+        "fill_type": "text"
+      },
+      {
+        "id": "namespace_set",
+        "text": "namespace: quay.io/tripleowallaby",
+        "category": "tripleo_container_prepare",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "镜像仓库命名空间",
+        "fill_type": "text"
+      },
+      {
+        "id": "tag_set",
+        "text": "tag: current-tripleo",
+        "category": "tripleo_container_prepare",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "镜像 tag（RDO Trunk 流）",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 ContainerImagePrepare 是一个列表，每项有 push_destination 和 set",
+      "level_2": "📖 set 里的 namespace/name_prefix/name_suffix/tag 决定镜像全名（如 quay.io/tripleowallaby/openstack-nova-api:current-tripleo）；push_destination: true 让 prepare 把镜像推入 undercloud 本地 registry",
+      "level_3": "👀 ContainerImagePrepare: - push_destination: true / set: namespace: ... / tag: ...",
+      "level_4": "📝 正确答案：`ContainerImagePrepare:`、`push_destination: true`、`namespace: quay.io/tripleowallaby`、`tag: current-tripleo`"
+    },
+    "explanation": "ContainerImagePrepare 定义镜像从哪里拉、怎么打 tag、是否推到本地 registry；deploy 时用 -e 引入该文件，undercloud 本地 registry 就能为 overcloud 节点提供镜像。"
+  },
+  {
+    "id": "os-tripleo-016",
+    "title": "查看部署状态并运行验证",
+    "description": "查看 overcloud 部署状态，并列出、运行 pre-deployment 组的 TripleO 验证",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "hard",
+    "category": "tripleo_validation",
+    "subcategory": "TripleO",
+    "full_code": "openstack overcloud status\nopenstack tripleo validator list --group pre-deployment\nopenstack tripleo validator run --group pre-deployment",
+    "expected": "",
+    "points": [
+      {
+        "id": "overcloud_status",
+        "text": "overcloud status",
+        "category": "tripleo_validation",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "查看部署状态",
+        "fill_type": "text"
+      },
+      {
+        "id": "validator_list_1",
+        "text": "tripleo",
+        "category": "tripleo_validation",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "列出可用验证",
+        "fill_type": "text"
+      },
+      {
+        "id": "validator_list_2",
+        "text": "validator",
+        "category": "tripleo_validation",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "列出可用验证",
+        "fill_type": "text"
+      },
+      {
+        "id": "validator_list_3",
+        "text": "list",
+        "category": "tripleo_validation",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "列出可用验证",
+        "fill_type": "text"
+      },
+      {
+        "id": "validator_run_1",
+        "text": "run",
+        "category": "tripleo_validation",
+        "min_weight": "hard",
+        "weight_score": 1.8,
+        "hint": "运行验证",
+        "fill_type": "text"
+      },
+      {
+        "id": "group_opt",
+        "text": "--group pre-deployment",
+        "category": "tripleo_validation",
+        "min_weight": "hard",
+        "weight_score": 1.75,
+        "hint": "按验证组过滤（list 与 run 都用）",
+        "fill_type": "text",
+        "occurrence": 0
+      }
+    ],
+    "hints": {
+      "level_1": "💡 状态用 overcloud status，验证用 tripleo validator list/run",
+      "level_2": "📖 overcloud status 读取部署状态；tripleo validator list --group 列出某组验证，run --group 执行整组验证，pre-deployment 组在部署前运行",
+      "level_3": "👀 openstack tripleo validator list --group pre-deployment / openstack tripleo validator run --group pre-deployment",
+      "level_4": "📝 正确答案：`overcloud status`、`tripleo`、`validator`、`list`、`run`、`--group pre-deployment`"
+    },
+    "explanation": "overcloud status 显示 Heat 部署状态；tripleo-validations 提供部署前/后检查（如 check-ram、check-cpu），--group pre-deployment 一次运行该组的全部验证，提前发现环境问题。"
+  },
+  {
+    "id": "os-tripleo-017",
+    "title": "小版本更新流程",
+    "description": "先 update prepare，再用 --limit 逐节点执行 update run，最后 converge",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "hard",
+    "category": "tripleo_update",
+    "subcategory": "TripleO",
+    "full_code": "openstack overcloud update prepare --templates\nopenstack overcloud update run --limit controller-0\nopenstack overcloud update converge --templates",
+    "expected": "",
+    "points": [
+      {
+        "id": "update_prepare_1",
+        "text": "overcloud",
+        "category": "tripleo_update",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "刷新 plan 并准备更新 playbook",
+        "fill_type": "text"
+      },
+      {
+        "id": "update_prepare_2",
+        "text": "update",
+        "category": "tripleo_update",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "刷新 plan 并准备更新 playbook",
+        "fill_type": "text"
+      },
+      {
+        "id": "update_prepare_3",
+        "text": "prepare",
+        "category": "tripleo_update",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "刷新 plan 并准备更新 playbook",
+        "fill_type": "text"
+      },
+      {
+        "id": "update_run",
+        "text": "update run",
+        "category": "tripleo_update",
+        "min_weight": "hard",
+        "weight_score": 1.75,
+        "hint": "执行更新 playbook",
+        "fill_type": "text"
+      },
+      {
+        "id": "limit_opt",
+        "text": "--limit controller-0",
+        "category": "tripleo_update",
+        "min_weight": "hard",
+        "weight_score": 1.75,
+        "hint": "把执行限制在单个节点",
+        "fill_type": "text"
+      },
+      {
+        "id": "update_converge",
+        "text": "update converge",
+        "category": "tripleo_update",
+        "min_weight": "hard",
+        "weight_score": 1.75,
+        "hint": "收敛更新，恢复 noop 资源",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 小版本更新三步：prepare → run（--limit 逐节点）→ converge",
+      "level_2": "📖 update prepare 刷新部署 plan 并生成 update playbook；update run --limit 一次只更新一个节点（控制器逐个来）；update converge 取消 noop 并收敛 stack",
+      "level_3": "👀 openstack overcloud update run --limit controller-0",
+      "level_4": "📝 正确答案：`overcloud`、`update`、`prepare`、`update run`、`--limit controller-0`、`update converge`"
+    },
+    "explanation": "minor update 在 prepare 阶段生成 update_steps_playbook；run 用 --limit 把 Ansible 执行限制到单个节点，控制器逐个更新以保持服务可用；converge 阶段恢复被 noop 的资源并完成收敛。"
+  },
+  {
+    "id": "os-tripleo-018",
+    "title": "大版本升级流程",
+    "description": "先 upgrade prepare，再按节点用 --limit 执行 upgrade run，最后 converge",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "hard",
+    "category": "tripleo_upgrade",
+    "subcategory": "TripleO",
+    "full_code": "openstack overcloud upgrade prepare --templates\nopenstack overcloud upgrade run --limit controller-0\nopenstack overcloud upgrade run --limit compute-0\nopenstack overcloud upgrade converge --templates",
+    "expected": "",
+    "points": [
+      {
+        "id": "upgrade_prepare_1",
+        "text": "overcloud",
+        "category": "tripleo_upgrade",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "刷新 plan 并准备升级 playbook",
+        "fill_type": "text"
+      },
+      {
+        "id": "upgrade_prepare_2",
+        "text": "upgrade",
+        "category": "tripleo_upgrade",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "刷新 plan 并准备升级 playbook",
+        "fill_type": "text"
+      },
+      {
+        "id": "upgrade_prepare_3",
+        "text": "prepare",
+        "category": "tripleo_upgrade",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "刷新 plan 并准备升级 playbook",
+        "fill_type": "text"
+      },
+      {
+        "id": "upgrade_run",
+        "text": "upgrade run",
+        "category": "tripleo_upgrade",
+        "min_weight": "hard",
+        "weight_score": 1.75,
+        "hint": "执行升级 playbook",
+        "fill_type": "text",
+        "occurrence": 0
+      },
+      {
+        "id": "limit_compute",
+        "text": "--limit compute-0",
+        "category": "tripleo_upgrade",
+        "min_weight": "hard",
+        "weight_score": 1.75,
+        "hint": "先控制器后计算节点逐个升级",
+        "fill_type": "text"
+      },
+      {
+        "id": "upgrade_converge",
+        "text": "upgrade converge",
+        "category": "tripleo_upgrade",
+        "min_weight": "hard",
+        "weight_score": 1.75,
+        "hint": "收敛升级，恢复资源",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 大版本升级同样是 prepare → run（--limit 逐节点）→ converge",
+      "level_2": "📖 upgrade prepare 准备升级；upgrade run --limit 先升级 controller-0 等控制器，再升级 compute-0 等计算节点；upgrade converge 完成收敛",
+      "level_3": "👀 openstack overcloud upgrade run --limit controller-0，然后 --limit compute-0",
+      "level_4": "📝 正确答案：`overcloud`、`upgrade`、`prepare`、`upgrade run`、`--limit compute-0`、`upgrade converge`"
+    },
+    "explanation": "major upgrade 先升级 undercloud，再对 overcloud 执行 upgrade prepare；run --limit 按节点滚动升级（控制器优先且逐个进行），全部节点完成后 converge 恢复 stack 资源。"
+  },
+  {
+    "id": "os-tripleo-019",
+    "title": "扩缩容与节点删除",
+    "description": "用 node provision 重新置备实现扩缩容，再用 node delete 删除节点",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "hard",
+    "category": "tripleo_scale",
+    "subcategory": "TripleO",
+    "full_code": "openstack overcloud node provision --output ~/overcloud-baremetal-deployed.yaml ~/overcloud-baremetal-deploy.yaml\nopenstack overcloud deploy --templates -e ~/overcloud-baremetal-deployed.yaml\nopenstack overcloud node delete --stack overcloud compute-0",
+    "expected": "",
+    "points": [
+      {
+        "id": "node_provision_1",
+        "text": "overcloud",
+        "category": "tripleo_scale",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "重新置备节点实现扩缩容",
+        "fill_type": "text"
+      },
+      {
+        "id": "node_provision_2",
+        "text": "node",
+        "category": "tripleo_scale",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "重新置备节点实现扩缩容",
+        "fill_type": "text"
+      },
+      {
+        "id": "node_provision_3",
+        "text": "provision",
+        "category": "tripleo_scale",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "重新置备节点实现扩缩容",
+        "fill_type": "text"
+      },
+      {
+        "id": "output_file",
+        "text": "--output ~/overcloud-baremetal-deployed.yaml",
+        "category": "tripleo_scale",
+        "min_weight": "hard",
+        "weight_score": 1.75,
+        "hint": "生成/更新的已置备文件",
+        "fill_type": "text"
+      },
+      {
+        "id": "deploy_input",
+        "text": "~/overcloud-baremetal-deploy.yaml",
+        "category": "tripleo_scale",
+        "min_weight": "hard",
+        "weight_score": 1.75,
+        "hint": "修改角色数量后作为输入",
+        "fill_type": "text"
+      },
+      {
+        "id": "node_delete_1",
+        "text": "delete",
+        "category": "tripleo_scale",
+        "min_weight": "hard",
+        "weight_score": 0.6,
+        "hint": "从 stack 中删除指定节点",
+        "fill_type": "text"
+      },
+      {
+        "id": "node_delete_2",
+        "text": "--stack",
+        "category": "tripleo_scale",
+        "min_weight": "hard",
+        "weight_score": 0.6,
+        "hint": "从 stack 中删除指定节点",
+        "fill_type": "text"
+      },
+      {
+        "id": "node_delete_3",
+        "text": "compute-0",
+        "category": "tripleo_scale",
+        "min_weight": "hard",
+        "weight_score": 0.6,
+        "hint": "从 stack 中删除指定节点",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 扩容/缩容改节点数量文件后重跑 provision，删除节点用 node delete",
+      "level_2": "📖 修改 overcloud-baremetal-deploy.yaml 里的角色数量再运行 node provision 即可扩缩容，生成的 overcloud-baremetal-deployed.yaml 要重新用 -e 引入部署；node delete --stack 从 stack 中移除节点",
+      "level_3": "👀 openstack overcloud node provision --output ~/overcloud-baremetal-deployed.yaml ~/overcloud-baremetal-deploy.yaml",
+      "level_4": "📝 正确答案：`overcloud`、`node`、`provision`、`--output ~/overcloud-baremetal-deployed.yaml`、`~/overcloud-baremetal-deploy.yaml`、`delete`、`--stack`、`compute-0`"
+    },
+    "explanation": "扩缩容通过修改 baremetal 部署文件的角色数量后重跑 node provision 实现，随后重新 deploy 让 stack 使用新的 deployed 文件；删除节点用 node delete（--stack 指定 stack，节点名或 UUID 作为参数）。"
+  },
+  {
+    "id": "os-tripleo-020",
+    "title": "计划、配置导出与排障",
+    "description": "切换 overcloudrc，管理部署计划，下载 config-download 配置并导出 stack 数据",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "expert",
+    "category": "tripleo_plan",
+    "subcategory": "TripleO",
+    "full_code": "source ~/overcloudrc\nopenstack overcloud plan list\nopenstack overcloud plan create overcloud\nopenstack overcloud plan delete overcloud\nopenstack overcloud config download --name overcloud\nansible-playbook -i ~/config-download/overcloud/tripleo-ansible-inventory.yaml ~/config-download/overcloud/deploy_steps_playbook.yaml\nopenstack overcloud export --config-download-dir /var/lib/mistral/overcloud\nopenstack overcloud failures",
+    "expected": "",
+    "points": [
+      {
+        "id": "overcloudrc",
+        "text": "source ~/overcloudrc",
+        "category": "tripleo_ops",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "切换到 overcloud 的凭据",
+        "fill_type": "text"
+      },
+      {
+        "id": "plan_create_1",
+        "text": "overcloud",
+        "category": "tripleo_plan",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "创建名为 overcloud 的部署计划",
+        "fill_type": "text",
+        "occurrence": 2
+      },
+      {
+        "id": "plan_create_2",
+        "text": "plan",
+        "category": "tripleo_plan",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "创建名为 overcloud 的部署计划",
+        "fill_type": "text",
+        "occurrence": 1
+      },
+      {
+        "id": "plan_create_3",
+        "text": "create",
+        "category": "tripleo_plan",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "创建名为 overcloud 的部署计划",
+        "fill_type": "text"
+      },
+      {
+        "id": "config_download_1",
+        "text": "config",
+        "category": "tripleo_config",
+        "min_weight": "hard",
+        "weight_score": 0.6,
+        "hint": "下载 config-download 配置到本地",
+        "fill_type": "text"
+      },
+      {
+        "id": "config_download_2",
+        "text": "download",
+        "category": "tripleo_config",
+        "min_weight": "hard",
+        "weight_score": 0.6,
+        "hint": "下载 config-download 配置到本地",
+        "fill_type": "text"
+      },
+      {
+        "id": "config_download_3",
+        "text": "--name",
+        "category": "tripleo_config",
+        "min_weight": "hard",
+        "weight_score": 0.6,
+        "hint": "下载 config-download 配置到本地",
+        "fill_type": "text"
+      },
+      {
+        "id": "overcloud_export_1",
+        "text": "export",
+        "category": "tripleo_export",
+        "min_weight": "expert",
+        "weight_score": 0.7,
+        "hint": "导出 stack 数据供其他 stack 导入",
+        "fill_type": "text"
+      },
+      {
+        "id": "overcloud_export_2",
+        "text": "--config-download-dir",
+        "category": "tripleo_export",
+        "min_weight": "expert",
+        "weight_score": 0.7,
+        "hint": "导出 stack 数据供其他 stack 导入",
+        "fill_type": "text"
+      },
+      {
+        "id": "overcloud_export_3",
+        "text": "/var/lib/mistral/overcloud",
+        "category": "tripleo_export",
+        "min_weight": "expert",
+        "weight_score": 0.7,
+        "hint": "导出 stack 数据供其他 stack 导入",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 overcloudrc 切换凭据，plan 管理计划，config download 取回 Ansible 配置",
+      "level_2": "📖 source ~/overcloudrc 设置 OS_* 环境变量指向 overcloud；plan list/create/delete 管理部署计划；config download --name 把 config-download 文件下载到本地，之后可用 ansible-playbook 重放；overcloud export 导出 stack 信息；overcloud failures 查看部署失败",
+      "level_3": "👀 openstack overcloud config download --name overcloud / openstack overcloud export --config-download-dir /var/lib/mistral/overcloud",
+      "level_4": "📝 正确答案：`source ~/overcloudrc`、`overcloud`、`plan`、`create`、`config`、`download`、`--name`、`export`、`--config-download-dir`、`/var/lib/mistral/overcloud`"
+    },
+    "explanation": "overcloudrc 里的 OS_* 变量让 CLI 连到 overcloud；plan 命令管理部署计划；config download 取回 config-download 生成的 Ansible 文件（可配合 ansible-playbook -i tripleo-ansible-inventory.yaml 重放）；export 导出 stack 数据供其他 stack 导入；overcloud failures 列出部署失败的主机与资源。"
+  }
+]

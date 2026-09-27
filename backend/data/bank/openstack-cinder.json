@@ -1,0 +1,1777 @@
+[
+  {
+    "id": "os-cinder-001",
+    "title": "创建块存储卷",
+    "description": "用 openstack CLI 创建普通卷与多挂载卷，指定大小、类型和可用域",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "beginner",
+    "category": "volume_create",
+    "subcategory": "Cinder",
+    "full_code": "openstack volume create --size 20 --type ssd --availability-zone nova my-volume\nopenstack volume create --size 20 --type ssd --multi-attach shared-volume",
+    "expected": "",
+    "points": [
+      {
+        "id": "create_cmd",
+        "text": "volume create",
+        "category": "volume_create",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "创建卷的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "size_opt",
+        "text": "--size 20",
+        "category": "volume_create",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "卷容量，单位 GiB",
+        "fill_type": "text"
+      },
+      {
+        "id": "az_opt",
+        "text": "--availability-zone nova",
+        "category": "volume_scheduling",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "把卷调度到指定可用域",
+        "fill_type": "text"
+      },
+      {
+        "id": "multi_attach_opt",
+        "text": "--multi-attach",
+        "category": "volume_create",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "允许多台虚机同时挂载（需后端与卷类型支持）",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 创建卷用 volume create，大小/类型/可用域/多挂载都是它的选项",
+      "level_2": "📖 cinder-scheduler 按卷类型和可用域把卷调度到后端；--multi-attach 允许卷同时挂到多台虚机（依赖后端支持）",
+      "level_3": "👀 openstack volume create --size ... --availability-zone ...",
+      "level_4": "📝 正确答案：`volume create`、`--size 20`、`--availability-zone nova`、`--multi-attach`"
+    },
+    "explanation": "volume create 由 cinder-scheduler 依据卷类型与可用域选择后端；--size 为 GiB，--multi-attach 允许卷被多台虚机同时挂载。"
+  },
+  {
+    "id": "os-cinder-002",
+    "title": "列出与查看卷详情",
+    "description": "跨项目列出卷并查看指定卷的完整属性",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "beginner",
+    "category": "volume_query",
+    "subcategory": "Cinder",
+    "full_code": "openstack volume list --all-projects --long\nopenstack volume show my-volume",
+    "expected": "",
+    "points": [
+      {
+        "id": "list_cmd",
+        "text": "volume list",
+        "category": "volume_query",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "列出卷的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "list_flags",
+        "text": "--all-projects --long",
+        "category": "volume_query",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "跨项目 + 显示类型/大小/挂载点等详情列",
+        "fill_type": "text"
+      },
+      {
+        "id": "show_cmd_1",
+        "text": "volume",
+        "category": "volume_query",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "查看单个卷的全部属性",
+        "fill_type": "text",
+        "occurrence": 1
+      },
+      {
+        "id": "show_cmd_2",
+        "text": "show",
+        "category": "volume_query",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "查看单个卷的全部属性",
+        "fill_type": "text"
+      },
+      {
+        "id": "show_cmd_3",
+        "text": "my-volume",
+        "category": "volume_query",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "查看单个卷的全部属性",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 列表用 volume list，详情用 volume show",
+      "level_2": "📖 volume list 的 --long 显示类型、大小、挂载点等列，--all-projects 是管理员跨项目视角；show 输出 attachments、volume_type、multiattach 等完整字段",
+      "level_3": "👀 openstack volume list --all-projects --long",
+      "level_4": "📝 正确答案：`volume list`、`--all-projects --long`、`volume`、`show`、`my-volume`"
+    },
+    "explanation": "list 汇总所有卷的状态与挂载信息，show 输出单个卷的全部字段；排查时先用 list 定位，再用 show 看细节。"
+  },
+  {
+    "id": "os-cinder-003",
+    "title": "cinder.conf 启用多后端",
+    "description": "在 [DEFAULT] 中声明启用的后端并设置默认卷类型",
+    "exercise_type": "config",
+    "tech_stack": "openstack",
+    "weight": "beginner",
+    "category": "cinder_conf_default",
+    "subcategory": "Cinder",
+    "full_code": "[DEFAULT]\nenabled_backends = lvm-ssd,ceph-hdd\ndefault_volume_type = lvm-ssd",
+    "expected": "",
+    "points": [
+      {
+        "id": "enabled_backends_opt",
+        "text": "enabled_backends",
+        "category": "cinder_conf_default",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "声明要加载哪些后端",
+        "fill_type": "text"
+      },
+      {
+        "id": "backend_list",
+        "text": "lvm-ssd,ceph-hdd",
+        "category": "cinder_conf_default",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "逗号分隔的后端段名列表",
+        "fill_type": "text"
+      },
+      {
+        "id": "default_type_1",
+        "text": "default_volume_type",
+        "category": "cinder_conf_default",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "未指定 --type 时使用的默认卷类型",
+        "fill_type": "text"
+      },
+      {
+        "id": "default_type_2",
+        "text": "lvm-ssd",
+        "category": "cinder_conf_default",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "未指定 --type 时使用的默认卷类型",
+        "fill_type": "text",
+        "occurrence": 1
+      }
+    ],
+    "hints": {
+      "level_1": "💡 启用后端用 enabled_backends，默认类型用 default_volume_type",
+      "level_2": "📖 enabled_backends 列出要加载的后端段名，每个名字都必须在 cinder.conf 里有同名 section 并配 volume_driver；创建卷不指定类型时使用 default_volume_type",
+      "level_3": "👀 [DEFAULT] 段下：enabled_backends = ...，default_volume_type = ...",
+      "level_4": "📝 正确答案：`enabled_backends`、`lvm-ssd,ceph-hdd`、`default_volume_type`、`lvm-ssd`"
+    },
+    "explanation": "enabled_backends 中的每个名字对应一个后端 section（如 [lvm-ssd]、[ceph-hdd]）；default_volume_type 决定未指定类型时创建卷所用的卷类型。"
+  },
+  {
+    "id": "os-cinder-004",
+    "title": "卷快照的创建、查看与删除",
+    "description": "对在用卷打快照并管理快照生命周期",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "easy",
+    "category": "volume_snapshot",
+    "subcategory": "Cinder",
+    "full_code": "openstack volume snapshot create --volume my-volume --force my-snap\nopenstack volume snapshot list --all-projects --long\nopenstack volume snapshot delete --force my-snap",
+    "expected": "",
+    "points": [
+      {
+        "id": "snap_create_1",
+        "text": "volume",
+        "category": "volume_snapshot",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "创建快照的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "snap_create_2",
+        "text": "snapshot",
+        "category": "volume_snapshot",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "创建快照的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "snap_create_3",
+        "text": "create",
+        "category": "volume_snapshot",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "创建快照的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "snap_volume_force_1",
+        "text": "--volume",
+        "category": "volume_snapshot",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "指定源卷并允许对已挂载卷打快照",
+        "fill_type": "text"
+      },
+      {
+        "id": "snap_volume_force_2",
+        "text": "my-volume",
+        "category": "volume_snapshot",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "指定源卷并允许对已挂载卷打快照",
+        "fill_type": "text"
+      },
+      {
+        "id": "snap_volume_force_3",
+        "text": "--force",
+        "category": "volume_snapshot",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "指定源卷并允许对已挂载卷打快照",
+        "fill_type": "text"
+      },
+      {
+        "id": "snap_list_1",
+        "text": "list",
+        "category": "volume_snapshot",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "管理员跨项目查看快照",
+        "fill_type": "text"
+      },
+      {
+        "id": "snap_list_2",
+        "text": "--all-projects",
+        "category": "volume_snapshot",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "管理员跨项目查看快照",
+        "fill_type": "text"
+      },
+      {
+        "id": "snap_delete_1",
+        "text": "delete",
+        "category": "volume_snapshot",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "删除快照的子命令",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 快照三连：create / list / delete",
+      "level_2": "📖 快照记录卷在某个时间点的数据；--force 允许对 in-use（已挂载）卷打快照，旧微版本才需要",
+      "level_3": "👀 openstack volume snapshot create --volume ... --force ...",
+      "level_4": "📝 正确答案：`volume`、`snapshot`、`create`、`--volume`、`my-volume`、`--force`、`list`、`--all-projects`、`delete`"
+    },
+    "explanation": "快照是 Cinder 层面的时间点副本，可用于快速回滚或派生新卷；API 3.66 之后对已挂载卷打快照不再需要 --force。"
+  },
+  {
+    "id": "os-cinder-005",
+    "title": "配置 LVM 后端",
+    "description": "在 cinder.conf 中配置 LVM 卷驱动与精简置备",
+    "exercise_type": "config",
+    "tech_stack": "openstack",
+    "weight": "easy",
+    "category": "cinder_conf_lvm",
+    "subcategory": "Cinder",
+    "full_code": "[lvm-ssd]\nvolume_driver = cinder.volume.drivers.lvm.LVMVolumeDriver\nvolume_group = cinder-volumes\nlvm_type = thin",
+    "expected": "",
+    "points": [
+      {
+        "id": "lvm_driver_1",
+        "text": "volume_driver",
+        "category": "cinder_conf_lvm",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "LVM 卷驱动的完整类路径",
+        "fill_type": "text"
+      },
+      {
+        "id": "lvm_driver_2",
+        "text": "cinder.volume.drivers.lvm.LVMVolumeDriver",
+        "category": "cinder_conf_lvm",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "LVM 卷驱动的完整类路径",
+        "fill_type": "text"
+      },
+      {
+        "id": "lvm_vg_1",
+        "text": "volume_group",
+        "category": "cinder_conf_lvm",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "用于切 LV 的卷组名",
+        "fill_type": "text"
+      },
+      {
+        "id": "lvm_vg_2",
+        "text": "cinder-volumes",
+        "category": "cinder_conf_lvm",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "用于切 LV 的卷组名",
+        "fill_type": "text"
+      },
+      {
+        "id": "lvm_thin_1",
+        "text": "lvm_type",
+        "category": "cinder_conf_lvm",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "启用 thin-provisioning",
+        "fill_type": "text"
+      },
+      {
+        "id": "lvm_thin_2",
+        "text": "thin",
+        "category": "cinder_conf_lvm",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "启用 thin-provisioning",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 LVM 后端三件套：volume_driver / volume_group / lvm_type",
+      "level_2": "📖 LVMVolumeDriver 在本地 VG 上切 LV 当卷；lvm_type=thin 用 thin-provisioning 超分，要求 VG 内已有 thin pool",
+      "level_3": "👀 [lvm-ssd] 段：volume_driver = cinder.volume.drivers.lvm.LVMVolumeDriver",
+      "level_4": "📝 正确答案：`volume_driver`、`cinder.volume.drivers.lvm.LVMVolumeDriver`、`volume_group`、`cinder-volumes`、`lvm_type`、`thin`"
+    },
+    "explanation": "段名要与 enabled_backends 中的名字一致；volume_group 指向预先创建的卷组（如 cinder-volumes），lvm_type=thin 启用精简置备。"
+  },
+  {
+    "id": "os-cinder-006",
+    "title": "挂载与卸载卷",
+    "description": "把卷挂到虚机指定设备并安全卸载",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "easy",
+    "category": "volume_attach",
+    "subcategory": "Cinder",
+    "full_code": "openstack server add volume --device /dev/vdb my-server my-volume\nopenstack server remove volume my-server my-volume",
+    "expected": "",
+    "points": [
+      {
+        "id": "attach_cmd_1",
+        "text": "server",
+        "category": "volume_attach",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "挂载卷并指定虚机内设备名",
+        "fill_type": "text"
+      },
+      {
+        "id": "attach_cmd_2",
+        "text": "add",
+        "category": "volume_attach",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "挂载卷并指定虚机内设备名",
+        "fill_type": "text"
+      },
+      {
+        "id": "attach_cmd_3",
+        "text": "volume",
+        "category": "volume_attach",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "挂载卷并指定虚机内设备名",
+        "fill_type": "text"
+      },
+      {
+        "id": "attach_cmd_4",
+        "text": "--device",
+        "category": "volume_attach",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "挂载卷并指定虚机内设备名",
+        "fill_type": "text"
+      },
+      {
+        "id": "attach_cmd_5",
+        "text": "/dev/vdb",
+        "category": "volume_attach",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "挂载卷并指定虚机内设备名",
+        "fill_type": "text"
+      },
+      {
+        "id": "detach_cmd_1",
+        "text": "remove",
+        "category": "volume_attach",
+        "min_weight": "easy",
+        "weight_score": 1.0,
+        "hint": "卸载卷的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "server_name",
+        "text": "my-server",
+        "category": "volume_attach",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "卷要挂到的虚机名",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 挂载/卸载走 server add/remove volume，设备名用 --device",
+      "level_2": "📖 挂载本质是 Nova 让 hypervisor 把卷的块设备接入虚机；/dev/vdb 是虚机内看到的设备名，卸载前先在虚机内 umount",
+      "level_3": "👀 openstack server add volume --device /dev/vdb ...",
+      "level_4": "📝 正确答案：`server`、`add`、`volume`、`--device`、`/dev/vdb`、`remove`、`my-server`"
+    },
+    "explanation": "add volume 触发 attach，卷变为 in-use；remove volume 触发 detach，卷回到 available。Linux 中 vdb 对应第二块 virtio 盘。"
+  },
+  {
+    "id": "os-cinder-007",
+    "title": "对接 Glance 镜像服务",
+    "description": "配置 cinder 访问 glance 的地址与 API 版本",
+    "exercise_type": "config",
+    "tech_stack": "openstack",
+    "weight": "easy",
+    "category": "cinder_conf_glance",
+    "subcategory": "Cinder",
+    "full_code": "[DEFAULT]\nglance_api_servers = http://controller:9292\nglance_api_version = 2\nglance_num_retries = 3",
+    "expected": "",
+    "points": [
+      {
+        "id": "glance_servers_1",
+        "text": "glance_api_servers",
+        "category": "cinder_conf_glance",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "Glance API 端点",
+        "fill_type": "text"
+      },
+      {
+        "id": "glance_servers_2",
+        "text": "http://controller:9292",
+        "category": "cinder_conf_glance",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "Glance API 端点",
+        "fill_type": "text"
+      },
+      {
+        "id": "glance_version_1",
+        "text": "glance_api_version",
+        "category": "cinder_conf_glance",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "使用 Glance v2 API",
+        "fill_type": "text"
+      },
+      {
+        "id": "glance_version_2",
+        "text": "2",
+        "category": "cinder_conf_glance",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "使用 Glance v2 API",
+        "fill_type": "text",
+        "occurrence": 2
+      },
+      {
+        "id": "glance_retries_1",
+        "text": "glance_num_retries",
+        "category": "cinder_conf_glance",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "访问 Glance 失败时的重试次数",
+        "fill_type": "text"
+      },
+      {
+        "id": "glance_retries_2",
+        "text": "3",
+        "category": "cinder_conf_glance",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "访问 Glance 失败时的重试次数",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 三个 glance_* 指令：地址、版本、重试次数",
+      "level_2": "📖 创建 --image 卷或卷转镜像时 cinder 要调 Glance；glance_api_servers 写端点，glance_api_version=2 使用 v2 API",
+      "level_3": "👀 [DEFAULT] 段：glance_api_servers = http://controller:9292",
+      "level_4": "📝 正确答案：`glance_api_servers`、`http://controller:9292`、`glance_api_version`、`2`、`glance_num_retries`、`3`"
+    },
+    "explanation": "cinder-volume 在 from-image 创建卷、上传卷为镜像时需要访问 Glance，显式配置端点可避免依赖 service catalog 解析。"
+  },
+  {
+    "id": "os-cinder-008",
+    "title": "在线扩容卷",
+    "description": "把卷扩容到更大容量并确认挂载状态",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "easy",
+    "category": "volume_extend",
+    "subcategory": "Cinder",
+    "full_code": "openstack volume set --size 50 my-volume\nopenstack volume list --status in-use",
+    "expected": "",
+    "points": [
+      {
+        "id": "extend_size_1",
+        "text": "volume",
+        "category": "volume_extend",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "扩容卷到 50GiB",
+        "fill_type": "text"
+      },
+      {
+        "id": "extend_size_2",
+        "text": "set",
+        "category": "volume_extend",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "扩容卷到 50GiB",
+        "fill_type": "text"
+      },
+      {
+        "id": "extend_size_3",
+        "text": "--size",
+        "category": "volume_extend",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "扩容卷到 50GiB",
+        "fill_type": "text"
+      },
+      {
+        "id": "extend_size_4",
+        "text": "50",
+        "category": "volume_extend",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "扩容卷到 50GiB",
+        "fill_type": "text"
+      },
+      {
+        "id": "volume_name",
+        "text": "my-volume",
+        "category": "volume_extend",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "被扩容的卷名",
+        "fill_type": "text"
+      },
+      {
+        "id": "status_filter_1",
+        "text": "list",
+        "category": "volume_extend",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "按状态过滤，确认卷仍在使用中",
+        "fill_type": "text"
+      },
+      {
+        "id": "status_filter_2",
+        "text": "--status",
+        "category": "volume_extend",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "按状态过滤，确认卷仍在使用中",
+        "fill_type": "text"
+      },
+      {
+        "id": "status_filter_3",
+        "text": "in-use",
+        "category": "volume_extend",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "按状态过滤，确认卷仍在使用中",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 扩容是 volume set --size；in-use 卷也能扩",
+      "level_2": "📖 Cinder 通过 os-extend 把卷扩到新容量（只能变大）；驱动支持时挂载中（in-use）即可在线扩容，扩完虚机内还需 growpart/resize2fs",
+      "level_3": "👀 openstack volume set --size 50 my-volume",
+      "level_4": "📝 正确答案：`volume`、`set`、`--size`、`50`、`my-volume`、`list`、`--status`、`in-use`"
+    },
+    "explanation": "volume set --size 触发在线扩容，卷保持 in-use；扩容后要在虚机内扩展分区和文件系统才能真正用上新增空间。"
+  },
+  {
+    "id": "os-cinder-009",
+    "title": "创建私有卷类型并授权",
+    "description": "建一个绑定 LVM 后端的私有卷类型，授权给指定项目并更新描述",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "medium",
+    "category": "volume_type",
+    "subcategory": "Cinder",
+    "full_code": "openstack volume type create --private --property volume_backend_name=lvm-ssd gold-type\nopenstack volume type access add --project demo gold-type\nopenstack volume type set --description high-performance gold-type",
+    "expected": "",
+    "points": [
+      {
+        "id": "type_create_private_1",
+        "text": "volume",
+        "category": "volume_type",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "创建仅创建者可见的私有卷类型",
+        "fill_type": "text"
+      },
+      {
+        "id": "type_create_private_2",
+        "text": "type",
+        "category": "volume_type",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "创建仅创建者可见的私有卷类型",
+        "fill_type": "text"
+      },
+      {
+        "id": "type_create_private_3",
+        "text": "create",
+        "category": "volume_type",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "创建仅创建者可见的私有卷类型",
+        "fill_type": "text"
+      },
+      {
+        "id": "type_create_private_4",
+        "text": "--private",
+        "category": "volume_type",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "创建仅创建者可见的私有卷类型",
+        "fill_type": "text"
+      },
+      {
+        "id": "type_access_add_1",
+        "text": "access",
+        "category": "volume_type",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "把私有类型授权给项目 demo",
+        "fill_type": "text"
+      },
+      {
+        "id": "type_access_add_2",
+        "text": "add",
+        "category": "volume_type",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "把私有类型授权给项目 demo",
+        "fill_type": "text"
+      },
+      {
+        "id": "type_access_add_3",
+        "text": "--project",
+        "category": "volume_type",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "把私有类型授权给项目 demo",
+        "fill_type": "text"
+      },
+      {
+        "id": "type_access_add_4",
+        "text": "demo",
+        "category": "volume_type",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "把私有类型授权给项目 demo",
+        "fill_type": "text"
+      },
+      {
+        "id": "type_set_desc_1",
+        "text": "set",
+        "category": "volume_type",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "更新卷类型描述",
+        "fill_type": "text"
+      },
+      {
+        "id": "type_set_desc_2",
+        "text": "--description",
+        "category": "volume_type",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "更新卷类型描述",
+        "fill_type": "text"
+      },
+      {
+        "id": "type_set_desc_3",
+        "text": "high-performance",
+        "category": "volume_type",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "更新卷类型描述",
+        "fill_type": "text"
+      },
+      {
+        "id": "type_name",
+        "text": "gold-type",
+        "category": "volume_type",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "卷类型名",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 私有类型用 --private，再 access add 授权给项目",
+      "level_2": "📖 卷类型的 property volume_backend_name 决定调度到哪个后端；--private 类型仅创建者可见，需 access add 授权其他项目（新版 OSC 也可用 volume type set --project）",
+      "level_3": "👀 openstack volume type create --private --property volume_backend_name=lvm-ssd gold-type",
+      "level_4": "📝 正确答案：`volume`、`type`、`create`、`--private`、`access`、`add`、`--project`、`demo`、`set`、`--description`、`high-performance`、`gold-type`"
+    },
+    "explanation": "卷类型是调度依据：volume_backend_name 匹配后端；--private + access add 实现只对指定项目开放的私有类型。"
+  },
+  {
+    "id": "os-cinder-010",
+    "title": "创建并绑定 QoS 限速",
+    "description": "为前端限速创建 QoS 规格并关联到卷类型",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "medium",
+    "category": "volume_qos",
+    "subcategory": "Cinder",
+    "full_code": "openstack volume qos create --consumer front-end high-iops --property read_iops_sec=20000\nopenstack volume qos associate high-iops gold-type",
+    "expected": "",
+    "points": [
+      {
+        "id": "qos_create_1",
+        "text": "volume",
+        "category": "volume_qos",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "创建前端限速的 QoS 规格",
+        "fill_type": "text"
+      },
+      {
+        "id": "qos_create_2",
+        "text": "qos",
+        "category": "volume_qos",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "创建前端限速的 QoS 规格",
+        "fill_type": "text"
+      },
+      {
+        "id": "qos_create_3",
+        "text": "create",
+        "category": "volume_qos",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "创建前端限速的 QoS 规格",
+        "fill_type": "text"
+      },
+      {
+        "id": "qos_create_4",
+        "text": "--consumer",
+        "category": "volume_qos",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "创建前端限速的 QoS 规格",
+        "fill_type": "text"
+      },
+      {
+        "id": "qos_create_5",
+        "text": "front-end",
+        "category": "volume_qos",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "创建前端限速的 QoS 规格",
+        "fill_type": "text"
+      },
+      {
+        "id": "qos_property",
+        "text": "--property read_iops_sec=20000",
+        "category": "volume_qos",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "限制每秒读 IOPS",
+        "fill_type": "text"
+      },
+      {
+        "id": "qos_associate_1",
+        "text": "associate",
+        "category": "volume_qos",
+        "min_weight": "medium",
+        "weight_score": 0.8,
+        "hint": "把 QoS 绑到卷类型",
+        "fill_type": "text"
+      },
+      {
+        "id": "qos_associate_2",
+        "text": "high-iops",
+        "category": "volume_qos",
+        "min_weight": "medium",
+        "weight_score": 0.8,
+        "hint": "把 QoS 绑到卷类型",
+        "fill_type": "text",
+        "occurrence": 1
+      },
+      {
+        "id": "qos_type",
+        "text": "gold-type",
+        "category": "volume_qos",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "目标卷类型",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 qos create 建规格，qos associate 绑到卷类型",
+      "level_2": "📖 --consumer 指定限速生效位置：front-end 由 hypervisor/QEMU 限（如 read_iops_sec），back-end 由存储后端限；QoS 通过卷类型关联到卷",
+      "level_3": "👀 openstack volume qos create --consumer front-end high-iops",
+      "level_4": "📝 正确答案：`volume`、`qos`、`create`、`--consumer`、`front-end`、`--property read_iops_sec=20000`、`associate`、`high-iops`、`gold-type`"
+    },
+    "explanation": "QoS 规格本身不生效，必须 associate 到卷类型；consumer=front-end 的 IOPS 限制在虚机侧执行。"
+  },
+  {
+    "id": "os-cinder-011",
+    "title": "卷备份的创建、查看与恢复",
+    "description": "创建增量备份、跨项目查看并恢复到已有卷",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "medium",
+    "category": "volume_backup",
+    "subcategory": "Cinder",
+    "full_code": "openstack volume backup create --name vol-backup-01 --incremental --container cinder-backups my-volume\nopenstack volume backup list --all-projects\nopenstack volume backup restore --force vol-backup-01 my-volume",
+    "expected": "",
+    "points": [
+      {
+        "id": "backup_create_1",
+        "text": "volume",
+        "category": "volume_backup",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "创建具名备份",
+        "fill_type": "text"
+      },
+      {
+        "id": "backup_create_2",
+        "text": "backup",
+        "category": "volume_backup",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "创建具名备份",
+        "fill_type": "text"
+      },
+      {
+        "id": "backup_create_3",
+        "text": "create",
+        "category": "volume_backup",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "创建具名备份",
+        "fill_type": "text"
+      },
+      {
+        "id": "backup_create_4",
+        "text": "--name",
+        "category": "volume_backup",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "创建具名备份",
+        "fill_type": "text"
+      },
+      {
+        "id": "backup_create_5",
+        "text": "vol-backup-01",
+        "category": "volume_backup",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "创建具名备份",
+        "fill_type": "text"
+      },
+      {
+        "id": "backup_incremental",
+        "text": "--incremental",
+        "category": "volume_backup",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "只传上次备份后的变化量",
+        "fill_type": "text"
+      },
+      {
+        "id": "backup_list_1",
+        "text": "list",
+        "category": "volume_backup",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "列出备份的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "backup_restore_1",
+        "text": "restore",
+        "category": "volume_backup",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "恢复到已有卷",
+        "fill_type": "text"
+      },
+      {
+        "id": "backup_restore_2",
+        "text": "--force",
+        "category": "volume_backup",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "恢复到已有卷",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 备份 create/list/restore；增量用 --incremental",
+      "level_2": "📖 备份存到 backup 后端（Swift/Ceph/NFS）；--incremental 只传上次备份后的变化；restore --force 把备份写回已有卷",
+      "level_3": "👀 openstack volume backup create --name vol-backup-01 --incremental ...",
+      "level_4": "📝 正确答案：`volume`、`backup`、`create`、`--name`、`vol-backup-01`、`--incremental`、`list`、`restore`、`--force`"
+    },
+    "explanation": "备份是独立于卷的持久化数据，存到 backup 后端后可跨存储恢复；恢复时目标卷容量必须不小于备份。"
+  },
+  {
+    "id": "os-cinder-012",
+    "title": "配置 Ceph RBD 后端",
+    "description": "在 cinder.conf 中配置 Ceph 块存储驱动与认证",
+    "exercise_type": "config",
+    "tech_stack": "openstack",
+    "weight": "medium",
+    "category": "cinder_conf_ceph",
+    "subcategory": "Cinder",
+    "full_code": "[ceph-hdd]\nvolume_driver = cinder.volume.drivers.rbd.RBDDriver\nrbd_pool = cinder-volumes\nrbd_user = cinder\nrbd_secret_uuid = 4b6c1d2e-3f4a-5b6c-7d8e-9f0a1b2c3d4e",
+    "expected": "",
+    "points": [
+      {
+        "id": "rbd_driver_1",
+        "text": "volume_driver",
+        "category": "cinder_conf_ceph",
+        "min_weight": "medium",
+        "weight_score": 0.8,
+        "hint": "Ceph RBD 驱动的完整类路径",
+        "fill_type": "text"
+      },
+      {
+        "id": "rbd_driver_2",
+        "text": "cinder.volume.drivers.rbd.RBDDriver",
+        "category": "cinder_conf_ceph",
+        "min_weight": "medium",
+        "weight_score": 0.8,
+        "hint": "Ceph RBD 驱动的完整类路径",
+        "fill_type": "text"
+      },
+      {
+        "id": "rbd_pool_1",
+        "text": "rbd_pool",
+        "category": "cinder_conf_ceph",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "存放卷的 Ceph 存储池",
+        "fill_type": "text"
+      },
+      {
+        "id": "rbd_pool_2",
+        "text": "cinder-volumes",
+        "category": "cinder_conf_ceph",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "存放卷的 Ceph 存储池",
+        "fill_type": "text"
+      },
+      {
+        "id": "rbd_user_1",
+        "text": "rbd_user",
+        "category": "cinder_conf_ceph",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "访问 Ceph 的 cephx 用户名",
+        "fill_type": "text"
+      },
+      {
+        "id": "rbd_user_2",
+        "text": "cinder",
+        "category": "cinder_conf_ceph",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "访问 Ceph 的 cephx 用户名",
+        "fill_type": "text",
+        "occurrence": 2
+      },
+      {
+        "id": "rbd_secret_1",
+        "text": "rbd_secret_uuid",
+        "category": "cinder_conf_ceph",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "libvirt 中 cephx key 对应的 secret UUID",
+        "fill_type": "text"
+      },
+      {
+        "id": "rbd_secret_2",
+        "text": "4b6c1d2e-3f4a-5b6c-7d8e-9f0a1b2c3d4e",
+        "category": "cinder_conf_ceph",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "libvirt 中 cephx key 对应的 secret UUID",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 Ceph 后端四件套：driver / pool / user / secret_uuid",
+      "level_2": "📖 RBDDriver 直接操作 Ceph RBD 镜像；rbd_secret_uuid 对应 libvirt 中存放 cephx key 的 secret，挂载时 nova 需要它",
+      "level_3": "👀 [ceph-hdd] 段：volume_driver = cinder.volume.drivers.rbd.RBDDriver",
+      "level_4": "📝 正确答案：`volume_driver`、`cinder.volume.drivers.rbd.RBDDriver`、`rbd_pool`、`cinder-volumes`、`rbd_user`、`cinder`、`rbd_secret_uuid`、`4b6c1d2e-3f4a-5b6c-7d8e-9f0a1b2c3d4e`"
+    },
+    "explanation": "段名需与 enabled_backends 一致；rbd_pool 指定存储池，rbd_user 与 rbd_secret_uuid 供 cinder、nova 访问 Ceph 集群时认证。"
+  },
+  {
+    "id": "os-cinder-013",
+    "title": "调度过滤器与 Keystone 认证",
+    "description": "配置 scheduler_default_filters 并让 cinder 通过 keystone_authtoken 认证",
+    "exercise_type": "config",
+    "tech_stack": "openstack",
+    "weight": "medium",
+    "category": "cinder_conf_auth",
+    "subcategory": "Cinder",
+    "full_code": "[DEFAULT]\nscheduler_default_filters = AvailabilityZoneFilter,CapacityFilter,CapabilitiesFilter\n\n[keystone_authtoken]\nauth_url = http://controller:5000/v3\nauth_type = password\nusername = cinder\npassword = CINDER_PASS\nproject_name = service\nuser_domain_name = Default\nproject_domain_name = Default",
+    "expected": "",
+    "points": [
+      {
+        "id": "scheduler_filters_1",
+        "text": "scheduler_default_filters",
+        "category": "cinder_conf_scheduler",
+        "min_weight": "medium",
+        "weight_score": 0.8,
+        "hint": "cinder-scheduler 默认过滤链",
+        "fill_type": "text"
+      },
+      {
+        "id": "scheduler_filters_2",
+        "text": "AvailabilityZoneFilter,CapacityFilter,CapabilitiesFilter",
+        "category": "cinder_conf_scheduler",
+        "min_weight": "medium",
+        "weight_score": 0.8,
+        "hint": "cinder-scheduler 默认过滤链",
+        "fill_type": "text"
+      },
+      {
+        "id": "auth_url_1",
+        "text": "auth_url",
+        "category": "cinder_conf_auth",
+        "min_weight": "medium",
+        "weight_score": 0.8,
+        "hint": "Keystone v3 认证端点",
+        "fill_type": "text"
+      },
+      {
+        "id": "auth_url_2",
+        "text": "http://controller:5000/v3",
+        "category": "cinder_conf_auth",
+        "min_weight": "medium",
+        "weight_score": 0.8,
+        "hint": "Keystone v3 认证端点",
+        "fill_type": "text"
+      },
+      {
+        "id": "auth_type_1",
+        "text": "auth_type",
+        "category": "cinder_conf_auth",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "用密码方式认证",
+        "fill_type": "text"
+      },
+      {
+        "id": "auth_type_2",
+        "text": "password",
+        "category": "cinder_conf_auth",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "用密码方式认证",
+        "fill_type": "text"
+      },
+      {
+        "id": "user_domain_1",
+        "text": "user_domain_name",
+        "category": "cinder_conf_auth",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "用户所属域",
+        "fill_type": "text"
+      },
+      {
+        "id": "user_domain_2",
+        "text": "Default",
+        "category": "cinder_conf_auth",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "用户所属域",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 调度过滤器 + keystone 认证两段配置",
+      "level_2": "📖 scheduler_default_filters 决定 cinder-scheduler 选后端的过滤链（可用域/容量/能力）；keystone_authtoken 让服务用 service 项目账号向 Keystone 认证",
+      "level_3": "👀 [DEFAULT] 的 scheduler_default_filters 与 [keystone_authtoken] 的 auth_url",
+      "level_4": "📝 正确答案：`scheduler_default_filters`、`AvailabilityZoneFilter,CapacityFilter,CapabilitiesFilter`、`auth_url`、`http://controller:5000/v3`、`auth_type`、`password`、`user_domain_name`、`Default`"
+    },
+    "explanation": "默认过滤器链保证卷按可用域、剩余容量和后端能力被调度；认证段是 cinder 各服务与 Keystone 交互的凭据。"
+  },
+  {
+    "id": "os-cinder-014",
+    "title": "消息队列配置",
+    "description": "配置 transport_url 与 oslo_messaging_rabbit 重试参数",
+    "exercise_type": "config",
+    "tech_stack": "openstack",
+    "weight": "medium",
+    "category": "cinder_conf_messaging",
+    "subcategory": "Cinder",
+    "full_code": "[DEFAULT]\ntransport_url = rabbit://openstack:RABBIT_PASS@controller\n\n[oslo_messaging_rabbit]\nrabbit_retry_interval = 1\nrabbit_retry_backoff = 2",
+    "expected": "",
+    "points": [
+      {
+        "id": "transport_url_1",
+        "text": "transport_url",
+        "category": "cinder_conf_messaging",
+        "min_weight": "medium",
+        "weight_score": 0.8,
+        "hint": "RabbitMQ 连接串",
+        "fill_type": "text"
+      },
+      {
+        "id": "transport_url_2",
+        "text": "rabbit://openstack:RABBIT_PASS@controller",
+        "category": "cinder_conf_messaging",
+        "min_weight": "medium",
+        "weight_score": 0.8,
+        "hint": "RabbitMQ 连接串",
+        "fill_type": "text"
+      },
+      {
+        "id": "rabbit_section",
+        "text": "[oslo_messaging_rabbit]",
+        "category": "cinder_conf_messaging",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "RabbitMQ 专用配置段",
+        "fill_type": "text"
+      },
+      {
+        "id": "rabbit_interval_1",
+        "text": "rabbit_retry_interval",
+        "category": "cinder_conf_messaging",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "重连基础间隔（秒）",
+        "fill_type": "text"
+      },
+      {
+        "id": "rabbit_interval_2",
+        "text": "1",
+        "category": "cinder_conf_messaging",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "重连基础间隔（秒）",
+        "fill_type": "text"
+      },
+      {
+        "id": "rabbit_backoff_1",
+        "text": "rabbit_retry_backoff",
+        "category": "cinder_conf_messaging",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "重连间隔的退避倍数",
+        "fill_type": "text"
+      },
+      {
+        "id": "rabbit_backoff_2",
+        "text": "2",
+        "category": "cinder_conf_messaging",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "重连间隔的退避倍数",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 消息队列：transport_url + [oslo_messaging_rabbit]",
+      "level_2": "📖 cinder-api/scheduler/volume 之间靠 RabbitMQ 通信；transport_url 给出连接串，重试参数控制断连后的重连节奏",
+      "level_3": "👀 [DEFAULT] 的 transport_url；[oslo_messaging_rabbit] 段的 rabbit_retry_*",
+      "level_4": "📝 正确答案：`transport_url`、`rabbit://openstack:RABBIT_PASS@controller`、`[oslo_messaging_rabbit]`、`rabbit_retry_interval`、`1`、`rabbit_retry_backoff`、`2`"
+    },
+    "explanation": "transport_url 是 oslo.messaging 的统一连接配置（也可用 rabbit_host/rabbit_userid 等旧参数），[oslo_messaging_rabbit] 用于调优 RabbitMQ 连接行为。"
+  },
+  {
+    "id": "os-cinder-015",
+    "title": "排查卡住的卷",
+    "description": "检查后端服务状态并用管理员权限重置卷状态",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "medium",
+    "category": "cinder_troubleshooting",
+    "subcategory": "Cinder",
+    "full_code": "openstack volume service list --host controller@lvm\nopenstack volume set --state available my-stuck-volume",
+    "expected": "",
+    "points": [
+      {
+        "id": "service_list_1",
+        "text": "volume",
+        "category": "cinder_troubleshooting",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "查看 cinder-volume/scheduler 服务状态",
+        "fill_type": "text"
+      },
+      {
+        "id": "service_list_2",
+        "text": "service",
+        "category": "cinder_troubleshooting",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "查看 cinder-volume/scheduler 服务状态",
+        "fill_type": "text"
+      },
+      {
+        "id": "service_list_3",
+        "text": "list",
+        "category": "cinder_troubleshooting",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "查看 cinder-volume/scheduler 服务状态",
+        "fill_type": "text"
+      },
+      {
+        "id": "service_host",
+        "text": "--host controller@lvm",
+        "category": "cinder_troubleshooting",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "只看指定后端主机",
+        "fill_type": "text"
+      },
+      {
+        "id": "reset_state_1",
+        "text": "set",
+        "category": "cinder_troubleshooting",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "把数据库中的卷状态改回 available",
+        "fill_type": "text"
+      },
+      {
+        "id": "reset_state_2",
+        "text": "--state",
+        "category": "cinder_troubleshooting",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "把数据库中的卷状态改回 available",
+        "fill_type": "text"
+      },
+      {
+        "id": "reset_state_3",
+        "text": "available",
+        "category": "cinder_troubleshooting",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "把数据库中的卷状态改回 available",
+        "fill_type": "text"
+      },
+      {
+        "id": "stuck_volume",
+        "text": "my-stuck-volume",
+        "category": "cinder_troubleshooting",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "卡住的卷名",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 先看服务，再重置状态",
+      "level_2": "📖 卷卡在 creating/attaching 时先确认 cinder-volume/scheduler 服务 up；确认后端已无残留后，管理员可用 --state 直接把数据库状态改回 available（有风险）",
+      "level_3": "👀 openstack volume service list --host controller@lvm",
+      "level_4": "📝 正确答案：`volume`、`service`、`list`、`--host controller@lvm`、`set`、`--state`、`available`、`my-stuck-volume`"
+    },
+    "explanation": "volume service list 显示各后端服务是否 up/enabled；set --state 只改数据库状态、不碰后端，务必确认后端确实没有该卷再执行。"
+  },
+  {
+    "id": "os-cinder-016",
+    "title": "跨项目迁移卷",
+    "description": "创建卷转移请求并在目标项目接受",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "hard",
+    "category": "volume_transfer",
+    "subcategory": "Cinder",
+    "full_code": "openstack volume transfer request create --name handover my-volume\nopenstack volume transfer request list\nopenstack volume transfer request accept --auth-key a1b2c3d4e5f6 8b0e3a2c-1f4d-4c6e-9a7b-2d3e4f5a6b7c",
+    "expected": "",
+    "points": [
+      {
+        "id": "transfer_create_1",
+        "text": "volume",
+        "category": "volume_transfer",
+        "min_weight": "hard",
+        "weight_score": 0.5,
+        "hint": "卷属主发起转移请求",
+        "fill_type": "text"
+      },
+      {
+        "id": "transfer_create_2",
+        "text": "transfer",
+        "category": "volume_transfer",
+        "min_weight": "hard",
+        "weight_score": 0.5,
+        "hint": "卷属主发起转移请求",
+        "fill_type": "text"
+      },
+      {
+        "id": "transfer_create_3",
+        "text": "request",
+        "category": "volume_transfer",
+        "min_weight": "hard",
+        "weight_score": 0.5,
+        "hint": "卷属主发起转移请求",
+        "fill_type": "text"
+      },
+      {
+        "id": "transfer_create_4",
+        "text": "create",
+        "category": "volume_transfer",
+        "min_weight": "hard",
+        "weight_score": 0.5,
+        "hint": "卷属主发起转移请求",
+        "fill_type": "text"
+      },
+      {
+        "id": "transfer_create_5",
+        "text": "--name",
+        "category": "volume_transfer",
+        "min_weight": "hard",
+        "weight_score": 0.5,
+        "hint": "卷属主发起转移请求",
+        "fill_type": "text"
+      },
+      {
+        "id": "transfer_create_6",
+        "text": "handover",
+        "category": "volume_transfer",
+        "min_weight": "hard",
+        "weight_score": 0.5,
+        "hint": "卷属主发起转移请求",
+        "fill_type": "text"
+      },
+      {
+        "id": "transfer_list_1",
+        "text": "list",
+        "category": "volume_transfer",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "查看待接受的转移请求",
+        "fill_type": "text"
+      },
+      {
+        "id": "transfer_accept_1",
+        "text": "accept",
+        "category": "volume_transfer",
+        "min_weight": "hard",
+        "weight_score": 0.6,
+        "hint": "接收方用 auth key 接受请求",
+        "fill_type": "text"
+      },
+      {
+        "id": "transfer_accept_2",
+        "text": "--auth-key",
+        "category": "volume_transfer",
+        "min_weight": "hard",
+        "weight_score": 0.6,
+        "hint": "接收方用 auth key 接受请求",
+        "fill_type": "text"
+      },
+      {
+        "id": "transfer_accept_3",
+        "text": "a1b2c3d4e5f6",
+        "category": "volume_transfer",
+        "min_weight": "hard",
+        "weight_score": 0.6,
+        "hint": "接收方用 auth key 接受请求",
+        "fill_type": "text"
+      },
+      {
+        "id": "transfer_volume",
+        "text": "my-volume",
+        "category": "volume_transfer",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "要转移的卷",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 transfer request：create →（目标项目）list → accept",
+      "level_2": "📖 转移请求由卷属主 create，返回 request id 和 auth key；接收方在目标项目用 accept --auth-key 接受后卷归属变更，卷必须处于 available",
+      "level_3": "👀 openstack volume transfer request create --name handover my-volume",
+      "level_4": "📝 正确答案：`volume`、`transfer`、`request`、`create`、`--name`、`handover`、`list`、`accept`、`--auth-key`、`a1b2c3d4e5f6`、`my-volume`"
+    },
+    "explanation": "create 返回的 id 和 auth key 需要安全地交给接收方；接收方在自己的项目里 accept，卷随即转移到该项目。"
+  },
+  {
+    "id": "os-cinder-017",
+    "title": "把卷上传为镜像",
+    "description": "用 image create --volume 把已有卷转成 Glance 镜像",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "hard",
+    "category": "volume_to_image",
+    "subcategory": "Cinder",
+    "full_code": "openstack image create --volume my-volume --disk-format qcow2 --container-format bare my-volume-image",
+    "expected": "",
+    "points": [
+      {
+        "id": "image_from_volume_1",
+        "text": "image",
+        "category": "volume_to_image",
+        "min_weight": "hard",
+        "weight_score": 0.6,
+        "hint": "从卷创建镜像的入口",
+        "fill_type": "text"
+      },
+      {
+        "id": "image_from_volume_2",
+        "text": "create",
+        "category": "volume_to_image",
+        "min_weight": "hard",
+        "weight_score": 0.6,
+        "hint": "从卷创建镜像的入口",
+        "fill_type": "text"
+      },
+      {
+        "id": "image_from_volume_3",
+        "text": "--volume",
+        "category": "volume_to_image",
+        "min_weight": "hard",
+        "weight_score": 0.6,
+        "hint": "从卷创建镜像的入口",
+        "fill_type": "text"
+      },
+      {
+        "id": "disk_format",
+        "text": "--disk-format qcow2",
+        "category": "volume_to_image",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "镜像磁盘格式",
+        "fill_type": "text"
+      },
+      {
+        "id": "container_format",
+        "text": "--container-format bare",
+        "category": "volume_to_image",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "裸容器格式",
+        "fill_type": "text"
+      },
+      {
+        "id": "image_name",
+        "text": "my-volume-image",
+        "category": "volume_to_image",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "新镜像名",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 卷转镜像：image create --volume",
+      "level_2": "📖 该命令调用 cinder 的 upload-to-image，把卷数据写入 Glance；需 cinder 能访问 glance_api_servers，卷较大时耗时较长",
+      "level_3": "👀 openstack image create --volume my-volume --disk-format qcow2 --container-format bare",
+      "level_4": "📝 正确答案：`image`、`create`、`--volume`、`--disk-format qcow2`、`--container-format bare`、`my-volume-image`"
+    },
+    "explanation": "卷转镜像打通 Cinder 与 Glance：生成的镜像可用于批量创建系统盘或灾备保留。"
+  },
+  {
+    "id": "os-cinder-018",
+    "title": "配置 NFS 备份与共享存储",
+    "description": "用 NFS 作为备份后端并配置 NFS 卷后端",
+    "exercise_type": "config",
+    "tech_stack": "openstack",
+    "weight": "hard",
+    "category": "cinder_conf_backup",
+    "subcategory": "Cinder",
+    "full_code": "[DEFAULT]\nbackup_driver = cinder.backup.drivers.nfs.NFSBackupDriver\nbackup_share = 10.0.0.5:/backups\n\n[nfs]\nvolume_backend_name = nfs-1\nvolume_driver = cinder.volume.drivers.nfs.NFSDriver\nnfs_shares_config = /etc/cinder/nfs_shares",
+    "expected": "",
+    "points": [
+      {
+        "id": "backup_driver_1",
+        "text": "backup_driver",
+        "category": "cinder_conf_backup",
+        "min_weight": "hard",
+        "weight_score": 0.9,
+        "hint": "cinder-backup 使用的 NFS 备份驱动",
+        "fill_type": "text"
+      },
+      {
+        "id": "backup_driver_2",
+        "text": "cinder.backup.drivers.nfs.NFSBackupDriver",
+        "category": "cinder_conf_backup",
+        "min_weight": "hard",
+        "weight_score": 0.9,
+        "hint": "cinder-backup 使用的 NFS 备份驱动",
+        "fill_type": "text"
+      },
+      {
+        "id": "backup_share_1",
+        "text": "backup_share",
+        "category": "cinder_conf_backup",
+        "min_weight": "medium",
+        "weight_score": 0.8,
+        "hint": "备份存放的 NFS 共享路径",
+        "fill_type": "text"
+      },
+      {
+        "id": "backup_share_2",
+        "text": "10.0.0.5:/backups",
+        "category": "cinder_conf_backup",
+        "min_weight": "medium",
+        "weight_score": 0.8,
+        "hint": "备份存放的 NFS 共享路径",
+        "fill_type": "text"
+      },
+      {
+        "id": "nfs_driver_1",
+        "text": "volume_driver",
+        "category": "cinder_conf_nfs",
+        "min_weight": "medium",
+        "weight_score": 0.8,
+        "hint": "NFS 卷驱动类路径",
+        "fill_type": "text"
+      },
+      {
+        "id": "nfs_driver_2",
+        "text": "cinder.volume.drivers.nfs.NFSDriver",
+        "category": "cinder_conf_nfs",
+        "min_weight": "medium",
+        "weight_score": 0.8,
+        "hint": "NFS 卷驱动类路径",
+        "fill_type": "text"
+      },
+      {
+        "id": "nfs_shares_1",
+        "text": "nfs_shares_config",
+        "category": "cinder_conf_nfs",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "共享列表文件路径",
+        "fill_type": "text"
+      },
+      {
+        "id": "nfs_shares_2",
+        "text": "/etc/cinder/nfs_shares",
+        "category": "cinder_conf_nfs",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "共享列表文件路径",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 备份驱动 backup_driver + NFS 卷后端 [nfs]",
+      "level_2": "📖 backup_driver 决定 cinder-backup 存哪：NFS 用 NFSBackupDriver + backup_share；NFS 卷后端用 NFSDriver + nfs_shares_config 指向共享列表文件",
+      "level_3": "👀 [DEFAULT] 的 backup_driver = cinder.backup.drivers.nfs.NFSBackupDriver",
+      "level_4": "📝 正确答案：`backup_driver`、`cinder.backup.drivers.nfs.NFSBackupDriver`、`backup_share`、`10.0.0.5:/backups`、`volume_driver`、`cinder.volume.drivers.nfs.NFSDriver`、`nfs_shares_config`、`/etc/cinder/nfs_shares`"
+    },
+    "explanation": "备份后端与卷后端是两套配置：backup_* 属于 cinder-backup，[nfs] 段属于 cinder-volume 的 NFS 卷驱动。"
+  },
+  {
+    "id": "os-cinder-019",
+    "title": "一致性组与组快照",
+    "description": "用通用卷组把多卷一起打快照（一致性组）",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "hard",
+    "category": "volume_group",
+    "subcategory": "Cinder",
+    "full_code": "openstack volume group create --volume-group-type cg-type --volume-type gold-type --name cg-mysql\nopenstack volume group snapshot create --name cg-mysql-snap cg-mysql",
+    "expected": "",
+    "points": [
+      {
+        "id": "group_create_1",
+        "text": "volume",
+        "category": "volume_group",
+        "min_weight": "hard",
+        "weight_score": 0.5,
+        "hint": "用组类型创建通用卷组",
+        "fill_type": "text"
+      },
+      {
+        "id": "group_create_2",
+        "text": "group",
+        "category": "volume_group",
+        "min_weight": "hard",
+        "weight_score": 0.5,
+        "hint": "用组类型创建通用卷组",
+        "fill_type": "text"
+      },
+      {
+        "id": "group_create_3",
+        "text": "create",
+        "category": "volume_group",
+        "min_weight": "hard",
+        "weight_score": 0.5,
+        "hint": "用组类型创建通用卷组",
+        "fill_type": "text"
+      },
+      {
+        "id": "group_create_4",
+        "text": "--volume-group-type",
+        "category": "volume_group",
+        "min_weight": "hard",
+        "weight_score": 0.5,
+        "hint": "用组类型创建通用卷组",
+        "fill_type": "text"
+      },
+      {
+        "id": "group_create_5",
+        "text": "cg-type",
+        "category": "volume_group",
+        "min_weight": "hard",
+        "weight_score": 0.5,
+        "hint": "用组类型创建通用卷组",
+        "fill_type": "text"
+      },
+      {
+        "id": "group_type",
+        "text": "--volume-type gold-type",
+        "category": "volume_group",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "组内卷使用的卷类型",
+        "fill_type": "text"
+      },
+      {
+        "id": "group_snapshot_1",
+        "text": "snapshot",
+        "category": "volume_group",
+        "min_weight": "hard",
+        "weight_score": 1.8,
+        "hint": "对整组卷打时间点一致的快照",
+        "fill_type": "text"
+      },
+      {
+        "id": "group_name",
+        "text": "cg-mysql",
+        "category": "volume_group",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "卷组名",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 通用卷组 create 后可直接对组打 snapshot",
+      "level_2": "📖 通用卷组（generic volume group）取代了旧一致性组：把多卷组成一组，再 group snapshot create 得到组内多卷的时间点一致快照",
+      "level_3": "👀 openstack volume group create --volume-group-type cg-type --volume-type gold-type --name cg-mysql",
+      "level_4": "📝 正确答案：`volume`、`group`、`create`、`--volume-group-type`、`cg-type`、`--volume-type gold-type`、`snapshot`、`cg-mysql`"
+    },
+    "explanation": "组快照保证组内卷在同一时间点备份，适合数据库等多卷一致性场景，需要 --os-volume-api-version 3.13 以上。"
+  },
+  {
+    "id": "os-cinder-020",
+    "title": "卷加密与 Barbican 对接",
+    "description": "配置 key_manager 使用 Barbican 管理卷加密密钥",
+    "exercise_type": "config",
+    "tech_stack": "openstack",
+    "weight": "expert",
+    "category": "cinder_conf_encryption",
+    "subcategory": "Cinder",
+    "full_code": "[key_manager]\nbackend = castellan.key_manager.barbican_key_manager.BarbicanKeyManager\n\n[barbican]\nauth_endpoint = http://controller:5000/v3\nbarbican_endpoint_type = internal",
+    "expected": "",
+    "points": [
+      {
+        "id": "key_manager_backend_1",
+        "text": "backend",
+        "category": "cinder_conf_encryption",
+        "min_weight": "expert",
+        "weight_score": 1.0,
+        "hint": "指定 Barbican 密钥管理实现",
+        "fill_type": "text"
+      },
+      {
+        "id": "key_manager_backend_2",
+        "text": "castellan.key_manager.barbican_key_manager.BarbicanKeyManager",
+        "category": "cinder_conf_encryption",
+        "min_weight": "expert",
+        "weight_score": 1.0,
+        "hint": "指定 Barbican 密钥管理实现",
+        "fill_type": "text"
+      },
+      {
+        "id": "barbican_section",
+        "text": "[barbican]",
+        "category": "cinder_conf_encryption",
+        "min_weight": "hard",
+        "weight_score": 1.75,
+        "hint": "Barbican 客户端配置段",
+        "fill_type": "text"
+      },
+      {
+        "id": "barbican_auth_1",
+        "text": "auth_endpoint",
+        "category": "cinder_conf_encryption",
+        "min_weight": "medium",
+        "weight_score": 0.8,
+        "hint": "访问 Keystone 的认证端点",
+        "fill_type": "text"
+      },
+      {
+        "id": "barbican_auth_2",
+        "text": "http://controller:5000/v3",
+        "category": "cinder_conf_encryption",
+        "min_weight": "medium",
+        "weight_score": 0.8,
+        "hint": "访问 Keystone 的认证端点",
+        "fill_type": "text"
+      },
+      {
+        "id": "barbican_endpoint_type_1",
+        "text": "barbican_endpoint_type",
+        "category": "cinder_conf_encryption",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "使用 internal 类型端点",
+        "fill_type": "text"
+      },
+      {
+        "id": "barbican_endpoint_type_2",
+        "text": "internal",
+        "category": "cinder_conf_encryption",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "使用 internal 类型端点",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 key_manager 指向 Barbican，[barbican] 段给认证端点",
+      "level_2": "📖 加密卷的密钥由 key manager 统一托管：castellan 的 BarbicanKeyManager 通过 Keystone 认证访问 Barbican；旧版本写 api_class，新版本改用 backend",
+      "level_3": "👀 [key_manager] 段：backend = castellan.key_manager.barbican_key_manager.BarbicanKeyManager",
+      "level_4": "📝 正确答案：`backend`、`castellan.key_manager.barbican_key_manager.BarbicanKeyManager`、`[barbican]`、`auth_endpoint`、`http://controller:5000/v3`、`barbican_endpoint_type`、`internal`"
+    },
+    "explanation": "配置好后即可用 `openstack volume type create --encryption-provider luks --encryption-key-size 256 ...` 建加密卷类型，密钥存入 Barbican，卷数据由 LUKS 加密。"
+  }
+]

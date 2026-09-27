@@ -1,0 +1,2081 @@
+[
+  {
+    "id": "selenium-001",
+    "title": "启动 Chrome 浏览器",
+    "description": "用 webdriver.Chrome() 启动浏览器并读取页面标题",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "beginner",
+    "category": "selenium_setup",
+    "subcategory": "selenium",
+    "full_code": "from selenium import webdriver\n\n\ndriver = webdriver.Chrome()\ndriver.get(\"https://example.com\")\ntitle = driver.title\nprint(title)\ndriver.quit()",
+    "expected": "",
+    "points": [
+      {
+        "id": "import_webdriver",
+        "text": "from selenium import webdriver",
+        "category": "selenium_setup",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "引入浏览器驱动模块的导入语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "chrome_instance",
+        "text": "driver = webdriver.Chrome()",
+        "category": "selenium_setup",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "创建 Chrome 浏览器对象的赋值语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "get_url",
+        "text": "driver.get(\"https://example.com\")",
+        "category": "selenium_navigation",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "让浏览器打开指定网址的方法调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "page_title",
+        "text": "driver.title",
+        "category": "selenium_extract",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "读取当前页面标题的属性",
+        "fill_type": "text"
+      },
+      {
+        "id": "browser_quit",
+        "text": "driver.quit()",
+        "category": "selenium_lifecycle",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "退出浏览器并释放会话的调用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 Selenium 4 会通过 Selenium Manager 自动准备驱动，实例化浏览器类即可得到一个会话对象。",
+      "level_2": "📖 先导入 webdriver 模块创建 Chrome 实例，再导航到目标网址；title 属性用于读取页面标题。",
+      "level_3": "👀 共 5 空：① 导入 webdriver 模块的语句；② 创建 Chrome 浏览器实例的赋值语句；③ 打开示例网址的方法调用；④ 读取页面标题的属性；⑤ 退出浏览器的调用。",
+      "level_4": "📝 正确答案：`from selenium import webdriver`、`driver = webdriver.Chrome()`、`driver.get(\"https://example.com\")`、`driver.title`、`driver.quit()`"
+    },
+    "explanation": "webdriver.Chrome() 直接创建本地 Chrome 会话，驱动匹配由 Selenium Manager 完成；quit() 会关闭所有窗口并结束 WebDriver 进程。"
+  },
+  {
+    "id": "selenium-002",
+    "title": "打开网页",
+    "description": "用 driver.get() 打开 Python 官网并读取当前地址",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "beginner",
+    "category": "selenium_navigation",
+    "subcategory": "selenium",
+    "full_code": "from selenium import webdriver\n\ndriver = webdriver.Chrome()\ndriver.get(\"https://www.python.org/\")\nurl = driver.current_url\nprint(url)\ndriver.quit()",
+    "expected": "",
+    "points": [
+      {
+        "id": "import_webdriver",
+        "text": "from selenium import webdriver",
+        "category": "selenium_setup",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "引入浏览器驱动模块的导入语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "chrome_instance",
+        "text": "driver = webdriver.Chrome()",
+        "category": "selenium_setup",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "创建浏览器会话对象的赋值语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "get_python_org",
+        "text": "driver.get(\"https://www.python.org/\")",
+        "category": "selenium_navigation",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "导航到 Python 官网的方法调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "current_url",
+        "text": "url = driver.current_url",
+        "category": "selenium_navigation",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "读取当前地址栏地址的赋值语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "browser_quit",
+        "text": "driver.quit()",
+        "category": "selenium_lifecycle",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "结束会话的调用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 导航用 get()，读回地址栏当前地址用 current_url 属性。",
+      "level_2": "📖 get() 会等待页面加载完成；current_url 常用来断言跳转后的地址是否正确。",
+      "level_3": "👀 共 5 空：① 导入 webdriver 模块的语句；② 创建浏览器实例的赋值语句；③ 导航到 Python 官网的方法调用；④ 读取当前 URL 的赋值语句；⑤ 退出浏览器的调用。",
+      "level_4": "📝 正确答案：`from selenium import webdriver`、`driver = webdriver.Chrome()`、`driver.get(\"https://www.python.org/\")`、`url = driver.current_url`、`driver.quit()`"
+    },
+    "explanation": "driver.get() 同步等待页面 load 事件后返回；current_url 返回浏览器地址栏中的地址字符串。"
+  },
+  {
+    "id": "selenium-003",
+    "title": "退出浏览器",
+    "description": "用 try/finally 确保测试结束一定 quit",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "easy",
+    "category": "selenium_lifecycle",
+    "subcategory": "selenium",
+    "full_code": "from selenium import webdriver\n\ndriver = webdriver.Chrome()\ntry:\n    driver.get(\"https://example.com\")\nfinally:\n    driver.quit()",
+    "expected": "",
+    "points": [
+      {
+        "id": "import_webdriver",
+        "text": "from selenium import webdriver",
+        "category": "selenium_setup",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "引入浏览器驱动模块的导入语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "chrome_instance",
+        "text": "driver = webdriver.Chrome()",
+        "category": "selenium_setup",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "创建浏览器会话对象的赋值语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "try_block",
+        "text": "try:",
+        "category": "selenium_lifecycle",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "开始受保护代码块的语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "get_url",
+        "text": "driver.get(\"https://example.com\")",
+        "category": "selenium_navigation",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "在受保护块中打开页面的调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "finally_block",
+        "text": "finally:",
+        "category": "selenium_lifecycle",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "无论是否发生异常都会执行的代码块语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "browser_quit",
+        "text": "driver.quit()",
+        "category": "selenium_lifecycle",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "在清理块中退出浏览器的调用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 测试中途抛异常时也要释放浏览器，把清理动作放进一定会执行的代码块。",
+      "level_2": "📖 导航写在受保护的代码块里，回收会话的调用写在兜底代码块里，两者配合保证资源不泄漏。",
+      "level_3": "👀 共 6 空：① 导入 webdriver 模块的语句；② 创建浏览器实例的赋值语句；③ 开始受保护代码块的语句；④ 在受保护块中打开页面的调用；⑤ 无论如何都会执行的代码块语句；⑥ 在清理块中退出浏览器的调用。",
+      "level_4": "📝 正确答案：`from selenium import webdriver`、`driver = webdriver.Chrome()`、`try:`、`driver.get(\"https://example.com\")`、`finally:`、`driver.quit()`"
+    },
+    "explanation": "finally 会让 quit() 一定执行，避免异常中断后残留浏览器进程；quit() 关闭所有窗口并终止会话。"
+  },
+  {
+    "id": "selenium-004",
+    "title": "按 ID 定位元素",
+    "description": "用 By.ID 找到登录按钮并点击",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "beginner",
+    "category": "selenium_locate",
+    "subcategory": "selenium",
+    "full_code": "from selenium import webdriver\nfrom selenium.webdriver.common.by import By\n\ndriver = webdriver.Chrome()\ndriver.get(\"https://example.com/login\")\nbutton = driver.find_element(By.ID, \"login-btn\")\nbutton.click()\ndriver.quit()",
+    "expected": "",
+    "points": [
+      {
+        "id": "by_id",
+        "text": "By.ID",
+        "category": "selenium_locate",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "以 id 属性定位的定位器类型",
+        "fill_type": "text"
+      },
+      {
+        "id": "find_element",
+        "text": "driver.find_element",
+        "category": "selenium_locate",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "查找单个元素的方法",
+        "fill_type": "text"
+      },
+      {
+        "id": "browser_quit",
+        "text": "driver.quit()",
+        "category": "selenium_lifecycle",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "退出浏览器并释放驱动的调用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 Selenium 4 定位元素用 By 常量 + find_element",
+      "level_2": "📖 By.ID 按 id 属性定位，driver.find_element 返回单个元素",
+      "level_3": "👀 共 3 空：① id 定位器；② 查找单个元素的方法；③ 退出浏览器的调用。",
+      "level_4": "📝 正确答案：`By.ID`、`driver.find_element`、`driver.quit()`"
+    },
+    "explanation": "By.ID 是 Selenium 4 推荐的定位方式之一，find_element 找不到元素时抛出 NoSuchElementException；quit 会关闭所有窗口并结束 driver 进程。"
+  },
+  {
+    "id": "selenium-005",
+    "title": "CSS 选择器定位",
+    "description": "用 By.CSS_SELECTOR 统计商品卡片数量",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "easy",
+    "category": "selenium_locate",
+    "subcategory": "selenium",
+    "full_code": "from selenium import webdriver\nfrom selenium.webdriver.common.by import By\n\ndriver = webdriver.Chrome()\ndriver.get(\"https://example.com/products\")\ncards = driver.find_elements(By.CSS_SELECTOR, \"div.product-card\")\nprint(len(cards))\ndriver.quit()",
+    "expected": "",
+    "points": [
+      {
+        "id": "import_by",
+        "text": "from selenium.webdriver.common.by import By",
+        "category": "selenium_locate",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "导入定位器常量所在模块的语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "get_products",
+        "text": "driver.get(\"https://example.com/products\")",
+        "category": "selenium_navigation",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "打开商品列表页的方法调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "css_locator",
+        "text": "By.CSS_SELECTOR",
+        "category": "selenium_locate",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "使用 CSS 表达式的定位器常量",
+        "fill_type": "text"
+      },
+      {
+        "id": "css_value",
+        "text": "\"div.product-card\"",
+        "category": "selenium_locate",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "匹配商品卡片的 CSS 字符串",
+        "fill_type": "text"
+      },
+      {
+        "id": "count_print",
+        "text": "print(len(cards))",
+        "category": "selenium_extract",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "统计元素列表长度的打印语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "browser_quit",
+        "text": "driver.quit()",
+        "category": "selenium_lifecycle",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "退出浏览器的调用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 CSS 选择器语法简洁，配合返回列表的批量查找方法可以一次拿到多个元素。",
+      "level_2": "📖 点号表示 class 选择器，div.product-card 选中 class 为 product-card 的 div；批量查找返回列表。",
+      "level_3": "👀 共 6 空：① 导入 By 常量的语句；② 打开商品列表页的调用；③ CSS 定位器常量；④ 匹配商品卡片的 CSS 字符串；⑤ 统计列表长度的打印语句；⑥ 退出浏览器的调用。",
+      "level_4": "📝 正确答案：`from selenium.webdriver.common.by import By`、`driver.get(\"https://example.com/products\")`、`By.CSS_SELECTOR`、`\"div.product-card\"`、`print(len(cards))`、`driver.quit()`"
+    },
+    "explanation": "By.CSS_SELECTOR 把表达式交给浏览器引擎求值；find_elements 找不到匹配时返回空列表而非抛异常。"
+  },
+  {
+    "id": "selenium-006",
+    "title": "XPath 定位",
+    "description": "用 By.XPATH 定位提交按钮并点击",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "easy",
+    "category": "selenium_locate",
+    "subcategory": "selenium",
+    "full_code": "from selenium import webdriver\nfrom selenium.webdriver.common.by import By\n\ndriver = webdriver.Chrome()\ndriver.get(\"https://example.com/login\")\nbutton = driver.find_element(By.XPATH, \"//button[@type='submit']\")\nbutton.click()\ndriver.quit()",
+    "expected": "",
+    "points": [
+      {
+        "id": "import_webdriver",
+        "text": "from selenium import webdriver",
+        "category": "selenium_setup",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "引入浏览器驱动模块的导入语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "get_login",
+        "text": "driver.get(\"https://example.com/login\")",
+        "category": "selenium_navigation",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "打开登录页的方法调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "xpath_locator",
+        "text": "By.XPATH",
+        "category": "selenium_locate",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "使用路径表达式的定位器常量",
+        "fill_type": "text"
+      },
+      {
+        "id": "xpath_value",
+        "text": "\"//button[@type='submit']\"",
+        "category": "selenium_locate",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "按 type 属性匹配按钮的 XPath 字符串",
+        "fill_type": "text"
+      },
+      {
+        "id": "click_button",
+        "text": "button.click()",
+        "category": "selenium_action",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "点击按钮的方法调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "browser_quit",
+        "text": "driver.quit()",
+        "category": "selenium_lifecycle",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "退出浏览器的调用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 XPath 能表达层级与属性条件，适合 CSS 不好描述的场景。",
+      "level_2": "📖 双斜杠开头表示任意层级查找，方括号里写属性条件，@type='submit' 匹配按钮。",
+      "level_3": "👀 共 6 空：① 导入 webdriver 模块的语句；② 打开登录页的调用；③ XPath 定位器常量；④ 按 type 属性匹配按钮的 XPath 字符串；⑤ 点击按钮的调用；⑥ 退出浏览器的调用。",
+      "level_4": "📝 正确答案：`from selenium import webdriver`、`driver.get(\"https://example.com/login\")`、`By.XPATH`、`\"//button[@type='submit']\"`、`button.click()`、`driver.quit()`"
+    },
+    "explanation": "XPath 由浏览器原生求值，表达式错误或不匹配会抛 NoSuchElementException；属性匹配写作 @属性='值'。"
+  },
+  {
+    "id": "selenium-007",
+    "title": "批量定位链接",
+    "description": "用 find_elements 取回链接列表并逐个打印文本",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "easy",
+    "category": "selenium_locate",
+    "subcategory": "selenium",
+    "full_code": "from selenium import webdriver\nfrom selenium.webdriver.common.by import By\n\ndriver = webdriver.Chrome()\ndriver.get(\"https://example.com/links\")\nlinks = driver.find_elements(By.TAG_NAME, \"a\")\nfor link in links:\n    print(link.text)\ndriver.quit()",
+    "expected": "",
+    "points": [
+      {
+        "id": "import_webdriver",
+        "text": "from selenium import webdriver",
+        "category": "selenium_setup",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "引入浏览器驱动模块的导入语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "get_links",
+        "text": "driver.get(\"https://example.com/links\")",
+        "category": "selenium_navigation",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "打开链接列表页的方法调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "find_all_links",
+        "text": "driver.find_elements(By.TAG_NAME, \"a\")",
+        "category": "selenium_locate",
+        "min_weight": "easy",
+        "weight_score": 1.5,
+        "hint": "按标签名批量查找元素的调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "loop_links",
+        "text": "for link in links:",
+        "category": "selenium_locate",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "遍历结果列表的循环语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "print_link_text",
+        "text": "print(link.text)",
+        "category": "selenium_extract",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "打印每个元素可见文本的语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "browser_quit",
+        "text": "driver.quit()",
+        "category": "selenium_lifecycle",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "退出浏览器的调用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 批量查找返回列表（没有匹配时是空列表），拿到之后自然可以遍历。",
+      "level_2": "📖 标签名 a 表示所有超链接；每个元素的 text 属性就是链接的可见文字。",
+      "level_3": "👀 共 6 空：① 导入 webdriver 模块的语句；② 打开链接列表页的调用；③ 按标签名批量查找的调用；④ 遍历结果列表的循环语句；⑤ 打印元素文本的语句；⑥ 退出浏览器的调用。",
+      "level_4": "📝 正确答案：`from selenium import webdriver`、`driver.get(\"https://example.com/links\")`、`driver.find_elements(By.TAG_NAME, \"a\")`、`for link in links:`、`print(link.text)`、`driver.quit()`"
+    },
+    "explanation": "find_elements 与 find_element 只差一个字母：前者返回列表、后者返回单个元素，找不到时行为也不同。"
+  },
+  {
+    "id": "selenium-008",
+    "title": "输入框填写",
+    "description": "用 send_keys 依次填写用户名和密码",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "beginner",
+    "category": "selenium_action",
+    "subcategory": "selenium",
+    "full_code": "from selenium import webdriver\nfrom selenium.webdriver.common.by import By\n\ndriver = webdriver.Chrome()\ndriver.get(\"https://example.com/login\")\nusername = driver.find_element(By.NAME, \"username\")\nusername.send_keys(\"standard_user\")\npassword = driver.find_element(By.NAME, \"password\")\npassword.send_keys(\"secret_sauce\")\ndriver.quit()",
+    "expected": "",
+    "points": [
+      {
+        "id": "import_webdriver",
+        "text": "from selenium import webdriver",
+        "category": "selenium_setup",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "引入浏览器驱动模块的导入语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "get_login",
+        "text": "driver.get(\"https://example.com/login\")",
+        "category": "selenium_navigation",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "打开登录页的方法调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "locate_username",
+        "text": "username = driver.find_element(By.NAME, \"username\")",
+        "category": "selenium_locate",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "定位用户名输入框的赋值语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "type_username",
+        "text": "username.send_keys(\"standard_user\")",
+        "category": "selenium_action",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "向用户名输入框键入文本的调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "type_password",
+        "text": "password.send_keys(\"secret_sauce\")",
+        "category": "selenium_action",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "向密码输入框键入文本的调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "browser_quit",
+        "text": "driver.quit()",
+        "category": "selenium_lifecycle",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "退出浏览器的调用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 先定位输入框，再调用键入方法把字符串送进去。",
+      "level_2": "📖 两个输入框分别用 name 属性定位，先后调用 send_keys 完成两次键入。",
+      "level_3": "👀 共 6 空：① 导入 webdriver 模块的语句；② 打开登录页的调用；③ 定位用户名输入框的赋值语句；④ 向用户名输入框键入文本的调用；⑤ 向密码输入框键入文本的调用；⑥ 退出浏览器的调用。",
+      "level_4": "📝 正确答案：`from selenium import webdriver`、`driver.get(\"https://example.com/login\")`、`username = driver.find_element(By.NAME, \"username\")`、`username.send_keys(\"standard_user\")`、`password.send_keys(\"secret_sauce\")`、`driver.quit()`"
+    },
+    "explanation": "send_keys 模拟真实键盘事件；若输入框已有内容，通常先 clear() 再输入，避免内容拼接。"
+  },
+  {
+    "id": "selenium-009",
+    "title": "点击按钮",
+    "description": "定位提交按钮并调用 click",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "beginner",
+    "category": "selenium_action",
+    "subcategory": "selenium",
+    "full_code": "from selenium import webdriver\nfrom selenium.webdriver.common.by import By\n\ndriver = webdriver.Chrome()\ndriver.get(\"https://example.com\")\nsubmit = driver.find_element(By.CSS_SELECTOR, \"#submit-btn\")\nsubmit.click()\ndriver.quit()",
+    "expected": "",
+    "points": [
+      {
+        "id": "import_by",
+        "text": "from selenium.webdriver.common.by import By",
+        "category": "selenium_locate",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "导入定位器常量所在模块的语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "get_page",
+        "text": "driver.get(\"https://example.com\")",
+        "category": "selenium_navigation",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "打开页面的方法调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "locate_submit",
+        "text": "submit = driver.find_element(By.CSS_SELECTOR, \"#submit-btn\")",
+        "category": "selenium_locate",
+        "min_weight": "beginner",
+        "weight_score": 1.5,
+        "hint": "按 id 选择器定位按钮的赋值语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "click_submit",
+        "text": "submit.click()",
+        "category": "selenium_action",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "点击按钮的方法调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "browser_quit",
+        "text": "driver.quit()",
+        "category": "selenium_lifecycle",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "退出浏览器的调用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 元素最常用的动作就是点击，定位到按钮后直接调用。",
+      "level_2": "📖 井号是 id 选择器写法，与 CSS 定位器常量搭配；点击方法会触发真实点击事件。",
+      "level_3": "👀 共 5 空：① 导入 By 常量的语句；② 打开页面的调用；③ 按 id 选择器定位按钮的赋值语句；④ 点击按钮的调用；⑤ 退出浏览器的调用。",
+      "level_4": "📝 正确答案：`from selenium.webdriver.common.by import By`、`driver.get(\"https://example.com\")`、`submit = driver.find_element(By.CSS_SELECTOR, \"#submit-btn\")`、`submit.click()`、`driver.quit()`"
+    },
+    "explanation": "click() 会先把元素滚动到可视区域再点击；元素被遮挡或尚未就绪时可能抛出 ElementClickInterceptedException。"
+  },
+  {
+    "id": "selenium-010",
+    "title": "清空输入框",
+    "description": "先 clear 清空搜索框再输入关键词",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "easy",
+    "category": "selenium_action",
+    "subcategory": "selenium",
+    "full_code": "from selenium import webdriver\nfrom selenium.webdriver.common.by import By\n\ndriver = webdriver.Chrome()\ndriver.get(\"https://example.com/search\")\nbox = driver.find_element(By.ID, \"search-input\")\nbox.clear()\nbox.send_keys(\"selenium grid\")\ndriver.quit()",
+    "expected": "",
+    "points": [
+      {
+        "id": "import_webdriver",
+        "text": "from selenium import webdriver",
+        "category": "selenium_setup",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "引入浏览器驱动模块的导入语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "get_search",
+        "text": "driver.get(\"https://example.com/search\")",
+        "category": "selenium_navigation",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "打开搜索页的方法调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "locate_box",
+        "text": "box = driver.find_element(By.ID, \"search-input\")",
+        "category": "selenium_locate",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "定位搜索输入框的赋值语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "clear_box",
+        "text": "box.clear()",
+        "category": "selenium_action",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "清空输入框内容的方法调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "type_box",
+        "text": "box.send_keys(\"selenium grid\")",
+        "category": "selenium_action",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "输入关键词的方法调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "browser_quit",
+        "text": "driver.quit()",
+        "category": "selenium_lifecycle",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "退出浏览器的调用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 复用已有输入框时要先清掉旧内容，否则新旧文字会拼在一起。",
+      "level_2": "📖 清空是元素自带的方法，调用后再用键入方法送入新关键词。",
+      "level_3": "👀 共 6 空：① 导入 webdriver 模块的语句；② 打开搜索页的调用；③ 定位搜索输入框的赋值语句；④ 清空输入框的调用；⑤ 输入关键词的调用；⑥ 退出浏览器的调用。",
+      "level_4": "📝 正确答案：`from selenium import webdriver`、`driver.get(\"https://example.com/search\")`、`box = driver.find_element(By.ID, \"search-input\")`、`box.clear()`、`box.send_keys(\"selenium grid\")`、`driver.quit()`"
+    },
+    "explanation": "clear() 会先聚焦元素再清空内容；对不可编辑元素调用可能抛 InvalidElementStateException。"
+  },
+  {
+    "id": "selenium-011",
+    "title": "读取元素文本",
+    "description": "读取 h1 标题的可见文本并打印",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "easy",
+    "category": "selenium_extract",
+    "subcategory": "selenium",
+    "full_code": "from selenium import webdriver\nfrom selenium.webdriver.common.by import By\n\ndriver = webdriver.Chrome()\ndriver.get(\"https://example.com/welcome\")\nheading = driver.find_element(By.TAG_NAME, \"h1\")\nmessage = heading.text\nprint(message)\ndriver.quit()",
+    "expected": "",
+    "points": [
+      {
+        "id": "import_webdriver",
+        "text": "from selenium import webdriver",
+        "category": "selenium_setup",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "引入浏览器驱动模块的导入语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "get_welcome",
+        "text": "driver.get(\"https://example.com/welcome\")",
+        "category": "selenium_navigation",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "打开欢迎页的方法调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "find_heading",
+        "text": "driver.find_element(By.TAG_NAME, \"h1\")",
+        "category": "selenium_locate",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "按标签名定位标题元素的调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "read_text",
+        "text": "message = heading.text",
+        "category": "selenium_extract",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "读取元素可见文本的赋值语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "print_message",
+        "text": "print(message)",
+        "category": "selenium_extract",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "打印文本内容的语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "browser_quit",
+        "text": "driver.quit()",
+        "category": "selenium_lifecycle",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "退出浏览器的调用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 元素的可见文本通过 text 属性读取，常用于断言页面内容。",
+      "level_2": "📖 先用标签名定位 h1，再把 text 属性保存到变量中打印出来。",
+      "level_3": "👀 共 6 空：① 导入 webdriver 模块的语句；② 打开欢迎页的调用；③ 按标签名定位标题的调用；④ 读取可见文本的赋值语句；⑤ 打印文本的语句；⑥ 退出浏览器的调用。",
+      "level_4": "📝 正确答案：`from selenium import webdriver`、`driver.get(\"https://example.com/welcome\")`、`driver.find_element(By.TAG_NAME, \"h1\")`、`message = heading.text`、`print(message)`、`driver.quit()`"
+    },
+    "explanation": "text 返回浏览器渲染后的可见文本并去除首尾空白；隐藏元素的 text 是空字符串。"
+  },
+  {
+    "id": "selenium-012",
+    "title": "读取元素属性",
+    "description": "用 get_attribute 获取链接的 href",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "easy",
+    "category": "selenium_extract",
+    "subcategory": "selenium",
+    "full_code": "from selenium import webdriver\nfrom selenium.webdriver.common.by import By\n\ndriver = webdriver.Chrome()\ndriver.get(\"https://example.com\")\nlink = driver.find_element(By.LINK_TEXT, \"Help\")\nhref = link.get_attribute(\"href\")\nprint(href)\ndriver.quit()",
+    "expected": "",
+    "points": [
+      {
+        "id": "import_by",
+        "text": "from selenium.webdriver.common.by import By",
+        "category": "selenium_locate",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "导入定位器常量所在模块的语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "get_page",
+        "text": "driver.get(\"https://example.com\")",
+        "category": "selenium_navigation",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "打开页面的方法调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "link_text_locator",
+        "text": "By.LINK_TEXT",
+        "category": "selenium_locate",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "按链接完整文字定位的定位器常量",
+        "fill_type": "text"
+      },
+      {
+        "id": "read_href",
+        "text": "href = link.get_attribute(\"href\")",
+        "category": "selenium_extract",
+        "min_weight": "easy",
+        "weight_score": 1.5,
+        "hint": "读取链接地址属性的赋值语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "print_href",
+        "text": "print(href)",
+        "category": "selenium_extract",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "打印属性值的语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "browser_quit",
+        "text": "driver.quit()",
+        "category": "selenium_lifecycle",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "退出浏览器的调用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 text 读可见文字，属性读取方法读 HTML 属性，两者分工不同。",
+      "level_2": "📖 按链接文字定位拿到元素后，用属性读取方法把地址字符串取回来。",
+      "level_3": "👀 共 6 空：① 导入 By 常量的语句；② 打开页面的调用；③ 按链接文字定位的定位器常量；④ 读取地址属性的赋值语句；⑤ 打印属性值的语句；⑥ 退出浏览器的调用。",
+      "level_4": "📝 正确答案：`from selenium.webdriver.common.by import By`、`driver.get(\"https://example.com\")`、`By.LINK_TEXT`、`href = link.get_attribute(\"href\")`、`print(href)`、`driver.quit()`"
+    },
+    "explanation": "get_attribute 返回属性值字符串；属性不存在时返回 None，使用前最好先断言。"
+  },
+  {
+    "id": "selenium-013",
+    "title": "下拉框选择",
+    "description": "用 Select 按可见文本选择国家",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "medium",
+    "category": "selenium_select",
+    "subcategory": "selenium",
+    "full_code": "from selenium import webdriver\nfrom selenium.webdriver.common.by import By\nfrom selenium.webdriver.support.ui import Select\n\ndriver = webdriver.Chrome()\ndriver.get(\"https://example.com/register\")\ncountry = driver.find_element(By.ID, \"country\")\nselect = Select(country)\nselect.select_by_visible_text(\"China\")\ndriver.quit()",
+    "expected": "",
+    "points": [
+      {
+        "id": "import_select",
+        "text": "from selenium.webdriver.support.ui import Select",
+        "category": "selenium_select",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "导入下拉框支持类的语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "locate_country",
+        "text": "country = driver.find_element(By.ID, \"country\")",
+        "category": "selenium_locate",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "定位国家下拉框的赋值语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "wrap_select",
+        "text": "select = Select(country)",
+        "category": "selenium_select",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "把下拉元素包装成支持类对象的赋值语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "select_by_text",
+        "text": "select.select_by_visible_text(\"China\")",
+        "category": "selenium_select",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "按可见文本选择选项的方法调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "browser_quit",
+        "text": "driver.quit()",
+        "category": "selenium_lifecycle",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "退出浏览器的调用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 原生 select 元素要用专门的类包装后，再按文本、值或下标选择选项。",
+      "level_2": "📖 支持类来自 support.ui 模块；按显示文字选择的方法接收页面上的可见文本。",
+      "level_3": "👀 共 5 空：① 导入下拉框支持类的语句；② 定位国家下拉框的赋值语句；③ 包装成支持类对象的赋值语句；④ 按可见文本选择选项的调用；⑤ 退出浏览器的调用。",
+      "level_4": "📝 正确答案：`from selenium.webdriver.support.ui import Select`、`country = driver.find_element(By.ID, \"country\")`、`select = Select(country)`、`select.select_by_visible_text(\"China\")`、`driver.quit()`"
+    },
+    "explanation": "Select 只适用于原生 select 标签；自定义下拉组件仍需普通点击。另有按 value 属性和按下标选择的方法。"
+  },
+  {
+    "id": "selenium-014",
+    "title": "隐式等待",
+    "description": "设置隐式等待后定位状态元素",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "medium",
+    "category": "selenium_wait",
+    "subcategory": "selenium",
+    "full_code": "from selenium import webdriver\nfrom selenium.webdriver.common.by import By\n\ndriver = webdriver.Chrome()\ndriver.implicitly_wait(10)\ndriver.get(\"https://example.com/dashboard\")\nbox = driver.find_element(By.CLASS_NAME, \"status\")\nprint(box.text)\ndriver.quit()",
+    "expected": "",
+    "points": [
+      {
+        "id": "import_webdriver",
+        "text": "from selenium import webdriver",
+        "category": "selenium_setup",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "引入浏览器驱动模块的导入语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "implicit_wait",
+        "text": "driver.implicitly_wait(10)",
+        "category": "selenium_wait",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "设置 10 秒隐式等待的方法调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "get_dashboard",
+        "text": "driver.get(\"https://example.com/dashboard\")",
+        "category": "selenium_navigation",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "打开仪表盘页的方法调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "class_locator",
+        "text": "By.CLASS_NAME",
+        "category": "selenium_locate",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "按 class 属性定位的定位器常量",
+        "fill_type": "text"
+      },
+      {
+        "id": "print_text",
+        "text": "print(box.text)",
+        "category": "selenium_extract",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "打印元素可见文本的语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "browser_quit",
+        "text": "driver.quit()",
+        "category": "selenium_lifecycle",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "退出浏览器的调用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 隐式等待是全局设置：查找元素时若暂时找不到，会在超时前反复重试。",
+      "level_2": "📖 设置 10 秒后，后续每次元素查找都会沿用这个超时；class 定位常量对应元素的 class 属性。",
+      "level_3": "👀 共 6 空：① 导入 webdriver 模块的语句；② 设置 10 秒隐式等待的调用；③ 打开仪表盘页的调用；④ 按 class 定位的定位器常量；⑤ 打印元素文本的语句；⑥ 退出浏览器的调用。",
+      "level_4": "📝 正确答案：`from selenium import webdriver`、`driver.implicitly_wait(10)`、`driver.get(\"https://example.com/dashboard\")`、`By.CLASS_NAME`、`print(box.text)`、`driver.quit()`"
+    },
+    "explanation": "隐式等待设置一次即对整个会话生效，但只作用于元素查找，无法等待可点击等状态，复杂场景建议用显式等待。"
+  },
+  {
+    "id": "selenium-015",
+    "title": "显式等待可点击",
+    "description": "用 WebDriverWait 等待按钮变为可点击",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "medium",
+    "category": "selenium_wait",
+    "subcategory": "selenium",
+    "full_code": "from selenium import webdriver\nfrom selenium.webdriver.common.by import By\nfrom selenium.webdriver.support.ui import WebDriverWait\nfrom selenium.webdriver.support import expected_conditions as EC\n\ndriver = webdriver.Chrome()\ndriver.get(\"https://example.com\")\nwait = WebDriverWait(driver, 10)\nbutton = wait.until(EC.element_to_be_clickable((By.ID, \"submit\")))\nbutton.click()\ndriver.quit()",
+    "expected": "",
+    "points": [
+      {
+        "id": "import_webdriver",
+        "text": "from selenium import webdriver",
+        "category": "selenium_setup",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "引入浏览器驱动模块的导入语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "import_wait",
+        "text": "from selenium.webdriver.support.ui import WebDriverWait",
+        "category": "selenium_wait",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "导入显式等待类的语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "import_ec",
+        "text": "from selenium.webdriver.support import expected_conditions as EC",
+        "category": "selenium_wait",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "导入期望条件模块并起别名的语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "create_wait",
+        "text": "wait = WebDriverWait(driver, 10)",
+        "category": "selenium_wait",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "创建 10 秒超时等待对象的赋值语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "until_clickable",
+        "text": "EC.element_to_be_clickable((By.ID, \"submit\"))",
+        "category": "selenium_wait",
+        "min_weight": "hard",
+        "weight_score": 2,
+        "hint": "等待按钮可点击的期望条件表达式",
+        "fill_type": "text"
+      },
+      {
+        "id": "click_button",
+        "text": "button.click()",
+        "category": "selenium_action",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "点击按钮的方法调用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 显式等待针对具体条件轮询，条件满足立即返回，比隐式等待更精准。",
+      "level_2": "📖 等待对象用 until 接收条件；条件需要 (定位方式, 值) 的元组，注意双层括号。",
+      "level_3": "👀 共 6 空：① 导入 webdriver 模块的语句；② 导入显式等待类的语句；③ 导入期望条件模块并起别名的语句；④ 创建 10 秒等待对象的赋值语句；⑤ 等待按钮可点击的条件表达式；⑥ 点击按钮的调用。",
+      "level_4": "📝 正确答案：`from selenium import webdriver`、`from selenium.webdriver.support.ui import WebDriverWait`、`from selenium.webdriver.support import expected_conditions as EC`、`wait = WebDriverWait(driver, 10)`、`EC.element_to_be_clickable((By.ID, \"submit\"))`、`button.click()`"
+    },
+    "explanation": "element_to_be_clickable 同时要求元素可见且启用；until 在超时前未满足条件会抛 TimeoutException。"
+  },
+  {
+    "id": "selenium-016",
+    "title": "等待元素出现",
+    "description": "用 EC.presence_of_element_located 等待加载",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "medium",
+    "category": "selenium_wait",
+    "subcategory": "selenium",
+    "full_code": "from selenium import webdriver\nfrom selenium.webdriver.common.by import By\nfrom selenium.webdriver.support.ui import WebDriverWait\nfrom selenium.webdriver.support import expected_conditions as EC\n\ndriver = webdriver.Chrome()\ndriver.get(\"https://example.com/loading\")\nwait = WebDriverWait(driver, 15)\nwait.until(EC.presence_of_element_located((By.CSS_SELECTOR, \".loaded\")))\ndriver.quit()",
+    "expected": "",
+    "points": [
+      {
+        "id": "import_by",
+        "text": "from selenium.webdriver.common.by import By",
+        "category": "selenium_locate",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "导入定位器常量所在模块的语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "get_loading",
+        "text": "driver.get(\"https://example.com/loading\")",
+        "category": "selenium_navigation",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "打开加载页的方法调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "create_wait",
+        "text": "wait = WebDriverWait(driver, 15)",
+        "category": "selenium_wait",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "创建 15 秒超时等待对象的赋值语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "until_presence",
+        "text": "wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, \".loaded\")))",
+        "category": "selenium_wait",
+        "min_weight": "hard",
+        "weight_score": 2,
+        "hint": "等待元素出现在 DOM 中的表达式",
+        "fill_type": "text"
+      },
+      {
+        "id": "browser_quit",
+        "text": "driver.quit()",
+        "category": "selenium_lifecycle",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "退出浏览器的调用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 只要求元素进入 DOM 而不要求可见或可点击时，用出现类期望条件最合适。",
+      "level_2": "📖 等待表达式由 until 接收条件构成；条件同样接收 (定位方式, 值) 元组。",
+      "level_3": "👀 共 5 空：① 导入 By 常量的语句；② 打开加载页的调用；③ 创建 15 秒等待对象的赋值语句；④ 等待元素出现在 DOM 中的表达式；⑤ 退出浏览器的调用。",
+      "level_4": "📝 正确答案：`from selenium.webdriver.common.by import By`、`driver.get(\"https://example.com/loading\")`、`wait = WebDriverWait(driver, 15)`、`wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, \".loaded\")))`、`driver.quit()`"
+    },
+    "explanation": "presence_of_element_located 适合等待异步渲染的内容出现；如果还要点击，应改用可点击条件。"
+  },
+  {
+    "id": "selenium-017",
+    "title": "鼠标悬停",
+    "description": "用 ActionChains 悬停在菜单上",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "hard",
+    "category": "selenium_action",
+    "subcategory": "selenium",
+    "full_code": "from selenium import webdriver\nfrom selenium.webdriver.common.by import By\nfrom selenium.webdriver.common.action_chains import ActionChains\n\ndriver = webdriver.Chrome()\ndriver.get(\"https://example.com/menu\")\nmenu = driver.find_element(By.ID, \"menu\")\nactions = ActionChains(driver)\nactions.move_to_element(menu).perform()\ndriver.quit()",
+    "expected": "",
+    "points": [
+      {
+        "id": "import_action_chains",
+        "text": "from selenium.webdriver.common.action_chains import ActionChains",
+        "category": "selenium_action",
+        "min_weight": "hard",
+        "weight_score": 1.5,
+        "hint": "导入鼠标动作链类的语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "get_menu",
+        "text": "driver.get(\"https://example.com/menu\")",
+        "category": "selenium_navigation",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "打开菜单页的方法调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "locate_menu",
+        "text": "menu = driver.find_element(By.ID, \"menu\")",
+        "category": "selenium_locate",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "定位菜单元素的赋值语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "create_actions",
+        "text": "actions = ActionChains(driver)",
+        "category": "selenium_action",
+        "min_weight": "hard",
+        "weight_score": 1.5,
+        "hint": "创建动作链对象的赋值语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "hover_menu",
+        "text": "actions.move_to_element(menu).perform()",
+        "category": "selenium_action",
+        "min_weight": "hard",
+        "weight_score": 2,
+        "hint": "悬停到元素并提交动作链的表达式",
+        "fill_type": "text"
+      },
+      {
+        "id": "browser_quit",
+        "text": "driver.quit()",
+        "category": "selenium_lifecycle",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "退出浏览器的调用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 悬停、拖拽等复杂鼠标操作要用动作链编排，最后提交才会真正执行。",
+      "level_2": "📖 动作链对象由 driver 构造；把指针移到目标元素后必须调用 perform 提交。",
+      "level_3": "👀 共 6 空：① 导入动作链类的语句；② 打开菜单页的调用；③ 定位菜单元素的赋值语句；④ 创建动作链对象的赋值语句；⑤ 悬停并提交动作链的表达式；⑥ 退出浏览器的调用。",
+      "level_4": "📝 正确答案：`from selenium.webdriver.common.action_chains import ActionChains`、`driver.get(\"https://example.com/menu\")`、`menu = driver.find_element(By.ID, \"menu\")`、`actions = ActionChains(driver)`、`actions.move_to_element(menu).perform()`、`driver.quit()`"
+    },
+    "explanation": "move_to_element 只把指针移到元素中心，必须 perform() 才提交整条链；悬停常用于展开二级菜单。"
+  },
+  {
+    "id": "selenium-018",
+    "title": "拖拽元素",
+    "description": "用 drag_and_drop 把方块拖到目标区",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "hard",
+    "category": "selenium_action",
+    "subcategory": "selenium",
+    "full_code": "from selenium import webdriver\nfrom selenium.webdriver.common.by import By\nfrom selenium.webdriver.common.action_chains import ActionChains\n\ndriver = webdriver.Chrome()\ndriver.get(\"https://example.com/dnd\")\nsource = driver.find_element(By.ID, \"draggable\")\ntarget = driver.find_element(By.ID, \"droppable\")\nactions = ActionChains(driver)\nactions.drag_and_drop(source, target).perform()\ndriver.quit()",
+    "expected": "",
+    "points": [
+      {
+        "id": "import_action_chains",
+        "text": "from selenium.webdriver.common.action_chains import ActionChains",
+        "category": "selenium_action",
+        "min_weight": "hard",
+        "weight_score": 1.5,
+        "hint": "导入鼠标动作链类的语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "locate_source",
+        "text": "source = driver.find_element(By.ID, \"draggable\")",
+        "category": "selenium_locate",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "定位可拖动元素的赋值语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "locate_target",
+        "text": "target = driver.find_element(By.ID, \"droppable\")",
+        "category": "selenium_locate",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "定位拖拽目标区的赋值语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "create_actions",
+        "text": "actions = ActionChains(driver)",
+        "category": "selenium_action",
+        "min_weight": "hard",
+        "weight_score": 1.5,
+        "hint": "创建动作链对象的赋值语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "drag_drop",
+        "text": "actions.drag_and_drop(source, target).perform()",
+        "category": "selenium_action",
+        "min_weight": "hard",
+        "weight_score": 2,
+        "hint": "执行拖拽并提交动作链的表达式",
+        "fill_type": "text"
+      },
+      {
+        "id": "browser_quit",
+        "text": "driver.quit()",
+        "category": "selenium_lifecycle",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "退出浏览器的调用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 拖拽方法接收起点与终点两个元素，内部会拆成按下、移动、释放三步。",
+      "level_2": "📖 先分别定位可拖动元素与目标区域，再交给动作链对象执行。",
+      "level_3": "👀 共 6 空：① 导入动作链类的语句；② 定位可拖动元素的赋值语句；③ 定位拖拽目标区的赋值语句；④ 创建动作链对象的赋值语句；⑤ 执行拖拽并提交动作链的表达式；⑥ 退出浏览器的调用。",
+      "level_4": "📝 正确答案：`from selenium.webdriver.common.action_chains import ActionChains`、`source = driver.find_element(By.ID, \"draggable\")`、`target = driver.find_element(By.ID, \"droppable\")`、`actions = ActionChains(driver)`、`actions.drag_and_drop(source, target).perform()`、`driver.quit()`"
+    },
+    "explanation": "drag_and_drop(source, target) 等价于按住起点、移动到终点、释放；纯 HTML5 拖拽场景可能需要 JS 模拟。"
+  },
+  {
+    "id": "selenium-019",
+    "title": "切入 iframe",
+    "description": "切到 iframe 内输入内容再切回主文档",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "medium",
+    "category": "selenium_frame",
+    "subcategory": "selenium",
+    "full_code": "from selenium import webdriver\nfrom selenium.webdriver.common.by import By\n\ndriver = webdriver.Chrome()\ndriver.get(\"https://example.com/editor\")\nframe = driver.find_element(By.CSS_SELECTOR, \"iframe#editor\")\ndriver.switch_to.frame(frame)\nbody = driver.find_element(By.TAG_NAME, \"body\")\nbody.send_keys(\"hello\")\ndriver.switch_to.default_content()\ndriver.quit()",
+    "expected": "",
+    "points": [
+      {
+        "id": "import_by",
+        "text": "from selenium.webdriver.common.by import By",
+        "category": "selenium_locate",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "导入定位器常量所在模块的语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "locate_frame",
+        "text": "frame = driver.find_element(By.CSS_SELECTOR, \"iframe#editor\")",
+        "category": "selenium_frame",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "定位 iframe 元素的赋值语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "switch_frame",
+        "text": "driver.switch_to.frame(frame)",
+        "category": "selenium_frame",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "切入 iframe 上下文的方法调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "type_body",
+        "text": "body.send_keys(\"hello\")",
+        "category": "selenium_action",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "向框架内元素键入文本的调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "back_default",
+        "text": "driver.switch_to.default_content()",
+        "category": "selenium_frame",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "切回主文档上下文的方法调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "browser_quit",
+        "text": "driver.quit()",
+        "category": "selenium_lifecycle",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "退出浏览器的调用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 iframe 内的元素必须先切换上下文才能定位，操作完要切回主文档。",
+      "level_2": "📖 switch_to 负责上下文切换；切入传元素对象，切回主文档用 default_content。",
+      "level_3": "👀 共 6 空：① 导入 By 常量的语句；② 定位 iframe 元素的赋值语句；③ 切入 iframe 的调用；④ 向框架内元素键入文本的调用；⑤ 切回主文档的调用；⑥ 退出浏览器的调用。",
+      "level_4": "📝 正确答案：`from selenium.webdriver.common.by import By`、`frame = driver.find_element(By.CSS_SELECTOR, \"iframe#editor\")`、`driver.switch_to.frame(frame)`、`body.send_keys(\"hello\")`、`driver.switch_to.default_content()`、`driver.quit()`"
+    },
+    "explanation": "Selenium 一次只能操作一个浏览上下文；切进 iframe 后原页面元素不可见，必须切回才能继续操作。"
+  },
+  {
+    "id": "selenium-020",
+    "title": "切换窗口",
+    "description": "记录窗口句柄并在新窗口间切换",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "hard",
+    "category": "selenium_window",
+    "subcategory": "selenium",
+    "full_code": "from selenium import webdriver\nfrom selenium.webdriver.common.by import By\n\ndriver = webdriver.Chrome()\ndriver.get(\"https://example.com\")\ndriver.find_element(By.LINK_TEXT, \"Docs\").click()\nhandles = driver.window_handles\ndriver.switch_to.window(handles[1])\nprint(driver.title)\ndriver.close()\ndriver.switch_to.window(handles[0])\ndriver.quit()",
+    "expected": "",
+    "points": [
+      {
+        "id": "import_webdriver",
+        "text": "from selenium import webdriver",
+        "category": "selenium_setup",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "引入浏览器驱动模块的导入语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "get_handles",
+        "text": "handles = driver.window_handles",
+        "category": "selenium_window",
+        "min_weight": "hard",
+        "weight_score": 2,
+        "hint": "读取全部窗口句柄的赋值语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "switch_new",
+        "text": "driver.switch_to.window(handles[1])",
+        "category": "selenium_window",
+        "min_weight": "hard",
+        "weight_score": 2,
+        "hint": "切换到新窗口的方法调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "close_window",
+        "text": "driver.close()",
+        "category": "selenium_window",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "关闭当前窗口的方法调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "switch_back",
+        "text": "driver.switch_to.window(handles[0])",
+        "category": "selenium_window",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "切回原窗口的方法调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "browser_quit",
+        "text": "driver.quit()",
+        "category": "selenium_lifecycle",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "结束整个会话的调用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 新窗口打开后 driver 仍停留在原窗口，窗口句柄列表记录了所有窗口。",
+      "level_2": "📖 用句柄列表加下标切换窗口；典型流程是记录句柄、切到新窗口、关闭后切回原窗口。",
+      "level_3": "👀 共 6 空：① 导入 webdriver 模块的语句；② 读取全部窗口句柄的赋值语句；③ 切换到新窗口的调用；④ 关闭当前窗口的调用；⑤ 切回原窗口的调用；⑥ 结束会话的调用。",
+      "level_4": "📝 正确答案：`from selenium import webdriver`、`handles = driver.window_handles`、`driver.switch_to.window(handles[1])`、`driver.close()`、`driver.switch_to.window(handles[0])`、`driver.quit()`"
+    },
+    "explanation": "window_handles 的句柄顺序通常按窗口打开先后排列；close() 只关当前窗口，quit() 才结束整个会话。"
+  },
+  {
+    "id": "selenium-021",
+    "title": "处理弹窗",
+    "description": "接受 JavaScript 确认框并读取提示",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "medium",
+    "category": "selenium_alert",
+    "subcategory": "selenium",
+    "full_code": "from selenium import webdriver\nfrom selenium.webdriver.common.by import By\n\ndriver = webdriver.Chrome()\ndriver.get(\"https://example.com/alerts\")\ndriver.find_element(By.ID, \"confirm\").click()\nalert = driver.switch_to.alert\nmessage = alert.text\nalert.accept()\ndriver.quit()",
+    "expected": "",
+    "points": [
+      {
+        "id": "import_by",
+        "text": "from selenium.webdriver.common.by import By",
+        "category": "selenium_locate",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "导入定位器常量所在模块的语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "click_confirm",
+        "text": "driver.find_element(By.ID, \"confirm\")",
+        "category": "selenium_action",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "定位触发弹窗的元素",
+        "fill_type": "text"
+      },
+      {
+        "id": "switch_alert",
+        "text": "alert = driver.switch_to.alert",
+        "category": "selenium_alert",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "切换到弹窗对象的赋值语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "read_alert_text",
+        "text": "message = alert.text",
+        "category": "selenium_alert",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "读取弹窗提示文字的赋值语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "accept_alert",
+        "text": "alert.accept()",
+        "category": "selenium_alert",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "确认弹窗的方法调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "browser_quit",
+        "text": "driver.quit()",
+        "category": "selenium_lifecycle",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "退出浏览器的调用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 原生弹窗不能用普通定位，要切换到弹窗上下文再操作。",
+      "level_2": "📖 切换到弹窗后可以读文字，用确认方法关掉对话框，另有取消方法。",
+      "level_3": "👀 共 6 空：① 导入 By 常量的语句；② 定位触发弹窗的元素；③ 切换到弹窗对象的赋值语句；④ 读取弹窗提示文字的赋值语句；⑤ 确认弹窗的调用；⑥ 退出浏览器的调用。",
+      "level_4": "📝 正确答案：`from selenium.webdriver.common.by import By`、`driver.find_element(By.ID, \"confirm\")`、`alert = driver.switch_to.alert`、`message = alert.text`、`alert.accept()`、`driver.quit()`"
+    },
+    "explanation": "弹窗只能在出现时操作，处理完自动回到页面；未出现就切换会抛 NoAlertPresentException。"
+  },
+  {
+    "id": "selenium-022",
+    "title": "执行 JavaScript",
+    "description": "用 execute_script 滚动页面到底部",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "hard",
+    "category": "selenium_script",
+    "subcategory": "selenium",
+    "full_code": "from selenium import webdriver\n\ndriver = webdriver.Chrome()\ndriver.get(\"https://example.com/long\")\ndriver.execute_script(\"window.scrollTo(0, document.body.scrollHeight);\")\ntitle = driver.title\nprint(title)\ndriver.quit()",
+    "expected": "",
+    "points": [
+      {
+        "id": "import_webdriver",
+        "text": "from selenium import webdriver",
+        "category": "selenium_setup",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "引入浏览器驱动模块的导入语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "get_long",
+        "text": "driver.get(\"https://example.com/long\")",
+        "category": "selenium_navigation",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "打开长页面的方法调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "exec_scroll",
+        "text": "driver.execute_script(\"window.scrollTo(0, document.body.scrollHeight);\")",
+        "category": "selenium_script",
+        "min_weight": "hard",
+        "weight_score": 2,
+        "hint": "执行滚动到底部脚本的方法调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "read_title",
+        "text": "title = driver.title",
+        "category": "selenium_extract",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "读取页面标题的赋值语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "print_title",
+        "text": "print(title)",
+        "category": "selenium_extract",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "打印标题的语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "browser_quit",
+        "text": "driver.quit()",
+        "category": "selenium_lifecycle",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "退出浏览器的调用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 浏览器原生 API 覆盖不到的操作，可以注入 JavaScript 来完成。",
+      "level_2": "📖 脚本执行是同步的；以 return 开头的脚本会把结果返回给 Python。",
+      "level_3": "👀 共 6 空：① 导入 webdriver 模块的语句；② 打开长页面的调用；③ 执行滚动到底部脚本的调用；④ 读取页面标题的赋值语句；⑤ 打印标题的语句；⑥ 退出浏览器的调用。",
+      "level_4": "📝 正确答案：`from selenium import webdriver`、`driver.get(\"https://example.com/long\")`、`driver.execute_script(\"window.scrollTo(0, document.body.scrollHeight);\")`、`title = driver.title`、`print(title)`、`driver.quit()`"
+    },
+    "explanation": "execute_script 在页面上下文中执行 JS，适合滚动、改样式等操作；返回值需为可序列化类型。"
+  },
+  {
+    "id": "selenium-023",
+    "title": "无头模式启动",
+    "description": "用 Options 配置 --headless=new 无头运行",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "medium",
+    "category": "selenium_options",
+    "subcategory": "selenium",
+    "full_code": "from selenium import webdriver\nfrom selenium.webdriver.chrome.options import Options\n\noptions = Options()\noptions.add_argument(\"--headless=new\")\noptions.add_argument(\"--window-size=1920,1080\")\ndriver = webdriver.Chrome(options=options)\ndriver.get(\"https://example.com\")\nprint(driver.title)\ndriver.quit()",
+    "expected": "",
+    "points": [
+      {
+        "id": "import_webdriver",
+        "text": "from selenium import webdriver",
+        "category": "selenium_setup",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "引入浏览器驱动模块的导入语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "import_options",
+        "text": "from selenium.webdriver.chrome.options import Options",
+        "category": "selenium_options",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "导入 Chrome 配置类的语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "create_options",
+        "text": "options = Options()",
+        "category": "selenium_options",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "创建配置对象的赋值语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "headless_arg",
+        "text": "options.add_argument(\"--headless=new\")",
+        "category": "selenium_options",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "添加新无头模式启动参数的调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "chrome_with_options",
+        "text": "driver = webdriver.Chrome(options=options)",
+        "category": "selenium_options",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "携带配置对象创建 Chrome 实例的赋值语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "browser_quit",
+        "text": "driver.quit()",
+        "category": "selenium_lifecycle",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "退出浏览器的调用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 无头模式不弹出窗口，通过浏览器配置对象传递启动参数。",
+      "level_2": "📖 参数添加方法来自配置对象；新无头写法比旧的更接近真实浏览器行为。",
+      "level_3": "👀 共 6 空：① 导入 webdriver 模块的语句；② 导入 Chrome 配置类的语句；③ 创建配置对象的赋值语句；④ 添加新无头模式参数的调用；⑤ 携带配置创建 Chrome 实例的赋值语句；⑥ 退出浏览器的调用。",
+      "level_4": "📝 正确答案：`from selenium import webdriver`、`from selenium.webdriver.chrome.options import Options`、`options = Options()`、`options.add_argument(\"--headless=new\")`、`driver = webdriver.Chrome(options=options)`、`driver.quit()`"
+    },
+    "explanation": "配置对象在创建 driver 时以 options 传入；--headless=new 是 Selenium 4.8+ 推荐的无头写法。"
+  },
+  {
+    "id": "selenium-024",
+    "title": "连接远程 Grid",
+    "description": "用 webdriver.Remote 连接本地 Grid 执行",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "expert",
+    "category": "selenium_grid",
+    "subcategory": "selenium",
+    "full_code": "from selenium import webdriver\nfrom selenium.webdriver.common.by import By\n\noptions = webdriver.ChromeOptions()\ndriver = webdriver.Remote(command_executor=\"http://localhost:4444\", options=options)\ndriver.get(\"https://example.com\")\nheading = driver.find_element(By.TAG_NAME, \"h1\")\nprint(heading.text)\ndriver.quit()",
+    "expected": "",
+    "points": [
+      {
+        "id": "import_webdriver",
+        "text": "from selenium import webdriver",
+        "category": "selenium_setup",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "引入浏览器驱动模块的导入语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "chrome_options",
+        "text": "options = webdriver.ChromeOptions()",
+        "category": "selenium_grid",
+        "min_weight": "expert",
+        "weight_score": 2,
+        "hint": "创建 Chrome 能力配置对象的赋值语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "remote_driver",
+        "text": "webdriver.Remote(command_executor=\"http://localhost:4444\", options=options)",
+        "category": "selenium_grid",
+        "min_weight": "expert",
+        "weight_score": 2,
+        "hint": "连接本地 4444 端口 Grid 的实例化表达式",
+        "fill_type": "text"
+      },
+      {
+        "id": "find_heading",
+        "text": "driver.find_element(By.TAG_NAME, \"h1\")",
+        "category": "selenium_locate",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "在远程会话中定位标题元素的调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "print_heading",
+        "text": "print(heading.text)",
+        "category": "selenium_extract",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "打印标题文本的语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "browser_quit",
+        "text": "driver.quit()",
+        "category": "selenium_lifecycle",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "结束远程会话的调用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 连 Grid 时不用本地浏览器类，而是把 Grid 地址交给远程驱动类。",
+      "level_2": "📖 远程驱动类用命令执行器指定 Grid 地址、用配置对象传浏览器能力，默认端口 4444。",
+      "level_3": "👀 共 6 空：① 导入 webdriver 模块的语句；② 创建 Chrome 配置对象的赋值语句；③ 连接本地 4444 端口 Grid 的表达式；④ 在远程会话中定位标题的调用；⑤ 打印标题文本的语句；⑥ 结束远程会话的调用。",
+      "level_4": "📝 正确答案：`from selenium import webdriver`、`options = webdriver.ChromeOptions()`、`webdriver.Remote(command_executor=\"http://localhost:4444\", options=options)`、`driver.find_element(By.TAG_NAME, \"h1\")`、`print(heading.text)`、`driver.quit()`"
+    },
+    "explanation": "Remote WebDriver 把命令发到 Grid，由匹配能力的 Node 执行；本地无需安装浏览器与驱动。"
+  },
+  {
+    "id": "selenium-025",
+    "title": "读写 Cookie",
+    "description": "add_cookie 写入后再 get_cookie 读回",
+    "exercise_type": "fill",
+    "tech_stack": "testing",
+    "weight": "expert",
+    "category": "selenium_cookies",
+    "subcategory": "selenium",
+    "full_code": "from selenium import webdriver\n\ndriver = webdriver.Chrome()\ndriver.get(\"https://example.com\")\ndriver.add_cookie({\"name\": \"session\", \"value\": \"abc123\"})\ncookie = driver.get_cookie(\"session\")\nprint(cookie[\"value\"])\ndriver.quit()",
+    "expected": "",
+    "points": [
+      {
+        "id": "import_webdriver",
+        "text": "from selenium import webdriver",
+        "category": "selenium_setup",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "引入浏览器驱动模块的导入语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "get_page",
+        "text": "driver.get(\"https://example.com\")",
+        "category": "selenium_navigation",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "打开目标域名页面的方法调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "add_cookie",
+        "text": "driver.add_cookie({\"name\": \"session\", \"value\": \"abc123\"})",
+        "category": "selenium_cookies",
+        "min_weight": "expert",
+        "weight_score": 2,
+        "hint": "写入 session Cookie 的方法调用",
+        "fill_type": "text"
+      },
+      {
+        "id": "get_cookie",
+        "text": "cookie = driver.get_cookie(\"session\")",
+        "category": "selenium_cookies",
+        "min_weight": "expert",
+        "weight_score": 2,
+        "hint": "按名称读取 Cookie 的赋值语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "print_cookie_value",
+        "text": "print(cookie[\"value\"])",
+        "category": "selenium_cookies",
+        "min_weight": "hard",
+        "weight_score": 1.5,
+        "hint": "打印 Cookie 值的语句",
+        "fill_type": "text"
+      },
+      {
+        "id": "browser_quit",
+        "text": "driver.quit()",
+        "category": "selenium_lifecycle",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "退出浏览器的调用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 Cookie 操作要基于已打开的页面域名，写入时用包含 name 与 value 的字典描述。",
+      "level_2": "📖 写入方法接收字典；读取方法按名字取回单个 Cookie，也可以用复数形式读取全部。",
+      "level_3": "👀 共 6 空：① 导入 webdriver 模块的语句；② 打开目标域名页面的调用；③ 写入 session Cookie 的调用；④ 按名称读取 Cookie 的赋值语句；⑤ 打印 Cookie 值的语句；⑥ 退出浏览器的调用。",
+      "level_4": "📝 正确答案：`from selenium import webdriver`、`driver.get(\"https://example.com\")`、`driver.add_cookie({\"name\": \"session\", \"value\": \"abc123\"})`、`cookie = driver.get_cookie(\"session\")`、`print(cookie[\"value\"])`、`driver.quit()`"
+    },
+    "explanation": "add_cookie 必须在目标域页面打开后调用，否则 Cookie 会写到错误的域；读取返回的字典包含 name、value、domain 等字段。"
+  },
+  {
+    "id": "selenium-026",
+    "title": "查询 Chrome 驱动",
+    "description": "用 selenium-manager 查询并强制下载 Chrome",
+    "exercise_type": "command",
+    "tech_stack": "testing",
+    "weight": "easy",
+    "category": "selenium_manager",
+    "subcategory": "selenium",
+    "full_code": "selenium-manager --browser chrome --force-browser-download --debug",
+    "expected": "",
+    "points": [
+      {
+        "id": "tool_name",
+        "text": "selenium-manager",
+        "category": "selenium_manager",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "Selenium 自带的浏览器与驱动管理命令行工具名",
+        "fill_type": "text"
+      },
+      {
+        "id": "browser_flag",
+        "text": "--browser chrome",
+        "category": "selenium_manager",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "指定要管理的浏览器名称与取值的参数",
+        "fill_type": "text"
+      },
+      {
+        "id": "force_download",
+        "text": "--force-browser-download",
+        "category": "selenium_manager",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "即使本机已装浏览器也强制下载对应版本的参数",
+        "fill_type": "text"
+      },
+      {
+        "id": "debug_flag",
+        "text": "--debug",
+        "category": "selenium_manager",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "让工具输出调试日志的参数",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 Selenium Manager 是随 bindings 附带的命令行工具，可独立查询或下载浏览器与驱动。",
+      "level_2": "📖 基本形式是工具名加浏览器参数，再按需附加下载策略与日志开关。",
+      "level_3": "👀 共 4 空：① 命令行工具本身的名字；② 指定管理 chrome 浏览器的参数；③ 强制下载浏览器的参数；④ 输出调试日志的参数。",
+      "level_4": "📝 正确答案：`selenium-manager`、`--browser chrome`、`--force-browser-download`、`--debug`"
+    },
+    "explanation": "Selenium Manager 4.6+ 内置于官方 bindings；--force-browser-download 可在系统已有浏览器时仍强制下载匹配版本。"
+  },
+  {
+    "id": "selenium-027",
+    "title": "启动 standalone Grid",
+    "description": "用 jar 包在 4444 端口启动单机 Grid",
+    "exercise_type": "command",
+    "tech_stack": "testing",
+    "weight": "medium",
+    "category": "selenium_grid",
+    "subcategory": "selenium",
+    "full_code": "java -jar selenium-server-4.21.0.jar standalone --port 4444 --detect-drivers true",
+    "expected": "",
+    "points": [
+      {
+        "id": "jar_command",
+        "text": "java -jar selenium-server-4.21.0.jar",
+        "category": "selenium_grid",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "用 java 运行 Grid 服务端 jar 包的命令片段",
+        "fill_type": "text"
+      },
+      {
+        "id": "standalone_mode",
+        "text": "standalone",
+        "category": "selenium_grid",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "单机同时承载 Hub 与 Node 的运行模式子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "port_flag",
+        "text": "--port 4444",
+        "category": "selenium_grid",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "指定 Grid 监听端口的参数",
+        "fill_type": "text"
+      },
+      {
+        "id": "detect_flag",
+        "text": "--detect-drivers true",
+        "category": "selenium_grid",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "开启本机驱动自动探测的参数",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 Selenium Grid 4 以可执行 jar 分发，单机模式一条命令即可启动全部组件。",
+      "level_2": "📖 单机子命令自带 Hub 与 Node 能力，默认端口 4444，自动探测驱动默认开启但可显式写出。",
+      "level_3": "👀 共 4 空：① 启动 jar 包的命令片段；② 单机模式的子命令；③ 指定端口的参数；④ 开启驱动自动探测的参数。",
+      "level_4": "📝 正确答案：`java -jar selenium-server-4.21.0.jar`、`standalone`、`--port 4444`、`--detect-drivers true`"
+    },
+    "explanation": "standalone 适合本地开发与小型 CI，一个进程同时提供路由、分发与会话执行能力。"
+  },
+  {
+    "id": "selenium-028",
+    "title": "注册 Grid 节点",
+    "description": "启动 node 并指向 Hub 地址",
+    "exercise_type": "command",
+    "tech_stack": "testing",
+    "weight": "hard",
+    "category": "selenium_grid",
+    "subcategory": "selenium",
+    "full_code": "java -jar selenium-server-4.21.0.jar node --grid-url http://hub:4444 --port 5555",
+    "expected": "",
+    "points": [
+      {
+        "id": "jar_command",
+        "text": "java -jar selenium-server-4.21.0.jar",
+        "category": "selenium_grid",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "用 java 运行 Grid 服务端 jar 包的命令片段",
+        "fill_type": "text"
+      },
+      {
+        "id": "node_mode",
+        "text": "node",
+        "category": "selenium_grid",
+        "min_weight": "hard",
+        "weight_score": 1.5,
+        "hint": "只承载浏览器会话的角色子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "grid_url",
+        "text": "--grid-url http://hub:4444",
+        "category": "selenium_grid",
+        "min_weight": "hard",
+        "weight_score": 2,
+        "hint": "告诉节点 Grid 整体对外地址的参数",
+        "fill_type": "text"
+      },
+      {
+        "id": "port_flag",
+        "text": "--port 5555",
+        "category": "selenium_grid",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "指定节点自身监听端口的参数",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 分布式部署时，节点需要知道 Hub 的地址才能注册并提供会话能力。",
+      "level_2": "📖 节点子命令启动 node；grid-url 指向 Hub 地址，节点自身端口默认 5555。",
+      "level_3": "👀 共 4 空：① 启动 jar 包的命令片段；② 节点角色的子命令；③ 指向 Hub 地址的参数；④ 指定节点端口的参数。",
+      "level_4": "📝 正确答案：`java -jar selenium-server-4.21.0.jar`、`node`、`--grid-url http://hub:4444`、`--port 5555`"
+    },
+    "explanation": "生产中通常再配合事件总线参数让节点与 Hub 通信；--grid-url 用于向外部暴露 Grid 的真实访问地址。"
+  },
+  {
+    "id": "selenium-029",
+    "title": "容器运行 Grid",
+    "description": "用 Docker 启动 standalone Chrome 节点",
+    "exercise_type": "command",
+    "tech_stack": "testing",
+    "weight": "medium",
+    "category": "selenium_docker",
+    "subcategory": "selenium",
+    "full_code": "docker run -d -p 4444:4444 --shm-size=2g selenium/standalone-chrome:latest",
+    "expected": "",
+    "points": [
+      {
+        "id": "docker_run",
+        "text": "docker run",
+        "category": "selenium_docker",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "创建并启动容器的命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "detach_port",
+        "text": "-d -p 4444:4444",
+        "category": "selenium_docker",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "后台运行并把宿主端口映射到容器 Grid 端口的参数",
+        "fill_type": "text"
+      },
+      {
+        "id": "shm_size",
+        "text": "--shm-size=2g",
+        "category": "selenium_docker",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "扩大共享内存以避免浏览器崩溃的参数",
+        "fill_type": "text"
+      },
+      {
+        "id": "image_name",
+        "text": "selenium/standalone-chrome:latest",
+        "category": "selenium_docker",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "官方提供的独立 Chrome 节点镜像名与标签",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 官方 docker-selenium 镜像可在容器里运行单机 Grid，Chrome 需要更大的共享内存。",
+      "level_2": "📖 启动参数负责后台运行与端口映射，共享内存参数调整 /dev/shm 大小，最后是镜像名。",
+      "level_3": "👀 共 4 空：① 创建并启动容器的命令；② 后台运行与端口映射的参数；③ 扩大共享内存的参数；④ 官方独立 Chrome 节点镜像名。",
+      "level_4": "📝 正确答案：`docker run`、`-d -p 4444:4444`、`--shm-size=2g`、`selenium/standalone-chrome:latest`"
+    },
+    "explanation": "Chrome 在容器中使用 /dev/shm 渲染，默认 64MB 容易崩溃，官方建议设为 2g；4444 是 Grid 默认入口端口。"
+  },
+  {
+    "id": "selenium-030",
+    "title": "查询 Firefox 驱动",
+    "description": "用 selenium-manager 以 JSON 输出 Firefox 信息",
+    "exercise_type": "command",
+    "tech_stack": "testing",
+    "weight": "medium",
+    "category": "selenium_manager",
+    "subcategory": "selenium",
+    "full_code": "selenium-manager --browser firefox --output json",
+    "expected": "",
+    "points": [
+      {
+        "id": "tool_name",
+        "text": "selenium-manager",
+        "category": "selenium_manager",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "Selenium 自带的浏览器与驱动管理命令行工具名",
+        "fill_type": "text"
+      },
+      {
+        "id": "browser_flag",
+        "text": "--browser firefox",
+        "category": "selenium_manager",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "指定要管理的浏览器名称与取值的参数",
+        "fill_type": "text"
+      },
+      {
+        "id": "output_flag",
+        "text": "--output json",
+        "category": "selenium_manager",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "以机器可读的 JSON 格式输出结果的参数",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 Selenium Manager 也能查询 Firefox 的驱动信息，并输出机器可读格式。",
+      "level_2": "📖 输出参数把默认的日志格式切换为 JSON，便于脚本解析驱动路径。",
+      "level_3": "👀 共 3 空：① 命令行工具本身的名字；② 指定管理 firefox 浏览器的参数；③ 以 JSON 格式输出的参数。",
+      "level_4": "📝 正确答案：`selenium-manager`、`--browser firefox`、`--output json`"
+    },
+    "explanation": "JSON 输出包含 driver 与 browser 的路径、版本等字段，适合在 CI 脚本中消费。"
+  }
+]

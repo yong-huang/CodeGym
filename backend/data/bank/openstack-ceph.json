@@ -1,0 +1,1747 @@
+[
+  {
+    "id": "os-ceph-001",
+    "title": "集群状态与健康检查",
+    "description": "查看 Ceph 集群概览，并展开健康检查明细",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "beginner",
+    "category": "ceph_health",
+    "subcategory": "Ceph",
+    "full_code": "ceph -s\nceph status\nceph health detail",
+    "expected": "",
+    "points": [
+      {
+        "id": "status_short",
+        "text": "ceph -s",
+        "category": "ceph_health",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "最常用的集群概览短命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "status_long",
+        "text": "ceph status",
+        "category": "ceph_health",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "与 -s 等价的长写法",
+        "fill_type": "text"
+      },
+      {
+        "id": "health_detail",
+        "text": "health detail",
+        "category": "ceph_health",
+        "min_weight": "easy",
+        "weight_score": 0.8,
+        "hint": "把每条健康告警的原因与建议展开",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 一眼看集群整体状态用什么？告警明细又怎么展开？",
+      "level_2": "📖 `ceph -s` 输出 mon/osd/pg/容量概览与整体 health；`ceph health detail` 会逐条列出 HEALTH_WARN/HEALTH_ERR 的原因",
+      "level_3": "👀 三行依次是：`ceph -s`、`ceph status`、`ceph health detail`",
+      "level_4": "📝 正确答案：`ceph -s`、`ceph status`、`health detail`"
+    },
+    "explanation": "`ceph -s`（长写法 `ceph status`）给出 monitor、OSD、PG、容量的一屏概览与整体健康状态；`ceph health detail` 把每条告警展开，包含具体原因和处置建议，是排障的第一步。"
+  },
+  {
+    "id": "os-ceph-002",
+    "title": "OSD 拓扑与容量分布",
+    "description": "查看 OSD 的 CRUSH 层级与每个 OSD 的容量使用率",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "beginner",
+    "category": "ceph_osd",
+    "subcategory": "Ceph",
+    "full_code": "ceph osd tree\nceph osd df",
+    "expected": "",
+    "points": [
+      {
+        "id": "osd_tree_1",
+        "text": "ceph",
+        "category": "ceph_osd",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "以 root/host/osd 树形展示层级、权重与 up/down 状态",
+        "fill_type": "text"
+      },
+      {
+        "id": "osd_tree_2",
+        "text": "osd",
+        "category": "ceph_osd",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "以 root/host/osd 树形展示层级、权重与 up/down 状态",
+        "fill_type": "text"
+      },
+      {
+        "id": "osd_tree_3",
+        "text": "tree",
+        "category": "ceph_osd",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "以 root/host/osd 树形展示层级、权重与 up/down 状态",
+        "fill_type": "text"
+      },
+      {
+        "id": "osd_df_1",
+        "text": "df",
+        "category": "ceph_osd",
+        "min_weight": "easy",
+        "weight_score": 1.0,
+        "hint": "按 OSD 列出容量、使用率与 PG 数量，加 tree 可按层级聚合",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 OSD 的层级归属和容量倾斜分别看哪个命令？",
+      "level_2": "📖 `ceph osd tree` 展示 CRUSH bucket 树与权重；`ceph osd df` 展示每个 OSD 的容量利用率，`ceph osd df tree` 按层级汇总",
+      "level_3": "👀 `ceph osd tree` 与 `ceph osd df`",
+      "level_4": "📝 正确答案：`ceph`、`osd`、`tree`、`df`"
+    },
+    "explanation": "`ceph osd tree` 用来确认 OSD 是否 up、落在哪个 host 以及 CRUSH 权重；`ceph osd df` 用来发现容量倾斜（个别 OSD 使用率明显偏高会先写满，影响集群可用空间）。"
+  },
+  {
+    "id": "os-ceph-003",
+    "title": "创建 RBD 存储池并启用应用",
+    "description": "创建 vms 池、启用 rbd application 并查看池详情",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "easy",
+    "category": "ceph_pool",
+    "subcategory": "Ceph",
+    "full_code": "ceph osd pool create vms 128 128\nceph osd pool application enable vms rbd\nceph osd pool ls detail",
+    "expected": "",
+    "points": [
+      {
+        "id": "pool_create_1",
+        "text": "osd",
+        "category": "ceph_pool",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "创建存储池的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "pool_create_2",
+        "text": "pool",
+        "category": "ceph_pool",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "创建存储池的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "pool_create_3",
+        "text": "create",
+        "category": "ceph_pool",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "创建存储池的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "pool_pg_1",
+        "text": "vms",
+        "category": "ceph_pool",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "池名 + pg_num + pgp_num（示例各 128）",
+        "fill_type": "text"
+      },
+      {
+        "id": "pool_pg_2",
+        "text": "128",
+        "category": "ceph_pool",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "池名 + pg_num + pgp_num（示例各 128）",
+        "fill_type": "text"
+      },
+      {
+        "id": "pool_app_1",
+        "text": "application",
+        "category": "ceph_pool",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "把池声明为 RBD 应用，否则 ceph -s 会报 POOL_APP_NOT_ENABLED",
+        "fill_type": "text"
+      },
+      {
+        "id": "pool_app_2",
+        "text": "enable",
+        "category": "ceph_pool",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "把池声明为 RBD 应用，否则 ceph -s 会报 POOL_APP_NOT_ENABLED",
+        "fill_type": "text"
+      },
+      {
+        "id": "pool_app_3",
+        "text": "rbd",
+        "category": "ceph_pool",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "把池声明为 RBD 应用，否则 ceph -s 会报 POOL_APP_NOT_ENABLED",
+        "fill_type": "text"
+      },
+      {
+        "id": "pool_ls_1",
+        "text": "ls",
+        "category": "ceph_pool",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "列出池并显示 pg 数、副本数、application 等详情",
+        "fill_type": "text"
+      },
+      {
+        "id": "pool_ls_2",
+        "text": "detail",
+        "category": "ceph_pool",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "列出池并显示 pg 数、副本数、application 等详情",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 给 OpenStack 建一个 RBD 池需要哪几步？",
+      "level_2": "📖 `ceph osd pool create <pool> <pg_num> <pgp_num>` 建池后必须 `ceph osd pool application enable <pool> rbd` 声明用途",
+      "level_3": "👀 三行依次是 create / application enable / ls detail",
+      "level_4": "📝 正确答案：`osd`、`pool`、`create`、`vms`、`128`、`application`、`enable`、`rbd`、`ls`、`detail`"
+    },
+    "explanation": "Ceph 要求每个池声明 application（rbd、cephfs 或 rgw），否则健康检查会持续告警。pg_num/pgp_num 决定 PG 数量，在新版本中 pgp_num 默认跟随 pg_num，显式写出便于教学与核对。"
+  },
+  {
+    "id": "os-ceph-004",
+    "title": "rbd pool init 初始化存储池",
+    "description": "用 rbd pool init 为 vms 与 images 池初始化 RBD 元数据",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "beginner",
+    "category": "ceph_rbd",
+    "subcategory": "Ceph",
+    "full_code": "rbd pool init vms\nrbd pool init images",
+    "expected": "",
+    "points": [
+      {
+        "id": "init_vms_1",
+        "text": "rbd",
+        "category": "ceph_rbd",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "为 vms 池初始化 RBD（启用 rbd application 并写入默认 rbd profile）",
+        "fill_type": "text"
+      },
+      {
+        "id": "init_vms_2",
+        "text": "pool",
+        "category": "ceph_rbd",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "为 vms 池初始化 RBD（启用 rbd application 并写入默认 rbd profile）",
+        "fill_type": "text"
+      },
+      {
+        "id": "init_vms_3",
+        "text": "init",
+        "category": "ceph_rbd",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "为 vms 池初始化 RBD（启用 rbd application 并写入默认 rbd profile）",
+        "fill_type": "text"
+      },
+      {
+        "id": "init_vms_4",
+        "text": "vms",
+        "category": "ceph_rbd",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "为 vms 池初始化 RBD（启用 rbd application 并写入默认 rbd profile）",
+        "fill_type": "text"
+      },
+      {
+        "id": "init_images_1",
+        "text": "images",
+        "category": "ceph_rbd",
+        "min_weight": "easy",
+        "weight_score": 1.0,
+        "hint": "对镜像池 images 做同样的初始化",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 除了 application enable，还有哪条命令专门为 RBD 初始化池？",
+      "level_2": "📖 `rbd pool init <pool>` 会启用 rbd application 并创建默认的 rbd profile，`rbd create` 前建议先执行",
+      "level_3": "👀 `rbd pool init vms` 与 `rbd pool init images`",
+      "level_4": "📝 正确答案：`rbd`、`pool`、`init`、`vms`、`images`"
+    },
+    "explanation": "`rbd pool init <pool>` 是幂等操作：它会启用池的 rbd application 并创建名为 rbd 的默认 profile，之后创建的镜像默认继承该 profile 的配置（如 pg 数量、object size 等）。"
+  },
+  {
+    "id": "os-ceph-005",
+    "title": "创建、列出与查看 RBD 镜像",
+    "description": "创建一个 10 GiB 镜像，列出池内镜像并查看详情",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "easy",
+    "category": "ceph_rbd",
+    "subcategory": "Ceph",
+    "full_code": "rbd create --size 10240 vms/disk1\nrbd ls vms\nrbd info vms/disk1",
+    "expected": "",
+    "points": [
+      {
+        "id": "rbd_create",
+        "text": "rbd create",
+        "category": "ceph_rbd",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "创建镜像的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "rbd_size",
+        "text": "--size 10240",
+        "category": "ceph_rbd",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "容量，默认单位 MB（10240 MB = 10 GiB）",
+        "fill_type": "text"
+      },
+      {
+        "id": "rbd_ls_1",
+        "text": "rbd",
+        "category": "ceph_rbd",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "列出池内的镜像",
+        "fill_type": "text",
+        "occurrence": 1
+      },
+      {
+        "id": "rbd_ls_2",
+        "text": "ls",
+        "category": "ceph_rbd",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "列出池内的镜像",
+        "fill_type": "text"
+      },
+      {
+        "id": "rbd_ls_3",
+        "text": "vms",
+        "category": "ceph_rbd",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "列出池内的镜像",
+        "fill_type": "text",
+        "occurrence": 1
+      },
+      {
+        "id": "rbd_info_1",
+        "text": "info",
+        "category": "ceph_rbd",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "查看镜像的 size、features、layout 等属性",
+        "fill_type": "text"
+      },
+      {
+        "id": "rbd_info_2",
+        "text": "vms/disk1",
+        "category": "ceph_rbd",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "查看镜像的 size、features、layout 等属性",
+        "fill_type": "text",
+        "occurrence": 1
+      }
+    ],
+    "hints": {
+      "level_1": "💡 创建镜像、列镜像、看详情分别用什么？",
+      "level_2": "📖 `rbd create --size <MB> <pool>/<image>`；容量默认按 MiB 计，也可写 `--size 10G` 这类后缀",
+      "level_3": "👀 三行依次是 create --size / ls / info",
+      "level_4": "📝 正确答案：`rbd create`、`--size 10240`、`rbd`、`ls`、`vms`、`info`、`vms/disk1`"
+    },
+    "explanation": "`rbd create` 的 `--size` 不带后缀时按 MiB 计算，10240 MiB 即 10 GiB；`rbd ls` 列出池内镜像名；`rbd info` 输出 size、object size、features（如 layering、exclusive-lock）等关键属性。"
+  },
+  {
+    "id": "os-ceph-006",
+    "title": "映射与解除映射 RBD 镜像",
+    "description": "以 cinder 身份把镜像映射为块设备，查看映射关系后解除",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "medium",
+    "category": "ceph_rbd",
+    "subcategory": "Ceph",
+    "full_code": "rbd map vms/disk1 --id cinder\nrbd showmapped\nrbd unmap /dev/rbd0",
+    "expected": "",
+    "points": [
+      {
+        "id": "rbd_map_1",
+        "text": "rbd",
+        "category": "ceph_rbd",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "把 RBD 镜像映射为本地块设备",
+        "fill_type": "text"
+      },
+      {
+        "id": "rbd_map_2",
+        "text": "map",
+        "category": "ceph_rbd",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "把 RBD 镜像映射为本地块设备",
+        "fill_type": "text"
+      },
+      {
+        "id": "rbd_map_3",
+        "text": "vms/disk1",
+        "category": "ceph_rbd",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "把 RBD 镜像映射为本地块设备",
+        "fill_type": "text"
+      },
+      {
+        "id": "rbd_id",
+        "text": "--id cinder",
+        "category": "ceph_rbd",
+        "min_weight": "medium",
+        "weight_score": 0.8,
+        "hint": "以 client.cinder 身份认证，读取对应 keyring",
+        "fill_type": "text"
+      },
+      {
+        "id": "rbd_showmapped",
+        "text": "rbd showmapped",
+        "category": "ceph_rbd",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "查看 pool/image 与 /dev/rbdX 的对应关系",
+        "fill_type": "text"
+      },
+      {
+        "id": "rbd_unmap_1",
+        "text": "unmap",
+        "category": "ceph_rbd",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "按设备名解除映射（也可用 pool/image 作为参数）",
+        "fill_type": "text"
+      },
+      {
+        "id": "rbd_unmap_2",
+        "text": "/dev/rbd0",
+        "category": "ceph_rbd",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "按设备名解除映射（也可用 pool/image 作为参数）",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 怎么把镜像变成 /dev/rbd0 这样的本地块设备？",
+      "level_2": "📖 map 依赖内核 rbd 模块；`--id` 选择 cephx 用户（默认 admin），对应 /etc/ceph/ceph.client.<id>.keyring",
+      "level_3": "👀 三行依次是 map（带 --id）/ showmapped / unmap",
+      "level_4": "📝 正确答案：`rbd`、`map`、`vms/disk1`、`--id cinder`、`rbd showmapped`、`unmap`、`/dev/rbd0`"
+    },
+    "explanation": "`rbd map` 把镜像映射为内核块设备并返回设备名（如 /dev/rbd0），`--id` 指定 cephx 客户端身份；`rbd showmapped` 查看当前映射；解除映射前需先 umount 设备，否则 unmap 会失败。"
+  },
+  {
+    "id": "os-ceph-007",
+    "title": "RBD 快照创建与回滚",
+    "description": "为镜像创建快照、列出快照、回滚并清理",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "medium",
+    "category": "ceph_rbd",
+    "subcategory": "Ceph",
+    "full_code": "rbd snap create vms/disk1@snap1\nrbd snap ls vms/disk1\nrbd snap rollback vms/disk1@snap1\nrbd snap purge vms/disk1",
+    "expected": "",
+    "points": [
+      {
+        "id": "snap_create_1",
+        "text": "rbd",
+        "category": "ceph_rbd",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "创建快照，语法为 image@snapshot",
+        "fill_type": "text"
+      },
+      {
+        "id": "snap_create_2",
+        "text": "snap",
+        "category": "ceph_rbd",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "创建快照，语法为 image@snapshot",
+        "fill_type": "text"
+      },
+      {
+        "id": "snap_create_3",
+        "text": "create",
+        "category": "ceph_rbd",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "创建快照，语法为 image@snapshot",
+        "fill_type": "text"
+      },
+      {
+        "id": "snap_create_4",
+        "text": "vms/disk1@snap1",
+        "category": "ceph_rbd",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "创建快照，语法为 image@snapshot",
+        "fill_type": "text"
+      },
+      {
+        "id": "snap_ls_1",
+        "text": "ls",
+        "category": "ceph_rbd",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "列出该镜像的所有快照",
+        "fill_type": "text"
+      },
+      {
+        "id": "snap_ls_2",
+        "text": "vms/disk1",
+        "category": "ceph_rbd",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "列出该镜像的所有快照",
+        "fill_type": "text",
+        "occurrence": 1
+      },
+      {
+        "id": "snap_rollback_1",
+        "text": "rollback",
+        "category": "ceph_rbd",
+        "min_weight": "medium",
+        "weight_score": 0.8,
+        "hint": "把镜像数据恢复到快照时刻，要求镜像没有活跃 watcher",
+        "fill_type": "text"
+      },
+      {
+        "id": "snap_purge_1",
+        "text": "purge",
+        "category": "ceph_rbd",
+        "min_weight": "medium",
+        "weight_score": 0.8,
+        "hint": "删除该镜像的全部快照，谨慎使用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 快照的创建、查看、回滚、清理各是什么命令？",
+      "level_2": "📖 快照名写作 `image@snap`；rollback 前一般要 umount/unmap，保证镜像没有活跃客户端",
+      "level_3": "👀 四行依次是 snap create / snap ls / snap rollback / snap purge",
+      "level_4": "📝 正确答案：`rbd`、`snap`、`create`、`vms/disk1@snap1`、`ls`、`vms/disk1`、`rollback`、`purge`"
+    },
+    "explanation": "RBD 快照是写时复制（COW）的只读时间点；`rbd snap rollback` 会把镜像回滚到快照状态，因此需要镜像没有活跃 watcher（先 umount/unmap）。生产中更常见的是 `rbd snap protect` 后 `rbd clone` 出可写副本，避免直接回滚。"
+  },
+  {
+    "id": "os-ceph-008",
+    "title": "创建 cinder 的 cephx 用户",
+    "description": "用 get-or-create 幂等创建 client.cinder 并导出密钥",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "medium",
+    "category": "ceph_auth",
+    "subcategory": "Ceph",
+    "full_code": "ceph auth get-or-create client.cinder mon 'profile rbd' osd 'profile rbd pool=volumes, profile rbd-read-only pool=images' mgr 'profile rbd pool=volumes'\nceph auth get client.cinder",
+    "expected": "",
+    "points": [
+      {
+        "id": "auth_goc_1",
+        "text": "ceph",
+        "category": "ceph_auth",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "幂等地创建或获取用户：已存在时直接返回 key，不会覆盖",
+        "fill_type": "text"
+      },
+      {
+        "id": "auth_goc_2",
+        "text": "auth",
+        "category": "ceph_auth",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "幂等地创建或获取用户：已存在时直接返回 key，不会覆盖",
+        "fill_type": "text"
+      },
+      {
+        "id": "auth_goc_3",
+        "text": "get-or-create",
+        "category": "ceph_auth",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "幂等地创建或获取用户：已存在时直接返回 key，不会覆盖",
+        "fill_type": "text"
+      },
+      {
+        "id": "auth_goc_4",
+        "text": "client.cinder",
+        "category": "ceph_auth",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "幂等地创建或获取用户：已存在时直接返回 key，不会覆盖",
+        "fill_type": "text"
+      },
+      {
+        "id": "auth_mon_1",
+        "text": "mon",
+        "category": "ceph_auth",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "MON 权限：使用内置 rbd profile",
+        "fill_type": "text"
+      },
+      {
+        "id": "auth_mon_2",
+        "text": "'profile rbd'",
+        "category": "ceph_auth",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "MON 权限：使用内置 rbd profile",
+        "fill_type": "text"
+      },
+      {
+        "id": "auth_osd_1",
+        "text": "osd",
+        "category": "ceph_auth",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "OSD 权限：volumes 池可读写，images 池只读",
+        "fill_type": "text"
+      },
+      {
+        "id": "auth_osd_2",
+        "text": "'profile rbd pool=volumes, profile rbd-read-only pool=images'",
+        "category": "ceph_auth",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "OSD 权限：volumes 池可读写，images 池只读",
+        "fill_type": "text"
+      },
+      {
+        "id": "auth_get_1",
+        "text": "get",
+        "category": "ceph_auth",
+        "min_weight": "easy",
+        "weight_score": 1.0,
+        "hint": "导出用户的 key 与 caps，可直接写入 keyring",
+        "fill_type": "text",
+        "occurrence": 1
+      }
+    ],
+    "hints": {
+      "level_1": "💡 给 Cinder 建 cephx 用户，为什么推荐 get-or-create 而不是 create？",
+      "level_2": "📖 caps 分 mon/osd/mgr 三段；官方建议用 `profile rbd`（含 blocklist 等锁所需权限），必要时再限定 pool",
+      "level_3": "👀 第一行 get-or-create 带 mon/osd/mgr caps，第二行 auth get 导出",
+      "level_4": "📝 正确答案：`ceph`、`auth`、`get-or-create`、`client.cinder`、`mon`、`'profile rbd'`、`osd`、`'profile rbd pool=volumes, profile rbd-read-only pool=images'`、`get`"
+    },
+    "explanation": "`get-or-create` 重复执行时只返回已有密钥，不会重置权限，适合自动化；`ceph auth get` 的输出即 keyring 内容，可重定向保存为 /etc/ceph/ceph.client.cinder.keyring 并分发给 cinder-volume 与 nova-compute。"
+  },
+  {
+    "id": "os-ceph-009",
+    "title": "Monitor 与 quorum 状态",
+    "description": "查看 mon 概览、quorum 成员与 monmap",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "easy",
+    "category": "ceph_mon",
+    "subcategory": "Ceph",
+    "full_code": "ceph mon stat\nceph quorum_status\nceph mon dump",
+    "expected": "",
+    "points": [
+      {
+        "id": "mon_stat_1",
+        "text": "ceph",
+        "category": "ceph_mon",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "mon 集群概览（数量、选举 epoch、quorum 成员）",
+        "fill_type": "text"
+      },
+      {
+        "id": "mon_stat_2",
+        "text": "mon",
+        "category": "ceph_mon",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "mon 集群概览（数量、选举 epoch、quorum 成员）",
+        "fill_type": "text"
+      },
+      {
+        "id": "mon_stat_3",
+        "text": "stat",
+        "category": "ceph_mon",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "mon 集群概览（数量、选举 epoch、quorum 成员）",
+        "fill_type": "text"
+      },
+      {
+        "id": "quorum_status",
+        "text": "ceph quorum_status",
+        "category": "ceph_mon",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "输出 monmap 与 quorum_names、各 rank 的详细信息",
+        "fill_type": "text"
+      },
+      {
+        "id": "mon_dump_1",
+        "text": "dump",
+        "category": "ceph_mon",
+        "min_weight": "easy",
+        "weight_score": 1.0,
+        "hint": "导出 monmap（fsid、epoch、各 mon 地址）",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 怎么看 quorum 是否完整、monmap 是否已更新？",
+      "level_2": "📖 `ceph mon stat` 是精简概览；`ceph quorum_status` 输出 JSON 形式详情（quorum_names 等）；`ceph mon dump` 导出 monmap",
+      "level_3": "👀 三行依次是 mon stat / quorum_status / mon dump",
+      "level_4": "📝 正确答案：`ceph`、`mon`、`stat`、`ceph quorum_status`、`dump`"
+    },
+    "explanation": "`ceph quorum_status` 的 JSON 里能看到 quorum_names 与每个 monitor 的 rank；新增 monitor 后用 `ceph mon dump` 核对 monmap 的 epoch 和地址是否生效。mon 集群需要多数派存活才能维持 quorum。"
+  },
+  {
+    "id": "os-ceph-010",
+    "title": "PG 自动伸缩默认配置",
+    "description": "在 ceph.conf 中设置新建池的 PG 数量与自动伸缩默认值",
+    "exercise_type": "config",
+    "tech_stack": "openstack",
+    "weight": "medium",
+    "category": "ceph_pg",
+    "subcategory": "Ceph",
+    "full_code": "[global]\nosd_pool_default_pg_autoscale_mode = on\nosd_pool_default_pg_num = 128\nmon_target_pg_per_osd = 100",
+    "expected": "",
+    "points": [
+      {
+        "id": "autoscale_mode_1",
+        "text": "osd_pool_default_pg_autoscale_mode",
+        "category": "ceph_pg",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "新建池默认开启 PG 自动伸缩（可选值 on/off/warn）",
+        "fill_type": "text"
+      },
+      {
+        "id": "autoscale_mode_2",
+        "text": "on",
+        "category": "ceph_pg",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "新建池默认开启 PG 自动伸缩（可选值 on/off/warn）",
+        "fill_type": "text"
+      },
+      {
+        "id": "default_pg_num_1",
+        "text": "osd_pool_default_pg_num",
+        "category": "ceph_pg",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "新建池的默认 PG 数",
+        "fill_type": "text"
+      },
+      {
+        "id": "default_pg_num_2",
+        "text": "128",
+        "category": "ceph_pg",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "新建池的默认 PG 数",
+        "fill_type": "text"
+      },
+      {
+        "id": "target_pg_per_osd_1",
+        "text": "mon_target_pg_per_osd",
+        "category": "ceph_pg",
+        "min_weight": "hard",
+        "weight_score": 0.5,
+        "hint": "自动伸缩器期望的每 OSD PG 数（默认 100）",
+        "fill_type": "text"
+      },
+      {
+        "id": "target_pg_per_osd_2",
+        "text": "100",
+        "category": "ceph_pg",
+        "min_weight": "hard",
+        "weight_score": 0.5,
+        "hint": "自动伸缩器期望的每 OSD PG 数（默认 100）",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 怎么让新建的池自动调整 PG 数量？",
+      "level_2": "📖 `osd_pool_default_pg_autoscale_mode` 控制默认伸缩模式；`mon_target_pg_per_osd` 决定 autoscaler 的目标密度；运行时可用 `ceph pg stat`、`ceph osd pool autoscale-status` 观察，`ceph osd pool set <pool> pg_autoscale_mode on` 单池开启",
+      "level_3": "👀 [global] 段下三行：pg_autoscale_mode / pg_num / target_pg_per_osd",
+      "level_4": "📝 正确答案：`osd_pool_default_pg_autoscale_mode`、`on`、`osd_pool_default_pg_num`、`128`、`mon_target_pg_per_osd`、`100`"
+    },
+    "explanation": "`ceph pg stat` 汇总所有 PG 的状态与数量，`ceph osd pool autoscale-status` 显示各池的伸缩建议；开启 autoscale 后，autoscaler 会依据 `mon_target_pg_per_osd` 与池的实际用量自动调整 pg_num/pgp_num，避免手工估算。"
+  },
+  {
+    "id": "os-ceph-011",
+    "title": "noout 维护模式",
+    "description": "维护前设置 noout、维护后取消，并检查集群 flags",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "medium",
+    "category": "ceph_maintenance",
+    "subcategory": "Ceph",
+    "full_code": "ceph osd set noout\nceph osd unset noout\nceph osd dump | grep flags",
+    "expected": "",
+    "points": [
+      {
+        "id": "set_noout_1",
+        "text": "ceph",
+        "category": "ceph_maintenance",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "维护（重启/升级）OSD 前设置，避免被判定 out 触发数据迁移",
+        "fill_type": "text"
+      },
+      {
+        "id": "set_noout_2",
+        "text": "osd",
+        "category": "ceph_maintenance",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "维护（重启/升级）OSD 前设置，避免被判定 out 触发数据迁移",
+        "fill_type": "text"
+      },
+      {
+        "id": "set_noout_3",
+        "text": "set",
+        "category": "ceph_maintenance",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "维护（重启/升级）OSD 前设置，避免被判定 out 触发数据迁移",
+        "fill_type": "text"
+      },
+      {
+        "id": "set_noout_4",
+        "text": "noout",
+        "category": "ceph_maintenance",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "维护（重启/升级）OSD 前设置，避免被判定 out 触发数据迁移",
+        "fill_type": "text"
+      },
+      {
+        "id": "unset_noout_1",
+        "text": "unset",
+        "category": "ceph_maintenance",
+        "min_weight": "medium",
+        "weight_score": 0.8,
+        "hint": "维护完成后取消该标志，恢复正常的 out 判定",
+        "fill_type": "text"
+      },
+      {
+        "id": "check_flags_1",
+        "text": "dump",
+        "category": "ceph_maintenance",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "确认 noout 标志已设置或已取消",
+        "fill_type": "text"
+      },
+      {
+        "id": "check_flags_2",
+        "text": "grep",
+        "category": "ceph_maintenance",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "确认 noout 标志已设置或已取消",
+        "fill_type": "text"
+      },
+      {
+        "id": "check_flags_3",
+        "text": "flags",
+        "category": "ceph_maintenance",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "确认 noout 标志已设置或已取消",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 重启一台 OSD 主机前，怎么防止数据被搬走？",
+      "level_2": "📖 `ceph osd set noout` 阻止 OSD 停止心跳后被标记为 out；完成后必须 `ceph osd unset noout`，忘记取消会降低冗余度",
+      "level_3": "👀 set noout → unset noout，中间可用 `ceph osd dump | grep flags` 核对",
+      "level_4": "📝 正确答案：`ceph`、`osd`、`set`、`noout`、`unset`、`dump`、`grep`、`flags`"
+    },
+    "explanation": "维护单台主机时先 `ceph osd set noout`，OSD 重启期间不会被标记 out，从而避免 CRUSH 触发大规模回填；维护结束后 `ceph osd unset noout` 恢复。若要进一步降低维护期间的 IO 压力，可配合 `noscrub`/`nodeep-scrub`。"
+  },
+  {
+    "id": "os-ceph-012",
+    "title": "Scrub 时间窗与深扫配置",
+    "description": "在 ceph.conf 的 [osd] 段限制 scrub 时段、负载阈值与深扫周期",
+    "exercise_type": "config",
+    "tech_stack": "openstack",
+    "weight": "hard",
+    "category": "ceph_scrub",
+    "subcategory": "Ceph",
+    "full_code": "[osd]\nosd_scrub_begin_hour = 22\nosd_scrub_end_hour = 6\nosd_scrub_load_threshold = 0.5\nosd_deep_scrub_interval = 604800",
+    "expected": "",
+    "points": [
+      {
+        "id": "scrub_begin_1",
+        "text": "osd_scrub_begin_hour",
+        "category": "ceph_scrub",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "scrub 时间窗开始小时（0-23）",
+        "fill_type": "text"
+      },
+      {
+        "id": "scrub_begin_2",
+        "text": "22",
+        "category": "ceph_scrub",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "scrub 时间窗开始小时（0-23）",
+        "fill_type": "text"
+      },
+      {
+        "id": "scrub_end_1",
+        "text": "osd_scrub_end_hour",
+        "category": "ceph_scrub",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "时间窗结束小时，这里表示 22 点到次日 6 点",
+        "fill_type": "text"
+      },
+      {
+        "id": "scrub_end_2",
+        "text": "6",
+        "category": "ceph_scrub",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "时间窗结束小时，这里表示 22 点到次日 6 点",
+        "fill_type": "text"
+      },
+      {
+        "id": "scrub_load_1",
+        "text": "osd_scrub_load_threshold",
+        "category": "ceph_scrub",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "节点归一化负载高于该值时不执行 scrub",
+        "fill_type": "text"
+      },
+      {
+        "id": "scrub_load_2",
+        "text": "0.5",
+        "category": "ceph_scrub",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "节点归一化负载高于该值时不执行 scrub",
+        "fill_type": "text"
+      },
+      {
+        "id": "deep_scrub_interval_1",
+        "text": "osd_deep_scrub_interval",
+        "category": "ceph_scrub",
+        "min_weight": "hard",
+        "weight_score": 0.5,
+        "hint": "深度 scrub 周期，单位秒，604800 = 7 天",
+        "fill_type": "text"
+      },
+      {
+        "id": "deep_scrub_interval_2",
+        "text": "604800",
+        "category": "ceph_scrub",
+        "min_weight": "hard",
+        "weight_score": 0.5,
+        "hint": "深度 scrub 周期，单位秒，604800 = 7 天",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 怎么把校验安排到业务低峰期执行？",
+      "level_2": "📖 scrub 校验元数据与对象大小，deep-scrub 还会校验数据内容；`osd_scrub_load_threshold` 用归一化负载保护业务，运行时可用 `ceph osd scrub <osd-id>` 或 `ceph osd deep-scrub <osd-id>` 手动触发",
+      "level_3": "👀 [osd] 段下四行：begin_hour / end_hour / load_threshold / deep_scrub_interval",
+      "level_4": "📝 正确答案：`osd_scrub_begin_hour`、`22`、`osd_scrub_end_hour`、`6`、`osd_scrub_load_threshold`、`0.5`、`osd_deep_scrub_interval`、`604800`"
+    },
+    "explanation": "scrub 定期校验 PG 内的对象与元数据一致性，deep-scrub 还会读取并校验数据内容，开销更大；通过时间窗和负载阈值可把校验限制在夜间低峰。运行时也可用 `ceph config set osd <option> <value>` 动态下发相同配置。"
+  },
+  {
+    "id": "os-ceph-013",
+    "title": "创建 RGW 用户与 S3 密钥",
+    "description": "用 radosgw-admin 创建对象存储用户、查看信息并生成密钥",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "easy",
+    "category": "ceph_rgw",
+    "subcategory": "Ceph",
+    "full_code": "radosgw-admin user create --uid=alice --display-name=\"Alice Zhang\" --email=alice@example.com\nradosgw-admin user info --uid=alice\nradosgw-admin key create --uid=alice --key-type=s3",
+    "expected": "",
+    "points": [
+      {
+        "id": "user_create_1",
+        "text": "radosgw-admin",
+        "category": "ceph_rgw",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "创建 RGW 用户的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "user_create_2",
+        "text": "user",
+        "category": "ceph_rgw",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "创建 RGW 用户的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "user_create_3",
+        "text": "create",
+        "category": "ceph_rgw",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "创建 RGW 用户的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "uid_display_1",
+        "text": "--uid=alice",
+        "category": "ceph_rgw",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "用户唯一 ID 与显示名",
+        "fill_type": "text"
+      },
+      {
+        "id": "uid_display_2",
+        "text": "--display-name=\"Alice",
+        "category": "ceph_rgw",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "用户唯一 ID 与显示名",
+        "fill_type": "text"
+      },
+      {
+        "id": "uid_display_3",
+        "text": "Zhang\"",
+        "category": "ceph_rgw",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "用户唯一 ID 与显示名",
+        "fill_type": "text"
+      },
+      {
+        "id": "user_info_1",
+        "text": "info",
+        "category": "ceph_rgw",
+        "min_weight": "easy",
+        "weight_score": 1.0,
+        "hint": "回显用户信息，包括 keys 与 caps",
+        "fill_type": "text"
+      },
+      {
+        "id": "key_create_1",
+        "text": "key",
+        "category": "ceph_rgw",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "为已有用户生成 S3 的 access/secret key",
+        "fill_type": "text"
+      },
+      {
+        "id": "key_create_2",
+        "text": "--key-type=s3",
+        "category": "ceph_rgw",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "为已有用户生成 S3 的 access/secret key",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 RGW 用户怎么建？access_key/secret_key 从哪来？",
+      "level_2": "📖 `radosgw-admin user create --uid=...` 创建时即可返回 keys；`key create --key-type=s3` 可为已有用户补发或轮换密钥",
+      "level_3": "👀 三行依次是 user create / user info / key create --key-type=s3",
+      "level_4": "📝 正确答案：`radosgw-admin`、`user`、`create`、`--uid=alice`、`--display-name=\"Alice`、`Zhang\"`、`info`、`key`、`--key-type=s3`"
+    },
+    "explanation": "RGW 用户是 radosgw 自己的 S3/Swift 用户，与 Keystone 用户相互独立（可另配 Keystone 集成）；`user create` 的返回里含 access_key/secret_key，`key create` 用于后续补发或轮换，`user info` 用于核对 caps 与 keys。"
+  },
+  {
+    "id": "os-ceph-014",
+    "title": "cephadm 引导集群与查看守护进程",
+    "description": "用 cephadm bootstrap 初始化集群，并用 orch 命令查看守护进程与设备",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "hard",
+    "category": "cephadm",
+    "subcategory": "Ceph",
+    "full_code": "cephadm bootstrap --mon-ip 10.0.0.11 --initial-dashboard-password 'ChangeMe123!'\nceph orch ps\nceph orch host ls\nceph orch device ls",
+    "expected": "",
+    "points": [
+      {
+        "id": "bootstrap",
+        "text": "cephadm bootstrap",
+        "category": "cephadm",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "引导新集群：部署首个 mon/mgr 并生成配置与 admin keyring",
+        "fill_type": "text"
+      },
+      {
+        "id": "mon_ip",
+        "text": "--mon-ip 10.0.0.11",
+        "category": "cephadm",
+        "min_weight": "medium",
+        "weight_score": 0.8,
+        "hint": "首个 monitor 的 IP（bootstrap 的必填参数）",
+        "fill_type": "text"
+      },
+      {
+        "id": "orch_ps_1",
+        "text": "ceph",
+        "category": "cephadm",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "列出 orchestrator 管理的守护进程状态与版本",
+        "fill_type": "text",
+        "occurrence": 1
+      },
+      {
+        "id": "orch_ps_2",
+        "text": "orch",
+        "category": "cephadm",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "列出 orchestrator 管理的守护进程状态与版本",
+        "fill_type": "text"
+      },
+      {
+        "id": "orch_ps_3",
+        "text": "ps",
+        "category": "cephadm",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "列出 orchestrator 管理的守护进程状态与版本",
+        "fill_type": "text"
+      },
+      {
+        "id": "orch_device_1",
+        "text": "device",
+        "category": "cephadm",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "发现各主机上可用的裸设备（Available 才能建 OSD）",
+        "fill_type": "text"
+      },
+      {
+        "id": "orch_device_2",
+        "text": "ls",
+        "category": "cephadm",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "发现各主机上可用的裸设备（Available 才能建 OSD）",
+        "fill_type": "text",
+        "occurrence": 1
+      }
+    ],
+    "hints": {
+      "level_1": "💡 Octopus 之后怎么初始化一个 Ceph 集群？",
+      "level_2": "📖 `cephadm bootstrap --mon-ip <ip>` 会写 /etc/ceph/ceph.conf、client.admin.keyring 并部署 mon+mgr；之后用 `ceph orch` 系列做声明式运维",
+      "level_3": "👀 bootstrap 带 --mon-ip 与 --initial-dashboard-password，接着 orch ps / host ls / device ls",
+      "level_4": "📝 正确答案：`cephadm bootstrap`、`--mon-ip 10.0.0.11`、`ceph`、`orch`、`ps`、`device`、`ls`"
+    },
+    "explanation": "cephadm 是 Ceph Octopus+ 的容器化部署与编排工具；bootstrap 自动生成 SSH 密钥、ceph.conf 与 admin keyring 并拉起首个 mon/mgr，随后可用 `ceph orch apply osd --all-available-devices` 等声明式命令纳管 OSD。"
+  },
+  {
+    "id": "os-ceph-015",
+    "title": "CRUSH 规则 create-simple",
+    "description": "用 create-simple 创建规则并列出、导出规则详情",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "expert",
+    "category": "ceph_crush",
+    "subcategory": "Ceph",
+    "full_code": "ceph osd crush rule create-simple data-rule default host\nceph osd crush rule ls\nceph osd crush rule dump",
+    "expected": "",
+    "points": [
+      {
+        "id": "create_simple_1",
+        "text": "ceph",
+        "category": "ceph_crush",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "创建 simple 规则的子命令：<name> <root> <type>",
+        "fill_type": "text"
+      },
+      {
+        "id": "create_simple_2",
+        "text": "osd",
+        "category": "ceph_crush",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "创建 simple 规则的子命令：<name> <root> <type>",
+        "fill_type": "text"
+      },
+      {
+        "id": "create_simple_3",
+        "text": "crush",
+        "category": "ceph_crush",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "创建 simple 规则的子命令：<name> <root> <type>",
+        "fill_type": "text"
+      },
+      {
+        "id": "create_simple_4",
+        "text": "rule",
+        "category": "ceph_crush",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "创建 simple 规则的子命令：<name> <root> <type>",
+        "fill_type": "text"
+      },
+      {
+        "id": "create_simple_5",
+        "text": "create-simple",
+        "category": "ceph_crush",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "创建 simple 规则的子命令：<name> <root> <type>",
+        "fill_type": "text"
+      },
+      {
+        "id": "rule_args_1",
+        "text": "data-rule",
+        "category": "ceph_crush",
+        "min_weight": "hard",
+        "weight_score": 0.5,
+        "hint": "规则名 data-rule，根 bucket 为 default，故障域类型为 host",
+        "fill_type": "text"
+      },
+      {
+        "id": "rule_args_2",
+        "text": "default",
+        "category": "ceph_crush",
+        "min_weight": "hard",
+        "weight_score": 0.5,
+        "hint": "规则名 data-rule，根 bucket 为 default，故障域类型为 host",
+        "fill_type": "text"
+      },
+      {
+        "id": "rule_args_3",
+        "text": "host",
+        "category": "ceph_crush",
+        "min_weight": "hard",
+        "weight_score": 0.5,
+        "hint": "规则名 data-rule，根 bucket 为 default，故障域类型为 host",
+        "fill_type": "text"
+      },
+      {
+        "id": "rule_ls_1",
+        "text": "ls",
+        "category": "ceph_crush",
+        "min_weight": "beginner",
+        "weight_score": 1.0,
+        "hint": "列出所有 CRUSH 规则名",
+        "fill_type": "text"
+      },
+      {
+        "id": "rule_dump_1",
+        "text": "dump",
+        "category": "ceph_crush",
+        "min_weight": "medium",
+        "weight_score": 0.8,
+        "hint": "导出规则详情（steps、type、chooseleaf 等）",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 怎么自定义一条按主机做故障域的 CRUSH 规则？",
+      "level_2": "📖 create-simple 的第三个参数是故障域类型（如 host），它从指定 root 里选择设备；若要让规则只作用于某类设备（如 ssd），应使用 `ceph osd crush rule create-replicated <name> <root> <failure-domain> <class>`",
+      "level_3": "👀 create-simple data-rule default host，然后用 rule ls / rule dump 核对",
+      "level_4": "📝 正确答案：`ceph`、`osd`、`crush`、`rule`、`create-simple`、`data-rule`、`default`、`host`、`ls`、`dump`"
+    },
+    "explanation": "简单规则按 <root> 与故障域类型生成 firstn 规则（可选 mode firstn|indep）；按设备类划分的规则用 create-replicated 指定 class。规则建好后用 `ceph osd pool set <pool> crush_rule <rule>` 绑定到池。"
+  },
+  {
+    "id": "os-ceph-016",
+    "title": "ceph.conf 全局网络配置",
+    "description": "在 [global] 中配置 mon 地址、公网与集群网络",
+    "exercise_type": "config",
+    "tech_stack": "openstack",
+    "weight": "easy",
+    "category": "ceph_conf",
+    "subcategory": "Ceph",
+    "full_code": "[global]\nmon_host = 10.0.0.11,10.0.0.12,10.0.0.13\npublic_network = 10.0.0.0/24\ncluster_network = 10.0.1.0/24",
+    "expected": "",
+    "points": [
+      {
+        "id": "global_section",
+        "text": "[global]",
+        "category": "ceph_conf",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "全局段，对所有守护进程生效",
+        "fill_type": "text"
+      },
+      {
+        "id": "mon_host_1",
+        "text": "mon_host",
+        "category": "ceph_conf",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "逗号分隔的 mon 地址列表（也支持 v2:/v1: 形式）",
+        "fill_type": "text"
+      },
+      {
+        "id": "mon_host_2",
+        "text": "10.0.0.11,10.0.0.12,10.0.0.13",
+        "category": "ceph_conf",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "逗号分隔的 mon 地址列表（也支持 v2:/v1: 形式）",
+        "fill_type": "text"
+      },
+      {
+        "id": "public_network_1",
+        "text": "public_network",
+        "category": "ceph_conf",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "公网/客户端网络 CIDR，mon 会在此网络中选取地址",
+        "fill_type": "text"
+      },
+      {
+        "id": "public_network_2",
+        "text": "10.0.0.0/24",
+        "category": "ceph_conf",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "公网/客户端网络 CIDR，mon 会在此网络中选取地址",
+        "fill_type": "text"
+      },
+      {
+        "id": "cluster_network_1",
+        "text": "cluster_network",
+        "category": "ceph_conf",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "OSD 之间复制/恢复流量使用的独立网络",
+        "fill_type": "text"
+      },
+      {
+        "id": "cluster_network_2",
+        "text": "10.0.1.0/24",
+        "category": "ceph_conf",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "OSD 之间复制/恢复流量使用的独立网络",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 客户端怎么找到 monitor？复制流量怎么与业务网络隔离？",
+      "level_2": "📖 `mon_host` 列出 mon 地址；`public_network` 决定公网地址选取；`cluster_network` 让复制/恢复流量走独立网段（未配置时复用 public 网络）",
+      "level_3": "👀 [global] 段下三行：mon_host / public_network / cluster_network",
+      "level_4": "📝 正确答案：`[global]`、`mon_host`、`10.0.0.11,10.0.0.12,10.0.0.13`、`public_network`、`10.0.0.0/24`、`cluster_network`、`10.0.1.0/24`"
+    },
+    "explanation": "mon_host 是客户端与守护进程定位 monitor 的入口；public_network 指定 mon/OSD 对外绑定网段；cluster_network 把 OSD 之间的复制与恢复流量放到独立网络，避免挤占业务带宽。"
+  },
+  {
+    "id": "os-ceph-017",
+    "title": "ceph.conf 客户端认证段",
+    "description": "配置 cephx 认证与 client.cinder 的 keyring 路径",
+    "exercise_type": "config",
+    "tech_stack": "openstack",
+    "weight": "medium",
+    "category": "ceph_conf",
+    "subcategory": "Ceph",
+    "full_code": "[global]\nauth_client_required = cephx\n\n[client.cinder]\nkeyring = /etc/ceph/ceph.client.cinder.keyring",
+    "expected": "",
+    "points": [
+      {
+        "id": "client_section",
+        "text": "[client.cinder]",
+        "category": "ceph_conf",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "客户端段：只对以 client.cinder 身份运行的进程生效",
+        "fill_type": "text"
+      },
+      {
+        "id": "auth_client_1",
+        "text": "auth_client_required",
+        "category": "ceph_conf",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "要求客户端使用 cephx 认证（默认即 cephx）",
+        "fill_type": "text"
+      },
+      {
+        "id": "auth_client_2",
+        "text": "cephx",
+        "category": "ceph_conf",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "要求客户端使用 cephx 认证（默认即 cephx）",
+        "fill_type": "text"
+      },
+      {
+        "id": "keyring_path_1",
+        "text": "keyring",
+        "category": "ceph_conf",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "指定该客户端的 cephx 密钥环文件路径",
+        "fill_type": "text"
+      },
+      {
+        "id": "keyring_path_2",
+        "text": "/etc/ceph/ceph.client.cinder.keyring",
+        "category": "ceph_conf",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "指定该客户端的 cephx 密钥环文件路径",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 cinder-volume 进程以 client.cinder 身份连 Ceph，密钥从哪读？",
+      "level_2": "📖 客户端段命名规则为 [client.<id>]，由 CLI 的 `--id <id>` 或 OpenStack 的 rbd_user 选中；keyring 默认按 /etc/ceph/ceph.client.<id>.keyring 等路径查找",
+      "level_3": "👀 [global] 下 auth_client_required，[client.cinder] 下 keyring",
+      "level_4": "📝 正确答案：`[client.cinder]`、`auth_client_required`、`cephx`、`keyring`、`/etc/ceph/ceph.client.cinder.keyring`"
+    },
+    "explanation": "cephx 是 Ceph 的认证机制；`auth_client_required = cephx` 强制客户端认证。把 keyring 路径显式写进 [client.cinder] 段可避免 cinder-volume 因默认搜索路径找不到密钥而报错。"
+  },
+  {
+    "id": "os-ceph-018",
+    "title": "cinder.conf 配置 RBD 后端",
+    "description": "在 cinder.conf 中启用 ceph 后端并配置池、用户与 secret",
+    "exercise_type": "config",
+    "tech_stack": "openstack",
+    "weight": "hard",
+    "category": "cinder_conf",
+    "subcategory": "Ceph",
+    "full_code": "[DEFAULT]\nenabled_backends = ceph\n\n[ceph]\nvolume_driver = cinder.volume.drivers.rbd.RBDDriver\nrbd_pool = volumes\nrbd_user = cinder\nrbd_secret_uuid = 457eb676-33da-42ec-9a8c-9293d545c337\nrbd_ceph_conf = /etc/ceph/ceph.conf",
+    "expected": "",
+    "points": [
+      {
+        "id": "volume_driver_1",
+        "text": "volume_driver",
+        "category": "cinder_conf",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "RBD 后端的驱动类路径",
+        "fill_type": "text"
+      },
+      {
+        "id": "volume_driver_2",
+        "text": "cinder.volume.drivers.rbd.RBDDriver",
+        "category": "cinder_conf",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "RBD 后端的驱动类路径",
+        "fill_type": "text"
+      },
+      {
+        "id": "rbd_pool_1",
+        "text": "rbd_pool",
+        "category": "cinder_conf",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "卷数据所在的 Ceph 池",
+        "fill_type": "text"
+      },
+      {
+        "id": "rbd_pool_2",
+        "text": "volumes",
+        "category": "cinder_conf",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "卷数据所在的 Ceph 池",
+        "fill_type": "text"
+      },
+      {
+        "id": "rbd_user_1",
+        "text": "rbd_user",
+        "category": "cinder_conf",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "cinder-volume 使用的 cephx 用户",
+        "fill_type": "text"
+      },
+      {
+        "id": "rbd_user_2",
+        "text": "cinder",
+        "category": "cinder_conf",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "cinder-volume 使用的 cephx 用户",
+        "fill_type": "text",
+        "occurrence": 1
+      },
+      {
+        "id": "rbd_secret_uuid_1",
+        "text": "rbd_secret_uuid",
+        "category": "cinder_conf",
+        "min_weight": "hard",
+        "weight_score": 0.5,
+        "hint": "libvirt/QEMU 打开卷时使用的密钥 UUID，必须与 virsh secret 一致",
+        "fill_type": "text"
+      },
+      {
+        "id": "rbd_secret_uuid_2",
+        "text": "457eb676-33da-42ec-9a8c-9293d545c337",
+        "category": "cinder_conf",
+        "min_weight": "hard",
+        "weight_score": 0.5,
+        "hint": "libvirt/QEMU 打开卷时使用的密钥 UUID，必须与 virsh secret 一致",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 Cinder 接 Ceph 需要在哪个段配驱动、池和用户？",
+      "level_2": "📖 [DEFAULT] 的 enabled_backends 列出要加载的后端名，每个名字对应一个同名 section；rbd_secret_uuid 与计算节点上 virsh secret-define 生成的 UUID 必须完全相同",
+      "level_3": "👀 enabled_backends = ceph，[ceph] 段下 volume_driver / rbd_pool / rbd_user / rbd_secret_uuid",
+      "level_4": "📝 正确答案：`volume_driver`、`cinder.volume.drivers.rbd.RBDDriver`、`rbd_pool`、`volumes`、`rbd_user`、`cinder`、`rbd_secret_uuid`、`457eb676-33da-42ec-9a8c-9293d545c337`"
+    },
+    "explanation": "cinder-volume 通过 RBDDriver 把卷直接建成 RBD 镜像；挂载到虚机时由 nova-compute 的 libvirt 用 rbd_user/rbd_secret_uuid 对应的 libvirt secret 打开卷，因此该 UUID 要与计算节点上用 `virsh secret-define` 定义的 secret 一致，secret 内容为 `ceph auth get-key client.cinder` 的密钥。"
+  },
+  {
+    "id": "os-ceph-019",
+    "title": "glance-api.conf 使用 RBD 后端",
+    "description": "把 Glance 默认镜像后端切换为 Ceph RBD 并配置池与用户",
+    "exercise_type": "config",
+    "tech_stack": "openstack",
+    "weight": "medium",
+    "category": "glance_conf",
+    "subcategory": "Ceph",
+    "full_code": "[glance_store]\nstores = rbd\ndefault_store = rbd\nrbd_store_pool = images\nrbd_store_user = glance\nrbd_store_ceph_conf = /etc/ceph/ceph.conf",
+    "expected": "",
+    "points": [
+      {
+        "id": "glance_store_section",
+        "text": "[glance_store]",
+        "category": "glance_conf",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "镜像存储后端的配置段",
+        "fill_type": "text"
+      },
+      {
+        "id": "default_store_1",
+        "text": "default_store",
+        "category": "glance_conf",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "默认后端设为 rbd，新上传镜像落到 Ceph",
+        "fill_type": "text"
+      },
+      {
+        "id": "default_store_2",
+        "text": "rbd",
+        "category": "glance_conf",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "默认后端设为 rbd，新上传镜像落到 Ceph",
+        "fill_type": "text",
+        "occurrence": 1
+      },
+      {
+        "id": "rbd_store_pool_1",
+        "text": "rbd_store_pool",
+        "category": "glance_conf",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "镜像数据所在的 Ceph 池",
+        "fill_type": "text"
+      },
+      {
+        "id": "rbd_store_pool_2",
+        "text": "images",
+        "category": "glance_conf",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "镜像数据所在的 Ceph 池",
+        "fill_type": "text"
+      },
+      {
+        "id": "rbd_store_user_1",
+        "text": "rbd_store_user",
+        "category": "glance_conf",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "glance-api 使用的 cephx 用户（需对应 client.glance keyring）",
+        "fill_type": "text"
+      },
+      {
+        "id": "rbd_store_user_2",
+        "text": "glance",
+        "category": "glance_conf",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "glance-api 使用的 cephx 用户（需对应 client.glance keyring）",
+        "fill_type": "text",
+        "occurrence": 1
+      }
+    ],
+    "hints": {
+      "level_1": "💡 怎么让 Glance 把镜像存进 Ceph？",
+      "level_2": "📖 单后端写法把 rbd_store_* 都放在 [glance_store] 段；新版多后端写法是 [DEFAULT] enabled_backends = rbd:rbd + [glance_store] default_backend = rbd，并把 rbd_store_* 放进以 store id 命名的 [rbd] 段",
+      "level_3": "👀 [glance_store] 下依次是 stores / default_store / rbd_store_pool / rbd_store_user / rbd_store_ceph_conf",
+      "level_4": "📝 正确答案：`[glance_store]`、`default_store`、`rbd`、`rbd_store_pool`、`images`、`rbd_store_user`、`glance`"
+    },
+    "explanation": "这是 Ceph 官方文档给 Glance 的单后端配置：镜像以 RBD 对象形式存放在 images 池，由 client.glance 访问；较新版本支持多后端（enabled_backends + default_backend），此时各后端的 rbd_store_* 选项写在以 store id 命名的段（如 [rbd]）中。"
+  },
+  {
+    "id": "os-ceph-020",
+    "title": "nova libvirt 使用 RBD 与 virsh secret",
+    "description": "配置 nova 用 RBD 存放实例盘，并定义 libvirt secret",
+    "exercise_type": "config",
+    "tech_stack": "openstack",
+    "weight": "hard",
+    "category": "nova_conf",
+    "subcategory": "Ceph",
+    "full_code": "[libvirt]\nimages_type = rbd\nimages_rbd_pool = vms\nimages_rbd_ceph_conf = /etc/ceph/ceph.conf\nrbd_user = cinder\nrbd_secret_uuid = 457eb676-33da-42ec-9a8c-9293d545c337\n\nvirsh secret-define --file secret.xml\nvirsh secret-set-value --secret 457eb676-33da-42ec-9a8c-9293d545c337 --base64 $(ceph auth get-key client.cinder)",
+    "expected": "",
+    "points": [
+      {
+        "id": "images_type_1",
+        "text": "images_type",
+        "category": "nova_conf",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "让 nova 直接用 RBD 存放实例磁盘",
+        "fill_type": "text"
+      },
+      {
+        "id": "images_type_2",
+        "text": "rbd",
+        "category": "nova_conf",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "让 nova 直接用 RBD 存放实例磁盘",
+        "fill_type": "text"
+      },
+      {
+        "id": "images_rbd_pool_1",
+        "text": "images_rbd_pool",
+        "category": "nova_conf",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "实例盘所在的 Ceph 池",
+        "fill_type": "text"
+      },
+      {
+        "id": "images_rbd_pool_2",
+        "text": "vms",
+        "category": "nova_conf",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "实例盘所在的 Ceph 池",
+        "fill_type": "text"
+      },
+      {
+        "id": "secret_define_1",
+        "text": "virsh",
+        "category": "nova_conf",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "用 XML 定义 libvirt secret，输出中的 UUID 要填入 rbd_secret_uuid",
+        "fill_type": "text"
+      },
+      {
+        "id": "secret_define_2",
+        "text": "secret-define",
+        "category": "nova_conf",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "用 XML 定义 libvirt secret，输出中的 UUID 要填入 rbd_secret_uuid",
+        "fill_type": "text"
+      },
+      {
+        "id": "secret_define_3",
+        "text": "--file",
+        "category": "nova_conf",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "用 XML 定义 libvirt secret，输出中的 UUID 要填入 rbd_secret_uuid",
+        "fill_type": "text"
+      },
+      {
+        "id": "secret_define_4",
+        "text": "secret.xml",
+        "category": "nova_conf",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "用 XML 定义 libvirt secret，输出中的 UUID 要填入 rbd_secret_uuid",
+        "fill_type": "text"
+      },
+      {
+        "id": "secret_set_value_1",
+        "text": "secret-set-value",
+        "category": "nova_conf",
+        "min_weight": "hard",
+        "weight_score": 0.5,
+        "hint": "把 cephx 密钥（base64）写入 secret，供 QEMU 打开卷",
+        "fill_type": "text"
+      },
+      {
+        "id": "secret_set_value_2",
+        "text": "--secret",
+        "category": "nova_conf",
+        "min_weight": "hard",
+        "weight_score": 0.5,
+        "hint": "把 cephx 密钥（base64）写入 secret，供 QEMU 打开卷",
+        "fill_type": "text"
+      },
+      {
+        "id": "secret_set_value_3",
+        "text": "457eb676-33da-42ec-9a8c-9293d545c337",
+        "category": "nova_conf",
+        "min_weight": "hard",
+        "weight_score": 0.5,
+        "hint": "把 cephx 密钥（base64）写入 secret，供 QEMU 打开卷",
+        "fill_type": "text",
+        "occurrence": 1
+      },
+      {
+        "id": "secret_set_value_4",
+        "text": "--base64",
+        "category": "nova_conf",
+        "min_weight": "hard",
+        "weight_score": 0.5,
+        "hint": "把 cephx 密钥（base64）写入 secret，供 QEMU 打开卷",
+        "fill_type": "text"
+      },
+      {
+        "id": "secret_set_value_5",
+        "text": "$(ceph auth get-key client.cinder)",
+        "category": "nova_conf",
+        "min_weight": "hard",
+        "weight_score": 0.5,
+        "hint": "把 cephx 密钥（base64）写入 secret，供 QEMU 打开卷",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 nova 用 RBD 存实例盘要配什么？QEMU 打开卷的密钥怎么准备？",
+      "level_2": "📖 [libvirt] 的 images_type = rbd 与 images_rbd_pool 指定实例盘落点；libvirt/QEMU 通过 secret 读取 client.cinder 的密钥，secret 的 UUID 写入 nova.conf 的 rbd_secret_uuid",
+      "level_3": "👀 [libvirt] 段 + `virsh secret-define --file secret.xml` + `virsh secret-set-value --secret <uuid> --base64 ...`",
+      "level_4": "📝 正确答案：`images_type`、`rbd`、`images_rbd_pool`、`vms`、`virsh`、`secret-define`、`--file`、`secret.xml`、`secret-set-value`、`--secret`、`457eb676-33da-42ec-9a8c-9293d545c337`、`--base64`、`$(ceph auth get-key client.cinder)`"
+    },
+    "explanation": "`images_type = rbd` 让 nova 直接用 RBD 镜像启动实例，省去把镜像下载到本地盘；rbd_user/rbd_secret_uuid 让 QEMU 以 client.cinder 打开卷，secret 的内容由 `ceph auth get-key` 得到，其 UUID 必须与 rbd_secret_uuid 完全一致。"
+  }
+]

@@ -1,4 +1,8 @@
 import type {
+  AdminUser,
+  AuthResponse,
+  BankInfo,
+  BankSource,
   CategoryItem,
   Environment,
   ExerciseDetail,
@@ -6,6 +10,7 @@ import type {
   ExecuteResult,
   FavoriteItem,
   ProgressResponse,
+  User,
   Variant,
   WeakPointItem,
 } from '../types';
@@ -31,17 +36,35 @@ export const adminToken = {
   set: (t: string) => (t ? localStorage.setItem(ADMIN_TOKEN_KEY, t.trim()) : localStorage.removeItem(ADMIN_TOKEN_KEY)),
 };
 
+export const AUTH_TOKEN_KEY = 'cg_auth_token';
+
+export const authToken = {
+  get: () => localStorage.getItem(AUTH_TOKEN_KEY) ?? '',
+  set: (t: string) => (t ? localStorage.setItem(AUTH_TOKEN_KEY, t.trim()) : localStorage.removeItem(AUTH_TOKEN_KEY)),
+  clear: () => localStorage.removeItem(AUTH_TOKEN_KEY),
+};
+
+/** Fired when the backend rejects the session token (401). */
+export const UNAUTHORIZED_EVENT = 'codegym:unauthorized';
+
 async function request<T>(url: string, init?: RequestInit): Promise<T> {
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
     ...((init?.headers as Record<string, string>) ?? {}),
   };
+  if (authToken.get()) {
+    headers['Authorization'] = `Bearer ${authToken.get()}`;
+  }
   if (url.startsWith('/admin') && adminToken.get()) {
     headers['X-Admin-Token'] = adminToken.get();
   }
   const res = await fetch(`${BASE}${url}`, { ...init, headers });
   if (!res.ok) {
     const body = await res.json().catch(() => ({}));
+    if (res.status === 401 && !url.startsWith('/auth/')) {
+      authToken.clear();
+      window.dispatchEvent(new Event(UNAUTHORIZED_EVENT));
+    }
     throw new Error((body as { error?: string }).error ?? `HTTP ${res.status}`);
   }
   return res.json() as Promise<T>;
@@ -72,6 +95,45 @@ export const api = {
     }),
 
   environments: () => request<unknown[]>('/environments'),
+
+  // --- 用户体系 ---
+  register: (payload: { username: string; password: string; display_name?: string }) =>
+    request<AuthResponse>('/auth/register', { method: 'POST', body: JSON.stringify(payload) }),
+
+  login: (payload: { username: string; password: string }) =>
+    request<AuthResponse>('/auth/login', { method: 'POST', body: JSON.stringify(payload) }),
+
+  logout: () => request<{ status: string }>('/auth/logout', { method: 'POST' }),
+
+  me: () => request<{ user: User }>('/auth/me'),
+
+  updateMe: (payload: { display_name?: string; old_password?: string; new_password?: string }) =>
+    request<{ user: User }>('/auth/me', { method: 'PUT', body: JSON.stringify(payload) }),
+
+  myBanks: () => request<{ available: BankInfo[]; selected: string[] }>('/me/banks'),
+
+  saveMyBanks: (selected: string[]) =>
+    request<{ selected: string[] }>('/me/banks', { method: 'PUT', body: JSON.stringify({ selected }) }),
+
+  // --- 教练端：用户管理 / 题库动态加载 ---
+  adminUsers: () => request<AdminUser[]>('/admin/users'),
+
+  adminCreateUser: (payload: { username: string; password: string; display_name?: string }) =>
+    request<User>('/admin/users', { method: 'POST', body: JSON.stringify(payload) }),
+
+  adminUpdateUser: (id: string, payload: { display_name?: string; disabled?: boolean; password?: string }) =>
+    request<User>(`/admin/users/${id}`, { method: 'PUT', body: JSON.stringify(payload) }),
+
+  adminDeleteUser: (id: string) =>
+    request<{ status: string }>(`/admin/users/${id}`, { method: 'DELETE' }),
+
+  adminBanks: () => request<BankSource[]>('/admin/banks'),
+
+  adminUploadBank: (payload: { name: string; content: string }) =>
+    request<{ name: string; imported: number }>('/admin/banks', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    }),
 
   createExercise: (ex: ExerciseDetail) =>
     request<ExerciseDetail>('/admin/exercises', { method: 'POST', body: JSON.stringify(ex) }),

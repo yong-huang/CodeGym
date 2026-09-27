@@ -200,6 +200,41 @@ type UserProgress struct {
 	UpdatedAt          time.Time         `json:"updated_at"`
 }
 
+// User is a trainee account. SelectedBanks holds "tech::subcategory" keys the
+// user chose to practice; empty means every bank is visible.
+type User struct {
+	ID            string    `json:"id"`
+	Username      string    `json:"username"`
+	DisplayName   string    `json:"display_name,omitempty"`
+	Disabled      bool      `json:"disabled"`
+	SelectedBanks []string  `json:"selected_banks"`
+	CreatedAt     time.Time `json:"created_at"`
+	UpdatedAt     time.Time `json:"updated_at"`
+}
+
+// BankInfo describes one selectable question bank (tech + subcategory).
+type BankInfo struct {
+	TechStack     string `json:"tech_stack"`
+	Subcategory   string `json:"subcategory"`
+	ExerciseCount int    `json:"exercise_count"`
+}
+
+// BankSource records a dynamically loaded bank file (uploaded or scanned).
+type BankSource struct {
+	Name          string    `json:"name"`
+	Source        string    `json:"source"` // upload / dir
+	ExerciseCount int       `json:"exercise_count"`
+	UpdatedAt     time.Time `json:"updated_at"`
+}
+
+// AdminUser is a user row enriched with training progress for the coach view.
+type AdminUser struct {
+	User
+	TotalAttempts  int `json:"total_attempts"`
+	CompletedCount int `json:"completed_count"`
+	CurrentStreak  int `json:"current_streak"`
+}
+
 // FillResult is one graded fill point (design section 12.3).
 type FillResult struct {
 	ID         string  `json:"id"`

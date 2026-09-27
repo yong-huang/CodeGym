@@ -269,6 +269,9 @@ func CategoryPlan() []CategoryPair {
 		{Tech: "javascript", Sub: "基础"},
 		{Tech: "go", Sub: "基础"},
 		{Tech: "go", Sub: "类型系统"},
+		{Tech: "go", Sub: "通信机制"},
+		{Tech: "go", Sub: "同步与原子"},
+		{Tech: "go", Sub: "并发模式"},
 		{Tech: "go", Sub: "高级"},
 		{Tech: "go", Sub: "实战"},
 		{Tech: "go", Sub: "web"},
@@ -309,6 +312,28 @@ func CategoryPlan() []CategoryPair {
 		{Tech: "aws", Sub: "高级"},
 		{Tech: "aws", Sub: "实战"},
 		{Tech: "aws", Sub: "web"},
+		{Tech: "openstack", Sub: "Nova"},
+		{Tech: "openstack", Sub: "Neutron"},
+		{Tech: "openstack", Sub: "Cinder"},
+		{Tech: "openstack", Sub: "Swift"},
+		{Tech: "openstack", Sub: "TripleO"},
+		{Tech: "openstack", Sub: "Keystone"},
+		{Tech: "openstack", Sub: "Glance"},
+		{Tech: "openstack", Sub: "运维"},
+		{Tech: "openstack", Sub: "升级"},
+		{Tech: "openstack", Sub: "Ceph"},
+		{Tech: "openstack", Sub: "高级"},
+		{Tech: "openstack", Sub: "实战"},
+		{Tech: "openstack", Sub: "web"},
+		{Tech: "testing", Sub: "pytest"},
+		{Tech: "testing", Sub: "unittest"},
+		{Tech: "testing", Sub: "selenium"},
+		{Tech: "testing", Sub: "playwright"},
+		{Tech: "testing", Sub: "cypress"},
+		{Tech: "testing", Sub: "locust"},
+		{Tech: "testing", Sub: "高级"},
+		{Tech: "testing", Sub: "实战"},
+		{Tech: "testing", Sub: "web"},
 		{Tech: "fastapi", Sub: "基础"},
 		{Tech: "fastapi", Sub: "高级"},
 		{Tech: "fastapi", Sub: "实战"},
@@ -338,6 +363,10 @@ func resolveBankDir(dir string) string {
 	}
 	return filepath.Join("data", "bank")
 }
+
+// ResolveBankDir exposes bank directory resolution: explicit path >
+// $CODEGYM_BANK_DIR > nearest ancestor of cwd containing data/bank.
+func ResolveBankDir(dir string) string { return resolveBankDir(dir) }
 
 // LoadBank reads one question-bank JSON file (raw seed sources) from dir.
 func LoadBank(dir, file string) ([]seedExercise, error) {
@@ -414,4 +443,27 @@ func BuildAll(dir string) ([]model.Exercise, error) {
 // banks from the data/bank JSON directory (see resolveBankDir).
 func All() ([]model.Exercise, error) {
 	return BuildAll("")
+}
+
+// BuildBank builds every exercise of one bank JSON file in dir.
+func BuildBank(dir, file string) ([]model.Exercise, error) {
+	return buildBank(dir, file)
+}
+
+// BuildBankJSON builds exercises from raw bank JSON bytes (dynamically loaded
+// banks: admin upload or directory scan).
+func BuildBankJSON(name string, data []byte) ([]model.Exercise, error) {
+	list, err := parseBank(name, data)
+	if err != nil {
+		return nil, err
+	}
+	out := make([]model.Exercise, 0, len(list))
+	for _, s := range list {
+		ex, err := buildExercise(s)
+		if err != nil {
+			return nil, err
+		}
+		out = append(out, ex)
+	}
+	return out, nil
 }

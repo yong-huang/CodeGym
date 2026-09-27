@@ -8,6 +8,8 @@ export const TECH_EMOJI: Record<string, string> = {
   bigquery: '📊',
   devops: '🚀',
   aws: '☁️',
+  openstack: '🌩️',
+  testing: '🧪',
   shell: '💻',
   git: '🌿',
   go: '🐹',

@@ -1,0 +1,1544 @@
+[
+  {
+    "id": "os-keystone-001",
+    "title": "签发 token 并用 debug 排查 401",
+    "description": "用当前认证信息签发 token，401 失败时开启 --debug 查看请求与响应",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "beginner",
+    "category": "keystone_token",
+    "subcategory": "Keystone",
+    "full_code": "openstack token issue\nopenstack --debug token issue",
+    "expected": "",
+    "points": [
+      {
+        "id": "token_issue_1",
+        "text": "token",
+        "category": "keystone_token",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "用环境变量里的认证信息申请 token 的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "token_issue_2",
+        "text": "issue",
+        "category": "keystone_token",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "用环境变量里的认证信息申请 token 的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "debug_flag",
+        "text": "--debug",
+        "category": "keystone_token",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "401 时打印完整 HTTP 请求与响应，定位认证失败原因",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 如何用当前认证信息换取一个 token？认证失败时怎样看到底层请求？",
+      "level_2": "📖 `openstack token issue` 用环境变量里的认证信息申请 token；加全局选项 `--debug` 打印 HTTP 交互",
+      "level_3": "👀 `openstack token issue` 与 `openstack --debug token issue`",
+      "level_4": "📝 正确答案：`token`、`issue`、`--debug`"
+    },
+    "explanation": "token issue 向 Keystone 的 /v3/auth/tokens 提交认证请求并返回 token；401 通常来自错误的 OS_AUTH_URL、密码、域或 scope，--debug 会打印完整请求与响应体，是最直接的排障手段。"
+  },
+  {
+    "id": "os-keystone-002",
+    "title": "用 OS_ 环境变量配置认证信息",
+    "description": "通过环境变量设置 Keystone 认证地址、用户名、密码、项目、用户域与 API 版本",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "beginner",
+    "category": "keystone_env",
+    "subcategory": "Keystone",
+    "full_code": "export OS_AUTH_URL=http://controller:5000/v3\nexport OS_USERNAME=admin\nexport OS_PASSWORD=secret\nexport OS_PROJECT_NAME=admin\nexport OS_USER_DOMAIN_NAME=Default\nexport OS_IDENTITY_API_VERSION=3\nopenstack token issue",
+    "expected": "",
+    "points": [
+      {
+        "id": "auth_url",
+        "text": "OS_AUTH_URL=http://controller:5000/v3",
+        "category": "keystone_env",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "Keystone 认证地址，v3 的路径以 /v3 结尾",
+        "fill_type": "text"
+      },
+      {
+        "id": "user_domain",
+        "text": "OS_USER_DOMAIN_NAME=Default",
+        "category": "keystone_env",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "用户名所属的域，v3 认证必须提供",
+        "fill_type": "text"
+      },
+      {
+        "id": "api_version",
+        "text": "OS_IDENTITY_API_VERSION=3",
+        "category": "keystone_env",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "显式声明使用 Keystone v3 API",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 openstack CLI 的认证信息大多通过 OS_ 前缀的环境变量传入",
+      "level_2": "📖 地址 OS_AUTH_URL（v3 要带 /v3）、用户名 OS_USERNAME、密码 OS_PASSWORD、项目 OS_PROJECT_NAME、用户域 OS_USER_DOMAIN_NAME、版本 OS_IDENTITY_API_VERSION=3",
+      "level_3": "👀 `export OS_AUTH_URL=http://controller:5000/v3` / `OS_USER_DOMAIN_NAME=Default` / `OS_IDENTITY_API_VERSION=3`",
+      "level_4": "📝 正确答案：`OS_AUTH_URL=http://controller:5000/v3`、`OS_USER_DOMAIN_NAME=Default`、`OS_IDENTITY_API_VERSION=3`"
+    },
+    "explanation": "openstackclient 从 OS_ 环境变量读取认证参数：OS_AUTH_URL 指向 Keystone v3（/v3），OS_USER_DOMAIN_NAME 与 OS_PROJECT_NAME 共同决定 token 的 scope，OS_IDENTITY_API_VERSION=3 显式声明 v3 API。"
+  },
+  {
+    "id": "os-keystone-003",
+    "title": "创建并列出项目",
+    "description": "在 default 域下创建带描述的 demo 项目，并按域过滤列出项目",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "easy",
+    "category": "keystone_project",
+    "subcategory": "Keystone",
+    "full_code": "openstack project create --domain default --description \"Demo Project\" demo\nopenstack project list --domain default",
+    "expected": "",
+    "points": [
+      {
+        "id": "project_create_1",
+        "text": "project",
+        "category": "keystone_project",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "创建项目并指定所属域",
+        "fill_type": "text"
+      },
+      {
+        "id": "project_create_2",
+        "text": "create",
+        "category": "keystone_project",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "创建项目并指定所属域",
+        "fill_type": "text"
+      },
+      {
+        "id": "project_create_3",
+        "text": "--domain",
+        "category": "keystone_project",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "创建项目并指定所属域",
+        "fill_type": "text"
+      },
+      {
+        "id": "project_create_4",
+        "text": "default",
+        "category": "keystone_project",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "创建项目并指定所属域",
+        "fill_type": "text"
+      },
+      {
+        "id": "project_description_1",
+        "text": "--description",
+        "category": "keystone_project",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "用 --description 写项目说明，末尾是项目名",
+        "fill_type": "text"
+      },
+      {
+        "id": "project_description_2",
+        "text": "\"Demo Project\"",
+        "category": "keystone_project",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "用 --description 写项目说明，末尾是项目名",
+        "fill_type": "text"
+      },
+      {
+        "id": "project_description_3",
+        "text": "demo",
+        "category": "keystone_project",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "用 --description 写项目说明，末尾是项目名",
+        "fill_type": "text"
+      },
+      {
+        "id": "project_list_1",
+        "text": "list",
+        "category": "keystone_project",
+        "min_weight": "easy",
+        "weight_score": 1.0,
+        "hint": "按域过滤列出项目",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 项目（project）是资源与配额的隔离单位，创建时要指明所属域",
+      "level_2": "📖 `project create --domain <域> --description <描述> <项目名>`；`project list --domain <域>` 按域过滤",
+      "level_3": "👀 `openstack project create --domain default --description \"Demo Project\" demo` 与 `openstack project list --domain default`",
+      "level_4": "📝 正确答案：`project`、`create`、`--domain`、`default`、`--description`、`\"Demo Project\"`、`demo`、`list`"
+    },
+    "explanation": "项目（project，旧称 tenant）是资源归属与配额的核心单位；v3 中项目必须属于某个域，因此创建和查询都要带 --domain，--description 用于标注用途。"
+  },
+  {
+    "id": "os-keystone-004",
+    "title": "创建用户并指定项目与密码",
+    "description": "在 default 域创建用户 alice，设置初始密码并直接加入 demo 项目",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "easy",
+    "category": "keystone_user",
+    "subcategory": "Keystone",
+    "full_code": "openstack user create --domain default --project demo --password secret123 alice\nopenstack user list --domain default",
+    "expected": "",
+    "points": [
+      {
+        "id": "user_create_1",
+        "text": "user",
+        "category": "keystone_user",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "创建用户，v3 中用户必须属于某个域",
+        "fill_type": "text"
+      },
+      {
+        "id": "user_create_2",
+        "text": "create",
+        "category": "keystone_user",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "创建用户，v3 中用户必须属于某个域",
+        "fill_type": "text"
+      },
+      {
+        "id": "user_create_3",
+        "text": "--domain",
+        "category": "keystone_user",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "创建用户，v3 中用户必须属于某个域",
+        "fill_type": "text"
+      },
+      {
+        "id": "user_create_4",
+        "text": "default",
+        "category": "keystone_user",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "创建用户，v3 中用户必须属于某个域",
+        "fill_type": "text"
+      },
+      {
+        "id": "user_project_password_1",
+        "text": "--project",
+        "category": "keystone_user",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "--project 让用户默认加入项目，--password 设置初始密码",
+        "fill_type": "text"
+      },
+      {
+        "id": "user_project_password_2",
+        "text": "demo",
+        "category": "keystone_user",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "--project 让用户默认加入项目，--password 设置初始密码",
+        "fill_type": "text"
+      },
+      {
+        "id": "user_project_password_3",
+        "text": "--password",
+        "category": "keystone_user",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "--project 让用户默认加入项目，--password 设置初始密码",
+        "fill_type": "text"
+      },
+      {
+        "id": "user_project_password_4",
+        "text": "secret123",
+        "category": "keystone_user",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "--project 让用户默认加入项目，--password 设置初始密码",
+        "fill_type": "text"
+      },
+      {
+        "id": "user_project_password_5",
+        "text": "alice",
+        "category": "keystone_user",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "--project 让用户默认加入项目，--password 设置初始密码",
+        "fill_type": "text"
+      },
+      {
+        "id": "user_list_1",
+        "text": "list",
+        "category": "keystone_user",
+        "min_weight": "easy",
+        "weight_score": 1.0,
+        "hint": "按域列出用户，确认创建结果",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 创建用户需要指定域，通常还要给默认项目和初始密码",
+      "level_2": "📖 `user create --domain <域> --project <项目> --password <密码> <用户名>`；`user list --domain <域>` 过滤",
+      "level_3": "👀 `openstack user create --domain default --project demo --password secret123 alice`",
+      "level_4": "📝 正确答案：`user`、`create`、`--domain`、`default`、`--project`、`demo`、`--password`、`secret123`、`alice`、`list`"
+    },
+    "explanation": "v3 中用户属于域；--project 把新用户加入指定项目作为默认项目，--password 设置初始密码；创建后用 user list --domain 校验结果。"
+  },
+  {
+    "id": "os-keystone-005",
+    "title": "创建角色并授予用户项目权限",
+    "description": "创建 developer 角色，把角色授予 demo 项目中的 alice，再用 --names 查看授权关系",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "medium",
+    "category": "keystone_role",
+    "subcategory": "Keystone",
+    "full_code": "openstack role create developer\nopenstack role add --user alice --project demo developer\nopenstack role assignment list --names --user alice --project demo",
+    "expected": "",
+    "points": [
+      {
+        "id": "role_create_1",
+        "text": "role",
+        "category": "keystone_role",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "先创建角色本身",
+        "fill_type": "text"
+      },
+      {
+        "id": "role_create_2",
+        "text": "create",
+        "category": "keystone_role",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "先创建角色本身",
+        "fill_type": "text"
+      },
+      {
+        "id": "role_create_3",
+        "text": "developer",
+        "category": "keystone_role",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "先创建角色本身",
+        "fill_type": "text"
+      },
+      {
+        "id": "role_add_1",
+        "text": "add",
+        "category": "keystone_role",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "把角色绑定到“用户 + 项目”上",
+        "fill_type": "text"
+      },
+      {
+        "id": "role_add_2",
+        "text": "--user",
+        "category": "keystone_role",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "把角色绑定到“用户 + 项目”上",
+        "fill_type": "text"
+      },
+      {
+        "id": "role_add_3",
+        "text": "alice",
+        "category": "keystone_role",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "把角色绑定到“用户 + 项目”上",
+        "fill_type": "text"
+      },
+      {
+        "id": "role_add_4",
+        "text": "--project",
+        "category": "keystone_role",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "把角色绑定到“用户 + 项目”上",
+        "fill_type": "text"
+      },
+      {
+        "id": "role_add_5",
+        "text": "demo",
+        "category": "keystone_role",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "把角色绑定到“用户 + 项目”上",
+        "fill_type": "text"
+      },
+      {
+        "id": "assignment_list_1",
+        "text": "assignment",
+        "category": "keystone_role",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "用 --names 让输出显示可读名称而不是 ID",
+        "fill_type": "text"
+      },
+      {
+        "id": "assignment_list_2",
+        "text": "list",
+        "category": "keystone_role",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "用 --names 让输出显示可读名称而不是 ID",
+        "fill_type": "text"
+      },
+      {
+        "id": "assignment_list_3",
+        "text": "--names",
+        "category": "keystone_role",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "用 --names 让输出显示可读名称而不是 ID",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 授权三步：建角色、把角色加到“用户 + 项目”上、再查授权",
+      "level_2": "📖 `role create <角色名>`；`role add --user <用户> --project <项目> <角色>`；`role assignment list --names --user <用户> --project <项目>`",
+      "level_3": "👀 `openstack role create developer` / `role add --user alice --project demo developer` / `role assignment list --names --user alice --project demo`",
+      "level_4": "📝 正确答案：`role`、`create`、`developer`、`add`、`--user`、`alice`、`--project`、`demo`、`assignment`、`list`、`--names`"
+    },
+    "explanation": "角色（role）本身只是一张权限标签，真正生效靠 role assignment 把“用户（或组）+ 项目 + 角色”绑定起来；--names 让 assignment list 输出可读的名字而不是一串 ID。"
+  },
+  {
+    "id": "os-keystone-006",
+    "title": "注册服务并查看服务列表",
+    "description": "用 service create 注册 compute 服务并写清描述，然后列出所有服务",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "easy",
+    "category": "keystone_service",
+    "subcategory": "Keystone",
+    "full_code": "openstack service create --name nova --description \"OpenStack Compute\" compute\nopenstack service list",
+    "expected": "",
+    "points": [
+      {
+        "id": "service_create",
+        "text": "service create",
+        "category": "keystone_service",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "把服务注册进 Keystone 服务目录的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "service_name_desc_1",
+        "text": "--name",
+        "category": "keystone_service",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "服务展示名用 --name，说明用 --description",
+        "fill_type": "text"
+      },
+      {
+        "id": "service_name_desc_2",
+        "text": "nova",
+        "category": "keystone_service",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "服务展示名用 --name，说明用 --description",
+        "fill_type": "text"
+      },
+      {
+        "id": "service_name_desc_3",
+        "text": "--description",
+        "category": "keystone_service",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "服务展示名用 --name，说明用 --description",
+        "fill_type": "text"
+      },
+      {
+        "id": "service_name_desc_4",
+        "text": "\"OpenStack Compute\"",
+        "category": "keystone_service",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "服务展示名用 --name，说明用 --description",
+        "fill_type": "text"
+      },
+      {
+        "id": "service_list",
+        "text": "service list",
+        "category": "keystone_service",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "列出已注册的服务",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 服务目录（service catalog）里的每个服务都要先在 Keystone 注册",
+      "level_2": "📖 `service create --name <名字> --description <描述> <类型>`，类型如 compute/identity/network",
+      "level_3": "👀 `openstack service create --name nova --description \"OpenStack Compute\" compute`",
+      "level_4": "📝 正确答案：`service create`、`--name`、`nova`、`--description`、`\"OpenStack Compute\"`、`service list`"
+    },
+    "explanation": "service create 把服务登记进 Keystone 的服务目录，--name 是展示名，--description 是说明，末尾的位置参数是服务类型（如 compute）；endpoint 必须挂到某个已注册的服务上。"
+  },
+  {
+    "id": "os-keystone-007",
+    "title": "为服务创建三种接口的 endpoint",
+    "description": "为 identity 服务分别创建 public、internal、admin 三个 endpoint，并指定区域与 URL",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "medium",
+    "category": "keystone_endpoint",
+    "subcategory": "Keystone",
+    "full_code": "openstack endpoint create --region RegionOne identity public http://controller:5000/v3\nopenstack endpoint create --region RegionOne identity internal http://controller:5000/v3\nopenstack endpoint create --region RegionOne identity admin http://controller:5000/v3\nopenstack endpoint list",
+    "expected": "",
+    "points": [
+      {
+        "id": "public_endpoint_1",
+        "text": "identity",
+        "category": "keystone_endpoint",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "对外访问接口用 public",
+        "fill_type": "text"
+      },
+      {
+        "id": "public_endpoint_2",
+        "text": "public",
+        "category": "keystone_endpoint",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "对外访问接口用 public",
+        "fill_type": "text"
+      },
+      {
+        "id": "public_endpoint_3",
+        "text": "http://controller:5000/v3",
+        "category": "keystone_endpoint",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "对外访问接口用 public",
+        "fill_type": "text"
+      },
+      {
+        "id": "internal_endpoint_1",
+        "text": "internal",
+        "category": "keystone_endpoint",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "内部服务间访问接口用 internal",
+        "fill_type": "text"
+      },
+      {
+        "id": "admin_endpoint_1",
+        "text": "admin",
+        "category": "keystone_endpoint",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "管理接口用 admin，现代部署同样使用 5000 端口",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 每个服务需要 public/internal/admin 三类 endpoint，客户端按场景选用",
+      "level_2": "📖 `endpoint create --region <区域> <服务> <接口> <URL>`；Keystone 的 URL 以 /v3 结尾，默认端口 5000",
+      "level_3": "👀 `openstack endpoint create --region RegionOne identity public http://controller:5000/v3`（internal/admin 同理）",
+      "level_4": "📝 正确答案：`identity`、`public`、`http://controller:5000/v3`、`internal`、`admin`"
+    },
+    "explanation": "endpoint 是服务目录中可直接访问的 URL，分 public（外部）、internal（内部网络）、admin（管理）三种接口；现代部署三者都用 5000 端口的 /v3 路径（早期版本 admin 曾用 35357），--region 标明 endpoint 所属区域。"
+  },
+  {
+    "id": "os-keystone-008",
+    "title": "查看服务目录",
+    "description": "列出完整服务目录，并查看 identity 服务的端点信息",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "beginner",
+    "category": "keystone_catalog",
+    "subcategory": "Keystone",
+    "full_code": "openstack catalog list\nopenstack catalog show identity",
+    "expected": "",
+    "points": [
+      {
+        "id": "catalog_list",
+        "text": "catalog list",
+        "category": "keystone_catalog",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "列出全部服务及其 endpoints",
+        "fill_type": "text"
+      },
+      {
+        "id": "catalog_show_1",
+        "text": "catalog",
+        "category": "keystone_catalog",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "只看 identity 一个服务的端点",
+        "fill_type": "text",
+        "occurrence": 1
+      },
+      {
+        "id": "catalog_show_2",
+        "text": "show",
+        "category": "keystone_catalog",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "只看 identity 一个服务的端点",
+        "fill_type": "text"
+      },
+      {
+        "id": "catalog_show_3",
+        "text": "identity",
+        "category": "keystone_catalog",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "只看 identity 一个服务的端点",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 token 里的服务目录可以整体列出，也可以单看某个服务",
+      "level_2": "📖 `catalog list` 输出全部服务与端点，`catalog show <服务名>` 只看一个",
+      "level_3": "👀 `openstack catalog list` 与 `openstack catalog show identity`",
+      "level_4": "📝 正确答案：`catalog list`、`catalog`、`show`、`identity`"
+    },
+    "explanation": "catalog 是 token 携带的服务目录，catalog list 展示所有服务与 endpoint，catalog show identity 可核对 Keystone 自身的端点配置是否正确。"
+  },
+  {
+    "id": "os-keystone-009",
+    "title": "创建并启用域",
+    "description": "创建带描述的 demo 域，用 domain set 启用它，再列出所有域",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "easy",
+    "category": "keystone_domain",
+    "subcategory": "Keystone",
+    "full_code": "openstack domain create --description \"Demo Domain\" demo\nopenstack domain set --enable demo\nopenstack domain list",
+    "expected": "",
+    "points": [
+      {
+        "id": "domain_create_1",
+        "text": "domain",
+        "category": "keystone_domain",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "创建域并写上描述",
+        "fill_type": "text"
+      },
+      {
+        "id": "domain_create_2",
+        "text": "create",
+        "category": "keystone_domain",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "创建域并写上描述",
+        "fill_type": "text"
+      },
+      {
+        "id": "domain_create_3",
+        "text": "--description",
+        "category": "keystone_domain",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "创建域并写上描述",
+        "fill_type": "text"
+      },
+      {
+        "id": "domain_create_4",
+        "text": "\"Demo Domain\"",
+        "category": "keystone_domain",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "创建域并写上描述",
+        "fill_type": "text"
+      },
+      {
+        "id": "domain_create_5",
+        "text": "demo",
+        "category": "keystone_domain",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "创建域并写上描述",
+        "fill_type": "text"
+      },
+      {
+        "id": "domain_set_1",
+        "text": "set",
+        "category": "keystone_domain",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "用 --enable 启用域（对应 --disable 禁用）",
+        "fill_type": "text"
+      },
+      {
+        "id": "domain_set_2",
+        "text": "--enable",
+        "category": "keystone_domain",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "用 --enable 启用域（对应 --disable 禁用）",
+        "fill_type": "text"
+      },
+      {
+        "id": "domain_list",
+        "text": "domain list",
+        "category": "keystone_domain",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "列出所有域",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 域（domain）是 v3 里最外层的隔离单位，可以创建、启用或禁用",
+      "level_2": "📖 `domain create --description <描述> <域名>`；`domain set --enable <域名>`；`domain list`",
+      "level_3": "👀 `openstack domain create --description \"Demo Domain\" demo` / `openstack domain set --enable demo`",
+      "level_4": "📝 正确答案：`domain`、`create`、`--description`、`\"Demo Domain\"`、`demo`、`set`、`--enable`、`domain list`"
+    },
+    "explanation": "域（domain）是 Keystone v3 中最顶层的命名空间，用户、项目、组都隶属于域；domain set 可修改名称/描述或启用、禁用整个域，禁用后该域下所有认证都会失败。"
+  },
+  {
+    "id": "os-keystone-010",
+    "title": "创建用户组并添加成员",
+    "description": "在 default 域创建 developers 组，把 alice 加入组并验证成员关系",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "medium",
+    "category": "keystone_group",
+    "subcategory": "Keystone",
+    "full_code": "openstack group create developers --domain default\nopenstack group add user developers alice\nopenstack group contains user developers alice",
+    "expected": "",
+    "points": [
+      {
+        "id": "group_create_1",
+        "text": "group",
+        "category": "keystone_group",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "创建组并指定所属域",
+        "fill_type": "text"
+      },
+      {
+        "id": "group_create_2",
+        "text": "create",
+        "category": "keystone_group",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "创建组并指定所属域",
+        "fill_type": "text"
+      },
+      {
+        "id": "group_create_3",
+        "text": "developers",
+        "category": "keystone_group",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "创建组并指定所属域",
+        "fill_type": "text"
+      },
+      {
+        "id": "group_create_4",
+        "text": "--domain",
+        "category": "keystone_group",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "创建组并指定所属域",
+        "fill_type": "text"
+      },
+      {
+        "id": "group_create_5",
+        "text": "default",
+        "category": "keystone_group",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "创建组并指定所属域",
+        "fill_type": "text"
+      },
+      {
+        "id": "group_add_user_1",
+        "text": "add",
+        "category": "keystone_group",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "把用户加入组：group add user <组> <用户>",
+        "fill_type": "text"
+      },
+      {
+        "id": "group_add_user_2",
+        "text": "user",
+        "category": "keystone_group",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "把用户加入组：group add user <组> <用户>",
+        "fill_type": "text"
+      },
+      {
+        "id": "group_add_user_3",
+        "text": "alice",
+        "category": "keystone_group",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "把用户加入组：group add user <组> <用户>",
+        "fill_type": "text"
+      },
+      {
+        "id": "group_contains_1",
+        "text": "contains",
+        "category": "keystone_group",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "验证组成员关系",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 组可以批量授权，先把用户加进组，再给组分配角色",
+      "level_2": "📖 `group create <组名> --domain <域>`；`group add user <组> <用户>`；`group contains user <组> <用户>` 验证",
+      "level_3": "👀 `openstack group create developers --domain default` / `group add user developers alice`",
+      "level_4": "📝 正确答案：`group`、`create`、`developers`、`--domain`、`default`、`add`、`user`、`alice`、`contains`"
+    },
+    "explanation": "组（group）是用户的集合，给组授予角色等价于给组内所有成员授权，适合批量权限管理；group contains user 用于确认成员关系。"
+  },
+  {
+    "id": "os-keystone-011",
+    "title": "创建、列出与删除应用凭证",
+    "description": "为自动化场景创建带角色和过期时间的 application credential，并列出、删除",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "hard",
+    "category": "keystone_application_credential",
+    "subcategory": "Keystone",
+    "full_code": "openstack application credential create my-app-cred --role developer --expiration 2026-12-31T23:59:59\nopenstack application credential list\nopenstack application credential delete my-app-cred",
+    "expected": "",
+    "points": [
+      {
+        "id": "app_cred_create_1",
+        "text": "application",
+        "category": "keystone_application_credential",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "创建应用凭证并指定名称",
+        "fill_type": "text"
+      },
+      {
+        "id": "app_cred_create_2",
+        "text": "credential",
+        "category": "keystone_application_credential",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "创建应用凭证并指定名称",
+        "fill_type": "text"
+      },
+      {
+        "id": "app_cred_create_3",
+        "text": "create",
+        "category": "keystone_application_credential",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "创建应用凭证并指定名称",
+        "fill_type": "text"
+      },
+      {
+        "id": "app_cred_create_4",
+        "text": "my-app-cred",
+        "category": "keystone_application_credential",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "创建应用凭证并指定名称",
+        "fill_type": "text"
+      },
+      {
+        "id": "app_cred_role_expiration_1",
+        "text": "--role",
+        "category": "keystone_application_credential",
+        "min_weight": "hard",
+        "weight_score": 0.5,
+        "hint": "--role 限制凭证权限，--expiration 用 ISO 8601 时间设置到期时刻",
+        "fill_type": "text"
+      },
+      {
+        "id": "app_cred_role_expiration_2",
+        "text": "developer",
+        "category": "keystone_application_credential",
+        "min_weight": "hard",
+        "weight_score": 0.5,
+        "hint": "--role 限制凭证权限，--expiration 用 ISO 8601 时间设置到期时刻",
+        "fill_type": "text"
+      },
+      {
+        "id": "app_cred_role_expiration_3",
+        "text": "--expiration",
+        "category": "keystone_application_credential",
+        "min_weight": "hard",
+        "weight_score": 0.5,
+        "hint": "--role 限制凭证权限，--expiration 用 ISO 8601 时间设置到期时刻",
+        "fill_type": "text"
+      },
+      {
+        "id": "app_cred_role_expiration_4",
+        "text": "2026-12-31T23:59:59",
+        "category": "keystone_application_credential",
+        "min_weight": "hard",
+        "weight_score": 0.5,
+        "hint": "--role 限制凭证权限，--expiration 用 ISO 8601 时间设置到期时刻",
+        "fill_type": "text"
+      },
+      {
+        "id": "app_cred_delete_1",
+        "text": "delete",
+        "category": "keystone_application_credential",
+        "min_weight": "hard",
+        "weight_score": 2.0,
+        "hint": "删除后凭证立即失效",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 应用凭证（application credential）用于脚本/自动化，避免明文保存用户密码",
+      "level_2": "📖 `application credential create <名称> --role <角色> --expiration <ISO时间>`；list 查看；delete 删除",
+      "level_3": "👀 `openstack application credential create my-app-cred --role developer --expiration 2026-12-31T23:59:59`",
+      "level_4": "📝 正确答案：`application`、`credential`、`create`、`my-app-cred`、`--role`、`developer`、`--expiration`、`2026-12-31T23:59:59`、`delete`"
+    },
+    "explanation": "application credential 用 id/secret 直接换取 token，权限受创建者角色与 --role 约束，--expiration 到期自动失效；泄漏风险小于长期密码，删除后立即失效，适合 CI/CD 与监控脚本。"
+  },
+  {
+    "id": "os-keystone-012",
+    "title": "创建委托信任",
+    "description": "让用户 alice 把 demo 项目上的 developer 角色委托给用户 bob，并列出 trust",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "hard",
+    "category": "keystone_trust",
+    "subcategory": "Keystone",
+    "full_code": "openstack trust create --project demo --role developer --expiration 2026-12-31T23:59:59 alice bob\nopenstack trust list",
+    "expected": "",
+    "points": [
+      {
+        "id": "trust_create_1",
+        "text": "trust",
+        "category": "keystone_trust",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "创建委托并指定被委托的项目",
+        "fill_type": "text"
+      },
+      {
+        "id": "trust_create_2",
+        "text": "create",
+        "category": "keystone_trust",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "创建委托并指定被委托的项目",
+        "fill_type": "text"
+      },
+      {
+        "id": "trust_create_3",
+        "text": "--project",
+        "category": "keystone_trust",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "创建委托并指定被委托的项目",
+        "fill_type": "text"
+      },
+      {
+        "id": "trust_create_4",
+        "text": "demo",
+        "category": "keystone_trust",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "创建委托并指定被委托的项目",
+        "fill_type": "text"
+      },
+      {
+        "id": "trust_role_expiration_users_1",
+        "text": "--role",
+        "category": "keystone_trust",
+        "min_weight": "hard",
+        "weight_score": 0.5,
+        "hint": "--role 是委托的角色，末尾两个位置参数依次是委托者与受托者",
+        "fill_type": "text"
+      },
+      {
+        "id": "trust_role_expiration_users_2",
+        "text": "developer",
+        "category": "keystone_trust",
+        "min_weight": "hard",
+        "weight_score": 0.5,
+        "hint": "--role 是委托的角色，末尾两个位置参数依次是委托者与受托者",
+        "fill_type": "text"
+      },
+      {
+        "id": "trust_role_expiration_users_3",
+        "text": "--expiration",
+        "category": "keystone_trust",
+        "min_weight": "hard",
+        "weight_score": 0.5,
+        "hint": "--role 是委托的角色，末尾两个位置参数依次是委托者与受托者",
+        "fill_type": "text"
+      },
+      {
+        "id": "trust_role_expiration_users_4",
+        "text": "2026-12-31T23:59:59",
+        "category": "keystone_trust",
+        "min_weight": "hard",
+        "weight_score": 0.5,
+        "hint": "--role 是委托的角色，末尾两个位置参数依次是委托者与受托者",
+        "fill_type": "text"
+      },
+      {
+        "id": "trust_role_expiration_users_5",
+        "text": "alice",
+        "category": "keystone_trust",
+        "min_weight": "hard",
+        "weight_score": 0.5,
+        "hint": "--role 是委托的角色，末尾两个位置参数依次是委托者与受托者",
+        "fill_type": "text"
+      },
+      {
+        "id": "trust_role_expiration_users_6",
+        "text": "bob",
+        "category": "keystone_trust",
+        "min_weight": "hard",
+        "weight_score": 0.5,
+        "hint": "--role 是委托的角色，末尾两个位置参数依次是委托者与受托者",
+        "fill_type": "text"
+      },
+      {
+        "id": "trust_list",
+        "text": "trust list",
+        "category": "keystone_trust",
+        "min_weight": "hard",
+        "weight_score": 2,
+        "hint": "列出 trust 委托关系",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 委托（trust）让一个用户把权限授予另一个用户，代其获取受限 token",
+      "level_2": "📖 `trust create --project <项目> --role <角色> [--expiration <时间>] <委托者> <被委托者>`",
+      "level_3": "👀 `openstack trust create --project demo --role developer --expiration 2026-12-31T23:59:59 alice bob`",
+      "level_4": "📝 正确答案：`trust`、`create`、`--project`、`demo`、`--role`、`developer`、`--expiration`、`2026-12-31T23:59:59`、`alice`、`bob`、`trust list`"
+    },
+    "explanation": "trust 由委托者（trustor）创建、授权给被委托者（trustee），被委托者据此可换取受限 token 代表委托者操作项目资源；--expiration 限制有效期，--allow-redelegation 允许继续转委托。"
+  },
+  {
+    "id": "os-keystone-013",
+    "title": "申请多域作用域的 token",
+    "description": "用全局选项分别指定用户域与项目域，跨域申请一个绑定项目的 scoped token",
+    "exercise_type": "command",
+    "tech_stack": "openstack",
+    "weight": "hard",
+    "category": "keystone_scoped_token",
+    "subcategory": "Keystone",
+    "full_code": "openstack --os-auth-url http://controller:5000/v3 \\\n  --os-user-domain-name Default \\\n  --os-project-domain-name demo \\\n  --os-project-name demo-project \\\n  token issue",
+    "expected": "",
+    "points": [
+      {
+        "id": "user_domain_flag",
+        "text": "--os-user-domain-name Default",
+        "category": "keystone_scoped_token",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "指明用户名所在的域",
+        "fill_type": "text"
+      },
+      {
+        "id": "project_domain_flag",
+        "text": "--os-project-domain-name demo",
+        "category": "keystone_scoped_token",
+        "min_weight": "hard",
+        "weight_score": 2,
+        "hint": "指明项目所在的域，跨域 scoped token 的关键选项",
+        "fill_type": "text"
+      },
+      {
+        "id": "project_name_flag",
+        "text": "--os-project-name demo-project",
+        "category": "keystone_scoped_token",
+        "min_weight": "hard",
+        "weight_score": 2,
+        "hint": "指定要 scope 到的项目名",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 用户和项目可以分属不同域，认证时域信息要分别指定",
+      "level_2": "📖 全局选项 `--os-user-domain-name <用户域>` 与 `--os-project-domain-name <项目域>` 一起决定 token 的 scope",
+      "level_3": "👀 `openstack --os-user-domain-name Default --os-project-domain-name demo --os-project-name demo-project token issue`",
+      "level_4": "📝 正确答案：`--os-user-domain-name Default`、`--os-project-domain-name demo`、`--os-project-name demo-project`"
+    },
+    "explanation": "v3 认证里用户名与项目名只在各自域内唯一，跨域时必须用 --os-user-domain-name 和 --os-project-domain-name 指明域；scope 到项目后 token 才带有该项目的角色与 catalog 权限。"
+  },
+  {
+    "id": "os-keystone-014",
+    "title": "引导初始化 Keystone",
+    "description": "用 keystone-manage bootstrap 创建管理员用户、项目与默认域，并写入三个 endpoint",
+    "exercise_type": "config",
+    "tech_stack": "openstack",
+    "weight": "medium",
+    "category": "keystone_bootstrap",
+    "subcategory": "Keystone",
+    "full_code": "keystone-manage bootstrap \\\n  --bootstrap-password ADMIN_PASS \\\n  --bootstrap-admin-url http://controller:5000/v3/ \\\n  --bootstrap-public-url http://controller:5000/v3/ \\\n  --bootstrap-internal-url http://controller:5000/v3/",
+    "expected": "",
+    "points": [
+      {
+        "id": "bootstrap_password",
+        "text": "--bootstrap-password ADMIN_PASS",
+        "category": "keystone_bootstrap",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "初始 admin 用户的密码",
+        "fill_type": "text"
+      },
+      {
+        "id": "bootstrap_admin_url",
+        "text": "--bootstrap-admin-url http://controller:5000/v3/",
+        "category": "keystone_bootstrap",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "admin 接口 URL",
+        "fill_type": "text"
+      },
+      {
+        "id": "bootstrap_public_url",
+        "text": "--bootstrap-public-url http://controller:5000/v3/",
+        "category": "keystone_bootstrap",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "public 接口 URL，与 admin 一样指向 Keystone v3",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 Keystone 首次部署需要一个初始管理员和默认域，bootstrap 一步完成",
+      "level_2": "📖 `keystone-manage bootstrap --bootstrap-password <密码> --bootstrap-admin-url <URL> --bootstrap-public-url <URL> --bootstrap-internal-url <URL>`",
+      "level_3": "👀 `keystone-manage bootstrap --bootstrap-password ADMIN_PASS --bootstrap-admin-url http://controller:5000/v3/ ...`",
+      "level_4": "📝 正确答案：`--bootstrap-password ADMIN_PASS`、`--bootstrap-admin-url http://controller:5000/v3/`、`--bootstrap-public-url http://controller:5000/v3/`"
+    },
+    "explanation": "bootstrap 会创建 Default 域、admin 项目与 admin 用户，并把 admin 角色授予该用户，同时写入三条 endpoint；--bootstrap-password 是初始管理员密码，三个 URL 决定客户端访问 Keystone 的地址。"
+  },
+  {
+    "id": "os-keystone-015",
+    "title": "同步并收缩数据库",
+    "description": "部署或升级时先执行 db_sync 建表/迁移，升级验证完成后执行 db_contract 清理旧结构",
+    "exercise_type": "config",
+    "tech_stack": "openstack",
+    "weight": "medium",
+    "category": "keystone_db",
+    "subcategory": "Keystone",
+    "full_code": "keystone-manage db_sync\nkeystone-manage db_contract",
+    "expected": "",
+    "points": [
+      {
+        "id": "manage_bin",
+        "text": "keystone-manage",
+        "category": "keystone_db",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "Keystone 数据库迁移/维护命令的入口",
+        "fill_type": "text"
+      },
+      {
+        "id": "db_sync",
+        "text": "db_sync",
+        "category": "keystone_db",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "应用数据库迁移，创建或升级表结构",
+        "fill_type": "text"
+      },
+      {
+        "id": "db_contract",
+        "text": "db_contract",
+        "category": "keystone_db",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "滚动升级最后阶段删除废弃的表和列",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 Keystone 的数据库表结构由 keystone-manage 负责迁移",
+      "level_2": "📖 先 `db_sync` 应用迁移，升级验证后再 `db_contract` 执行收缩（删除废弃表/列）",
+      "level_3": "👀 `keystone-manage db_sync` 与 `keystone-manage db_contract`",
+      "level_4": "📝 正确答案：`keystone-manage`、`db_sync`、`db_contract`"
+    },
+    "explanation": "db_sync 按迁移脚本创建或升级数据库表结构，部署与升级时必须执行；db_contract 用于滚动升级的最后阶段，删除旧版本遗留的表和列，必须先完成数据迁移再执行。"
+  },
+  {
+    "id": "os-keystone-016",
+    "title": "初始化 Fernet 密钥与轮换 token",
+    "description": "生成 Fernet token 与 credential 加密的密钥仓库，并轮换签发新 token",
+    "exercise_type": "config",
+    "tech_stack": "openstack",
+    "weight": "hard",
+    "category": "keystone_fernet",
+    "subcategory": "Keystone",
+    "full_code": "keystone-manage fernet_setup --keystone-user keystone --keystone-group keystone\nkeystone-manage credential_setup --keystone-user keystone --keystone-group keystone\nkeystone-manage token_rotate",
+    "expected": "",
+    "points": [
+      {
+        "id": "fernet_setup",
+        "text": "keystone-manage fernet_setup",
+        "category": "keystone_fernet",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "生成 Fernet token 的密钥仓库",
+        "fill_type": "text"
+      },
+      {
+        "id": "credential_setup_1",
+        "text": "keystone-manage",
+        "category": "keystone_fernet",
+        "min_weight": "hard",
+        "weight_score": 0.5,
+        "hint": "生成 credential 加密密钥，并指定属主用户与组",
+        "fill_type": "text",
+        "occurrence": 1
+      },
+      {
+        "id": "credential_setup_2",
+        "text": "credential_setup",
+        "category": "keystone_fernet",
+        "min_weight": "hard",
+        "weight_score": 0.5,
+        "hint": "生成 credential 加密密钥，并指定属主用户与组",
+        "fill_type": "text"
+      },
+      {
+        "id": "credential_setup_3",
+        "text": "--keystone-user",
+        "category": "keystone_fernet",
+        "min_weight": "hard",
+        "weight_score": 0.5,
+        "hint": "生成 credential 加密密钥，并指定属主用户与组",
+        "fill_type": "text",
+        "occurrence": 1
+      },
+      {
+        "id": "credential_setup_4",
+        "text": "keystone",
+        "category": "keystone_fernet",
+        "min_weight": "hard",
+        "weight_score": 0.5,
+        "hint": "生成 credential 加密密钥，并指定属主用户与组",
+        "fill_type": "text",
+        "occurrence": 7
+      },
+      {
+        "id": "credential_setup_5",
+        "text": "--keystone-group",
+        "category": "keystone_fernet",
+        "min_weight": "hard",
+        "weight_score": 0.5,
+        "hint": "生成 credential 加密密钥，并指定属主用户与组",
+        "fill_type": "text",
+        "occurrence": 1
+      },
+      {
+        "id": "token_rotate",
+        "text": "keystone-manage token_rotate",
+        "category": "keystone_fernet",
+        "min_weight": "hard",
+        "weight_score": 2,
+        "hint": "轮换出新的 primary 密钥",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 Fernet token 需要密钥仓库，credential 加密也需要独立密钥，二者用 keystone-manage 初始化",
+      "level_2": "📖 `fernet_setup` 生成 Fernet 密钥，`credential_setup` 生成 credential 密钥，`token_rotate` 轮换签发密钥",
+      "level_3": "👀 `keystone-manage fernet_setup --keystone-user keystone --keystone-group keystone` / `credential_setup ...` / `token_rotate`",
+      "level_4": "📝 正确答案：`keystone-manage fernet_setup`、`keystone-manage`、`credential_setup`、`--keystone-user`、`keystone`、`--keystone-group`、`keystone-manage token_rotate`"
+    },
+    "explanation": "fernet_setup 在 key_repository 生成第一套 Fernet 密钥（用于签发/校验 token），credential_setup 为 credential 加密生成密钥；token_rotate 生成新的 primary 密钥，让后续 token 用新密钥签发，旧密钥保留用于校验存量 token。"
+  },
+  {
+    "id": "os-keystone-017",
+    "title": "配置 token 提供者与有效期",
+    "description": "在 keystone.conf 的 [token] 段启用 fernet provider 并设置 token 过期时间",
+    "exercise_type": "config",
+    "tech_stack": "openstack",
+    "weight": "easy",
+    "category": "keystone_conf_token",
+    "subcategory": "Keystone",
+    "full_code": "[token]\nprovider = fernet\nexpiration = 3600",
+    "expected": "",
+    "points": [
+      {
+        "id": "token_section",
+        "text": "[token]",
+        "category": "keystone_conf_token",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "token 相关配置所在的段",
+        "fill_type": "text"
+      },
+      {
+        "id": "provider_fernet_1",
+        "text": "provider",
+        "category": "keystone_conf_token",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "指定使用 Fernet 格式的自包含 token",
+        "fill_type": "text"
+      },
+      {
+        "id": "provider_fernet_2",
+        "text": "fernet",
+        "category": "keystone_conf_token",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "指定使用 Fernet 格式的自包含 token",
+        "fill_type": "text"
+      },
+      {
+        "id": "expiration_1",
+        "text": "expiration",
+        "category": "keystone_conf_token",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "token 有效期，单位为秒，默认 3600",
+        "fill_type": "text"
+      },
+      {
+        "id": "expiration_2",
+        "text": "3600",
+        "category": "keystone_conf_token",
+        "min_weight": "easy",
+        "weight_score": 0.5,
+        "hint": "token 有效期，单位为秒，默认 3600",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 token 的格式与有效期都在 keystone.conf 的 [token] 段配置",
+      "level_2": "📖 provider 可选 fernet（推荐）或 uuid；expiration 单位是秒",
+      "level_3": "👀 [token] provider = fernet / expiration = 3600",
+      "level_4": "📝 正确答案：`[token]`、`provider`、`fernet`、`expiration`、`3600`"
+    },
+    "explanation": "[token] 段控制 token 的签发方式：provider = fernet 使用对称加密的自包含 token（无需持久化存储，是当前推荐），expiration 设置 token 有效期（秒），过期后需重新认证。"
+  },
+  {
+    "id": "os-keystone-018",
+    "title": "配置密钥仓库路径",
+    "description": "指定 Fernet token 密钥与 credential 密钥的存放目录，保证多节点共享",
+    "exercise_type": "config",
+    "tech_stack": "openstack",
+    "weight": "medium",
+    "category": "keystone_conf_fernet",
+    "subcategory": "Keystone",
+    "full_code": "[fernet_tokens]\nkey_repository = /etc/keystone/fernet-keys/\n\n[credential]\nkey_repository = /etc/keystone/credential-keys/",
+    "expected": "",
+    "points": [
+      {
+        "id": "fernet_section",
+        "text": "[fernet_tokens]",
+        "category": "keystone_conf_fernet",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "Fernet token 密钥配置所在的段",
+        "fill_type": "text"
+      },
+      {
+        "id": "fernet_key_repo_1",
+        "text": "key_repository",
+        "category": "keystone_conf_fernet",
+        "min_weight": "medium",
+        "weight_score": 0.8,
+        "hint": "Fernet 密钥仓库目录，fernet_setup 会写入这里",
+        "fill_type": "text"
+      },
+      {
+        "id": "fernet_key_repo_2",
+        "text": "/etc/keystone/fernet-keys/",
+        "category": "keystone_conf_fernet",
+        "min_weight": "medium",
+        "weight_score": 0.8,
+        "hint": "Fernet 密钥仓库目录，fernet_setup 会写入这里",
+        "fill_type": "text"
+      },
+      {
+        "id": "credential_section",
+        "text": "[credential]",
+        "category": "keystone_conf_fernet",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "credential 加密配置所在的段",
+        "fill_type": "text"
+      },
+      {
+        "id": "credential_key_repo_1",
+        "text": "/etc/keystone/credential-keys/",
+        "category": "keystone_conf_fernet",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "credential 密钥仓库目录，credential_setup 会写入这里",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 Fernet token 和 credential 的密钥各自有独立的 key_repository",
+      "level_2": "📖 [fernet_tokens] 的 key_repository 默认 /etc/keystone/fernet-keys/，[credential] 的 key_repository 默认 /etc/keystone/credential-keys/",
+      "level_3": "👀 [fernet_tokens] key_repository = /etc/keystone/fernet-keys/ / [credential] key_repository = /etc/keystone/credential-keys/",
+      "level_4": "📝 正确答案：`[fernet_tokens]`、`key_repository`、`/etc/keystone/fernet-keys/`、`[credential]`、`/etc/keystone/credential-keys/`"
+    },
+    "explanation": "key_repository 指向存放密钥的目录，fernet_setup/credential_setup 会把密钥写到这里；多节点部署需共享同一份密钥目录（如 NFS），否则各节点签发的 token 无法互相校验。"
+  },
+  {
+    "id": "os-keystone-019",
+    "title": "配置数据库连接与后端驱动",
+    "description": "设置 Keystone 的数据库连接串，以及 identity 与 trust 使用的 SQL 驱动",
+    "exercise_type": "config",
+    "tech_stack": "openstack",
+    "weight": "medium",
+    "category": "keystone_conf_identity",
+    "subcategory": "Keystone",
+    "full_code": "[database]\nconnection = mysql+pymysql://keystone:KEYSTONE_DBPASS@controller/keystone\n\n[identity]\ndriver = sql\n\n[trust]\ndriver = sql",
+    "expected": "",
+    "points": [
+      {
+        "id": "database_section",
+        "text": "[database]",
+        "category": "keystone_conf_identity",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "数据库配置所在的段",
+        "fill_type": "text"
+      },
+      {
+        "id": "connection_1",
+        "text": "connection",
+        "category": "keystone_conf_identity",
+        "min_weight": "medium",
+        "weight_score": 0.8,
+        "hint": "SQLAlchemy 连接串，格式为 驱动://用户:密码@主机/库名",
+        "fill_type": "text"
+      },
+      {
+        "id": "connection_2",
+        "text": "mysql+pymysql://keystone:KEYSTONE_DBPASS@controller/keystone",
+        "category": "keystone_conf_identity",
+        "min_weight": "medium",
+        "weight_score": 0.8,
+        "hint": "SQLAlchemy 连接串，格式为 驱动://用户:密码@主机/库名",
+        "fill_type": "text"
+      },
+      {
+        "id": "identity_driver_1",
+        "text": "[identity]",
+        "category": "keystone_conf_identity",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "身份数据（用户/项目/组）使用 SQL 后端",
+        "fill_type": "text"
+      },
+      {
+        "id": "identity_driver_2",
+        "text": "driver",
+        "category": "keystone_conf_identity",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "身份数据（用户/项目/组）使用 SQL 后端",
+        "fill_type": "text"
+      },
+      {
+        "id": "identity_driver_3",
+        "text": "sql",
+        "category": "keystone_conf_identity",
+        "min_weight": "medium",
+        "weight_score": 0.5,
+        "hint": "身份数据（用户/项目/组）使用 SQL 后端",
+        "fill_type": "text",
+        "occurrence": 2
+      },
+      {
+        "id": "trust_driver_1",
+        "text": "[trust]",
+        "category": "keystone_conf_identity",
+        "min_weight": "medium",
+        "weight_score": 1.5,
+        "hint": "委托数据同样使用 SQL 后端",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 Keystone 把数据存在 SQL 数据库，身份与信任等后端由 driver 决定",
+      "level_2": "📖 [database] connection 用 SQLAlchemy URL 连接串；[identity]/[trust] 的 driver = sql 表示使用 SQL 后端",
+      "level_3": "👀 [database] connection = mysql+pymysql://... / [identity] driver = sql / [trust] driver = sql",
+      "level_4": "📝 正确答案：`[database]`、`connection`、`mysql+pymysql://keystone:KEYSTONE_DBPASS@controller/keystone`、`[identity]`、`driver`、`sql`、`[trust]`"
+    },
+    "explanation": "[database] connection 决定 Keystone 使用哪个数据库（mysql+pymysql 驱动），[identity] driver = sql 表示用户/项目/组等身份数据存 SQL，[trust] driver = sql 表示委托数据同样存 SQL；修改后需执行 keystone-manage db_sync 建表。"
+  },
+  {
+    "id": "os-keystone-020",
+    "title": "用 policy.yaml 自定义管理员权限",
+    "description": "覆盖默认策略：项目创建与更新仅限 admin，查询项目允许 admin 或项目自身成员",
+    "exercise_type": "config",
+    "tech_stack": "openstack",
+    "weight": "expert",
+    "category": "keystone_policy",
+    "subcategory": "Keystone",
+    "full_code": "identity:create_project: \"role:admin\"\nidentity:update_project: \"role:admin\"\nidentity:get_project: \"role:admin or project_id:%(target.project.id)s\"",
+    "expected": "",
+    "points": [
+      {
+        "id": "create_project_rule",
+        "text": "identity:create_project: \"role:admin\"",
+        "category": "keystone_policy",
+        "min_weight": "beginner",
+        "weight_score": 0.5,
+        "hint": "创建项目要求 admin 角色",
+        "fill_type": "text"
+      },
+      {
+        "id": "update_project_rule",
+        "text": "identity:update_project: \"role:admin\"",
+        "category": "keystone_policy",
+        "min_weight": "expert",
+        "weight_score": 2,
+        "hint": "更新项目同样只允许 admin",
+        "fill_type": "text"
+      },
+      {
+        "id": "get_project_rule_1",
+        "text": "identity:get_project:",
+        "category": "keystone_policy",
+        "min_weight": "expert",
+        "weight_score": 1.0,
+        "hint": "admin 或目标项目自身的成员可以查询项目",
+        "fill_type": "text"
+      },
+      {
+        "id": "get_project_rule_2",
+        "text": "\"role:admin or project_id:%(target.project.id)s\"",
+        "category": "keystone_policy",
+        "min_weight": "expert",
+        "weight_score": 1.0,
+        "hint": "admin 或目标项目自身的成员可以查询项目",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 Keystone 的 API 权限由 policy.yaml 中的规则决定，可以按需覆盖默认策略",
+      "level_2": "📖 规则格式为 `identity:<动作>: <规则>`；`role:admin` 表示需要 admin 角色，`project_id:%(target.project.id)s` 表示目标项目属于调用者",
+      "level_3": "👀 `identity:create_project: \"role:admin\"` / `identity:get_project: \"role:admin or project_id:%(target.project.id)s\"`",
+      "level_4": "📝 正确答案：`identity:create_project: \"role:admin\"`、`identity:update_project: \"role:admin\"`、`identity:get_project:`、`\"role:admin or project_id:%(target.project.id)s\"`"
+    },
+    "explanation": "policy.yaml 用 `identity:<API动作>` 为键、check string 为值；role:admin 要求调用者拥有 admin 角色，project_id:%(target.project.id)s 表示目标项目 ID 必须与 token 的项目一致（即只能看自己的项目）；修改后需重启 keystone 服务生效。"
+  }
+]

@@ -1,0 +1,1605 @@
+[
+  {
+    "id": "cka-wl-001",
+    "title": "命令行创建 Deployment",
+    "description": "在 prod 命名空间创建 3 副本的 deployment web，镜像 nginx:1.25",
+    "exercise_type": "command",
+    "tech_stack": "cka",
+    "weight": "beginner",
+    "category": "cka_deploy",
+    "subcategory": "工作负载",
+    "full_code": "kubectl create deployment web --image=nginx:1.25 --replicas=3 -n prod",
+    "expected": "",
+    "points": [
+      {
+        "id": "cmd",
+        "text": "kubectl create deployment",
+        "category": "command",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "创建 Deployment 的命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "img",
+        "text": "--image=nginx:1.25",
+        "category": "command_flag",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "容器镜像",
+        "fill_type": "text"
+      },
+      {
+        "id": "rep",
+        "text": "--replicas=3",
+        "category": "command_flag",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "副本数",
+        "fill_type": "text"
+      },
+      {
+        "id": "ns",
+        "text": "-n prod",
+        "category": "command_flag",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "目标命名空间",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 一条命令拉起 Deployment",
+      "level_2": "📖 create deployment 必须给 --image；副本用 --replicas",
+      "level_3": "👀 `kubectl create deployment web --image=... --replicas=... -n prod`",
+      "level_4": "📝 正确答案：`kubectl create deployment web --image=nginx:1.25 --replicas=3 -n prod`"
+    },
+    "explanation": "考试策略：能用 create 先生成再 edit/patch 就不要手写整份 YAML；配合 --dry-run=client -o yaml > web.yaml 可拿到标准模板。"
+  },
+  {
+    "id": "cka-wl-002",
+    "title": "编写 Deployment 清单",
+    "description": "Deployment api：3 副本，标签 app: api，容器镜像 nginx:1.25，暴露容器端口 80",
+    "exercise_type": "config",
+    "tech_stack": "cka",
+    "weight": "medium",
+    "category": "cka_deploy",
+    "subcategory": "工作负载",
+    "full_code": "apiVersion: apps/v1\nkind: Deployment\nmetadata:\n  name: api\nspec:\n  replicas: 3\n  selector:\n    matchLabels:\n      app: api\n  template:\n    metadata:\n      labels:\n        app: api\n    spec:\n      containers:\n      - name: api\n        image: nginx:1.25\n        ports:\n        - containerPort: 80",
+    "expected": "",
+    "points": [
+      {
+        "id": "apiv",
+        "text": "apps/v1",
+        "category": "api_version",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "Deployment 属于 apps 组",
+        "fill_type": "text"
+      },
+      {
+        "id": "rep",
+        "text": "replicas: 3",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "期望副本数",
+        "fill_type": "text"
+      },
+      {
+        "id": "sel",
+        "text": "matchLabels:",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "selector 用来匹配 Pod 标签",
+        "fill_type": "text"
+      },
+      {
+        "id": "lbl1",
+        "text": "app: api",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "selector 侧的标签",
+        "fill_type": "text"
+      },
+      {
+        "id": "lbl2",
+        "text": "app: api",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "template 侧的标签（必须与 selector 一致）",
+        "fill_type": "text",
+        "occurrence": 1
+      },
+      {
+        "id": "img",
+        "text": "image: nginx:1.25",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "容器镜像",
+        "fill_type": "text"
+      },
+      {
+        "id": "port",
+        "text": "containerPort: 80",
+        "category": "config",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "容器监听端口（仅声明作用）",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 Deployment 必填：apiVersion/kind/metadata + spec(replicas/selector/template)",
+      "level_2": "📖 selector.matchLabels 必须与 template.metadata.labels 一致，否则创建即报错",
+      "level_3": "👀 `replicas: 3` + 两处 `app: api` + `image: nginx:1.25`",
+      "level_4": "📝 正确答案：replicas 3 / selector 与 template 的 `app: api` / image nginx:1.25"
+    },
+    "explanation": "selector 与 Pod 标签不匹配是 Deployment 拒绝创建的第一大错误；.spec.selector 创建后不可变，改标签匹配只能删了重建。"
+  },
+  {
+    "id": "cka-wl-003",
+    "title": "滚动更新镜像",
+    "description": "把 deployment web 的 web 容器更新为 nginx:1.26（触发滚动更新）",
+    "exercise_type": "command",
+    "tech_stack": "cka",
+    "weight": "easy",
+    "category": "cka_deploy",
+    "subcategory": "工作负载",
+    "full_code": "kubectl set image deployment/web web=nginx:1.26",
+    "expected": "",
+    "points": [
+      {
+        "id": "cmd",
+        "text": "kubectl set image",
+        "category": "command",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "更新容器镜像的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "target",
+        "text": "deployment/web",
+        "category": "command_arg",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "对象：deployment/web",
+        "fill_type": "text"
+      },
+      {
+        "id": "val",
+        "text": "web=nginx:1.26",
+        "category": "command_arg",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "容器名=新镜像",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 set image 的参数格式",
+      "level_2": "📖 `容器名=镜像:tag`；对象可写 deployment/web",
+      "level_3": "👀 `kubectl set image deployment/web web=nginx:1.26`",
+      "level_4": "📝 正确答案：`kubectl set image deployment/web web=nginx:1.26`"
+    },
+    "explanation": "默认 RollingUpdate 策略逐批替换；同镜像不同 tag 时 kubectl rollout restart 不生效，必须 set image。"
+  },
+  {
+    "id": "cka-wl-004",
+    "title": "查看滚动更新进度",
+    "description": "观察 deployment api 的滚动更新是否完成",
+    "exercise_type": "command",
+    "tech_stack": "cka",
+    "weight": "beginner",
+    "category": "cka_deploy",
+    "subcategory": "工作负载",
+    "full_code": "kubectl rollout status deployment/api",
+    "expected": "",
+    "points": [
+      {
+        "id": "cmd",
+        "text": "kubectl rollout status",
+        "category": "command",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "查看发布状态的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "target",
+        "text": "deployment/api",
+        "category": "command_arg",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "目标 Deployment",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 rollout 三个子命令：status/history/undo",
+      "level_2": "📖 status 会阻塞到发布完成或失败",
+      "level_3": "👀 `kubectl rollout status deployment/api`",
+      "level_4": "📝 正确答案：`kubectl rollout status deployment/api`"
+    },
+    "explanation": "考试时 set image 后接一条 rollout status 验证成功；successfully rolled out 字样代表完成。"
+  },
+  {
+    "id": "cka-wl-005",
+    "title": "查看发布历史",
+    "description": "列出 deployment api 的历史修订版本",
+    "exercise_type": "command",
+    "tech_stack": "cka",
+    "weight": "easy",
+    "category": "cka_deploy",
+    "subcategory": "工作负载",
+    "full_code": "kubectl rollout history deployment/api",
+    "expected": "",
+    "points": [
+      {
+        "id": "cmd",
+        "text": "kubectl rollout history",
+        "category": "command",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "查看修订历史的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "target",
+        "text": "deployment/api",
+        "category": "command_arg",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "目标 Deployment",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 想看改过几次、每个版本改了什么",
+      "level_2": "📖 rollout history 列 revision 号；加 --revision=N 看详情",
+      "level_3": "👀 `kubectl rollout history deployment/api`",
+      "level_4": "📝 正确答案：`kubectl rollout history deployment/api`"
+    },
+    "explanation": "每次 PodTemplate 变更生成一个新 revision；--record 已废弃，查看详情用 --revision=N。"
+  },
+  {
+    "id": "cka-wl-006",
+    "title": "回滚到指定版本",
+    "description": "把 deployment api 回滚到 revision 2",
+    "exercise_type": "command",
+    "tech_stack": "cka",
+    "weight": "easy",
+    "category": "cka_deploy",
+    "subcategory": "工作负载",
+    "full_code": "kubectl rollout undo deployment/api --to-revision=2",
+    "expected": "",
+    "points": [
+      {
+        "id": "cmd",
+        "text": "kubectl rollout undo",
+        "category": "command",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "回滚子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "rev",
+        "text": "--to-revision=2",
+        "category": "command_flag",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "指定目标修订号（缺省回滚到上一版）",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 不带参数的 undo 回到哪？",
+      "level_2": "📖 缺省回上一版；--to-revision=N 回任意指定版本",
+      "level_3": "👀 `kubectl rollout undo deployment/api --to-revision=2`",
+      "level_4": "📝 正确答案：`kubectl rollout undo deployment/api --to-revision=2`"
+    },
+    "explanation": "回滚本身也是一次新发布（生成新 revision）；.spec.revisionHistoryLimit 默认 10，太老的 revision 会被清理掉。"
+  },
+  {
+    "id": "cka-wl-007",
+    "title": "手动扩缩容",
+    "description": "把 deployment api 扩到 5 副本",
+    "exercise_type": "command",
+    "tech_stack": "cka",
+    "weight": "beginner",
+    "category": "cka_scale",
+    "subcategory": "工作负载",
+    "full_code": "kubectl scale deployment api --replicas=5",
+    "expected": "",
+    "points": [
+      {
+        "id": "cmd",
+        "text": "kubectl scale",
+        "category": "command",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "手动改副本数的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "rep",
+        "text": "--replicas=5",
+        "category": "command_flag",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "目标副本数",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 一条命令改副本数",
+      "level_2": "📖 `kubectl scale <type> <name> --replicas=N`",
+      "level_3": "👀 `kubectl scale deployment api --replicas=5`",
+      "level_4": "📝 正确答案：`kubectl scale deployment api --replicas=5`"
+    },
+    "explanation": "scale 直接改 spec.replicas；若同时存在 HPA，HPA 会接管副本数，手改会被覆盖——考试注意题目是否要求 HPA。"
+  },
+  {
+    "id": "cka-wl-008",
+    "title": "命令行创建 HPA",
+    "description": "为 deployment api 创建自动扩缩容：2~8 副本，CPU 目标 70%",
+    "exercise_type": "command",
+    "tech_stack": "cka",
+    "weight": "medium",
+    "category": "cka_scale",
+    "subcategory": "工作负载",
+    "full_code": "kubectl autoscale deployment api --min=2 --max=8 --cpu-percent=70",
+    "expected": "",
+    "points": [
+      {
+        "id": "cmd",
+        "text": "kubectl autoscale",
+        "category": "command",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "创建 HPA 的命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "min",
+        "text": "--min=2",
+        "category": "command_flag",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "最小副本",
+        "fill_type": "text"
+      },
+      {
+        "id": "max",
+        "text": "--max=8",
+        "category": "command_flag",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "最大副本",
+        "fill_type": "text"
+      },
+      {
+        "id": "cpu",
+        "text": "--cpu-percent=70",
+        "category": "command_flag",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "CPU 平均使用率目标",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 autoscale 三个参数",
+      "level_2": "📖 --min/--max/--cpu-percent",
+      "level_3": "👀 `kubectl autoscale deployment api --min=2 --max=8 --cpu-percent=70`",
+      "level_4": "📝 正确答案：`kubectl autoscale deployment api --min=2 --max=8 --cpu-percent=70`"
+    },
+    "explanation": "HPA 依赖 metrics-server 提供指标；CPU 百分比是相对 Pod resources.requests 的比例，所以被伸缩的 Pod 必须配置 requests。"
+  },
+  {
+    "id": "cka-wl-009",
+    "title": "编写 HPA 清单",
+    "description": "api-hpa：作用于 Deployment api，副本 2~8，CPU 平均使用率 70% 时扩容",
+    "exercise_type": "config",
+    "tech_stack": "cka",
+    "weight": "hard",
+    "category": "cka_scale",
+    "subcategory": "工作负载",
+    "full_code": "apiVersion: autoscaling/v2\nkind: HorizontalPodAutoscaler\nmetadata:\n  name: api-hpa\nspec:\n  scaleTargetRef:\n    apiVersion: apps/v1\n    kind: Deployment\n    name: api\n  minReplicas: 2\n  maxReplicas: 8\n  metrics:\n  - type: Resource\n    resource:\n      name: cpu\n      target:\n        type: Utilization\n        averageUtilization: 70",
+    "expected": "",
+    "points": [
+      {
+        "id": "apiv",
+        "text": "autoscaling/v2",
+        "category": "api_version",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "HPA 当前稳定版 apiVersion",
+        "fill_type": "text"
+      },
+      {
+        "id": "ref",
+        "text": "scaleTargetRef:",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "指向被伸缩的工作负载",
+        "fill_type": "text"
+      },
+      {
+        "id": "min",
+        "text": "minReplicas: 2",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "最小副本数",
+        "fill_type": "text"
+      },
+      {
+        "id": "max",
+        "text": "maxReplicas: 8",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "最大副本数",
+        "fill_type": "text"
+      },
+      {
+        "id": "util",
+        "text": "averageUtilization: 70",
+        "category": "config",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "CPU 平均使用率目标（相对 requests）",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 HPA v2 的指标在 spec.metrics 下",
+      "level_2": "📖 type: Resource + resource.name/target.averageUtilization",
+      "level_3": "👀 `averageUtilization: 70`",
+      "level_4": "📝 正确答案：`minReplicas: 2` / `maxReplicas: 8` / `averageUtilization: 70`"
+    },
+    "explanation": "autoscaling/v2 是当前考试主流写法（v1 也能创建但字段不同）；考试常让先写好 HPA 再用 kubectl describe hpa 验证。"
+  },
+  {
+    "id": "cka-wl-010",
+    "title": "命令行创建 ConfigMap",
+    "description": "创建 configmap app-config，包含键值 LOG_LEVEL=debug 与 ENV=prod",
+    "exercise_type": "command",
+    "tech_stack": "cka",
+    "weight": "beginner",
+    "category": "cka_config",
+    "subcategory": "工作负载",
+    "full_code": "kubectl create configmap app-config --from-literal=LOG_LEVEL=debug --from-literal=ENV=prod",
+    "expected": "",
+    "points": [
+      {
+        "id": "cmd",
+        "text": "kubectl create configmap",
+        "category": "command",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "创建 ConfigMap 的命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "kv1",
+        "text": "--from-literal=LOG_LEVEL=debug",
+        "category": "command_flag",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "字面量键值",
+        "fill_type": "text"
+      },
+      {
+        "id": "kv2",
+        "text": "--from-literal=ENV=prod",
+        "category": "command_flag",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "可重复多次",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 从命令行直接写键值",
+      "level_2": "📖 --from-literal=KEY=VALUE 可重复",
+      "level_3": "👀 `kubectl create configmap app-config --from-literal=... --from-literal=...`",
+      "level_4": "📝 正确答案：`kubectl create configmap app-config --from-literal=LOG_LEVEL=debug --from-literal=ENV=prod`"
+    },
+    "explanation": "文件创建用 --from-file（可指定 key 名 --from-file=mykey=path）；考试先 create 再 --dry-run=client -o yaml 检查内容。"
+  },
+  {
+    "id": "cka-wl-011",
+    "title": "从文件创建 ConfigMap",
+    "description": "把当前目录的 nginx.conf 作为键 nginx.conf 创建 configmap nginx-conf",
+    "exercise_type": "command",
+    "tech_stack": "cka",
+    "weight": "easy",
+    "category": "cka_config",
+    "subcategory": "工作负载",
+    "full_code": "kubectl create configmap nginx-conf --from-file=nginx.conf",
+    "expected": "",
+    "points": [
+      {
+        "id": "cmd",
+        "text": "kubectl create configmap",
+        "category": "command",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "创建 ConfigMap 的命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "file",
+        "text": "--from-file=nginx.conf",
+        "category": "command_flag",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "文件名即数据键名；自定义键名写 --from-file=<key>=<path>",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 --from-file 的键名是什么？",
+      "level_2": "📖 不指定键名时默认用文件名作 key",
+      "level_3": "👀 `kubectl create configmap nginx-conf --from-file=nginx.conf`",
+      "level_4": "📝 正确答案：`kubectl create configmap nginx-conf --from-file=nginx.conf`"
+    },
+    "explanation": "--from-file=path 时 key=path 基名；自定义键 --from-file=nginx-config=path/nginx.conf；目录形式会导入目录下所有文件。"
+  },
+  {
+    "id": "cka-wl-012",
+    "title": "环境变量引用 ConfigMap 单个键",
+    "description": "Pod app 注入环境变量 LOG_LEVEL，值取 configmap app-config 的 LOG_LEVEL 键",
+    "exercise_type": "config",
+    "tech_stack": "cka",
+    "weight": "easy",
+    "category": "cka_config",
+    "subcategory": "工作负载",
+    "full_code": "apiVersion: v1\nkind: Pod\nmetadata:\n  name: app\nspec:\n  containers:\n  - name: app\n    image: busybox:1.36\n    env:\n    - name: LOG_LEVEL\n      valueFrom:\n        configMapKeyRef:\n          name: app-config\n          key: LOG_LEVEL",
+    "expected": "",
+    "points": [
+      {
+        "id": "env",
+        "text": "env:",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "环境变量列表字段",
+        "fill_type": "text"
+      },
+      {
+        "id": "vf",
+        "text": "valueFrom:",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "值来自引用而非字面量",
+        "fill_type": "text"
+      },
+      {
+        "id": "ref",
+        "text": "configMapKeyRef:",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "引用 ConfigMap 单个键",
+        "fill_type": "text"
+      },
+      {
+        "id": "cm",
+        "text": "name: app-config",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "ConfigMap 名",
+        "fill_type": "text"
+      },
+      {
+        "id": "key",
+        "text": "key: LOG_LEVEL",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "ConfigMap 里的键名",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 单个键用什么引用？",
+      "level_2": "📖 valueFrom.configMapKeyRef.{name,key}",
+      "level_3": "👀 `configMapKeyRef:` + `name: app-config` + `key: LOG_LEVEL`",
+      "level_4": "📝 正确答案：`configMapKeyRef:` name/key 两行"
+    },
+    "explanation": "整包注入用 envFrom；引用不存在的键会导致 Pod 卡 CreateContainerConfigError——排障时注意。"
+  },
+  {
+    "id": "cka-wl-013",
+    "title": "整包注入 ConfigMap 为环境变量",
+    "description": "Pod app 把 configmap app-config 的所有键都注入为环境变量",
+    "exercise_type": "config",
+    "tech_stack": "cka",
+    "weight": "easy",
+    "category": "cka_config",
+    "subcategory": "工作负载",
+    "full_code": "apiVersion: v1\nkind: Pod\nmetadata:\n  name: app\nspec:\n  containers:\n  - name: app\n    image: busybox:1.36\n    envFrom:\n    - configMapRef:\n        name: app-config",
+    "expected": "",
+    "points": [
+      {
+        "id": "ef",
+        "text": "envFrom:",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "整包注入环境变量的字段",
+        "fill_type": "text"
+      },
+      {
+        "id": "ref",
+        "text": "configMapRef:",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "引用整个 ConfigMap（Secret 用 secretRef）",
+        "fill_type": "text"
+      },
+      {
+        "id": "cm",
+        "text": "name: app-config",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "ConfigMap 名",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 所有键一次注入",
+      "level_2": "📖 envFrom.configMapRef；每个键变成一个环境变量",
+      "level_3": "👀 `envFrom:` + `configMapRef:` + `name: app-config`",
+      "level_4": "📝 正确答案：`envFrom:` / `configMapRef:` / `name: app-config`"
+    },
+    "explanation": "envFrom 注入的环境变量不会随 ConfigMap 更新自动变化，需要重启 Pod（kubectl rollout restart）才生效；挂载文件方式则会自动更新。"
+  },
+  {
+    "id": "cka-wl-014",
+    "title": "ConfigMap 挂载为文件",
+    "description": "把 configmap nginx-conf 挂到容器 /etc/nginx/conf.d 目录",
+    "exercise_type": "config",
+    "tech_stack": "cka",
+    "weight": "medium",
+    "category": "cka_config",
+    "subcategory": "工作负载",
+    "full_code": "apiVersion: v1\nkind: Pod\nmetadata:\n  name: app\nspec:\n  containers:\n  - name: app\n    image: nginx:1.25\n    volumeMounts:\n    - name: config-vol\n      mountPath: /etc/nginx/conf.d\n  volumes:\n  - name: config-vol\n    configMap:\n      name: nginx-conf",
+    "expected": "",
+    "points": [
+      {
+        "id": "vm",
+        "text": "volumeMounts:",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "容器侧挂载列表",
+        "fill_type": "text"
+      },
+      {
+        "id": "mp",
+        "text": "mountPath: /etc/nginx/conf.d",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "容器内挂载点",
+        "fill_type": "text"
+      },
+      {
+        "id": "vol",
+        "text": "volumes:",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "Pod 侧卷定义",
+        "fill_type": "text"
+      },
+      {
+        "id": "cmv",
+        "text": "configMap:",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "卷类型：ConfigMap",
+        "fill_type": "text"
+      },
+      {
+        "id": "cmn",
+        "text": "name: nginx-conf",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "ConfigMap 名",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 挂载分两处写：容器侧 volumeMounts + Pod 侧 volumes",
+      "level_2": "📖 卷类型写 configMap，name 指向 ConfigMap；两侧用 name 关联",
+      "level_3": "👀 `mountPath:` + `configMap:` + `name: nginx-conf`",
+      "level_4": "📝 正确答案：`mountPath: /etc/nginx/conf.d` + volumes 里 `configMap: name: nginx-conf`"
+    },
+    "explanation": "ConfigMap 卷内容更新后约一分钟同步到挂载文件（env 方式不会）；每个键成为挂载目录下的一个文件名。"
+  },
+  {
+    "id": "cka-wl-015",
+    "title": "命令行创建 Secret",
+    "description": "创建 generic 类型 secret db-cred，包含键 password=s3cr3t",
+    "exercise_type": "command",
+    "tech_stack": "cka",
+    "weight": "beginner",
+    "category": "cka_secret",
+    "subcategory": "工作负载",
+    "full_code": "kubectl create secret generic db-cred --from-literal=password=s3cr3t",
+    "expected": "",
+    "points": [
+      {
+        "id": "cmd",
+        "text": "kubectl create secret generic",
+        "category": "command",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "创建 Opaque 类型 Secret",
+        "fill_type": "text"
+      },
+      {
+        "id": "kv",
+        "text": "--from-literal=password=s3cr3t",
+        "category": "command_flag",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "字面量键值（自动 base64）",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 secret 三种常用子类型",
+      "level_2": "📖 generic / docker-registry / tls",
+      "level_3": "👀 `kubectl create secret generic db-cred --from-literal=...`",
+      "level_4": "📝 正确答案：`kubectl create secret generic db-cred --from-literal=password=s3cr3t`"
+    },
+    "explanation": "generic 创建的是 Opaque 类型，data 值自动 base64；private registry 凭据用 docker-registry，证书对用 tls。"
+  },
+  {
+    "id": "cka-wl-016",
+    "title": "环境变量引用 Secret",
+    "description": "Pod app 注入 DB_PASSWORD，值来自 secret db-cred 的 password 键",
+    "exercise_type": "config",
+    "tech_stack": "cka",
+    "weight": "easy",
+    "category": "cka_secret",
+    "subcategory": "工作负载",
+    "full_code": "apiVersion: v1\nkind: Pod\nmetadata:\n  name: app\nspec:\n  containers:\n  - name: app\n    image: busybox:1.36\n    env:\n    - name: DB_PASSWORD\n      valueFrom:\n        secretKeyRef:\n          name: db-cred\n          key: password",
+    "expected": "",
+    "points": [
+      {
+        "id": "ref",
+        "text": "secretKeyRef:",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "引用 Secret 单个键（区别于 configMapKeyRef）",
+        "fill_type": "text"
+      },
+      {
+        "id": "name",
+        "text": "name: db-cred",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "Secret 名",
+        "fill_type": "text"
+      },
+      {
+        "id": "key",
+        "text": "key: password",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "Secret 里的键",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 Secret 的单键引用字段叫什么？",
+      "level_2": "📖 valueFrom.secretKeyRef.{name,key}",
+      "level_3": "👀 `secretKeyRef:` + `name: db-cred` + `key: password`",
+      "level_4": "📝 正确答案：`secretKeyRef:` name/key 两行"
+    },
+    "explanation": "secretKeyRef 与 configMapKeyRef 极易写混；Secret 注入的环境变量在容器里是解码后的明文。"
+  },
+  {
+    "id": "cka-wl-017",
+    "title": "创建 TLS 类型 Secret",
+    "description": "用 tls.crt 与 tls.key 创建 TLS secret web-tls（供 Ingress 使用）",
+    "exercise_type": "command",
+    "tech_stack": "cka",
+    "weight": "medium",
+    "category": "cka_secret",
+    "subcategory": "工作负载",
+    "full_code": "kubectl create secret tls web-tls --cert=tls.crt --key=tls.key",
+    "expected": "",
+    "points": [
+      {
+        "id": "cmd",
+        "text": "kubectl create secret tls",
+        "category": "command",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "创建 kubernetes.io/tls 类型 Secret",
+        "fill_type": "text"
+      },
+      {
+        "id": "cert",
+        "text": "--cert=tls.crt",
+        "category": "command_flag",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "证书文件",
+        "fill_type": "text"
+      },
+      {
+        "id": "key",
+        "text": "--key=tls.key",
+        "category": "command_flag",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "私钥文件",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 TLS secret 需要哪两个文件？",
+      "level_2": "📖 --cert 与 --key；生成 tls.crt / tls.key 两个数据键",
+      "level_3": "👀 `kubectl create secret tls web-tls --cert=tls.crt --key=tls.key`",
+      "level_4": "📝 正确答案：`kubectl create secret tls web-tls --cert=tls.crt --key=tls.key`"
+    },
+    "explanation": "tls 类型 Secret 的 data 固定为 tls.crt/tls.key 两个键；Ingress spec.tls.secretName 引用它实现 HTTPS 终结。"
+  },
+  {
+    "id": "cka-wl-018",
+    "title": "配置存活探针（httpGet）",
+    "description": "容器每 5 秒 GET /healthz:8080 探活，首次探测延迟 10 秒；失败自动重启容器",
+    "exercise_type": "config",
+    "tech_stack": "cka",
+    "weight": "easy",
+    "category": "cka_probe",
+    "subcategory": "工作负载",
+    "full_code": "apiVersion: v1\nkind: Pod\nmetadata:\n  name: web\nspec:\n  containers:\n  - name: web\n    image: nginx:1.25\n    livenessProbe:\n      httpGet:\n        path: /healthz\n        port: 8080\n      initialDelaySeconds: 10\n      periodSeconds: 5",
+    "expected": "",
+    "points": [
+      {
+        "id": "lp",
+        "text": "livenessProbe:",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "存活探针字段",
+        "fill_type": "text"
+      },
+      {
+        "id": "path",
+        "text": "path: /healthz",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "探测路径",
+        "fill_type": "text"
+      },
+      {
+        "id": "port",
+        "text": "port: 8080",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "探测端口",
+        "fill_type": "text"
+      },
+      {
+        "id": "delay",
+        "text": "initialDelaySeconds: 10",
+        "category": "config",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "容器启动后首次探测的延迟",
+        "fill_type": "text"
+      },
+      {
+        "id": "period",
+        "text": "periodSeconds: 5",
+        "category": "config",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "探测周期",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 存活探针字段名",
+      "level_2": "📖 livenessProbe，探针三种：httpGet/exec/tcpSocket",
+      "level_3": "👀 `httpGet: path: /healthz port: 8080`",
+      "level_4": "📝 正确答案：`livenessProbe:` + `path: /healthz` + `port: 8080`"
+    },
+    "explanation": "livenessProbe 失败会重启容器；initialDelaySeconds 给慢启动留时间，配合 startupProbe 更优雅（探活地址错会造成无限重启循环）。"
+  },
+  {
+    "id": "cka-wl-019",
+    "title": "配置就绪探针（exec）",
+    "description": "容器用 cat /tmp/ready 判断就绪，失败 3 次才判定失败",
+    "exercise_type": "config",
+    "tech_stack": "cka",
+    "weight": "medium",
+    "category": "cka_probe",
+    "subcategory": "工作负载",
+    "full_code": "apiVersion: v1\nkind: Pod\nmetadata:\n  name: worker\nspec:\n  containers:\n  - name: worker\n    image: busybox:1.36\n    command: [\"sleep\", \"3600\"]\n    readinessProbe:\n      exec:\n        command:\n        - cat\n        - /tmp/ready\n      initialDelaySeconds: 5\n      failureThreshold: 3",
+    "expected": "",
+    "points": [
+      {
+        "id": "rp",
+        "text": "readinessProbe:",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "就绪探针字段",
+        "fill_type": "text"
+      },
+      {
+        "id": "exec",
+        "text": "exec:",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "exec 型探针",
+        "fill_type": "text"
+      },
+      {
+        "id": "cmd",
+        "text": "command:",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "探针执行的命令列表",
+        "fill_type": "text"
+      },
+      {
+        "id": "fail",
+        "text": "failureThreshold: 3",
+        "category": "config",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "连续失败多少次才判定失败",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 readiness 失败的后果与 liveness 不同",
+      "level_2": "📖 readiness 失败只摘除 Endpoints 不重启；exec 探针用 command 列表",
+      "level_3": "👀 `readinessProbe:` + `exec:` + `command:`",
+      "level_4": "📝 正确答案：`readinessProbe:` / `exec:` / `command:`"
+    },
+    "explanation": "readinessProbe 失败 → 从 Service Endpoints 摘除但容器照跑；livenessProbe 失败 → 重启容器。failureThreshold 默认 3。"
+  },
+  {
+    "id": "cka-wl-020",
+    "title": "配置资源请求与限制",
+    "description": "容器 requests：64Mi/250m；limits：128Mi/500m",
+    "exercise_type": "config",
+    "tech_stack": "cka",
+    "weight": "easy",
+    "category": "cka_resource",
+    "subcategory": "工作负载",
+    "full_code": "apiVersion: v1\nkind: Pod\nmetadata:\n  name: app\nspec:\n  containers:\n  - name: app\n    image: nginx:1.25\n    resources:\n      requests:\n        memory: \"64Mi\"\n        cpu: \"250m\"\n      limits:\n        memory: \"128Mi\"\n        cpu: \"500m\"",
+    "expected": "",
+    "points": [
+      {
+        "id": "req",
+        "text": "requests:",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "调度时保证的资源量",
+        "fill_type": "text"
+      },
+      {
+        "id": "mem1",
+        "text": "memory: \"64Mi\"",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "内存请求",
+        "fill_type": "text"
+      },
+      {
+        "id": "cpu1",
+        "text": "cpu: \"250m\"",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "CPU 请求（毫核）",
+        "fill_type": "text"
+      },
+      {
+        "id": "lim",
+        "text": "limits:",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "运行时上限",
+        "fill_type": "text"
+      },
+      {
+        "id": "mem2",
+        "text": "memory: \"128Mi\"",
+        "category": "config",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "内存上限，超过会被 OOMKilled",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 requests 用于调度，limits 用于运行时",
+      "level_2": "📖 单位：内存 Ki/Mi/Gi，CPU 用核数或毫核 m",
+      "level_3": "👀 `memory: \"64Mi\"` / `cpu: \"250m\"` / `limits:`",
+      "level_4": "📝 正确答案：requests 64Mi+250m / limits 128Mi+500m"
+    },
+    "explanation": "requests 决定 Pod 被调度到哪（节点剩余可分配资源够 requests 才放行）；内存超 limit 会被 OOMKilled，CPU 超 limit 只被限流。"
+  },
+  {
+    "id": "cka-wl-021",
+    "title": "Init 容器：先拉代码再起服务",
+    "description": "Pod 用 init 容器 clone 仓库到共享卷 workdir，再由 nginx 提供静态页",
+    "exercise_type": "config",
+    "tech_stack": "cka",
+    "weight": "medium",
+    "category": "cka_workload",
+    "subcategory": "工作负载",
+    "full_code": "apiVersion: v1\nkind: Pod\nmetadata:\n  name: web\nspec:\n  initContainers:\n  - name: init-clone\n    image: busybox:1.36\n    command: [\"sh\", \"-c\", \"git clone https://example.com/repo /work-dir\"]\n    volumeMounts:\n    - name: workdir\n      mountPath: /work-dir\n  containers:\n  - name: nginx\n    image: nginx:1.25\n    volumeMounts:\n    - name: workdir\n      mountPath: /usr/share/nginx/html\n  volumes:\n  - name: workdir\n    emptyDir: {}",
+    "expected": "",
+    "points": [
+      {
+        "id": "ic",
+        "text": "initContainers:",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "Init 容器列表字段",
+        "fill_type": "text"
+      },
+      {
+        "id": "img",
+        "text": "image: busybox:1.36",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "init 容器镜像",
+        "fill_type": "text"
+      },
+      {
+        "id": "mp",
+        "text": "mountPath: /usr/share/nginx/html",
+        "category": "config",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "nginx 侧挂载点",
+        "fill_type": "text"
+      },
+      {
+        "id": "ed",
+        "text": "emptyDir: {}",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "共享空目录卷",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 业务容器启动前跑一次的任务",
+      "level_2": "📖 initContainers 按顺序跑完且全部成功才启动业务容器",
+      "level_3": "👀 `initContainers:` + 共享 `emptyDir: {}`",
+      "level_4": "📝 正确答案：`initContainers:` 与 `emptyDir: {}`"
+    },
+    "explanation": "Init 容器失败会不断重试直至成功（Pod 卡 Init 状态）；与业务容器通过 emptyDir 共享数据是标准模式。"
+  },
+  {
+    "id": "cka-wl-022",
+    "title": "Sidecar 容器共享日志卷",
+    "description": "app 容器持续写日志到共享卷，sidecar 容器 tail 输出该日志",
+    "exercise_type": "config",
+    "tech_stack": "cka",
+    "weight": "medium",
+    "category": "cka_workload",
+    "subcategory": "工作负载",
+    "full_code": "apiVersion: v1\nkind: Pod\nmetadata:\n  name: app\nspec:\n  containers:\n  - name: app\n    image: busybox:1.36\n    command: [\"sh\", \"-c\", \"while true; do date >> /var/log/app.log; sleep 2; done\"]\n    volumeMounts:\n    - name: log-vol\n      mountPath: /var/log\n  - name: sidecar\n    image: busybox:1.36\n    command: [\"sh\", \"-c\", \"tail -f /var/log/app.log\"]\n    volumeMounts:\n    - name: log-vol\n      mountPath: /var/log\n  volumes:\n  - name: log-vol\n    emptyDir: {}",
+    "expected": "",
+    "points": [
+      {
+        "id": "sc",
+        "text": "name: sidecar",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "辅助容器名",
+        "fill_type": "text"
+      },
+      {
+        "id": "mp",
+        "text": "mountPath: /var/log",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "两个容器挂同一卷",
+        "fill_type": "text"
+      },
+      {
+        "id": "tail",
+        "text": "tail -f /var/log/app.log",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "sidecar 持续读取日志",
+        "fill_type": "text"
+      },
+      {
+        "id": "ed",
+        "text": "emptyDir: {}",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "共享卷类型",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 同一 Pod 内容器怎么共享文件？",
+      "level_2": "📖 都挂同一个卷（如 emptyDir）到相同/相关路径",
+      "level_3": "👀 两个容器 `mountPath: /var/log` + `emptyDir: {}`",
+      "level_4": "📝 正确答案：两处 `mountPath: /var/log` + `emptyDir: {}`"
+    },
+    "explanation": "同 Pod 容器共享网络与存储卷；1.29+ 支持原生 Sidecar（initContainers + restartPolicy: Always），随 Pod 全生命周期运行。"
+  },
+  {
+    "id": "cka-wl-023",
+    "title": "每节点一个的 DaemonSet",
+    "description": "创建 DaemonSet node-logger：标签 app: node-logger，容器 busybox:1.36",
+    "exercise_type": "config",
+    "tech_stack": "cka",
+    "weight": "medium",
+    "category": "cka_workload",
+    "subcategory": "工作负载",
+    "full_code": "apiVersion: apps/v1\nkind: DaemonSet\nmetadata:\n  name: node-logger\nspec:\n  selector:\n    matchLabels:\n      app: node-logger\n  template:\n    metadata:\n      labels:\n        app: node-logger\n    spec:\n      containers:\n      - name: logger\n        image: busybox:1.36\n        command: [\"sh\", \"-c\", \"sleep 3600\"]",
+    "expected": "",
+    "points": [
+      {
+        "id": "kind",
+        "text": "DaemonSet",
+        "category": "kind",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "每节点一个 Pod 的控制器",
+        "fill_type": "text"
+      },
+      {
+        "id": "sel",
+        "text": "matchLabels:",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "selector 匹配模板标签",
+        "fill_type": "text"
+      },
+      {
+        "id": "lbl",
+        "text": "app: node-logger",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "标签（selector 与 template 一致）",
+        "fill_type": "text"
+      },
+      {
+        "id": "img",
+        "text": "image: busybox:1.36",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "容器镜像",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 每个（合格）节点跑一个 Pod 的控制器",
+      "level_2": "📖 kind: DaemonSet；无需 replicas 字段",
+      "level_3": "👀 `kind: DaemonSet`",
+      "level_4": "📝 正确答案：`kind: DaemonSet`"
+    },
+    "explanation": "DaemonSet 没有 replicas——由节点数决定；新节点加入自动部署，常用于日志采集/监控 agent/CNI 组件。"
+  },
+  {
+    "id": "cka-wl-024",
+    "title": "有状态应用 StatefulSet",
+    "description": "StatefulSet db：headless service db，3 副本，volumeClaimTemplates 提供 5Gi RWO 存储",
+    "exercise_type": "config",
+    "tech_stack": "cka",
+    "weight": "hard",
+    "category": "cka_workload",
+    "subcategory": "工作负载",
+    "full_code": "apiVersion: apps/v1\nkind: StatefulSet\nmetadata:\n  name: db\nspec:\n  serviceName: db\n  replicas: 3\n  selector:\n    matchLabels:\n      app: db\n  template:\n    metadata:\n      labels:\n        app: db\n    spec:\n      containers:\n      - name: mysql\n        image: mysql:8.0\n        volumeMounts:\n        - name: data\n          mountPath: /var/lib/mysql\n  volumeClaimTemplates:\n  - metadata:\n      name: data\n    spec:\n      accessModes: [\"ReadWriteOnce\"]\n      resources:\n        requests:\n          storage: 5Gi",
+    "expected": "",
+    "points": [
+      {
+        "id": "kind",
+        "text": "StatefulSet",
+        "category": "kind",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "有状态副本集控制器",
+        "fill_type": "text"
+      },
+      {
+        "id": "svc",
+        "text": "serviceName: db",
+        "category": "config",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "关联的 headless Service（稳定网络标识）",
+        "fill_type": "text"
+      },
+      {
+        "id": "vct",
+        "text": "volumeClaimTemplates:",
+        "category": "config",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "每个副本自动创建独立 PVC",
+        "fill_type": "text"
+      },
+      {
+        "id": "am",
+        "text": "accessModes: [\"ReadWriteOnce\"]",
+        "category": "config",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "存储访问模式",
+        "fill_type": "text"
+      },
+      {
+        "id": "st",
+        "text": "storage: 5Gi",
+        "category": "config",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "每副本存储容量",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 有状态三件套：稳定名字、稳定存储、有序部署",
+      "level_2": "📖 serviceName 指向 headless svc；volumeClaimTemplates 按副本建 PVC",
+      "level_3": "👀 `serviceName: db` + `volumeClaimTemplates:`",
+      "level_4": "📝 正确答案：`serviceName: db` / `volumeClaimTemplates:` / `storage: 5Gi`"
+    },
+    "explanation": "StatefulSet Pod 名有序（db-0/db-1/db-2），DNS 形如 db-0.db.<ns>.svc.cluster.local；扩容按序、缩容倒序，每个副本独享 PVC。"
+  },
+  {
+    "id": "cka-wl-025",
+    "title": "批处理 Job",
+    "description": "Job batch-count：共完成 5 次、最多并行 2 个，失败重试上限 4，容器 busybox:1.36",
+    "exercise_type": "config",
+    "tech_stack": "cka",
+    "weight": "medium",
+    "category": "cka_job",
+    "subcategory": "工作负载",
+    "full_code": "apiVersion: batch/v1\nkind: Job\nmetadata:\n  name: batch-count\nspec:\n  completions: 5\n  parallelism: 2\n  backoffLimit: 4\n  template:\n    spec:\n      restartPolicy: Never\n      containers:\n      - name: counter\n        image: busybox:1.36\n        command: [\"sh\", \"-c\", \"for i in $(seq 1 10); do echo done-$i; done\"]",
+    "expected": "",
+    "points": [
+      {
+        "id": "apiv",
+        "text": "batch/v1",
+        "category": "api_version",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "Job/CronJob 属于 batch 组",
+        "fill_type": "text"
+      },
+      {
+        "id": "comp",
+        "text": "completions: 5",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "总成功次数",
+        "fill_type": "text"
+      },
+      {
+        "id": "par",
+        "text": "parallelism: 2",
+        "category": "config",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "最大并行 Pod 数",
+        "fill_type": "text"
+      },
+      {
+        "id": "bo",
+        "text": "backoffLimit: 4",
+        "category": "config",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "失败重试上限，超过则 Job 标记失败",
+        "fill_type": "text"
+      },
+      {
+        "id": "rp",
+        "text": "restartPolicy: Never",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "Job Pod 不允许 Always",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 Job 的 Pod 重启策略不能是 Always",
+      "level_2": "📖 restartPolicy: Never 或 OnFailure",
+      "level_3": "👀 `restartPolicy: Never`",
+      "level_4": "📝 正确答案：`completions: 5` / `parallelism: 2` / `backoffLimit: 4`"
+    },
+    "explanation": "completions=总任务数、parallelism=并发度、backoffLimit=失败容忍；restartPolicy 写 Always 会直接校验报错。"
+  },
+  {
+    "id": "cka-wl-026",
+    "title": "定时任务 CronJob",
+    "description": "CronJob nightly-report：每天 02:00 执行，禁止并发，容器 busybox:1.36",
+    "exercise_type": "config",
+    "tech_stack": "cka",
+    "weight": "medium",
+    "category": "cka_job",
+    "subcategory": "工作负载",
+    "full_code": "apiVersion: batch/v1\nkind: CronJob\nmetadata:\n  name: nightly-report\nspec:\n  schedule: \"0 2 * * *\"\n  concurrencyPolicy: Forbid\n  jobTemplate:\n    spec:\n      template:\n        spec:\n          restartPolicy: OnFailure\n          containers:\n          - name: report\n            image: busybox:1.36\n            command: [\"sh\", \"-c\", \"echo generating report\"]",
+    "expected": "",
+    "points": [
+      {
+        "id": "sched",
+        "text": "schedule: \"0 2 * * *\"",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "标准 cron 表达式（分 时 日 月 周）",
+        "fill_type": "text"
+      },
+      {
+        "id": "cc",
+        "text": "concurrencyPolicy: Forbid",
+        "category": "config",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "禁止重叠执行",
+        "fill_type": "text"
+      },
+      {
+        "id": "jt",
+        "text": "jobTemplate:",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "内嵌 Job 模板",
+        "fill_type": "text"
+      },
+      {
+        "id": "rp",
+        "text": "restartPolicy: OnFailure",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "Job 内 Pod 重启策略",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 CronJob 的核心字段",
+      "level_2": "📖 spec.schedule（cron 表达式）+ spec.jobTemplate",
+      "level_3": "👀 `schedule: \"0 2 * * *\"` + `jobTemplate:`",
+      "level_4": "📝 正确答案：`schedule: \"0 2 * * *\"` 与 `concurrencyPolicy: Forbid`"
+    },
+    "explanation": "cron 五段：分 时 日 月 周（0 2 * * * = 每天 02:00）；Forbid 上次没跑完就跳过本次，Allow 并发，Replace 替换。"
+  },
+  {
+    "id": "cka-wl-027",
+    "title": "用 nodeSelector 定向调度",
+    "description": "让 Pod 只调度到带 disktype=ssd 标签的节点",
+    "exercise_type": "config",
+    "tech_stack": "cka",
+    "weight": "easy",
+    "category": "cka_schedule",
+    "subcategory": "工作负载",
+    "full_code": "apiVersion: v1\nkind: Pod\nmetadata:\n  name: app\nspec:\n  nodeSelector:\n    disktype: ssd\n  containers:\n  - name: app\n    image: nginx:1.25",
+    "expected": "",
+    "points": [
+      {
+        "id": "ns",
+        "text": "nodeSelector:",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "最简单的节点选择字段",
+        "fill_type": "text"
+      },
+      {
+        "id": "kv",
+        "text": "disktype: ssd",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "节点标签键值（kubectl label node ...）",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 最简单的节点定向调度",
+      "level_2": "📖 spec.nodeSelector 写节点标签键值对",
+      "level_3": "👀 `nodeSelector:` + `disktype: ssd`",
+      "level_4": "📝 正确答案：`nodeSelector: disktype: ssd`"
+    },
+    "explanation": "节点打标签：kubectl label node worker1 disktype=ssd；没有满足标签的节点时 Pod 一直 Pending。"
+  },
+  {
+    "id": "cka-wl-028",
+    "title": "节点亲和性（硬约束）",
+    "description": "Pod 必须调度到 kubernetes.io/os=linux 的节点（required 硬性要求）",
+    "exercise_type": "config",
+    "tech_stack": "cka",
+    "weight": "hard",
+    "category": "cka_schedule",
+    "subcategory": "工作负载",
+    "full_code": "apiVersion: v1\nkind: Pod\nmetadata:\n  name: app\nspec:\n  affinity:\n    nodeAffinity:\n      requiredDuringSchedulingIgnoredDuringExecution:\n        nodeSelectorTerms:\n        - matchExpressions:\n          - key: kubernetes.io/os\n            operator: In\n            values:\n            - linux\n  containers:\n  - name: app\n    image: nginx:1.25",
+    "expected": "",
+    "points": [
+      {
+        "id": "na",
+        "text": "nodeAffinity:",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "节点亲和性字段",
+        "fill_type": "text"
+      },
+      {
+        "id": "req",
+        "text": "requiredDuringSchedulingIgnoredDuringExecution",
+        "category": "config",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "硬约束：必须满足才调度，运行后忽略变化",
+        "fill_type": "text"
+      },
+      {
+        "id": "op",
+        "text": "operator: In",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "匹配操作符",
+        "fill_type": "text"
+      },
+      {
+        "id": "key",
+        "text": "key: kubernetes.io/os",
+        "category": "config",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "节点标签键",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 required=硬性 / preferred=软性",
+      "level_2": "📖 requiredDuringSchedulingIgnoredDuringExecution 是标准硬亲和写法",
+      "level_3": "👀 `requiredDuringSchedulingIgnoredDuringExecution` + `operator: In`",
+      "level_4": "📝 正确答案：`requiredDuringSchedulingIgnoredDuringExecution` / `operator: In`"
+    },
+    "explanation": "IgnoredDuringExecution 表示运行中节点标签变化不迁移 Pod；preferred 对应软亲和带 weight 1-100；operator 还有 NotIn/Exists/Gt/Lt。"
+  },
+  {
+    "id": "cka-wl-029",
+    "title": "容忍节点污点",
+    "description": "节点带 special=true:NoSchedule 污点，让 Pod 能调度上去",
+    "exercise_type": "config",
+    "tech_stack": "cka",
+    "weight": "medium",
+    "category": "cka_schedule",
+    "subcategory": "工作负载",
+    "full_code": "apiVersion: v1\nkind: Pod\nmetadata:\n  name: app\nspec:\n  tolerations:\n  - key: \"special\"\n    operator: \"Equal\"\n    value: \"true\"\n    effect: \"NoSchedule\"\n  containers:\n  - name: app\n    image: nginx:1.25",
+    "expected": "",
+    "points": [
+      {
+        "id": "tol",
+        "text": "tolerations:",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "容忍列表字段",
+        "fill_type": "text"
+      },
+      {
+        "id": "op",
+        "text": "operator: \"Equal\"",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "Equal 需同时给 value；Exists 可省略",
+        "fill_type": "text"
+      },
+      {
+        "id": "eff",
+        "text": "effect: \"NoSchedule\"",
+        "category": "config",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "与节点污点的 effect 一致",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 污点拒调度，容忍放行",
+      "level_2": "📖 tolerations 的 key/value/effect 必须与污点匹配",
+      "level_3": "👀 `tolerations:` + `effect: \"NoSchedule\"`",
+      "level_4": "📝 正确答案：`tolerations:` 四字段 key/operator/value/effect"
+    },
+    "explanation": "污点命令：kubectl taint node worker1 special=true:NoSchedule；effect 有 NoSchedule/PreferNoSchedule/NoExecute（NoExecute 还会驱逐已运行 Pod）。"
+  },
+  {
+    "id": "cka-wl-030",
+    "title": "给节点打污点",
+    "description": "给 worker1 打上 special=true:NoSchedule 污点，阻止未容忍的 Pod 调度",
+    "exercise_type": "command",
+    "tech_stack": "cka",
+    "weight": "medium",
+    "category": "cka_schedule",
+    "subcategory": "工作负载",
+    "full_code": "kubectl taint node worker1 special=true:NoSchedule",
+    "expected": "",
+    "points": [
+      {
+        "id": "cmd",
+        "text": "kubectl taint",
+        "category": "command",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "管理污点的命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "kv",
+        "text": "special=true:NoSchedule",
+        "category": "command_arg",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "格式 key=value:effect",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 污点三段式",
+      "level_2": "📖 key=value:effect，effect 三选一",
+      "level_3": "👀 `kubectl taint node worker1 special=true:NoSchedule`",
+      "level_4": "📝 正确答案：`kubectl taint node worker1 special=true:NoSchedule`"
+    },
+    "explanation": "删除污点在键值后加减号：kubectl taint node worker1 special=true:NoSchedule-；control plane 节点默认带 node-role.kubernetes.io/control-plane:NoSchedule 污点。"
+  }
+]

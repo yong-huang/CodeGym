@@ -5,6 +5,7 @@
 ## [Unreleased]
 
 ### Added
+- CKA 认证题库（150 题，新增 `cka` 技术栈，5 个子库各 30 题，按 CNCF CKA 考纲五大域组织，命令/配置补全 + 答案匹配判题）：集群架构（kubeadm init·join·HA/版本升级全流程/etcd 快照备份·恢复·etcdutl/证书 check-expiration·renew/RBAC Role·RoleBinding·ClusterRole/CSR 审批/kubeconfig 上下文与默认命名空间/静态 Pod 目录/CNI 安装）、工作负载（Deployment 创建·滚动更新·回滚·扩缩/HPA v2/ConfigMap·Secret 三种注入方式/liveness·readiness 探针/资源 requests·limits/init 容器/sidecar 共享卷/DaemonSet/StatefulSet·volumeClaimTemplates/Job·CronJob/nodeSelector·亲和性/污点与容忍）、服务网络（Service 四类型/headless·ExternalName/手动 Endpoints/Ingress 多路径·TLS/CoreDNS Corefile/集群 FQDN/NetworkPolicy 默认拒绝·namespaceSelector·egress 含 DNS 放行/sessionAffinity/externalTrafficPolicy/命名端口/节点宿主网络 ip addr·route）、存储（PV hostPath·NFS·local·Block/PVC volumeName·selector 精确绑定/StorageClass 动态供给·默认类注解·WaitForFirstConsumer/PVC 在线扩容 patch/subPath 单文件挂载/accessModes·回收策略选择）、故障排查（NotReady 节点体检/kubelet systemctl·journalctl/drain·uncordon/crictl ps/CrashLoopBackOff --previous/事件排序/镜像 tag·selector 错配·探针 404·OOMKilled·PVC 名错·污点 Pending 修复/控制平面静态 Pod 修复/openssl 证书日期/DNS·Service 连通性验证/can-i --list 权限排查）
 - 用户体系：注册 / 登录（PBKDF2-HMAC-SHA256 密码哈希 + 30 天会话 token）、退出登录、修改昵称 / 密码；进度、收藏、薄弱点、连续打卡按用户隔离
 - 我的题库：用户勾选要练的 `tech::subcategory` 范围并持久化，首页与侧边栏按所选范围过滤（不选 = 全部）
 - 题库动态加载：教练端 `POST /api/v1/admin/banks` 上传题库 JSON 即时生效；`data/bank` 目录热扫描（`-bank-watch`，默认 15s）自动加载新增 / 修改的题库文件

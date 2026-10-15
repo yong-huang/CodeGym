@@ -1,0 +1,1369 @@
+[
+  {
+    "id": "cka-sto-001",
+    "title": "创建 PV（hostPath）",
+    "description": "PV pv-data：容量 1Gi、RWO、回收策略 Retain、storageClass manual、路径 /mnt/data",
+    "exercise_type": "config",
+    "tech_stack": "cka",
+    "weight": "medium",
+    "category": "cka_pv",
+    "subcategory": "存储",
+    "full_code": "apiVersion: v1\nkind: PersistentVolume\nmetadata:\n  name: pv-data\nspec:\n  capacity:\n    storage: 1Gi\n  accessModes:\n  - ReadWriteOnce\n  persistentVolumeReclaimPolicy: Retain\n  storageClassName: manual\n  hostPath:\n    path: /mnt/data",
+    "expected": "",
+    "points": [
+      {
+        "id": "kind",
+        "text": "PersistentVolume",
+        "category": "kind",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "集群级持久卷资源",
+        "fill_type": "text"
+      },
+      {
+        "id": "cap",
+        "text": "storage: 1Gi",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "spec.capacity 下的容量",
+        "fill_type": "text"
+      },
+      {
+        "id": "am",
+        "text": "ReadWriteOnce",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "单节点读写挂载",
+        "fill_type": "text"
+      },
+      {
+        "id": "policy",
+        "text": "persistentVolumeReclaimPolicy: Retain",
+        "category": "config",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "释放后保留数据待人工处理",
+        "fill_type": "text"
+      },
+      {
+        "id": "sc",
+        "text": "storageClassName: manual",
+        "category": "config",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "归属的存储类名（PVC 需同名匹配）",
+        "fill_type": "text"
+      },
+      {
+        "id": "path",
+        "text": "path: /mnt/data",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "节点上的实际路径",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 PV 必填：capacity/accessModes + 卷来源",
+      "level_2": "📖 hostPath 卷写 spec.hostPath.path；回收策略 Retain 最常考",
+      "level_3": "👀 `capacity: storage: 1Gi` + `accessModes: ReadWriteOnce` + `hostPath: path:`",
+      "level_4": "📝 正确答案：`storage: 1Gi` / `- ReadWriteOnce` / `Retain` / `path: /mnt/data`"
+    },
+    "explanation": "PV 是集群级资源无命名空间；1Gi 不能写成 1GB（合法单位 Ki/Mi/Gi/Ti/Pi 及 k/M/G 十进制）；accessModes 是数组可含多个模式，绑定按第一个匹配。"
+  },
+  {
+    "id": "cka-sto-002",
+    "title": "创建 PV（NFS）",
+    "description": "PV pv-nfs：10Gi、RWX，NFS 服务器 10.0.0.5 导出 /exports/data，挂载参数 nfsvers=4.1",
+    "exercise_type": "config",
+    "tech_stack": "cka",
+    "weight": "medium",
+    "category": "cka_pv",
+    "subcategory": "存储",
+    "full_code": "apiVersion: v1\nkind: PersistentVolume\nmetadata:\n  name: pv-nfs\nspec:\n  capacity:\n    storage: 10Gi\n  accessModes:\n  - ReadWriteMany\n  nfs:\n    server: 10.0.0.5\n    path: /exports/data\n  mountOptions:\n  - hard\n  - nfsvers=4.1",
+    "expected": "",
+    "points": [
+      {
+        "id": "am",
+        "text": "ReadWriteMany",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "多节点读写",
+        "fill_type": "text"
+      },
+      {
+        "id": "server",
+        "text": "server: 10.0.0.5",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "NFS 服务器地址",
+        "fill_type": "text"
+      },
+      {
+        "id": "path",
+        "text": "path: /exports/data",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "导出路径",
+        "fill_type": "text"
+      },
+      {
+        "id": "mo",
+        "text": "mountOptions:",
+        "category": "config",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "挂载参数列表",
+        "fill_type": "text"
+      },
+      {
+        "id": "opt",
+        "text": "nfsvers=4.1",
+        "category": "config",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "NFS 协议版本参数",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 NFS 卷的两个字段",
+      "level_2": "📖 spec.nfs.{server,path}；共享写用 ReadWriteMany",
+      "level_3": "👀 `nfs:` + `server:` + `path:` + `mountOptions:`",
+      "level_4": "📝 正确答案：`server: 10.0.0.5` / `path: /exports/data` / `- nfsvers=4.1`"
+    },
+    "explanation": "RWX（ReadWriteMany）传统上由 NFS/GlusterFS/文件存储提供；块存储（EBS 等）只支持 RWO。"
+  },
+  {
+    "id": "cka-sto-003",
+    "title": "创建 PVC",
+    "description": "PVC pvc-data：RWO、申请 1Gi",
+    "exercise_type": "config",
+    "tech_stack": "cka",
+    "weight": "easy",
+    "category": "cka_pvc",
+    "subcategory": "存储",
+    "full_code": "apiVersion: v1\nkind: PersistentVolumeClaim\nmetadata:\n  name: pvc-data\nspec:\n  accessModes:\n  - ReadWriteOnce\n  resources:\n    requests:\n      storage: 1Gi",
+    "expected": "",
+    "points": [
+      {
+        "id": "kind",
+        "text": "PersistentVolumeClaim",
+        "category": "kind",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "命名空间级的卷申请资源",
+        "fill_type": "text"
+      },
+      {
+        "id": "am",
+        "text": "ReadWriteOnce",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "访问模式（须与 PV 兼容）",
+        "fill_type": "text"
+      },
+      {
+        "id": "req",
+        "text": "requests:",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "resources 下的申请段",
+        "fill_type": "text"
+      },
+      {
+        "id": "st",
+        "text": "storage: 1Gi",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "申请容量",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 PVC 三要素",
+      "level_2": "📖 accessModes + resources.requests.storage（+ 可选 storageClassName）",
+      "level_3": "👀 `- ReadWriteOnce` + `storage: 1Gi`",
+      "level_4": "📝 正确答案：`- ReadWriteOnce` / `storage: 1Gi`"
+    },
+    "explanation": "PVC 属于命名空间；绑定条件：容量 ≥ 申请、accessModes 兼容、storageClassName 一致（或都为空/默认类）。"
+  },
+  {
+    "id": "cka-sto-004",
+    "title": "PVC 精确绑定指定 PV",
+    "description": "PVC pvc-pv-data 直接绑定名为 pv-data 的 PV",
+    "exercise_type": "config",
+    "tech_stack": "cka",
+    "weight": "medium",
+    "category": "cka_pvc",
+    "subcategory": "存储",
+    "full_code": "apiVersion: v1\nkind: PersistentVolumeClaim\nmetadata:\n  name: pvc-pv-data\nspec:\n  volumeName: pv-data\n  accessModes:\n  - ReadWriteOnce\n  resources:\n    requests:\n      storage: 1Gi",
+    "expected": "",
+    "points": [
+      {
+        "id": "vn",
+        "text": "volumeName: pv-data",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "跳过自动匹配，精确绑定指定 PV",
+        "fill_type": "text"
+      },
+      {
+        "id": "am",
+        "text": "ReadWriteOnce",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "访问模式",
+        "fill_type": "text"
+      },
+      {
+        "id": "st",
+        "text": "storage: 1Gi",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "申请容量（不得超过 PV 容量）",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 想跳过自动匹配直接指定 PV",
+      "level_2": "📖 spec.volumeName: <pv 名>",
+      "level_3": "👀 `volumeName: pv-data`",
+      "level_4": "📝 正确答案：`volumeName: pv-data`"
+    },
+    "explanation": "考试常考静态绑定：PV 无合适的 storageClassName 时用 volumeName 强绑；容量超过 PV 会绑不上。"
+  },
+  {
+    "id": "cka-sto-005",
+    "title": "Pod 挂载 PVC",
+    "description": "Pod app 把 PVC pvc-data 挂到 /usr/share/nginx/html",
+    "exercise_type": "config",
+    "tech_stack": "cka",
+    "weight": "easy",
+    "category": "cka_mount",
+    "subcategory": "存储",
+    "full_code": "apiVersion: v1\nkind: Pod\nmetadata:\n  name: app\nspec:\n  containers:\n  - name: app\n    image: nginx:1.25\n    volumeMounts:\n    - name: data-vol\n      mountPath: /usr/share/nginx/html\n  volumes:\n  - name: data-vol\n    persistentVolumeClaim:\n      claimName: pvc-data",
+    "expected": "",
+    "points": [
+      {
+        "id": "vm",
+        "text": "volumeMounts:",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "容器侧挂载列表",
+        "fill_type": "text"
+      },
+      {
+        "id": "mp",
+        "text": "mountPath: /usr/share/nginx/html",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "容器内挂载点",
+        "fill_type": "text"
+      },
+      {
+        "id": "pvcv",
+        "text": "persistentVolumeClaim:",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "卷类型：PVC",
+        "fill_type": "text"
+      },
+      {
+        "id": "cn",
+        "text": "claimName: pvc-data",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "引用的 PVC 名",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 Pod 卷里引用 PVC 的字段",
+      "level_2": "📖 volumes[].persistentVolumeClaim.claimName",
+      "level_3": "👀 `persistentVolumeClaim:` + `claimName: pvc-data`",
+      "level_4": "📝 正确答案：`persistentVolumeClaim:` / `claimName: pvc-data`"
+    },
+    "explanation": "Pod 与 PVC 必须同命名空间；PVC 处于 Pending 时 Pod 卡 ContainerCreating/调度等待。"
+  },
+  {
+    "id": "cka-sto-006",
+    "title": "创建 StorageClass",
+    "description": "StorageClass fast-ssd：provisioner ebs.csi.aws.com、回收策略 Delete、允许扩容、参数 type=pd-ssd",
+    "exercise_type": "config",
+    "tech_stack": "cka",
+    "weight": "medium",
+    "category": "cka_sc",
+    "subcategory": "存储",
+    "full_code": "apiVersion: storage.k8s.io/v1\nkind: StorageClass\nmetadata:\n  name: fast-ssd\nprovisioner: ebs.csi.aws.com\nreclaimPolicy: Delete\nallowVolumeExpansion: true\nparameters:\n  type: pd-ssd",
+    "expected": "",
+    "points": [
+      {
+        "id": "apiv",
+        "text": "storage.k8s.io/v1",
+        "category": "api_version",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "存储资源的 apiVersion",
+        "fill_type": "text"
+      },
+      {
+        "id": "prov",
+        "text": "provisioner: ebs.csi.aws.com",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "动态供给的实现方（CSI 驱动名）",
+        "fill_type": "text"
+      },
+      {
+        "id": "rp",
+        "text": "reclaimPolicy: Delete",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "动态卷默认 Delete，可改 Retain",
+        "fill_type": "text"
+      },
+      {
+        "id": "ave",
+        "text": "allowVolumeExpansion: true",
+        "category": "config",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "允许 PVC 扩容",
+        "fill_type": "text"
+      },
+      {
+        "id": "param",
+        "text": "type: pd-ssd",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "传给 provisioner 的参数",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 动态供给的入口",
+      "level_2": "📖 kind: StorageClass + provisioner + parameters",
+      "level_3": "👀 `provisioner: ebs.csi.aws.com`",
+      "level_4": "📝 正确答案：`provisioner: ebs.csi.aws.com` / `allowVolumeExpansion: true`"
+    },
+    "explanation": "动态供给：PVC 引用 SC → CSI 驱动自动建卷与 PV；无 provisioner 的 SC 只能静态匹配；扩容必须先在 SC 开 allowVolumeExpansion。"
+  },
+  {
+    "id": "cka-sto-007",
+    "title": "设置默认 StorageClass",
+    "description": "把 standard 设为默认存储类（注解方式）",
+    "exercise_type": "config",
+    "tech_stack": "cka",
+    "weight": "easy",
+    "category": "cka_sc",
+    "subcategory": "存储",
+    "full_code": "apiVersion: storage.k8s.io/v1\nkind: StorageClass\nmetadata:\n  name: standard\n  annotations:\n    storageclass.kubernetes.io/is-default-class: \"true\"\nprovisioner: ebs.csi.aws.com",
+    "expected": "",
+    "points": [
+      {
+        "id": "ann",
+        "text": "annotations:",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "注解放在 metadata",
+        "fill_type": "text"
+      },
+      {
+        "id": "def",
+        "text": "storageclass.kubernetes.io/is-default-class: \"true\"",
+        "category": "config",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "默认存储类注解（值是字符串 true）",
+        "fill_type": "text"
+      },
+      {
+        "id": "prov",
+        "text": "provisioner: ebs.csi.aws.com",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "供给方",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 默认 SC 靠注解",
+      "level_2": "📖 `storageclass.kubernetes.io/is-default-class: \"true\"`",
+      "level_3": "👀 `annotations:` 下的 is-default-class",
+      "level_4": "📝 正确答案：`storageclass.kubernetes.io/is-default-class: \"true\"`"
+    },
+    "explanation": "PVC 不写 storageClassName 时使用默认 SC；多个默认 SC 会告警并随机选一个；旧版注解前缀为 storageclass.beta.kubernetes.io。"
+  },
+  {
+    "id": "cka-sto-008",
+    "title": "存储类延迟绑定",
+    "description": "StorageClass wait-sc：等 Pod 调度后再创建并绑定卷（保证卷与 Pod 同可用区）",
+    "exercise_type": "config",
+    "tech_stack": "cka",
+    "weight": "medium",
+    "category": "cka_sc",
+    "subcategory": "存储",
+    "full_code": "apiVersion: storage.k8s.io/v1\nkind: StorageClass\nmetadata:\n  name: wait-sc\nprovisioner: ebs.csi.aws.com\nvolumeBindingMode: WaitForFirstConsumer",
+    "expected": "",
+    "points": [
+      {
+        "id": "vbm",
+        "text": "volumeBindingMode: WaitForFirstConsumer",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "延迟到第一个使用它的 Pod 调度时再绑定",
+        "fill_type": "text"
+      },
+      {
+        "id": "prov",
+        "text": "provisioner: ebs.csi.aws.com",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "供给方",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 卷与 Pod 不在同一可用区怎么办？",
+      "level_2": "📖 volumeBindingMode: WaitForFirstConsumer",
+      "level_3": "👀 `volumeBindingMode: WaitForFirstConsumer`",
+      "level_4": "📝 正确答案：`volumeBindingMode: WaitForFirstConsumer`"
+    },
+    "explanation": "默认 Immediate 立即绑定，可能把卷建在与 Pod 调度不同的可用区导致 Pod 起不来；WaitForFirstConsumer 让调度器先定节点再供卷。"
+  },
+  {
+    "id": "cka-sto-009",
+    "title": "PVC 指定 StorageClass",
+    "description": "PVC pvc-fast：通过 fast-ssd 动态供给 5Gi RWO 卷",
+    "exercise_type": "config",
+    "tech_stack": "cka",
+    "weight": "easy",
+    "category": "cka_pvc",
+    "subcategory": "存储",
+    "full_code": "apiVersion: v1\nkind: PersistentVolumeClaim\nmetadata:\n  name: pvc-fast\nspec:\n  storageClassName: fast-ssd\n  accessModes:\n  - ReadWriteOnce\n  resources:\n    requests:\n      storage: 5Gi",
+    "expected": "",
+    "points": [
+      {
+        "id": "sc",
+        "text": "storageClassName: fast-ssd",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "指向 StorageClass 触发动态供给",
+        "fill_type": "text"
+      },
+      {
+        "id": "st",
+        "text": "storage: 5Gi",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "申请容量",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 PVC 侧引用 SC 的字段",
+      "level_2": "📖 spec.storageClassName: <name>",
+      "level_3": "👀 `storageClassName: fast-ssd`",
+      "level_4": "📝 正确答案：`storageClassName: fast-ssd`"
+    },
+    "explanation": "写  表示禁用动态供给只做静态匹配（注意加引号）；不写字段则用默认 SC；名字写错 PVC 一直 Pending。"
+  },
+  {
+    "id": "cka-sto-010",
+    "title": "在线扩容 PVC",
+    "description": "把 pvc-data 的容量从 1Gi 扩到 10Gi（用 kubectl patch）",
+    "exercise_type": "command",
+    "tech_stack": "cka",
+    "weight": "hard",
+    "category": "cka_pvc",
+    "subcategory": "存储",
+    "full_code": "kubectl patch pvc pvc-data -p '{\"spec\":{\"resources\":{\"requests\":{\"storage\":\"10Gi\"}}}}'",
+    "expected": "",
+    "points": [
+      {
+        "id": "cmd",
+        "text": "kubectl patch pvc",
+        "category": "command",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "补丁修改 PVC",
+        "fill_type": "text"
+      },
+      {
+        "id": "name",
+        "text": "pvc-data",
+        "category": "command_arg",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "目标 PVC",
+        "fill_type": "text"
+      },
+      {
+        "id": "json",
+        "text": "{\"spec\":{\"resources\":{\"requests\":{\"storage\":\"10Gi\"}}}}",
+        "category": "command_arg",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "-p 的 JSON 补丁体",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 PVC 只能扩大不能缩小",
+      "level_2": "📖 patch spec.resources.requests.storage；前提 SC 允许扩容",
+      "level_3": "👀 `kubectl patch pvc pvc-data -p '{...storage...}'`",
+      "level_4": "📝 正确答案：`kubectl patch pvc pvc-data -p '{\"spec\":{\"resources\":{\"requests\":{\"storage\":\"10Gi\"}}}}'`"
+    },
+    "explanation": "扩容前提：SC 的 allowVolumeExpansion: true；文件系统扩容由 kubelet 完成（多数 CSI 在线完成）；缩小容量不被支持，只能删了重建。"
+  },
+  {
+    "id": "cka-sto-011",
+    "title": "块设备卷（volumeMode Block）",
+    "description": "PV pv-block：2Gi 裸块设备，直接把 /dev/xvdb 以块模式提供给 Pod",
+    "exercise_type": "config",
+    "tech_stack": "cka",
+    "weight": "hard",
+    "category": "cka_pv",
+    "subcategory": "存储",
+    "full_code": "apiVersion: v1\nkind: PersistentVolume\nmetadata:\n  name: pv-block\nspec:\n  capacity:\n    storage: 2Gi\n  volumeMode: Block\n  accessModes:\n  - ReadWriteOnce\n  hostPath:\n    path: /dev/xvdb",
+    "expected": "",
+    "points": [
+      {
+        "id": "vm",
+        "text": "volumeMode: Block",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "块设备模式（默认 Filesystem）",
+        "fill_type": "text"
+      },
+      {
+        "id": "path",
+        "text": "path: /dev/xvdb",
+        "category": "config",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "裸设备路径",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 不想要文件系统、直接给裸盘",
+      "level_2": "📖 volumeMode: Block；容器内拿到字符/块设备",
+      "level_3": "👀 `volumeMode: Block`",
+      "level_4": "📝 正确答案：`volumeMode: Block`"
+    },
+    "explanation": "Filesystem 模式挂载点为目录；Block 模式容器里是设备文件（数据库自管理格式时用）；PV 与 PVC 的 volumeMode 必须一致才能绑定。"
+  },
+  {
+    "id": "cka-sto-012",
+    "title": "选择访问模式：多节点只读共享",
+    "description": "许多节点上的 Pod 需要同时【只读】挂载同一卷，选择正确的 accessModes",
+    "exercise_type": "config",
+    "tech_stack": "cka",
+    "weight": "easy",
+    "category": "cka_pv",
+    "subcategory": "存储",
+    "full_code": "apiVersion: v1\nkind: PersistentVolume\nmetadata:\n  name: pv-shared\nspec:\n  capacity:\n    storage: 5Gi\n  accessModes:\n  - ReadOnlyMany\n  hostPath:\n    path: /mnt/shared",
+    "expected": "",
+    "points": [
+      {
+        "id": "am",
+        "text": "ReadOnlyMany",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "多节点只读",
+        "fill_type": "select",
+        "options": [
+          "ReadWriteOnce",
+          "ReadOnlyMany",
+          "ReadWriteMany",
+          "ReadWriteOncePod"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 三种模式各自的含义",
+      "level_2": "📖 RWO 单节点读写 / ROX 多节点只读 / RWX 多节点读写",
+      "level_3": "👀 多节点 + 只读 → ReadOnlyMany",
+      "level_4": "📝 正确答案：`ReadOnlyMany`"
+    },
+    "explanation": "RWO=ReadWriteOnce（单节点）、ROX=ReadOnlyMany（多节点只读）、RWX=ReadWriteMany（多节点读写）、1.29+ 还有 ReadWriteOncePod（单 Pod）。"
+  },
+  {
+    "id": "cka-sto-013",
+    "title": "修改 PV 回收策略",
+    "description": "把 pv-data 的回收策略改为 Retain（用 kubectl patch）",
+    "exercise_type": "command",
+    "tech_stack": "cka",
+    "weight": "hard",
+    "category": "cka_pv",
+    "subcategory": "存储",
+    "full_code": "kubectl patch pv pv-data -p '{\"spec\":{\"persistentVolumeReclaimPolicy\":\"Retain\"}}'",
+    "expected": "",
+    "points": [
+      {
+        "id": "cmd",
+        "text": "kubectl patch pv",
+        "category": "command",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "补丁修改 PV",
+        "fill_type": "text"
+      },
+      {
+        "id": "name",
+        "text": "pv-data",
+        "category": "command_arg",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "目标 PV",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 PV 规格里哪个字段管回收？",
+      "level_2": "📖 spec.persistentVolumeReclaimPolicy；Retain 保留数据等人工处理",
+      "level_3": "👀 `kubectl patch pv pv-data -p '{...persistentVolumeReclaimPolicy: Retain}'`",
+      "level_4": "📝 正确答案：patch 体：`{\"spec\":{\"persistentVolumeReclaimPolicy\":\"Retain\"}}`"
+    },
+    "explanation": "Retain：Released 后数据保留，人工清理后删除 PV 才能复用；Delete：级联删除底层存储；Recycle 已废弃。PV 已绑定也可改策略。"
+  },
+  {
+    "id": "cka-sto-014",
+    "title": "临时卷 emptyDir",
+    "description": "Pod cache 把 emptyDir 挂到 /cache，限制 500Mi",
+    "exercise_type": "config",
+    "tech_stack": "cka",
+    "weight": "easy",
+    "category": "cka_mount",
+    "subcategory": "存储",
+    "full_code": "apiVersion: v1\nkind: Pod\nmetadata:\n  name: cache\nspec:\n  containers:\n  - name: app\n    image: busybox:1.36\n    volumeMounts:\n    - name: cache-vol\n      mountPath: /cache\n  volumes:\n  - name: cache-vol\n    emptyDir:\n      sizeLimit: 500Mi",
+    "expected": "",
+    "points": [
+      {
+        "id": "ed",
+        "text": "emptyDir:",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "Pod 生命周期的临时空目录",
+        "fill_type": "text"
+      },
+      {
+        "id": "sl",
+        "text": "sizeLimit: 500Mi",
+        "category": "config",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "卷容量上限",
+        "fill_type": "text"
+      },
+      {
+        "id": "mp",
+        "text": "mountPath: /cache",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "挂载点",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 随 Pod 生死、可被同 Pod 容器共享的卷",
+      "level_2": "📖 emptyDir（可选 sizeLimit）",
+      "level_3": "👀 `emptyDir:` + `sizeLimit: 500Mi`",
+      "level_4": "📝 正确答案：`emptyDir:` / `sizeLimit: 500Mi`"
+    },
+    "explanation": "Pod 删除时 emptyDir 数据一并删除（容器重启不删）；medium: Memory 可把它放进 tmpfs。"
+  },
+  {
+    "id": "cka-sto-015",
+    "title": "挂载节点目录 hostPath",
+    "description": "Pod node-tools 把节点 /var/log 挂到容器 /var/log/host，要求路径必须存在",
+    "exercise_type": "config",
+    "tech_stack": "cka",
+    "weight": "medium",
+    "category": "cka_mount",
+    "subcategory": "存储",
+    "full_code": "apiVersion: v1\nkind: Pod\nmetadata:\n  name: node-tools\nspec:\n  containers:\n  - name: tools\n    image: busybox:1.36\n    command: [\"sleep\", \"3600\"]\n    volumeMounts:\n    - name: host-log\n      mountPath: /var/log/host\n  volumes:\n  - name: host-log\n    hostPath:\n      path: /var/log\n      type: Directory",
+    "expected": "",
+    "points": [
+      {
+        "id": "hp",
+        "text": "hostPath:",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "节点路径卷",
+        "fill_type": "text"
+      },
+      {
+        "id": "path",
+        "text": "path: /var/log",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "节点上的路径",
+        "fill_type": "text"
+      },
+      {
+        "id": "type",
+        "text": "type: Directory",
+        "category": "config",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "校验类型：目录必须存在",
+        "fill_type": "text"
+      },
+      {
+        "id": "mp",
+        "text": "mountPath: /var/log/host",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "容器内挂载点",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 hostPath 的存在性校验",
+      "level_2": "📖 type: Directory 要求路径存在（DirectoryOrCreate 可自动创建）",
+      "level_3": "👀 `hostPath:` + `path: /var/log` + `type: Directory`",
+      "level_4": "📝 正确答案：`path: /var/log` / `type: Directory`"
+    },
+    "explanation": "type 常用值：Directory/DirectoryOrCreate/File/FileOrCreate/Socket；hostPath 让 Pod 看到节点文件系统，日志采集与节点排障常用，也是安全风险点。"
+  },
+  {
+    "id": "cka-sto-016",
+    "title": "只挂载 ConfigMap 中的单个文件",
+    "description": "把 config-vol 卷中的 nginx.conf 单文件挂为 /etc/nginx/nginx.conf，不覆盖目录",
+    "exercise_type": "config",
+    "tech_stack": "cka",
+    "weight": "hard",
+    "category": "cka_mount",
+    "subcategory": "存储",
+    "full_code": "apiVersion: v1\nkind: Pod\nmetadata:\n  name: web\nspec:\n  containers:\n  - name: web\n    image: nginx:1.25\n    volumeMounts:\n    - name: config-vol\n      mountPath: /etc/nginx/nginx.conf\n      subPath: nginx.conf\n  volumes:\n  - name: config-vol\n    configMap:\n      name: nginx-conf",
+    "expected": "",
+    "points": [
+      {
+        "id": "sp",
+        "text": "subPath: nginx.conf",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "只取卷内该键对应的文件",
+        "fill_type": "text"
+      },
+      {
+        "id": "mp",
+        "text": "mountPath: /etc/nginx/nginx.conf",
+        "category": "config",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "挂成单个文件而不是目录",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 直接 mountPath 到文件路径会怎样？",
+      "level_2": "📖 配合 subPath 指定卷内文件，实现单文件挂载",
+      "level_3": "👀 `mountPath: /etc/nginx/nginx.conf` + `subPath: nginx.conf`",
+      "level_4": "📝 正确答案：`subPath: nginx.conf`"
+    },
+    "explanation": "没有 subPath 时整卷覆盖 mountPath 目录；注意 subPath 挂载的文件在 ConfigMap 更新后不会自动同步。"
+  },
+  {
+    "id": "cka-sto-017",
+    "title": "只读挂载卷",
+    "description": "容器把卷 conf 挂到 /etc/app，且只允许读取",
+    "exercise_type": "config",
+    "tech_stack": "cka",
+    "weight": "easy",
+    "category": "cka_mount",
+    "subcategory": "存储",
+    "full_code": "apiVersion: v1\nkind: Pod\nmetadata:\n  name: app\nspec:\n  containers:\n  - name: app\n    image: nginx:1.25\n    volumeMounts:\n    - name: conf\n      mountPath: /etc/app\n      readOnly: true\n  volumes:\n  - name: conf\n    configMap:\n      name: app-conf",
+    "expected": "",
+    "points": [
+      {
+        "id": "ro",
+        "text": "readOnly: true",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "volumeMount 的只读开关",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 挂载项的只读字段",
+      "level_2": "📖 volumeMounts[].readOnly: true",
+      "level_3": "👀 `readOnly: true`",
+      "level_4": "📝 正确答案：`readOnly: true`"
+    },
+    "explanation": "ConfigMap/Secret 卷本身就是只读的；readOnly 主要用于 emptyDir/hostPath/PVC 等可写卷的降权。"
+  },
+  {
+    "id": "cka-sto-018",
+    "title": "本地盘 local PV",
+    "description": "PV pv-local：使用节点 /mnt/disks/ssd1 本地盘，并用 nodeAffinity 固定到 worker1",
+    "exercise_type": "config",
+    "tech_stack": "cka",
+    "weight": "hard",
+    "category": "cka_pv",
+    "subcategory": "存储",
+    "full_code": "apiVersion: v1\nkind: PersistentVolume\nmetadata:\n  name: pv-local\nspec:\n  capacity:\n    storage: 5Gi\n  accessModes:\n  - ReadWriteOnce\n  local:\n    path: /mnt/disks/ssd1\n  nodeAffinity:\n    required:\n      nodeSelectorTerms:\n      - matchExpressions:\n        - key: kubernetes.io/hostname\n          operator: In\n          values:\n          - worker1",
+    "expected": "",
+    "points": [
+      {
+        "id": "local",
+        "text": "local:",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "local 卷类型（区别于 hostPath）",
+        "fill_type": "text"
+      },
+      {
+        "id": "path",
+        "text": "path: /mnt/disks/ssd1",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "本地盘路径",
+        "fill_type": "text"
+      },
+      {
+        "id": "na",
+        "text": "nodeAffinity:",
+        "category": "config",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "local PV 必须声明节点亲和",
+        "fill_type": "text"
+      },
+      {
+        "id": "key",
+        "text": "key: kubernetes.io/hostname",
+        "category": "config",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "按主机名匹配节点",
+        "fill_type": "text"
+      },
+      {
+        "id": "node",
+        "text": "worker1",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "目标节点名",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 local 与 hostPath 最大的差别",
+      "level_2": "📖 local 需要 nodeAffinity 告诉调度器卷在哪个节点",
+      "level_3": "👀 `local:` + `nodeAffinity:` + `kubernetes.io/hostname`",
+      "level_4": "📝 正确答案：`local: path: /mnt/disks/ssd1` + nodeAffinity 限 worker1"
+    },
+    "explanation": "无 nodeAffinity 的 local PV 会创建失败；local PV 由静态管理或 local-path-provisioner/SIG-storage 工具供给，调度器据此把 Pod 与卷调度到同节点。"
+  },
+  {
+    "id": "cka-sto-019",
+    "title": "总览 PV 与 PVC",
+    "description": "一条命令同时列出集群的 PV 和 PVC 概况",
+    "exercise_type": "command",
+    "tech_stack": "cka",
+    "weight": "beginner",
+    "category": "cka_pvc",
+    "subcategory": "存储",
+    "full_code": "kubectl get pv,pvc -o wide",
+    "expected": "",
+    "points": [
+      {
+        "id": "cmd",
+        "text": "kubectl get pv,pvc",
+        "category": "command",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "逗号并列多资源；全称 persistentvolumes,persistentvolumeclaims",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "kubectl get persistentvolumes,persistentvolumeclaims"
+        ]
+      },
+      {
+        "id": "flag",
+        "text": "-o wide",
+        "category": "command_flag",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "多显示几列",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "-owide"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 一次列两种资源",
+      "level_2": "📖 `kubectl get pv,pvc`",
+      "level_3": "👀 `kubectl get pv,pvc`",
+      "level_4": "📝 正确答案：`kubectl get pv,pvc`"
+    },
+    "explanation": "PVC 列表有 STATUS 列（Bound/Pending）；PV 的 CLAIM 列显示绑定的 <ns>/<pvc>，RECLAIM 显示回收策略。"
+  },
+  {
+    "id": "cka-sto-020",
+    "title": "查看 PV 详情",
+    "description": "查看 pv-data 的容量、绑定关系与来源",
+    "exercise_type": "command",
+    "tech_stack": "cka",
+    "weight": "easy",
+    "category": "cka_pv",
+    "subcategory": "存储",
+    "full_code": "kubectl describe pv pv-data",
+    "expected": "",
+    "points": [
+      {
+        "id": "cmd",
+        "text": "kubectl describe pv",
+        "category": "command",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "查看 PV 详情",
+        "fill_type": "text"
+      },
+      {
+        "id": "name",
+        "text": "pv-data",
+        "category": "command_arg",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "PV 名",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 PV 的 Claim/Source 信息在哪看",
+      "level_2": "📖 describe pv 输出 Claim、Reclaim Policy、Source、Events",
+      "level_3": "👀 `kubectl describe pv pv-data`",
+      "level_4": "📝 正确答案：`kubectl describe pv pv-data`"
+    },
+    "explanation": "排绑定时重点看 Claim 与 Capacity；hostPath 的 Source 会显示路径，NFS 显示 server/path。"
+  },
+  {
+    "id": "cka-sto-021",
+    "title": "清理 Released 状态的 PV",
+    "description": "PVC 已删，pv-data 处于 Released；删除该 PV 以便重新纳入管理",
+    "exercise_type": "command",
+    "tech_stack": "cka",
+    "weight": "easy",
+    "category": "cka_pv",
+    "subcategory": "存储",
+    "full_code": "kubectl delete pv pv-data",
+    "expected": "",
+    "points": [
+      {
+        "id": "cmd",
+        "text": "kubectl delete pv",
+        "category": "command",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "删除 PV",
+        "fill_type": "text"
+      },
+      {
+        "id": "name",
+        "text": "pv-data",
+        "category": "command_arg",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "PV 名",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 Retain 的卷释放后谁来清？",
+      "level_2": "📖 Released 后需人工处理数据，再 delete pv 释放对象",
+      "level_3": "👀 `kubectl delete pv pv-data`",
+      "level_4": "📝 正确答案：`kubectl delete pv pv-data`"
+    },
+    "explanation": "Retain 策略下删除 PVC 不会动数据；清完外部存储数据、删除 PV 后，同一 hostPath 可新建 PV 复用。"
+  },
+  {
+    "id": "cka-sto-022",
+    "title": "Deployment 挂载共享卷",
+    "description": "Deployment web 把 PVC pvc-data 挂到容器的 /data",
+    "exercise_type": "config",
+    "tech_stack": "cka",
+    "weight": "medium",
+    "category": "cka_mount",
+    "subcategory": "存储",
+    "full_code": "apiVersion: apps/v1\nkind: Deployment\nmetadata:\n  name: web\nspec:\n  replicas: 1\n  selector:\n    matchLabels:\n      app: web\n  template:\n    metadata:\n      labels:\n        app: web\n    spec:\n      containers:\n      - name: web\n        image: nginx:1.25\n        volumeMounts:\n        - name: data\n          mountPath: /data\n      volumes:\n      - name: data\n        persistentVolumeClaim:\n          claimName: pvc-data",
+    "expected": "",
+    "points": [
+      {
+        "id": "pvcv",
+        "text": "persistentVolumeClaim:",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "卷类型：PVC",
+        "fill_type": "text"
+      },
+      {
+        "id": "cn",
+        "text": "claimName: pvc-data",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "PVC 名",
+        "fill_type": "text"
+      },
+      {
+        "id": "mp",
+        "text": "mountPath: /data",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "容器内挂载点",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 RWO 卷能给 Deployment 多副本共享吗？",
+      "level_2": "📖 RWO 限单节点；多副本同节点可挂，跨节点会卡住",
+      "level_3": "👀 `persistentVolumeClaim:` + `claimName: pvc-data`",
+      "level_4": "📝 正确答案：`persistentVolumeClaim:` / `claimName: pvc-data`"
+    },
+    "explanation": "多副本共享写需要 RWX 存储，或每副本独立卷（StatefulSet volumeClaimTemplates）；RWO 卷被 A 节点 Pod 占用时 B 节点副本会挂载失败。"
+  },
+  {
+    "id": "cka-sto-023",
+    "title": "查看存储类",
+    "description": "列出集群所有 StorageClass 并识别默认项",
+    "exercise_type": "command",
+    "tech_stack": "cka",
+    "weight": "beginner",
+    "category": "cka_sc",
+    "subcategory": "存储",
+    "full_code": "kubectl get storageclass",
+    "expected": "",
+    "points": [
+      {
+        "id": "cmd",
+        "text": "kubectl get storageclass",
+        "category": "command",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "列出存储类（缩写 sc）",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "kubectl get sc"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 存储类的资源名",
+      "level_2": "📖 get storageclass（缩写 sc）；默认类名称旁有 (default) 标记",
+      "level_3": "👀 `kubectl get storageclass`",
+      "level_4": "📝 正确答案：`kubectl get storageclass`"
+    },
+    "explanation": "输出中 (default) 标记的 SC 会被未指定 storageClassName 的 PVC 使用；这也常用于考试开始时确认可用供给方式。"
+  },
+  {
+    "id": "cka-sto-024",
+    "title": "用 jsonpath 查询 PVC 状态",
+    "description": "输出 pvc-data 当前所处阶段（Bound/Pending 等）",
+    "exercise_type": "command",
+    "tech_stack": "cka",
+    "weight": "medium",
+    "category": "cka_pvc",
+    "subcategory": "存储",
+    "full_code": "kubectl get pvc pvc-data -o jsonpath='{.status.phase}'",
+    "expected": "",
+    "points": [
+      {
+        "id": "cmd",
+        "text": "kubectl get pvc",
+        "category": "command",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "查询 PVC",
+        "fill_type": "text"
+      },
+      {
+        "id": "jp",
+        "text": "{.status.phase}",
+        "category": "command_arg",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "jsonpath 取状态阶段",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 不要整坨 yaml，只要 phase 字段",
+      "level_2": "📖 `-o jsonpath='{.status.phase}'`",
+      "level_3": "👀 `-o jsonpath='{.status.phase}'`",
+      "level_4": "📝 正确答案：`kubectl get pvc pvc-data -o jsonpath='{.status.phase}'`"
+    },
+    "explanation": "可能值：Pending/Bound；PVC 删除后 PV 显示 Released/Lost。jsonpath 在 CKA 里常用于精确取值与脚本化。"
+  },
+  {
+    "id": "cka-sto-025",
+    "title": "PVC 按标签选择 PV",
+    "description": "PVC pvc-labeled 只绑定带 tier=gold 标签的 PV，申请 2Gi RWO",
+    "exercise_type": "config",
+    "tech_stack": "cka",
+    "weight": "medium",
+    "category": "cka_pvc",
+    "subcategory": "存储",
+    "full_code": "apiVersion: v1\nkind: PersistentVolumeClaim\nmetadata:\n  name: pvc-labeled\nspec:\n  accessModes:\n  - ReadWriteOnce\n  selector:\n    matchLabels:\n      tier: gold\n  resources:\n    requests:\n      storage: 2Gi",
+    "expected": "",
+    "points": [
+      {
+        "id": "sel",
+        "text": "selector:",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "按标签筛选候选 PV",
+        "fill_type": "text"
+      },
+      {
+        "id": "lbl",
+        "text": "tier: gold",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "PV 必须带该标签",
+        "fill_type": "text"
+      },
+      {
+        "id": "st",
+        "text": "storage: 2Gi",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "申请容量",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 PVC 也能像 Service 一样按标签选后端",
+      "level_2": "📖 spec.selector.matchLabels 匹配 PV 的 metadata.labels",
+      "level_3": "👀 `selector:` + `tier: gold`",
+      "level_4": "📝 正确答案：`selector:` / `matchLabels: tier: gold`"
+    },
+    "explanation": "静态供给下的精细绑定手段：先 kubectl label pv pv-gold tier=gold，PVC 即只匹配它；无匹配 PV 时 PVC 一直 Pending。"
+  },
+  {
+    "id": "cka-sto-026",
+    "title": "PVC 的命名空间归属",
+    "description": "在 data 命名空间创建 PVC pvc-ns（1Gi RWO）",
+    "exercise_type": "config",
+    "tech_stack": "cka",
+    "weight": "easy",
+    "category": "cka_pvc",
+    "subcategory": "存储",
+    "full_code": "apiVersion: v1\nkind: PersistentVolumeClaim\nmetadata:\n  name: pvc-ns\n  namespace: data\nspec:\n  accessModes:\n  - ReadWriteOnce\n  resources:\n    requests:\n      storage: 1Gi",
+    "expected": "",
+    "points": [
+      {
+        "id": "ns",
+        "text": "namespace: data",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "PVC 是命名空间级资源",
+        "fill_type": "text"
+      },
+      {
+        "id": "st",
+        "text": "storage: 1Gi",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "申请容量",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 PV 与 PVC 的作用域差异",
+      "level_2": "📖 PV 集群级 / PVC 命名空间级；Pod 必须与 PVC 同命名空间",
+      "level_3": "👀 `namespace: data`",
+      "level_4": "📝 正确答案：`namespace: data`"
+    },
+    "explanation": "考试常见坑：Pod 在 default 引用 data 里的 PVC 直接找不到；PV 无命名空间所以可被任何命名空间的 PVC 绑定。"
+  },
+  {
+    "id": "cka-sto-027",
+    "title": "选择访问模式：多节点共享读写",
+    "description": "多个节点上的 Pod 需要【同时读写】同一卷（如共享网页目录），选择正确的 accessModes",
+    "exercise_type": "config",
+    "tech_stack": "cka",
+    "weight": "easy",
+    "category": "cka_pv",
+    "subcategory": "存储",
+    "full_code": "apiVersion: v1\nkind: PersistentVolume\nmetadata:\n  name: pv-rw-shared\nspec:\n  capacity:\n    storage: 5Gi\n  accessModes:\n  - ReadWriteMany\n  nfs:\n    server: 10.0.0.5\n    path: /exports/web",
+    "expected": "",
+    "points": [
+      {
+        "id": "am",
+        "text": "ReadWriteMany",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "多节点读写",
+        "fill_type": "select",
+        "options": [
+          "ReadWriteOnce",
+          "ReadOnlyMany",
+          "ReadWriteMany",
+          "ReadWriteOncePod"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 既要多节点又要可写",
+      "level_2": "📖 ReadWriteMany；典型实现 NFS / CephFS / 云文件存储",
+      "level_3": "👀 多节点 + 读写 → ReadWriteMany",
+      "level_4": "📝 正确答案：`ReadWriteMany`"
+    },
+    "explanation": "块存储（EBS/PD/Cinder）一般只支持 RWO；需要 RWX 时选 NFS、CephFS、EFS/Azure Files 等。"
+  },
+  {
+    "id": "cka-sto-028",
+    "title": "离线查询字段文档",
+    "description": "查 volumeMode 字段在 PVC 里的位置与说明（kubectl 自带文档）",
+    "exercise_type": "command",
+    "tech_stack": "cka",
+    "weight": "medium",
+    "category": "cka_pvc",
+    "subcategory": "存储",
+    "full_code": "kubectl explain pvc.spec.volumeMode",
+    "expected": "",
+    "points": [
+      {
+        "id": "cmd",
+        "text": "kubectl explain",
+        "category": "command",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "内置 API 字段文档",
+        "fill_type": "text"
+      },
+      {
+        "id": "path",
+        "text": "pvc.spec.volumeMode",
+        "category": "command_arg",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "资源路径：资源缩写.spec.字段",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 考试忘了字段结构怎么办",
+      "level_2": "📖 kubectl explain <资源>.<路径>；--recursive 看整棵树",
+      "level_3": "👀 `kubectl explain pvc.spec.volumeMode`",
+      "level_4": "📝 正确答案：`kubectl explain pvc.spec.volumeMode`"
+    },
+    "explanation": "explain 是考场的离线手册；配合 --dry-run=client -o yaml 生成骨架，基本可以不查外部文档写完存储类题目。"
+  },
+  {
+    "id": "cka-sto-029",
+    "title": "修复无法绑定的 PVC",
+    "description": "PVC pvc-fix 申请 ReadWriteMany 但可用 PV 只有 ReadWriteOnce，把 PVC 改为与 PV 兼容的 RWO 以完成绑定",
+    "exercise_type": "config",
+    "tech_stack": "cka",
+    "weight": "medium",
+    "category": "cka_pvc",
+    "subcategory": "存储",
+    "full_code": "apiVersion: v1\nkind: PersistentVolumeClaim\nmetadata:\n  name: pvc-fix\nspec:\n  accessModes:\n  - ReadWriteOnce\n  resources:\n    requests:\n      storage: 1Gi",
+    "expected": "",
+    "points": [
+      {
+        "id": "am",
+        "text": "ReadWriteOnce",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "与 PV 一致的访问模式",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 绑定失败的排查顺序",
+      "level_2": "📖 对比 PVC 与 PV 的 accessModes / storageClassName / 容量",
+      "level_3": "👀 PV 是 RWO，PVC 改成 `- ReadWriteOnce`",
+      "level_4": "📝 正确答案：`- ReadWriteOnce`"
+    },
+    "explanation": "PVC 创建后 accessModes 不可修改——正确做法是删除重建（这也是考试标准答案）；describe pvc 的 Events 会提示 No persistent volumes available。"
+  },
+  {
+    "id": "cka-sto-030",
+    "title": "选择回收策略：数据安全优先",
+    "description": "卷释放后要求数据保留、由管理员确认后清理，选择正确的回收策略",
+    "exercise_type": "config",
+    "tech_stack": "cka",
+    "weight": "easy",
+    "category": "cka_pv",
+    "subcategory": "存储",
+    "full_code": "apiVersion: v1\nkind: PersistentVolume\nmetadata:\n  name: pv-safe\nspec:\n  capacity:\n    storage: 1Gi\n  accessModes:\n  - ReadWriteOnce\n  persistentVolumeReclaimPolicy: Retain\n  hostPath:\n    path: /mnt/data",
+    "expected": "",
+    "points": [
+      {
+        "id": "policy",
+        "text": "Retain",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "释放后保留数据",
+        "fill_type": "select",
+        "options": [
+          "Retain",
+          "Delete",
+          "Recycle"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 三种回收策略",
+      "level_2": "📖 Retain 保留 / Delete 删除底层卷 / Recycle 已废弃",
+      "level_3": "👀 数据安全优先 → Retain",
+      "level_4": "📝 正确答案：`Retain`"
+    },
+    "explanation": "Retain 下 PVC 删除后 PV 进入 Released，数据原样保留；动态供给默认 Delete，生产敏感数据建议改 Retain。"
+  }
+]

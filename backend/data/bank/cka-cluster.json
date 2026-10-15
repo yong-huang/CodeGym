@@ -1,0 +1,1499 @@
+[
+  {
+    "id": "cka-cluster-001",
+    "title": "初始化控制平面",
+    "description": "用 kubeadm 初始化控制平面节点：稳定 API 地址 k8s-api.example.com:6443，Pod 网段 192.168.0.0/16，并上传证书供 HA 共享",
+    "exercise_type": "command",
+    "tech_stack": "cka",
+    "weight": "easy",
+    "category": "cka_kubeadm",
+    "subcategory": "集群架构",
+    "full_code": "kubeadm init --control-plane-endpoint=k8s-api.example.com:6443 --pod-network-cidr=192.168.0.0/16 --upload-certs",
+    "expected": "",
+    "points": [
+      {
+        "id": "cmd",
+        "text": "kubeadm init",
+        "category": "command",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "初始化控制平面的 kubeadm 子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "ep",
+        "text": "--control-plane-endpoint=k8s-api.example.com:6443",
+        "category": "command_flag",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "控制平面稳定入口地址（HA 负载均衡/DNS），供所有节点与客户端访问",
+        "fill_type": "text"
+      },
+      {
+        "id": "cidr",
+        "text": "--pod-network-cidr=192.168.0.0/16",
+        "category": "command_flag",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "Pod 网段，必须与所选 CNI 插件一致（如 Calico 默认 192.168.0.0/16）",
+        "fill_type": "text"
+      },
+      {
+        "id": "upload",
+        "text": "--upload-certs",
+        "category": "command_flag",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "把控制平面证书加密上传到集群 Secret，供其他控制平面节点共用",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 初始化控制平面用哪个 kubeadm 子命令？",
+      "level_2": "📖 HA 集群必须用 --control-plane-endpoint 指定稳定 API 地址；--pod-network-cidr 提前声明 Pod 网段给 CNI 用",
+      "level_3": "👀 `kubeadm init --control-plane-endpoint=... --pod-network-cidr=... --upload-certs`",
+      "level_4": "📝 正确答案：`kubeadm init --control-plane-endpoint=k8s-api.example.com:6443 --pod-network-cidr=192.168.0.0/16 --upload-certs`"
+    },
+    "explanation": "HA 集群必须用稳定的 control-plane-endpoint（负载均衡地址），否则控制平面节点互相不可替换；--pod-network-cidr 要与 CNI 插件网段一致，不一致会导致 Pod 网络不通；--upload-certs 把证书存入 kubeadm-certs Secret，附加控制平面节点时用 --certificate-key 解密。"
+  },
+  {
+    "id": "cka-cluster-002",
+    "title": "工作节点加入集群",
+    "description": "把 worker 节点加入集群：API 服务器 172.30.8.10:6443，token abcdef.0123456789abcdef，CA 证书哈希 sha256:9a2f...",
+    "exercise_type": "command",
+    "tech_stack": "cka",
+    "weight": "easy",
+    "category": "cka_kubeadm",
+    "subcategory": "集群架构",
+    "full_code": "kubeadm join 172.30.8.10:6443 --token abcdef.0123456789abcdef --discovery-token-ca-cert-hash sha256:9a2f1b7c3d4e5f60718293a4b5c6d7e8f901a2b3c4d5e6f708192a3b4c5d6e7f",
+    "expected": "",
+    "points": [
+      {
+        "id": "cmd",
+        "text": "kubeadm join",
+        "category": "command",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "节点加入集群的 kubeadm 子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "addr",
+        "text": "172.30.8.10:6443",
+        "category": "command_arg",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "API 服务器的地址:端口",
+        "fill_type": "text"
+      },
+      {
+        "id": "tok",
+        "text": "--token abcdef.0123456789abcdef",
+        "category": "command_flag",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "身份发现用的引导 token",
+        "fill_type": "text"
+      },
+      {
+        "id": "hash",
+        "text": "--discovery-token-ca-cert-hash",
+        "category": "command_flag",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "集群 CA 证书的 sha256 哈希，用来确认连到的是真集群",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 节点加入集群的命令？",
+      "level_2": "📖 init 输出末尾会打印完整 join 命令；token 默认 24 小时过期",
+      "level_3": "👀 `kubeadm join <api>:6443 --token ... --discovery-token-ca-cert-hash sha256:...`",
+      "level_4": "📝 正确答案：`kubeadm join 172.30.8.10:6443 --token ... --discovery-token-ca-cert-hash sha256:...`"
+    },
+    "explanation": "worker 通过 token 完成 发现，并用 CA 证书哈希验证 API 服务器身份（防中间人）；token 过期后用 kubeadm token create --print-join-command 重新生成。"
+  },
+  {
+    "id": "cka-cluster-003",
+    "title": "附加控制平面节点（HA）",
+    "description": "把新节点作为控制平面加入 HA 集群：API 地址 k8s-api.example.com:6443，用 --certificate-key 解密共享证书",
+    "exercise_type": "command",
+    "tech_stack": "cka",
+    "weight": "hard",
+    "category": "cka_kubeadm",
+    "subcategory": "集群架构",
+    "full_code": "kubeadm join k8s-api.example.com:6443 --control-plane --certificate-key 41c8a2e7d9b3f6158027aec4d1e5b9f3c26a8d0e7b4f19c2a5d8e3b6f9041c7a",
+    "expected": "",
+    "points": [
+      {
+        "id": "cmd",
+        "text": "kubeadm join",
+        "category": "command",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "节点加入集群的 kubeadm 子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "cp",
+        "text": "--control-plane",
+        "category": "command_flag",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "以控制平面角色加入（不加则是 worker）",
+        "fill_type": "text"
+      },
+      {
+        "id": "ck",
+        "text": "--certificate-key 41c8a2e7d9b3f6158027aec4d1e5b9f3c26a8d0e7b4f19c2a5d8e3b6f9041c7a",
+        "category": "command_flag",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "解密 kubeadm-certs Secret 的密钥，init 时需配合 --upload-certs",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 与 worker join 相比多了哪个角色标记？",
+      "level_2": "📖 控制平面节点需要共享证书；--upload-certs 上传后得到一次性 certificate-key",
+      "level_3": "👀 `kubeadm join <api>:6443 --control-plane --certificate-key <key>`",
+      "level_4": "📝 正确答案：`kubeadm join k8s-api.example.com:6443 --control-plane --certificate-key <key>`"
+    },
+    "explanation": "多控制平面 HA 部署：init 时 --upload-certs 上传证书得到 certificate-key；新控制平面节点用 --control-plane 标记加入并凭该 key 解密证书，完成后 etcd 会自动组建成三节点集群。"
+  },
+  {
+    "id": "cka-cluster-004",
+    "title": "重新生成 join 命令",
+    "description": "token 已过期，重新生成一条完整的工作节点 join 命令并打印",
+    "exercise_type": "command",
+    "tech_stack": "cka",
+    "weight": "beginner",
+    "category": "cka_kubeadm",
+    "subcategory": "集群架构",
+    "full_code": "kubeadm token create --print-join-command",
+    "expected": "",
+    "points": [
+      {
+        "id": "cmd",
+        "text": "kubeadm token create",
+        "category": "command",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "创建新的引导 token",
+        "fill_type": "text"
+      },
+      {
+        "id": "flag",
+        "text": "--print-join-command",
+        "category": "command_flag",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "直接打印完整可复制的 join 命令",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 想拿到一条能直接粘贴执行的 join 命令",
+      "level_2": "📖 token create 只发 token；加 --print-join-command 会连哈希一起拼好",
+      "level_3": "👀 `kubeadm token create --print-join-command`",
+      "level_4": "📝 正确答案：`kubeadm token create --print-join-command`"
+    },
+    "explanation": "join 命令有效期取决于 token（默认 24h）；考试里经常先执行这条拿到命令，再复制到 worker 上执行。"
+  },
+  {
+    "id": "cka-cluster-005",
+    "title": "查看集群升级计划",
+    "description": "先查看当前集群可升级到哪些版本",
+    "exercise_type": "command",
+    "tech_stack": "cka",
+    "weight": "beginner",
+    "category": "cka_kubeadm",
+    "subcategory": "集群架构",
+    "full_code": "kubeadm upgrade plan",
+    "expected": "",
+    "points": [
+      {
+        "id": "verb",
+        "text": "kubeadm upgrade",
+        "category": "command",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "集群升级相关的 kubeadm 子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "sub",
+        "text": "plan",
+        "category": "command_arg",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "先看计划再动手：列出可用版本与组件清单",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 升级前先看有哪些可选版本",
+      "level_2": "📖 kubeadm upgrade 有 plan / apply / node 三个常用子命令",
+      "level_3": "👀 `kubeadm upgrade plan`",
+      "level_4": "📝 正确答案：`kubeadm upgrade plan`"
+    },
+    "explanation": "升级第一步永远是 plan：它列出当前版本、可升级版本以及证书等注意事项；CKA 升级题要求逐个节点 drain → 升级 → uncordon。"
+  },
+  {
+    "id": "cka-cluster-006",
+    "title": "升级控制平面",
+    "description": "把控制平面升级到 v1.31.2（含 etcd）",
+    "exercise_type": "command",
+    "tech_stack": "cka",
+    "weight": "medium",
+    "category": "cka_kubeadm",
+    "subcategory": "集群架构",
+    "full_code": "kubeadm upgrade apply v1.31.2 --etcd-upgrade=true",
+    "expected": "",
+    "points": [
+      {
+        "id": "cmd",
+        "text": "kubeadm upgrade apply",
+        "category": "command",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "控制平面节点执行升级的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "ver",
+        "text": "v1.31.2",
+        "category": "command_arg",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "目标版本号，带 v 前缀",
+        "fill_type": "text"
+      },
+      {
+        "id": "etcd",
+        "text": "--etcd-upgrade=true",
+        "category": "command_flag",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "同版本对应 etcd 补丁版本也一并升级",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 控制平面升级用 apply 还是 node？",
+      "level_2": "📖 apply 用在第一个（及 init 的）控制平面节点；其余控制平面用 node",
+      "level_3": "👀 `kubeadm upgrade apply v1.31.2`",
+      "level_4": "📝 正确答案：`kubeadm upgrade apply v1.31.2 --etcd-upgrade=true`"
+    },
+    "explanation": "kubeadm upgrade apply 只管控制平面组件与证书，kubelet/kubectl 要用包管理器单独升级；升级前记得先 drain 节点。"
+  },
+  {
+    "id": "cka-cluster-007",
+    "title": "升级工作节点上的 kubeadm 组件",
+    "description": "worker 节点已升级完软件包，执行 kubeadm 侧升级并把 kubelet 更新到 v1.31.2",
+    "exercise_type": "command",
+    "tech_stack": "cka",
+    "weight": "medium",
+    "category": "cka_kubeadm",
+    "subcategory": "集群架构",
+    "full_code": "kubeadm upgrade node --kubelet-version v1.31.2",
+    "expected": "",
+    "points": [
+      {
+        "id": "cmd",
+        "text": "kubeadm upgrade node",
+        "category": "command",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "worker/附加控制平面节点用的升级子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "ver",
+        "text": "--kubelet-version v1.31.2",
+        "category": "command_flag",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "指定本节点 kubelet 目标版本",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 worker 上不用 apply，用哪个子命令？",
+      "level_2": "📖 node 子命令刷新 kubelet 配置与证书，不改控制平面",
+      "level_3": "👀 `kubeadm upgrade node --kubelet-version v1.31.2`",
+      "level_4": "📝 正确答案：`kubeadm upgrade node --kubelet-version v1.31.2`"
+    },
+    "explanation": "worker 升级流程：apt 装 kubelet/kubectl 新版 → kubeadm upgrade node → systemctl daemon-reload && systemctl restart kubelet → uncordon。"
+  },
+  {
+    "id": "cka-cluster-008",
+    "title": "安装指定版本的 kubelet/kubeadm/kubectl",
+    "description": "把三个二进制升级到 1.31.2（Debian 包版本 1.31.2-1.1）",
+    "exercise_type": "command",
+    "tech_stack": "cka",
+    "weight": "medium",
+    "category": "cka_kubeadm",
+    "subcategory": "集群架构",
+    "full_code": "apt-get install -y kubelet=1.31.2-1.1 kubeadm=1.31.2-1.1 kubectl=1.31.2-1.1",
+    "expected": "",
+    "points": [
+      {
+        "id": "cmd",
+        "text": "apt-get install",
+        "category": "command",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "Debian 系安装软件包的命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "k1",
+        "text": "kubelet=1.31.2-1.1",
+        "category": "command_arg",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "包名=精确版本 的写法",
+        "fill_type": "text"
+      },
+      {
+        "id": "k2",
+        "text": "kubeadm=1.31.2-1.1",
+        "category": "command_arg",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "三个工具版本必须一致",
+        "fill_type": "text"
+      },
+      {
+        "id": "k3",
+        "text": "kubectl=1.31.2-1.1",
+        "category": "command_arg",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "客户端工具也要同步升级",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 apt 如何安装精确版本？",
+      "level_2": "📖 `包名=版本` 语法；kubelet/kubeadm/kubectl 三件套要装同一个版本",
+      "level_3": "👀 `apt-get install -y kubelet=1.31.2-1.1 kubeadm=1.31.2-1.1 kubectl=1.31.2-1.1`",
+      "level_4": "📝 正确答案：`apt-get install -y kubelet=1.31.2-1.1 kubeadm=1.31.2-1.1 kubectl=1.31.2-1.1`"
+    },
+    "explanation": "升级前先 apt-mark unhold 解除固定，装完再 hold 回去；kubelet 装完需要 daemon-reload 并 restart。"
+  },
+  {
+    "id": "cka-cluster-009",
+    "title": "固定软件包版本",
+    "description": "防止 kubelet/kubeadm/kubectl 被 apt upgrade 意外升级",
+    "exercise_type": "command",
+    "tech_stack": "cka",
+    "weight": "easy",
+    "category": "cka_kubeadm",
+    "subcategory": "集群架构",
+    "full_code": "apt-mark hold kubelet kubeadm kubectl",
+    "expected": "",
+    "points": [
+      {
+        "id": "cmd",
+        "text": "apt-mark hold",
+        "category": "command",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "apt-mark 的 hold 子命令：锁定版本",
+        "fill_type": "text"
+      },
+      {
+        "id": "pkgs",
+        "text": "kubelet kubeadm kubectl",
+        "category": "command_arg",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "要固定的三个包",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 apt 如何阻止包被升级？",
+      "level_2": "📖 hold = 固定；unhold = 解除",
+      "level_3": "👀 `apt-mark hold kubelet kubeadm kubectl`",
+      "level_4": "📝 正确答案：`apt-mark hold kubelet kubeadm kubectl`"
+    },
+    "explanation": "这是官方升级文档的最后一步：升级完成后立即 hold，避免后续 apt upgrade 自动拉高 Kubernetes 版本造成版本漂移。"
+  },
+  {
+    "id": "cka-cluster-010",
+    "title": "etcd 快照备份",
+    "description": "在本机对 etcd 做快照备份到 /backup/etcd-snapshot.db（证书都在 /etc/kubernetes/pki/etcd/）",
+    "exercise_type": "command",
+    "tech_stack": "cka",
+    "weight": "hard",
+    "category": "cka_etcd",
+    "subcategory": "集群架构",
+    "full_code": "ETCDCTL_API=3 etcdctl snapshot save /backup/etcd-snapshot.db --endpoints=https://127.0.0.1:2379 --cacert=/etc/kubernetes/pki/etcd/ca.crt --cert=/etc/kubernetes/pki/etcd/server.crt --key=/etc/kubernetes/pki/etcd/server.key",
+    "expected": "",
+    "points": [
+      {
+        "id": "api",
+        "text": "ETCDCTL_API=3",
+        "category": "env",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "etcdctl v3 API 环境变量前缀",
+        "fill_type": "text"
+      },
+      {
+        "id": "verb",
+        "text": "snapshot save",
+        "category": "command",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "etcdctl 的快照保存子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "path",
+        "text": "/backup/etcd-snapshot.db",
+        "category": "command_arg",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "快照输出路径",
+        "fill_type": "text"
+      },
+      {
+        "id": "ep",
+        "text": "--endpoints=https://127.0.0.1:2379",
+        "category": "command_flag",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "etcd 客户端地址",
+        "fill_type": "text"
+      },
+      {
+        "id": "ca",
+        "text": "--cacert=/etc/kubernetes/pki/etcd/ca.crt",
+        "category": "command_flag",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "验证 etcd 服务端的 CA 证书",
+        "fill_type": "text"
+      },
+      {
+        "id": "cert",
+        "text": "--cert=/etc/kubernetes/pki/etcd/server.crt",
+        "category": "command_flag",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "etcd 客户端证书",
+        "fill_type": "text"
+      },
+      {
+        "id": "key",
+        "text": "--key=/etc/kubernetes/pki/etcd/server.key",
+        "category": "command_flag",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "etcd 客户端私钥",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 考试环境 etcd 是 HTTPS + 双向证书认证的",
+      "level_2": "📖 三个证书参数一个都不能少；CA/证书/私钥都在 etcd 的 pki 目录",
+      "level_3": "👀 `ETCDCTL_API=3 etcdctl snapshot save <path> --endpoints=... --cacert=... --cert=... --key=...`",
+      "level_4": "📝 正确答案：save 快照 + 四个连接参数（endpoints/cacert/cert/key）"
+    },
+    "explanation": "CKA 高频考点：kubeadm 集群的 etcd 证书在 /etc/kubernetes/pki/etcd/ 下，缺证书会报 connection refused/unauthorized；ETCDCTL_API=3 显式声明 v3 API（旧版需要，新版默认）。"
+  },
+  {
+    "id": "cka-cluster-011",
+    "title": "etcd 快照恢复",
+    "description": "把 /backup/etcd-snapshot.db 恢复到新数据目录 /var/lib/etcd-restored",
+    "exercise_type": "command",
+    "tech_stack": "cka",
+    "weight": "hard",
+    "category": "cka_etcd",
+    "subcategory": "集群架构",
+    "full_code": "ETCDCTL_API=3 etcdctl snapshot restore /backup/etcd-snapshot.db --data-dir=/var/lib/etcd-restored",
+    "expected": "",
+    "points": [
+      {
+        "id": "verb",
+        "text": "snapshot restore",
+        "category": "command",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "从快照恢复的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "src",
+        "text": "/backup/etcd-snapshot.db",
+        "category": "command_arg",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "快照文件路径",
+        "fill_type": "text"
+      },
+      {
+        "id": "dd",
+        "text": "--data-dir=/var/lib/etcd-restored",
+        "category": "command_flag",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "恢复到全新的数据目录，避免与运行中的 etcd 冲突",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 restore 必须写到一个新目录",
+      "level_2": "📖 恢复后要改 etcd 静态 Pod 的 --data-dir 指向新目录（或移回原目录）",
+      "level_3": "👀 `etcdctl snapshot restore <snap> --data-dir=<new-dir>`",
+      "level_4": "📝 正确答案：`ETCDCTL_API=3 etcdctl snapshot restore /backup/etcd-snapshot.db --data-dir=/var/lib/etcd-restored`"
+    },
+    "explanation": "restore 生成的是全新的 etcd 数据目录（成员 ID 会变）；恢复后修改 /etc/kubernetes/manifests/etcd.yaml 的 --data-dir，kubelet 会自动拉起新 etcd。"
+  },
+  {
+    "id": "cka-cluster-012",
+    "title": "验证快照完整性",
+    "description": "查看备份快照的 hash / revision / 总键数",
+    "exercise_type": "command",
+    "tech_stack": "cka",
+    "weight": "easy",
+    "category": "cka_etcd",
+    "subcategory": "集群架构",
+    "full_code": "etcdutl snapshot status /backup/etcd-snapshot.db",
+    "expected": "",
+    "points": [
+      {
+        "id": "cmd",
+        "text": "etcdutl",
+        "category": "command",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "etcd 3.5 起推荐的管理工具",
+        "fill_type": "text"
+      },
+      {
+        "id": "verb",
+        "text": "snapshot status",
+        "category": "command",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "查看快照元信息的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "path",
+        "text": "/backup/etcd-snapshot.db",
+        "category": "command_arg",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "快照文件路径",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 etcd 3.5 起快照信息查询从 etcdctl 移到了 etcdutl",
+      "level_2": "📖 `etcdutl snapshot status <snap>` 输出 hash/revision/keys",
+      "level_3": "👀 `etcdutl snapshot status /backup/etcd-snapshot.db`",
+      "level_4": "📝 正确答案：`etcdutl snapshot status /backup/etcd-snapshot.db`"
+    },
+    "explanation": "etcdutl 是离线管理工具（快照状态/恢复）；etcdctl snapshot status 在 3.5 已弃用。考试环境两者通常都可用，但新语法更规范。"
+  },
+  {
+    "id": "cka-cluster-013",
+    "title": "检查 etcd 健康状态",
+    "description": "确认本机 etcd 端点健康",
+    "exercise_type": "command",
+    "tech_stack": "cka",
+    "weight": "easy",
+    "category": "cka_etcd",
+    "subcategory": "集群架构",
+    "full_code": "etcdctl endpoint health --endpoints=https://127.0.0.1:2379",
+    "expected": "",
+    "points": [
+      {
+        "id": "verb",
+        "text": "endpoint health",
+        "category": "command",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "etcdctl 检查端点健康的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "ep",
+        "text": "--endpoints=https://127.0.0.1:2379",
+        "category": "command_flag",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "etcd 客户端地址（本机 2379）",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 etcdctl 里查健康用哪两个词？",
+      "level_2": "📖 `endpoint health` 逐个端点探活",
+      "level_3": "👀 `etcdctl endpoint health --endpoints=...`",
+      "level_4": "📝 正确答案：`etcdctl endpoint health --endpoints=https://127.0.0.1:2379`"
+    },
+    "explanation": "排查控制平面故障时先确认 etcd 活着；endpoint health / endpoint status 是 etcd 侧的基础体检命令。"
+  },
+  {
+    "id": "cka-cluster-014",
+    "title": "检查证书有效期",
+    "description": "查看 kubeadm 集群各证书的过期时间",
+    "exercise_type": "command",
+    "tech_stack": "cka",
+    "weight": "easy",
+    "category": "cka_cert",
+    "subcategory": "集群架构",
+    "full_code": "kubeadm certs check-expiration",
+    "expected": "",
+    "points": [
+      {
+        "id": "cmd",
+        "text": "kubeadm certs",
+        "category": "command",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "kubeadm 管理证书的子命令组",
+        "fill_type": "text"
+      },
+      {
+        "id": "sub",
+        "text": "check-expiration",
+        "category": "command_arg",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "检查过期时间",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 kubeadm 的证书子命令组",
+      "level_2": "📖 `kubeadm certs` 下有 check-expiration / renew",
+      "level_3": "👀 `kubeadm certs check-expiration`",
+      "level_4": "📝 正确答案：`kubeadm certs check-expiration`"
+    },
+    "explanation": "kubeadm 证书默认一年过期（CA 十年）；check-expiration 列出每张证书的到期时间与 CA 信息，旧版本子命令是 alpha certs。"
+  },
+  {
+    "id": "cka-cluster-015",
+    "title": "续期全部证书",
+    "description": "一次性续期所有 kubeadm 管理的证书",
+    "exercise_type": "command",
+    "tech_stack": "cka",
+    "weight": "medium",
+    "category": "cka_cert",
+    "subcategory": "集群架构",
+    "full_code": "kubeadm certs renew all",
+    "expected": "",
+    "points": [
+      {
+        "id": "cmd",
+        "text": "kubeadm certs renew",
+        "category": "command",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "续期证书的子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "all",
+        "text": "all",
+        "category": "command_arg",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "全部证书一起续",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 renew 后面接证书名或 all",
+      "level_2": "📖 续期只是写新文件，运行中的组件不会自动加载",
+      "level_3": "👀 `kubeadm certs renew all`",
+      "level_4": "📝 正确答案：`kubeadm certs renew all`"
+    },
+    "explanation": "续期后必须重启使用证书的组件：静态 Pod 把清单移出再移回 /etc/kubernetes/manifests，或直接重启 kubelet；kubelet 证书由 /var/lib/kubelet 单独轮换。"
+  },
+  {
+    "id": "cka-cluster-016",
+    "title": "查看静态 Pod 清单目录",
+    "description": "列出 kubeadm 集群静态 Pod 清单目录里的文件",
+    "exercise_type": "command",
+    "tech_stack": "cka",
+    "weight": "beginner",
+    "category": "cka_cluster",
+    "subcategory": "集群架构",
+    "full_code": "ls /etc/kubernetes/manifests",
+    "expected": "",
+    "points": [
+      {
+        "id": "cmd",
+        "text": "ls",
+        "category": "command",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "列目录命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "path",
+        "text": "/etc/kubernetes/manifests",
+        "category": "command_arg",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "kubelet --pod-manifest-path 指定的静态 Pod 目录",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 控制平面组件以静态 Pod 方式运行",
+      "level_2": "📖 kubeadm 默认静态清单目录是 /etc/kubernetes/manifests",
+      "level_3": "👀 `ls /etc/kubernetes/manifests`",
+      "level_4": "📝 正确答案：`ls /etc/kubernetes/manifests`"
+    },
+    "explanation": "etcd/apiserver/scheduler/controller-manager 四个静态清单由 kubelet 每 20 秒扫描托管；改清单即改组件，排障时也先看这里。"
+  },
+  {
+    "id": "cka-cluster-017",
+    "title": "创建 Role（命名空间级授权）",
+    "description": "在 dev 命名空间创建 Role pod-reader：允许 get/list/watch pods",
+    "exercise_type": "config",
+    "tech_stack": "cka",
+    "weight": "medium",
+    "category": "cka_rbac",
+    "subcategory": "集群架构",
+    "full_code": "apiVersion: rbac.authorization.k8s.io/v1\nkind: Role\nmetadata:\n  name: pod-reader\n  namespace: dev\nrules:\n- apiGroups: [\"\"]\n  resources: [\"pods\"]\n  verbs: [\"get\", \"list\", \"watch\"]",
+    "expected": "",
+    "points": [
+      {
+        "id": "apiv",
+        "text": "rbac.authorization.k8s.io/v1",
+        "category": "api_version",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "RBAC 资源的 apiVersion",
+        "fill_type": "text"
+      },
+      {
+        "id": "kind",
+        "text": "Role",
+        "category": "kind",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "命名空间级权限集合的资源类型",
+        "fill_type": "text"
+      },
+      {
+        "id": "res",
+        "text": "resources: [\"pods\"]",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "可操作的资源（核心组资源直接写复数名）",
+        "fill_type": "text"
+      },
+      {
+        "id": "verbs",
+        "text": "verbs: [\"get\", \"list\", \"watch\"]",
+        "category": "config",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "允许的动作列表",
+        "fill_type": "text"
+      },
+      {
+        "id": "ns",
+        "text": "namespace: dev",
+        "category": "metadata",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "Role 是命名空间级资源",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 授权 = 谁能对什么资源做什么",
+      "level_2": "📖 Role 的 rules 由 apiGroups/resources/verbs 组成；核心组 apiGroups 写空字符串",
+      "level_3": "👀 `apiGroups: [\"\"]` / `resources: [\"pods\"]` / `verbs: [...]`",
+      "level_4": "📝 正确答案：`resources: [\"pods\"]` + `verbs: [\"get\", \"list\", \"watch\"]`"
+    },
+    "explanation": "Role 只在 metadata.namespace 生效；apiGroups 为空串表示核心组（pods/services 等），apps 组要写 \"apps\"；verbs 与 kubectl 动作同名（get/list/watch/create/delete/patch...）。"
+  },
+  {
+    "id": "cka-cluster-018",
+    "title": "绑定用户到 Role",
+    "description": "把用户 jane 绑定到 dev 命名空间的 Role pod-reader",
+    "exercise_type": "config",
+    "tech_stack": "cka",
+    "weight": "medium",
+    "category": "cka_rbac",
+    "subcategory": "集群架构",
+    "full_code": "apiVersion: rbac.authorization.k8s.io/v1\nkind: RoleBinding\nmetadata:\n  name: read-pods\n  namespace: dev\nsubjects:\n- kind: User\n  name: jane\n  apiGroup: rbac.authorization.k8s.io\nroleRef:\n  kind: Role\n  name: pod-reader\n  apiGroup: rbac.authorization.k8s.io",
+    "expected": "",
+    "points": [
+      {
+        "id": "kind",
+        "text": "RoleBinding",
+        "category": "kind",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "把 subjects 绑到 roleRef 的资源类型",
+        "fill_type": "text"
+      },
+      {
+        "id": "subj",
+        "text": "subjects:",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "被授权主体列表字段",
+        "fill_type": "text"
+      },
+      {
+        "id": "ukind",
+        "text": "kind: User",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "主体类型：User/Group/ServiceAccount",
+        "fill_type": "text"
+      },
+      {
+        "id": "uname",
+        "text": "name: jane",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "用户名（x509 CN 等）",
+        "fill_type": "text"
+      },
+      {
+        "id": "roleref",
+        "text": "roleRef:",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "指向被绑定的角色",
+        "fill_type": "text"
+      },
+      {
+        "id": "rname",
+        "text": "name: pod-reader",
+        "category": "config",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "roleRef 引用的 Role 名（本命名空间内）",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 RoleBinding 三要素：subjects / roleRef / 本体",
+      "level_2": "📖 subjects 写谁，roleRef 写绑到哪个 Role；二者都必须在 dev 命名空间",
+      "level_3": "👀 `subjects: - kind: User / name: jane` + `roleRef: kind: Role / name: pod-reader`",
+      "level_4": "📝 正确答案：`kind: User` + `name: jane` + roleRef 指向 `pod-reader`"
+    },
+    "explanation": "注意 roleRef 的 name: pod-reader 那一栏（roleRef 段第二处 pod-reader）：User 在 Kubernetes 里不是 API 对象，来自证书 CN/OIDC 等外部认证；ServiceAccount 主体的 kind 写 ServiceAccount 并带 namespace。"
+  },
+  {
+    "id": "cka-cluster-019",
+    "title": "集群级授权节点只读权限",
+    "description": "创建 ClusterRole node-viewer（get/list nodes）并用 ClusterRoleBinding 授予组 ops-team",
+    "exercise_type": "config",
+    "tech_stack": "cka",
+    "weight": "medium",
+    "category": "cka_rbac",
+    "subcategory": "集群架构",
+    "full_code": "apiVersion: rbac.authorization.k8s.io/v1\nkind: ClusterRole\nmetadata:\n  name: node-viewer\nrules:\n- apiGroups: [\"\"]\n  resources: [\"nodes\"]\n  verbs: [\"get\", \"list\"]\n---\napiVersion: rbac.authorization.k8s.io/v1\nkind: ClusterRoleBinding\nmetadata:\n  name: view-nodes\nsubjects:\n- kind: Group\n  name: ops-team\n  apiGroup: rbac.authorization.k8s.io\nroleRef:\n  kind: ClusterRole\n  name: node-viewer\n  apiGroup: rbac.authorization.k8s.io",
+    "expected": "",
+    "points": [
+      {
+        "id": "crkind",
+        "text": "kind: ClusterRole",
+        "category": "kind",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "集群级权限集合",
+        "fill_type": "text"
+      },
+      {
+        "id": "res",
+        "text": "resources: [\"nodes\"]",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "nodes 是集群级资源",
+        "fill_type": "text"
+      },
+      {
+        "id": "crb",
+        "text": "ClusterRoleBinding",
+        "category": "kind",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "集群范围的绑定",
+        "fill_type": "text"
+      },
+      {
+        "id": "gname",
+        "text": "name: ops-team",
+        "category": "config",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "组名（证书 O 字段映射为 Group）",
+        "fill_type": "text"
+      },
+      {
+        "id": "rref",
+        "text": "roleRef:",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "指向 ClusterRole",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 nodes 这类集群级资源需要集群级的 Role 与 Binding",
+      "level_2": "📖 ClusterRole 不属于命名空间；ClusterRoleBinding 授予整个集群",
+      "level_3": "👀 `kind: ClusterRole` + `kind: ClusterRoleBinding` + `kind: Group`",
+      "level_4": "📝 正确答案：ClusterRole(node-viewer) + ClusterRoleBinding(Group ops-team)"
+    },
+    "explanation": "ClusterRole 也可以被 RoleBinding 引用——那样权限会被限制在该命名空间内（常见考法：给 SA 授命名空间内的 cluster-admin）。"
+  },
+  {
+    "id": "cka-cluster-020",
+    "title": "命令行创建 Role",
+    "description": "用 kubectl 在 dev 命名空间创建 Role pod-reader：get/list/watch pods",
+    "exercise_type": "command",
+    "tech_stack": "cka",
+    "weight": "easy",
+    "category": "cka_rbac",
+    "subcategory": "集群架构",
+    "full_code": "kubectl create role pod-reader --verb=get,list,watch --resource=pods -n dev",
+    "expected": "",
+    "points": [
+      {
+        "id": "cmd",
+        "text": "kubectl create role",
+        "category": "command",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "创建 Role 的命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "verbs",
+        "text": "--verb=get,list,watch",
+        "category": "command_flag",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "逗号分隔的动作列表",
+        "fill_type": "text"
+      },
+      {
+        "id": "res",
+        "text": "--resource=pods",
+        "category": "command_flag",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "资源名",
+        "fill_type": "text"
+      },
+      {
+        "id": "ns",
+        "text": "-n dev",
+        "category": "command_flag",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "Role 所在命名空间",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 kubectl create role 两个必填参数",
+      "level_2": "📖 --verb 与 --resource；动词可逗号分隔写多个",
+      "level_3": "👀 `kubectl create role pod-reader --verb=... --resource=pods -n dev`",
+      "level_4": "📝 正确答案：`kubectl create role pod-reader --verb=get,list,watch --resource=pods -n dev`"
+    },
+    "explanation": "忘记 -n 会建到 default 命名空间；--dry-run=client -o yaml 可以先输出模板再改，是考试省时神器。"
+  },
+  {
+    "id": "cka-cluster-021",
+    "title": "命令行绑定用户",
+    "description": "把用户 jane 绑定到 dev 里的 Role pod-reader",
+    "exercise_type": "command",
+    "tech_stack": "cka",
+    "weight": "easy",
+    "category": "cka_rbac",
+    "subcategory": "集群架构",
+    "full_code": "kubectl create rolebinding read-bind --role=pod-reader --user=jane -n dev",
+    "expected": "",
+    "points": [
+      {
+        "id": "cmd",
+        "text": "kubectl create rolebinding",
+        "category": "command",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "创建 RoleBinding 的命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "role",
+        "text": "--role=pod-reader",
+        "category": "command_flag",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "引用命名空间内的 Role（集群级用 --clusterrole）",
+        "fill_type": "text"
+      },
+      {
+        "id": "user",
+        "text": "--user=jane",
+        "category": "command_flag",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "User 主体",
+        "fill_type": "text"
+      },
+      {
+        "id": "ns",
+        "text": "-n dev",
+        "category": "command_flag",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "Binding 所在命名空间",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 --role 与 --clusterrole 有何区别？",
+      "level_2": "📖 --role 引用同命名空间 Role；--clusterrole 引用 ClusterRole",
+      "level_3": "👀 `kubectl create rolebinding read-bind --role=pod-reader --user=jane -n dev`",
+      "level_4": "📝 正确答案：`kubectl create rolebinding read-bind --role=pod-reader --user=jane -n dev`"
+    },
+    "explanation": "主体三选一：--user / --group / --serviceaccount=<ns>:<name>；RoleBinding 必须与 Role 同命名空间才生效。"
+  },
+  {
+    "id": "cka-cluster-022",
+    "title": "模拟检查权限",
+    "description": "模拟用户 jane 检查她在 dev 命名空间能否 list pods",
+    "exercise_type": "command",
+    "tech_stack": "cka",
+    "weight": "easy",
+    "category": "cka_rbac",
+    "subcategory": "集群架构",
+    "full_code": "kubectl auth can-i list pods --as=jane -n dev",
+    "expected": "",
+    "points": [
+      {
+        "id": "cmd",
+        "text": "kubectl auth can-i",
+        "category": "command",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "权限检查子命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "action",
+        "text": "list pods",
+        "category": "command_arg",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "动词 + 资源",
+        "fill_type": "text"
+      },
+      {
+        "id": "as",
+        "text": "--as=jane",
+        "category": "command_flag",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "模拟（impersonate）指定用户",
+        "fill_type": "text"
+      },
+      {
+        "id": "ns",
+        "text": "-n dev",
+        "category": "command_flag",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "目标命名空间",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 can-i 后面直接跟 动词 资源",
+      "level_2": "📖 --as 模拟其他用户（需要 impersonate 权限）；加 --list 可列出全部权限",
+      "level_3": "👀 `kubectl auth can-i list pods --as=jane -n dev`",
+      "level_4": "📝 正确答案：`kubectl auth can-i list pods --as=jane -n dev`"
+    },
+    "explanation": "RBAC 排查利器：返回 yes/no；自检全部权限用 kubectl auth can-i --list --as=<user> -n <ns>。"
+  },
+  {
+    "id": "cka-cluster-023",
+    "title": "Pod 使用指定 ServiceAccount",
+    "description": "创建 Pod inventory，在 default 命名空间使用 SA build-bot；不需要访问 API，禁用 token 自动挂载",
+    "exercise_type": "config",
+    "tech_stack": "cka",
+    "weight": "medium",
+    "category": "cka_rbac",
+    "subcategory": "集群架构",
+    "full_code": "apiVersion: v1\nkind: Pod\nmetadata:\n  name: inventory\nspec:\n  serviceAccountName: build-bot\n  automountServiceAccountToken: false\n  containers:\n  - name: app\n    image: busybox:1.36\n    command: [\"sleep\", \"3600\"]",
+    "expected": "",
+    "points": [
+      {
+        "id": "sa",
+        "text": "serviceAccountName: build-bot",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "Pod 级字段：使用指定 ServiceAccount",
+        "fill_type": "text"
+      },
+      {
+        "id": "cmd",
+        "text": "command: [\"sleep\", \"3600\"]",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "让容器常驻",
+        "fill_type": "text"
+      },
+      {
+        "id": "img",
+        "text": "busybox:1.36",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 0.7,
+        "hint": "补充容器镜像",
+        "fill_type": "text"
+      },
+      {
+        "id": "am",
+        "text": "automountServiceAccountToken: false",
+        "category": "config",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "Pod 级禁用 API token 自动挂载",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 Pod 规格里指定 SA 的字段名",
+      "level_2": "📖 spec.serviceAccountName；SA 需已存在（kubectl create sa）",
+      "level_3": "👀 `serviceAccountName: build-bot`",
+      "level_4": "📝 正确答案：`serviceAccountName: build-bot`"
+    },
+    "explanation": "不写 serviceAccountName 时使用 default SA；automountServiceAccountToken: false 减少攻击面（Pod 内不再有 /var/run/secrets/kubernetes.io/serviceaccount/token）。"
+  },
+  {
+    "id": "cka-cluster-024",
+    "title": "切换 kubeconfig 上下文",
+    "description": "切换当前上下文到 k8s-prod（每个 CKA 题都应先确认在正确的集群）",
+    "exercise_type": "command",
+    "tech_stack": "cka",
+    "weight": "beginner",
+    "category": "cka_context",
+    "subcategory": "集群架构",
+    "full_code": "kubectl config use-context k8s-prod",
+    "expected": "",
+    "points": [
+      {
+        "id": "cmd",
+        "text": "kubectl config use-context",
+        "category": "command",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "切换当前上下文",
+        "fill_type": "text"
+      },
+      {
+        "id": "ctx",
+        "text": "k8s-prod",
+        "category": "command_arg",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "kubectl config get-contexts 里列出的上下文名",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 切换上下文的 config 子命令",
+      "level_2": "📖 use-context = 切换；get-contexts / current-context = 查看",
+      "level_3": "👀 `kubectl config use-context k8s-prod`",
+      "level_4": "📝 正确答案：`kubectl config use-context k8s-prod`"
+    },
+    "explanation": "CKA 每道题干会注明使用的上下文，做错集群 = 零分，这是最常见的丢分原因；题目还可能给专门的 kubeconfig 文件，用 --kubeconfig=<path> 指定。"
+  },
+  {
+    "id": "cka-cluster-025",
+    "title": "设置上下文默认命名空间",
+    "description": "把当前上下文的默认命名空间设为 prod",
+    "exercise_type": "command",
+    "tech_stack": "cka",
+    "weight": "easy",
+    "category": "cka_context",
+    "subcategory": "集群架构",
+    "full_code": "kubectl config set-context --current --namespace=prod",
+    "expected": "",
+    "points": [
+      {
+        "id": "cmd",
+        "text": "kubectl config set-context",
+        "category": "command",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "修改上下文",
+        "fill_type": "text"
+      },
+      {
+        "id": "cur",
+        "text": "--current",
+        "category": "command_flag",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "直接改当前上下文而不是新建",
+        "fill_type": "text"
+      },
+      {
+        "id": "ns",
+        "text": "--namespace=prod",
+        "category": "command_flag",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "上下文的默认命名空间",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 不新建上下文、就地修改当前上下文",
+      "level_2": "📖 set-context --current --namespace=<ns>",
+      "level_3": "👀 `kubectl config set-context --current --namespace=prod`",
+      "level_4": "📝 正确答案：`kubectl config set-context --current --namespace=prod`"
+    },
+    "explanation": "考试里大量题目指定命名空间，提前 set 好默认 ns 可以避免忘写 -n；注意 default 命名空间的资源不会受影响。"
+  },
+  {
+    "id": "cka-cluster-026",
+    "title": "查询当前上下文的命名空间",
+    "description": "用 view --minify + jsonpath 输出当前上下文绑定的命名空间",
+    "exercise_type": "command",
+    "tech_stack": "cka",
+    "weight": "medium",
+    "category": "cka_context",
+    "subcategory": "集群架构",
+    "full_code": "kubectl config view --minify --output jsonpath='{..namespace}'",
+    "expected": "",
+    "points": [
+      {
+        "id": "cmd",
+        "text": "kubectl config view",
+        "category": "command",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "查看 kubeconfig 内容",
+        "fill_type": "text"
+      },
+      {
+        "id": "minify",
+        "text": "--minify",
+        "category": "command_flag",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "只保留当前上下文相关的 cluster/user/namespace",
+        "fill_type": "text"
+      },
+      {
+        "id": "jp",
+        "text": "{..namespace}",
+        "category": "command_arg",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "jsonpath 通配：取所有层级里的 namespace 字段",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 --minify 会裁掉其他上下文",
+      "level_2": "📖 `{..namespace}` 递归匹配任意层级下的 namespace 字段",
+      "level_3": "👀 `kubectl config view --minify -o jsonpath='{..namespace}'`",
+      "level_4": "📝 正确答案：`kubectl config view --minify --output jsonpath='{..namespace}'`"
+    },
+    "explanation": "这是 CKA 经典考法（考的是 config + jsonpath 组合）；等价写法还有 kubectl config view --minify -o jsonpath='{.contexts[0].context.namespace}'。"
+  },
+  {
+    "id": "cka-cluster-027",
+    "title": "批准证书签名请求",
+    "description": "查看 CSR 列表并批准名为 john-developer 的证书签名请求",
+    "exercise_type": "command",
+    "tech_stack": "cka",
+    "weight": "easy",
+    "category": "cka_cert",
+    "subcategory": "集群架构",
+    "full_code": "kubectl certificate approve john-developer",
+    "expected": "",
+    "points": [
+      {
+        "id": "cmd",
+        "text": "kubectl certificate approve",
+        "category": "command",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "批准 CSR 的命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "csr",
+        "text": "john-developer",
+        "category": "command_arg",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "CSR 对象名（先 kubectl get csr 查看）",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 CSR 审批命令",
+      "level_2": "📖 approve 通过 / deny 拒绝",
+      "level_3": "👀 `kubectl certificate approve john-developer`",
+      "level_4": "📝 正确答案：`kubectl certificate approve john-developer`"
+    },
+    "explanation": "kubelet 客户端/服务端证书引导、自定义 CA 流程都会产生 Pending CSR；批准后签发结果回填 .status.certificate（base64 的 PEM）。"
+  },
+  {
+    "id": "cka-cluster-028",
+    "title": "查看 kubelet 服务日志",
+    "description": "查看 kubelet systemd 服务最近一小时的日志",
+    "exercise_type": "command",
+    "tech_stack": "cka",
+    "weight": "easy",
+    "category": "cka_node",
+    "subcategory": "集群架构",
+    "full_code": "journalctl -u kubelet --since \"1 hour ago\"",
+    "expected": "",
+    "points": [
+      {
+        "id": "cmd",
+        "text": "journalctl",
+        "category": "command",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "systemd 日志查询工具",
+        "fill_type": "text"
+      },
+      {
+        "id": "unit",
+        "text": "-u kubelet",
+        "category": "command_flag",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "只看 kubelet 单元",
+        "fill_type": "text"
+      },
+      {
+        "id": "since",
+        "text": "1 hour ago",
+        "category": "command_arg",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "--since 时间范围的值",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 systemd 服务日志用 journalctl",
+      "level_2": "📖 -u <unit> 过滤服务；--since \"1 hour ago\" 限定时间",
+      "level_3": "👀 `journalctl -u kubelet --since \"1 hour ago\"`",
+      "level_4": "📝 正确答案：`journalctl -u kubelet --since \"1 hour ago\"`"
+    },
+    "explanation": "节点 NotReady 时第一步看 kubelet 日志：证书过期、pause 镜像拉不动、swap 未关都会在这里暴露；-f 可持续跟踪。"
+  },
+  {
+    "id": "cka-cluster-029",
+    "title": "安装 CNI 网络插件",
+    "description": "kubeadm init 后节点一直 NotReady，安装 Calico 网络插件（清单 URL 已给出）",
+    "exercise_type": "command",
+    "tech_stack": "cka",
+    "weight": "easy",
+    "category": "cka_cluster",
+    "subcategory": "集群架构",
+    "full_code": "kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.28.2/manifests/calico.yaml",
+    "expected": "",
+    "points": [
+      {
+        "id": "cmd",
+        "text": "kubectl apply -f",
+        "category": "command",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "应用清单文件/URL",
+        "fill_type": "text"
+      },
+      {
+        "id": "url",
+        "text": "https://raw.githubusercontent.com/projectcalico/calico/v3.28.2/manifests/calico.yaml",
+        "category": "command_arg",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "CNI 清单地址",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 init 后没装 CNI，节点会怎样？",
+      "level_2": "📖 kubelet 因网络插件未就绪而 NotReady；apply 对应 CNI 清单即可",
+      "level_3": "👀 `kubectl apply -f <calico.yaml>`",
+      "level_4": "📝 正确答案：`kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.28.2/manifests/calico.yaml`"
+    },
+    "explanation": "新版 kubeadm 不会自动装 CNI：节点 NotReady、cni 相关报错都指向缺网络插件；Flannel 用 kube-flannel.yml，Calico 默认网段 192.168.0.0/16 需与 --pod-network-cidr 一致。"
+  },
+  {
+    "id": "cka-cluster-030",
+    "title": "查看节点概览",
+    "description": "列出全部节点及其内网 IP、版本、状态",
+    "exercise_type": "command",
+    "tech_stack": "cka",
+    "weight": "beginner",
+    "category": "cka_node",
+    "subcategory": "集群架构",
+    "full_code": "kubectl get nodes -o wide",
+    "expected": "",
+    "points": [
+      {
+        "id": "cmd",
+        "text": "kubectl get nodes",
+        "category": "command",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "列节点",
+        "fill_type": "text"
+      },
+      {
+        "id": "flag",
+        "text": "-o wide",
+        "category": "command_flag",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "输出更多信息（IP/OS/内核/版本）",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "-owide"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 想多看几列信息",
+      "level_2": "📖 -o wide 追加 INTERNAL-IP、VERSION、OS-IMAGE 等列",
+      "level_3": "👀 `kubectl get nodes -o wide`",
+      "level_4": "📝 正确答案：`kubectl get nodes -o wide`"
+    },
+    "explanation": "-o wide 几乎适用于所有 get：INTERNAL-IP 错误（多网卡绑错）是节点间网络故障的经典原因，wide 输出一眼可见。"
+  }
+]

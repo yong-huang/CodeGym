@@ -1,0 +1,1196 @@
+[
+  {
+    "id": "cka-ts-001",
+    "title": "排查 NotReady 节点：节点详情",
+    "description": "worker1 处于 NotReady，查看它的 Conditions、容量与事件",
+    "exercise_type": "command",
+    "tech_stack": "cka",
+    "weight": "beginner",
+    "category": "cka_ts_node",
+    "subcategory": "故障排查",
+    "full_code": "kubectl describe node worker1",
+    "expected": "",
+    "points": [
+      {
+        "id": "cmd",
+        "text": "kubectl describe node",
+        "category": "command",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "查看节点详情",
+        "fill_type": "text"
+      },
+      {
+        "id": "name",
+        "text": "worker1",
+        "category": "command_arg",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "目标节点名",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 节点异常先看什么",
+      "level_2": "📖 describe node 输出 Conditions（Ready/MemoryPressure…）与 Events",
+      "level_3": "👀 `kubectl describe node worker1`",
+      "level_4": "📝 正确答案：`kubectl describe node worker1`"
+    },
+    "explanation": "Ready=False + KubeletNotReady 原因串是排障入口：CNI 缺失、kubelet 挂了、容器运行时无响应都会写在这里。"
+  },
+  {
+    "id": "cka-ts-002",
+    "title": "检查 kubelet 服务状态",
+    "description": "在 worker1 上确认 kubelet 服务是否存活",
+    "exercise_type": "command",
+    "tech_stack": "cka",
+    "weight": "easy",
+    "category": "cka_ts_node",
+    "subcategory": "故障排查",
+    "full_code": "systemctl status kubelet",
+    "expected": "",
+    "points": [
+      {
+        "id": "cmd",
+        "text": "systemctl status",
+        "category": "command",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "查看 systemd 服务状态",
+        "fill_type": "text"
+      },
+      {
+        "id": "svc",
+        "text": "kubelet",
+        "category": "command_arg",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "服务名",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 NotReady 先查节点上的 agent",
+      "level_2": "📖 systemctl status kubelet：active (running) / inactive / failed",
+      "level_3": "👀 `systemctl status kubelet`",
+      "level_4": "📝 正确答案：`systemctl status kubelet`"
+    },
+    "explanation": "kubelet inactive/failed 是 NotReady 最常见原因；随后的日志看 journalctl -u kubelet。"
+  },
+  {
+    "id": "cka-ts-003",
+    "title": "查看 kubelet 日志",
+    "description": "看 kubelet 最近 10 分钟的日志定位启动失败原因",
+    "exercise_type": "command",
+    "tech_stack": "cka",
+    "weight": "easy",
+    "category": "cka_ts_node",
+    "subcategory": "故障排查",
+    "full_code": "journalctl -u kubelet --since \"10 min ago\"",
+    "expected": "",
+    "points": [
+      {
+        "id": "cmd",
+        "text": "journalctl",
+        "category": "command",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "systemd 日志工具",
+        "fill_type": "text"
+      },
+      {
+        "id": "unit",
+        "text": "-u kubelet",
+        "category": "command_flag",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "过滤 kubelet 单元",
+        "fill_type": "text"
+      },
+      {
+        "id": "since",
+        "text": "10 min ago",
+        "category": "command_arg",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "--since 的时间值",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 kubelet 起不来看哪",
+      "level_2": "📖 journalctl -u kubelet；--since 限定时间窗",
+      "level_3": "👀 `journalctl -u kubelet --since \"10 min ago\"`",
+      "level_4": "📝 正确答案：`journalctl -u kubelet --since \"10 min ago\"`"
+    },
+    "explanation": "证书过期（x509: certificate has expired）、swap 未关、pause 镜像拉取失败是三大经典日志；-f 跟踪、-p err 只看错误。"
+  },
+  {
+    "id": "cka-ts-004",
+    "title": "拉起并自启 kubelet",
+    "description": "kubelet 服务是 inactive 且未设开机自启，修复它",
+    "exercise_type": "command",
+    "tech_stack": "cka",
+    "weight": "medium",
+    "category": "cka_ts_node",
+    "subcategory": "故障排查",
+    "full_code": "sudo systemctl enable --now kubelet",
+    "expected": "",
+    "points": [
+      {
+        "id": "cmd",
+        "text": "systemctl enable --now",
+        "category": "command",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "设置自启并立即启动（--now 等价 start）",
+        "fill_type": "text"
+      },
+      {
+        "id": "svc",
+        "text": "kubelet",
+        "category": "command_arg",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "服务名",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 既要自启也要立刻启动",
+      "level_2": "📖 enable --now 一步到位",
+      "level_3": "👀 `sudo systemctl enable --now kubelet`",
+      "level_4": "📝 正确答案：`sudo systemctl enable --now kubelet`"
+    },
+    "explanation": "只 enable 不 start 节点不会恢复；只 start 下次重启又挂。kubelet 恢复并心跳成功后节点自动回到 Ready。"
+  },
+  {
+    "id": "cka-ts-005",
+    "title": "维护后恢复节点调度",
+    "description": "worker1 维护完成已恢复 Ready，解除调度限制",
+    "exercise_type": "command",
+    "tech_stack": "cka",
+    "weight": "beginner",
+    "category": "cka_ts_node",
+    "subcategory": "故障排查",
+    "full_code": "kubectl uncordon worker1",
+    "expected": "",
+    "points": [
+      {
+        "id": "cmd",
+        "text": "kubectl uncordon",
+        "category": "command",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "解除节点 cordon（恢复调度）",
+        "fill_type": "text"
+      },
+      {
+        "id": "name",
+        "text": "worker1",
+        "category": "command_arg",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "节点名",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 cordon 的反操作",
+      "level_2": "📖 uncordon 恢复可调度",
+      "level_3": "👀 `kubectl uncordon worker1`",
+      "level_4": "📝 正确答案：`kubectl uncordon worker1`"
+    },
+    "explanation": "官方升级流程最后一步：drain → 升级 → uncordon；cordon 只阻止新调度不驱逐存量 Pod。"
+  },
+  {
+    "id": "cka-ts-006",
+    "title": "安全排空节点",
+    "description": "把 worker1 上的 Pod 驱逐到其他节点（忽略 DaemonSet，丢弃 emptyDir 数据）",
+    "exercise_type": "command",
+    "tech_stack": "cka",
+    "weight": "medium",
+    "category": "cka_ts_node",
+    "subcategory": "故障排查",
+    "full_code": "kubectl drain worker1 --ignore-daemonsets --delete-emptydir-data",
+    "expected": "",
+    "points": [
+      {
+        "id": "cmd",
+        "text": "kubectl drain",
+        "category": "command",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "排空节点（cordon + 驱逐）",
+        "fill_type": "text"
+      },
+      {
+        "id": "f1",
+        "text": "--ignore-daemonsets",
+        "category": "command_flag",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "DaemonSet Pod 不算驱逐对象",
+        "fill_type": "text"
+      },
+      {
+        "id": "f2",
+        "text": "--delete-emptydir-data",
+        "category": "command_flag",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "允许丢弃 emptyDir 临时数据",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 drain 卡住的两个报错",
+      "level_2": "📖 不加这两个参数会拒绝：DaemonSet Pod 无法驱逐 / emptyDir 数据会丢失",
+      "level_3": "👀 `kubectl drain worker1 --ignore-daemonsets --delete-emptydir-data`",
+      "level_4": "📝 正确答案：`--ignore-daemonsets` + `--delete-emptydir-data`"
+    },
+    "explanation": "考试标准答案就是这两个参数；--force 可再忽略裸 Pod（谨慎）。drain 前节点自动 cordon。"
+  },
+  {
+    "id": "cka-ts-007",
+    "title": "节点上看容器真相",
+    "description": "在节点上用 crictl 列出所有容器（含已退出的）",
+    "exercise_type": "command",
+    "tech_stack": "cka",
+    "weight": "medium",
+    "category": "cka_ts_node",
+    "subcategory": "故障排查",
+    "full_code": "crictl ps -a",
+    "expected": "",
+    "points": [
+      {
+        "id": "cmd",
+        "text": "crictl ps",
+        "category": "command",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "CRI 运行时查看容器",
+        "fill_type": "text"
+      },
+      {
+        "id": "flag",
+        "text": "-a",
+        "category": "command_flag",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "包含非运行中的容器",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 kubectl 看不到的容器层信息",
+      "level_2": "📖 crictl ps -a 显示 Exited 容器与退出码",
+      "level_3": "👀 `crictl ps -a`",
+      "level_4": "📝 正确答案：`crictl ps -a`"
+    },
+    "explanation": "静态 Pod 控制平面组件排障利器：apiserver 反复崩溃时 crictl ps -a 看 Exited(错误码) + crictl logs <id> 看输出；crictl pods 列 Pod 沙箱。"
+  },
+  {
+    "id": "cka-ts-008",
+    "title": "看崩溃容器的上一次日志",
+    "description": "Pod prod/web-7d9f 一直 CrashLoopBackOff，查看它上一次崩溃的日志",
+    "exercise_type": "command",
+    "tech_stack": "cka",
+    "weight": "easy",
+    "category": "cka_ts_pod",
+    "subcategory": "故障排查",
+    "full_code": "kubectl logs web-7d9f -n prod --previous",
+    "expected": "",
+    "points": [
+      {
+        "id": "cmd",
+        "text": "kubectl logs",
+        "category": "command",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "查看容器日志",
+        "fill_type": "text"
+      },
+      {
+        "id": "ns",
+        "text": "-n prod",
+        "category": "command_flag",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "命名空间",
+        "fill_type": "text"
+      },
+      {
+        "id": "prev",
+        "text": "--previous",
+        "category": "command_flag",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "上一次（已崩溃退出）实例的日志",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 CrashLoopBackOff 想看崩溃那次的输出",
+      "level_2": "📖 --previous 取上一次实例日志",
+      "level_3": "👀 `kubectl logs web-7d9f -n prod --previous`",
+      "level_4": "📝 正确答案：`kubectl logs web-7d9f -n prod --previous`"
+    },
+    "explanation": "首次崩溃没有 previous 日志；多容器要加 -c <container>；一直重启的应用配合 describe pod 的重启计数一起看。"
+  },
+  {
+    "id": "cka-ts-009",
+    "title": "指定容器取日志",
+    "description": "Pod web-7d9f 有两个容器，只看 sidecar 容器的日志",
+    "exercise_type": "command",
+    "tech_stack": "cka",
+    "weight": "easy",
+    "category": "cka_ts_pod",
+    "subcategory": "故障排查",
+    "full_code": "kubectl logs web-7d9f -c sidecar",
+    "expected": "",
+    "points": [
+      {
+        "id": "cmd",
+        "text": "kubectl logs",
+        "category": "command",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "查看容器日志",
+        "fill_type": "text"
+      },
+      {
+        "id": "c",
+        "text": "-c sidecar",
+        "category": "command_flag",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "多容器 Pod 必须指定 -c <容器名>",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 Pod 里多个容器取谁的日志？",
+      "level_2": "📖 -c/--container 指定容器名",
+      "level_3": "👀 `-c sidecar`",
+      "level_4": "📝 正确答案：`kubectl logs web-7d9f -c sidecar`"
+    },
+    "explanation": "不指定 -c 时 kubectl 会报 container <name> is not valid...或列出可选容器；-f 可跟随，-l <label> 可聚合多 Pod。"
+  },
+  {
+    "id": "cka-ts-010",
+    "title": "按标签聚合日志",
+    "description": "看所有 app=web Pod 的最后 100 行日志，并带时间戳",
+    "exercise_type": "command",
+    "tech_stack": "cka",
+    "weight": "easy",
+    "category": "cka_ts_pod",
+    "subcategory": "故障排查",
+    "full_code": "kubectl logs -l app=web --tail=100 --timestamps",
+    "expected": "",
+    "points": [
+      {
+        "id": "sel",
+        "text": "-l app=web",
+        "category": "command_flag",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "按标签选 Pod",
+        "fill_type": "text"
+      },
+      {
+        "id": "tail",
+        "text": "--tail=100",
+        "category": "command_flag",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "只取末尾 N 行",
+        "fill_type": "text"
+      },
+      {
+        "id": "ts",
+        "text": "--timestamps",
+        "category": "command_flag",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "每行加时间戳",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 一组 Pod 的日志一起看",
+      "level_2": "📖 -l 标签选择器 + --tail/--timestamps",
+      "level_3": "👀 `kubectl logs -l app=web --tail=100 --timestamps`",
+      "level_4": "📝 正确答案：`kubectl logs -l app=web --tail=100 --timestamps`"
+    },
+    "explanation": "label 聚合会跳过多容器歧义问题（每个 Pod 取第一个容器）；排查应用级故障比逐个 Pod 快。"
+  },
+  {
+    "id": "cka-ts-011",
+    "title": "按时间排序查看事件",
+    "description": "列出 prod 命名空间最近事件，按创建时间排序",
+    "exercise_type": "command",
+    "tech_stack": "cka",
+    "weight": "medium",
+    "category": "cka_ts_pod",
+    "subcategory": "故障排查",
+    "full_code": "kubectl get events -n prod --sort-by=.metadata.creationTimestamp",
+    "expected": "",
+    "points": [
+      {
+        "id": "cmd",
+        "text": "kubectl get events",
+        "category": "command",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "查看事件",
+        "fill_type": "text"
+      },
+      {
+        "id": "ns",
+        "text": "-n prod",
+        "category": "command_flag",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "命名空间",
+        "fill_type": "text"
+      },
+      {
+        "id": "sort",
+        "text": "--sort-by=.metadata.creationTimestamp",
+        "category": "command_flag",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "按时间字段排序",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 events 默认乱序",
+      "level_2": "📖 --sort-by=.metadata.creationTimestamp",
+      "level_3": "👀 `kubectl get events -n prod --sort-by=.metadata.creationTimestamp`",
+      "level_4": "📝 正确答案：`kubectl get events -n prod --sort-by=.metadata.creationTimestamp`"
+    },
+    "explanation": "事件是排障时间线：FailedScheduling/Unhealthy/BackOff 一目了然；kubectl get events -A 看全集群（考试常用）。"
+  },
+  {
+    "id": "cka-ts-012",
+    "title": "查看 Pod 详情与事件",
+    "description": "查看 prod 里 web-7d9f 的容器状态与最近事件",
+    "exercise_type": "command",
+    "tech_stack": "cka",
+    "weight": "beginner",
+    "category": "cka_ts_pod",
+    "subcategory": "故障排查",
+    "full_code": "kubectl describe pod web-7d9f -n prod",
+    "expected": "",
+    "points": [
+      {
+        "id": "cmd",
+        "text": "kubectl describe pod",
+        "category": "command",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "Pod 详情",
+        "fill_type": "text"
+      },
+      {
+        "id": "name",
+        "text": "web-7d9f",
+        "category": "command_arg",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "Pod 名",
+        "fill_type": "text"
+      },
+      {
+        "id": "ns",
+        "text": "-n prod",
+        "category": "command_flag",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "命名空间",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 Pod 排障的第一条命令",
+      "level_2": "📖 describe 输出 States/Events：镜像拉取失败、探针失败都在这",
+      "level_3": "👀 `kubectl describe pod web-7d9f -n prod`",
+      "level_4": "📝 正确答案：`kubectl describe pod web-7d9f -n prod`"
+    },
+    "explanation": "Events 段的 Warning 就是答案：Failed to pull image / Readiness probe failed / FailedScheduling 等原文。"
+  },
+  {
+    "id": "cka-ts-013",
+    "title": "修复 ImagePullBackOff：镜像 tag 错误",
+    "description": "Pod web 报 ImagePullBackOff，事件显示 nginx:v1.25.0 不存在；修正为 nginx:1.25",
+    "exercise_type": "config",
+    "tech_stack": "cka",
+    "weight": "easy",
+    "category": "cka_ts_pod",
+    "subcategory": "故障排查",
+    "full_code": "apiVersion: v1\nkind: Pod\nmetadata:\n  name: web\nspec:\n  containers:\n  - name: web\n    image: nginx:1.25",
+    "expected": "",
+    "points": [
+      {
+        "id": "img",
+        "text": "image: nginx:1.25",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "改成真实存在的镜像:tag",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 ImagePullBackOff 的 Events 会写真实原因",
+      "level_2": "📖 manifest pulled ... not found：tag 打错；401：私有仓库缺 secret",
+      "level_3": "👀 事件里镜像名不对，改 `image:` 行",
+      "level_4": "📝 正确答案：`image: nginx:1.25`"
+    },
+    "explanation": "三类镜像故障：tag 不存在（ErrImageNotFound）、私有仓库未认证（加 imagePullSecrets）、网络策略拦截；Deployment 场景用 kubectl set image 修复。"
+  },
+  {
+    "id": "cka-ts-014",
+    "title": "修复 Service 无 Endpoints",
+    "description": "web-svc 的 Endpoints 为空：selector 写的 app: weeb 与 Pod 标签 app: web 不一致，修正 selector",
+    "exercise_type": "config",
+    "tech_stack": "cka",
+    "weight": "medium",
+    "category": "cka_ts_net",
+    "subcategory": "故障排查",
+    "full_code": "apiVersion: v1\nkind: Service\nmetadata:\n  name: web-svc\nspec:\n  selector:\n    app: web\n  ports:\n  - port: 80\n    targetPort: 8080",
+    "expected": "",
+    "points": [
+      {
+        "id": "sel",
+        "text": "app: web",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "selector 必须与 Pod 标签一致",
+        "fill_type": "text"
+      },
+      {
+        "id": "tp",
+        "text": "targetPort: 8080",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "容器端口核对项",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 Endpoints 空的第一嫌疑",
+      "level_2": "📖 selector 与 Pod labels 不匹配；kubectl get pod --show-labels 对照",
+      "level_3": "👀 selector 改成 Pod 真实标签 `app: web`",
+      "level_4": "📝 正确答案：`selector: app: web`"
+    },
+    "explanation": "排查链：get endpoints → 空 → get pod --show-labels → 修 selector；targetPort 写错容器端口则 Endpoints 有值但连接被拒。"
+  },
+  {
+    "id": "cka-ts-015",
+    "title": "修复就绪探针 404",
+    "description": "Pod 一直 NotReady：readinessProbe 请求 /health 返回 404，应用实际暴露的是 /healthz，修正探针路径",
+    "exercise_type": "config",
+    "tech_stack": "cka",
+    "weight": "medium",
+    "category": "cka_ts_pod",
+    "subcategory": "故障排查",
+    "full_code": "apiVersion: v1\nkind: Pod\nmetadata:\n  name: api\nspec:\n  containers:\n  - name: api\n    image: myapp:2.1\n    readinessProbe:\n      httpGet:\n        path: /healthz\n        port: 8080",
+    "expected": "",
+    "points": [
+      {
+        "id": "path",
+        "text": "path: /healthz",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "改为应用真实暴露的健康路径",
+        "fill_type": "text"
+      },
+      {
+        "id": "port",
+        "text": "port: 8080",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "端口也要与应用一致",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 Unhealthy: Readiness probe failed: HTTP 404",
+      "level_2": "📖 path/port 与应用实现对不上；先 curl 容器确认真实路径",
+      "level_3": "👀 probe 的 `path:` 改为 `/healthz`",
+      "level_4": "📝 正确答案：`path: /healthz`"
+    },
+    "explanation": "探针失败三类：404/500（路径错或应用异常）、connection refused（端口错或没监听）、超时（应用卡死调大 timeoutSeconds）。"
+  },
+  {
+    "id": "cka-ts-016",
+    "title": "修复 OOMKilled",
+    "description": "容器反复 OOMKilled：内存 limit 128Mi 不够用，改为 limit 512Mi、requests 256Mi",
+    "exercise_type": "config",
+    "tech_stack": "cka",
+    "weight": "medium",
+    "category": "cka_ts_pod",
+    "subcategory": "故障排查",
+    "full_code": "apiVersion: v1\nkind: Pod\nmetadata:\n  name: app\nspec:\n  containers:\n  - name: app\n    image: myapp:2.1\n    resources:\n      requests:\n        memory: \"256Mi\"\n      limits:\n        memory: \"512Mi\"",
+    "expected": "",
+    "points": [
+      {
+        "id": "req",
+        "text": "memory: \"256Mi\"",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "调高内存请求",
+        "fill_type": "text"
+      },
+      {
+        "id": "lim",
+        "text": "memory: \"512Mi\"",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "调高内存上限",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 describe 里 State: OOMKilled",
+      "level_2": "📖 内存 limit 太小 → 调大 limits（与 requests）",
+      "level_3": "👀 limits 改成 `512Mi`",
+      "level_4": "📝 正确答案：`memory: \"512Mi\"`"
+    },
+    "explanation": "验证：kubectl get pod 看 RESTARTS 是否停止增长；CPU 超 limit 只限流不杀进程，内存超 limit 必被 OOMKill。"
+  },
+  {
+    "id": "cka-ts-017",
+    "title": "修复 Pod 挂载不存在的 PVC",
+    "description": "Pod 卡在 ContainerCreating：事件提示找不到 PVC db-data；集群里实际的 PVC 叫 db-data-pvc，修正引用",
+    "exercise_type": "config",
+    "tech_stack": "cka",
+    "weight": "medium",
+    "category": "cka_ts_pod",
+    "subcategory": "故障排查",
+    "full_code": "apiVersion: v1\nkind: Pod\nmetadata:\n  name: db\nspec:\n  containers:\n  - name: mysql\n    image: mysql:8.0\n    volumeMounts:\n    - name: data\n      mountPath: /var/lib/mysql\n  volumes:\n  - name: data\n    persistentVolumeClaim:\n      claimName: db-data-pvc",
+    "expected": "",
+    "points": [
+      {
+        "id": "cn",
+        "text": "claimName: db-data-pvc",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "改成真实存在的 PVC 名",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 找不到 PVC 的事件长什么样",
+      "level_2": "📖 pending-pod ... persistentvolumeclaim \"db-data\" not found",
+      "level_3": "👀 `claimName:` 改为真实 PVC 名",
+      "level_4": "📝 正确答案：`claimName: db-data-pvc`"
+    },
+    "explanation": "先 kubectl get pvc -n <ns> 确认名字与状态（Pending 的 PVC 也会让 Pod 卡住），再改 claimName 或修 PVC。"
+  },
+  {
+    "id": "cka-ts-018",
+    "title": "修复因污点导致的 Pending",
+    "description": "Pod Pending：FailedScheduling 提示节点有 special=true:NoSchedule 污点；为 Pod 添加对应容忍",
+    "exercise_type": "config",
+    "tech_stack": "cka",
+    "weight": "medium",
+    "category": "cka_ts_pod",
+    "subcategory": "故障排查",
+    "full_code": "apiVersion: v1\nkind: Pod\nmetadata:\n  name: app\nspec:\n  tolerations:\n  - key: \"special\"\n    operator: \"Equal\"\n    value: \"true\"\n    effect: \"NoSchedule\"\n  containers:\n  - name: app\n    image: nginx:1.25",
+    "expected": "",
+    "points": [
+      {
+        "id": "tol",
+        "text": "tolerations:",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "添加容忍列表",
+        "fill_type": "text"
+      },
+      {
+        "id": "eff",
+        "text": "effect: \"NoSchedule\"",
+        "category": "config",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "effect 与污点一致",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 FailedScheduling 提到 taint",
+      "level_2": "📖 tolerations 的 key/value/effect 与节点污点完全匹配",
+      "level_3": "👀 `tolerations:` 四字段，effect `NoSchedule`",
+      "level_4": "📝 正确答案：`tolerations: - key: special / operator: Equal / value: \"true\" / effect: NoSchedule`"
+    },
+    "explanation": "查污点：kubectl describe node worker1 | grep Taints；NoExecute 污点还需要容忍已运行 Pod 否则会被驱逐。"
+  },
+  {
+    "id": "cka-ts-019",
+    "title": "查看节点资源用量",
+    "description": "查看各节点 CPU/内存的实际使用（需 metrics-server）",
+    "exercise_type": "command",
+    "tech_stack": "cka",
+    "weight": "easy",
+    "category": "cka_ts_node",
+    "subcategory": "故障排查",
+    "full_code": "kubectl top nodes",
+    "expected": "",
+    "points": [
+      {
+        "id": "cmd",
+        "text": "kubectl top nodes",
+        "category": "command",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "节点级资源用量（缩写 top node）",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "kubectl top node"
+        ]
+      }
+    ],
+    "hints": {
+      "level_1": "💡 实时用量不是 describe",
+      "level_2": "📖 kubectl top nodes / top pods 走 metrics-server",
+      "level_3": "👀 `kubectl top nodes`",
+      "level_4": "📝 正确答案：`kubectl top nodes`"
+    },
+    "explanation": "Pending 原因是资源不足（Insufficient cpu/memory）时用 top 对照节点余量；% 列是相对 allocatable 的占比。"
+  },
+  {
+    "id": "cka-ts-020",
+    "title": "查看 Pod 资源用量",
+    "description": "看 prod 命名空间各 Pod 的 CPU/内存使用",
+    "exercise_type": "command",
+    "tech_stack": "cka",
+    "weight": "easy",
+    "category": "cka_ts_pod",
+    "subcategory": "故障排查",
+    "full_code": "kubectl top pods -n prod",
+    "expected": "",
+    "points": [
+      {
+        "id": "cmd",
+        "text": "kubectl top pods",
+        "category": "command",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "Pod 级资源用量",
+        "fill_type": "text"
+      },
+      {
+        "id": "ns",
+        "text": "-n prod",
+        "category": "command_flag",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "命名空间",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 找出谁在吃资源",
+      "level_2": "📖 kubectl top pods -n <ns>；--sort-by=cpu 可排序",
+      "level_3": "👀 `kubectl top pods -n prod`",
+      "level_4": "📝 正确答案：`kubectl top pods -n prod`"
+    },
+    "explanation": "监控类考点的兄弟命令：kubectl top pod <name> --containers 看到容器粒度；报 metrics not found 说明 metrics-server 异常。"
+  },
+  {
+    "id": "cka-ts-021",
+    "title": "检查 API 服务器健康",
+    "description": "用 --raw 直接访问 apiserver 的 /readyz 端点",
+    "exercise_type": "command",
+    "tech_stack": "cka",
+    "weight": "medium",
+    "category": "cka_ts_ctrl",
+    "subcategory": "故障排查",
+    "full_code": "kubectl get --raw /readyz",
+    "expected": "",
+    "points": [
+      {
+        "id": "cmd",
+        "text": "kubectl get --raw",
+        "category": "command",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "直接请求原始 API 路径",
+        "fill_type": "text"
+      },
+      {
+        "id": "path",
+        "text": "/readyz",
+        "category": "command_arg",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "就绪检查端点（另有 /livez /healthz）",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 apiserver 分层健康检查",
+      "level_2": "📖 /healthz 总览、/livez 存活、/readyz 就绪，返回 ok",
+      "level_3": "👀 `kubectl get --raw /readyz`",
+      "level_4": "📝 正确答案：`kubectl get --raw /readyz`"
+    },
+    "explanation": "输出 ok 即健康；verbose 模式 /readyz?verbose 逐项列出检查项；某组件 unhealthy 时可到 /readyz/<检查项> 细查。"
+  },
+  {
+    "id": "cka-ts-022",
+    "title": "查看集群信息",
+    "description": "输出控制平面与 CoreDNS 的服务地址",
+    "exercise_type": "command",
+    "tech_stack": "cka",
+    "weight": "beginner",
+    "category": "cka_ts_ctrl",
+    "subcategory": "故障排查",
+    "full_code": "kubectl cluster-info",
+    "expected": "",
+    "points": [
+      {
+        "id": "cmd",
+        "text": "kubectl cluster-info",
+        "category": "command",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "集群入口信息",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 最基础的集群自检",
+      "level_2": "📖 显示 kube-apiserver 与 kube-dns 地址",
+      "level_3": "👀 `kubectl cluster-info`",
+      "level_4": "📝 正确答案：`kubectl cluster-info`"
+    },
+    "explanation": "apiserver 地址不通（网络/证书）时这条会失败——它本身就是一次连通性测试；cluster-info dump 可导出全量诊断信息。"
+  },
+  {
+    "id": "cka-ts-023",
+    "title": "检查控制平面组件",
+    "description": "列出 kube-system 里控制平面组件 Pod（静态 Pod 方式运行）",
+    "exercise_type": "command",
+    "tech_stack": "cka",
+    "weight": "easy",
+    "category": "cka_ts_ctrl",
+    "subcategory": "故障排查",
+    "full_code": "kubectl get pods -n kube-system -l tier=control-plane",
+    "expected": "",
+    "points": [
+      {
+        "id": "ns",
+        "text": "-n kube-system",
+        "category": "command_flag",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "控制平面所在命名空间",
+        "fill_type": "text"
+      },
+      {
+        "id": "sel",
+        "text": "-l tier=control-plane",
+        "category": "command_flag",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "kubeadm 组件的统一标签",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 scheduler/controller-manager 挂了去哪看",
+      "level_2": "📖 kube-apiserver / etcd / scheduler / controller-manager 四件套",
+      "level_3": "👀 `-n kube-system -l tier=control-plane`",
+      "level_4": "📝 正确答案：`kubectl get pods -n kube-system -l tier=control-plane`"
+    },
+    "explanation": "kube-scheduler 崩溃的表现：已有 Pod 正常、新建 Pod 一直 Pending（无人调度）；组件是静态 Pod，节点上改 /etc/kubernetes/manifests 对应清单。"
+  },
+  {
+    "id": "cka-ts-024",
+    "title": "调度器故障时的应急手动调度",
+    "description": "kube-scheduler 未运行导致新 Pod 一直 Pending；直接在 Pod 规格里指定节点 worker1 完成绑定",
+    "exercise_type": "config",
+    "tech_stack": "cka",
+    "weight": "medium",
+    "category": "cka_ts_ctrl",
+    "subcategory": "故障排查",
+    "full_code": "apiVersion: v1\nkind: Pod\nmetadata:\n  name: manual-pod\nspec:\n  nodeName: worker1\n  containers:\n  - name: app\n    image: nginx:1.25",
+    "expected": "",
+    "points": [
+      {
+        "id": "nn",
+        "text": "nodeName: worker1",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "绕过调度器直接绑节点",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 完全跳过调度器的字段",
+      "level_2": "📖 spec.nodeName 直接指定节点（区别于 nodeSelector 只是偏好）",
+      "level_3": "👀 `nodeName: worker1`",
+      "level_4": "📝 正确答案：`nodeName: worker1`"
+    },
+    "explanation": "nodeName 在创建时即绑定、不再经过调度流程，是「修好调度器前」的应急手段；nodeSelector/affinity 仍需调度器运行。"
+  },
+  {
+    "id": "cka-ts-025",
+    "title": "修复起不来的静态 Pod",
+    "description": "kube-scheduler 静态 Pod 反复重启：清单里镜像误写成 v1.30.0（集群为 1.31.2）；修正镜像",
+    "exercise_type": "config",
+    "tech_stack": "cka",
+    "weight": "hard",
+    "category": "cka_ts_ctrl",
+    "subcategory": "故障排查",
+    "full_code": "apiVersion: v1\nkind: Pod\nmetadata:\n  name: kube-scheduler\n  namespace: kube-system\n  labels:\n    tier: control-plane\n    component: kube-scheduler\nspec:\n  hostNetwork: true\n  nodeName: controlplane\n  containers:\n  - name: kube-scheduler\n    image: registry.k8s.io/kube-scheduler:v1.31.2\n    command:\n    - kube-scheduler\n    - --kubeconfig=/etc/kubernetes/scheduler.conf",
+    "expected": "",
+    "points": [
+      {
+        "id": "img",
+        "text": "image: registry.k8s.io/kube-scheduler:v1.31.2",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "改回与集群版本匹配的镜像",
+        "fill_type": "text"
+      },
+      {
+        "id": "kc",
+        "text": "--kubeconfig=/etc/kubernetes/scheduler.conf",
+        "category": "config",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "组件连接 apiserver 的凭据（核对项）",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 静态 Pod 修复 = 改清单文件",
+      "level_2": "📖 /etc/kubernetes/manifests/kube-scheduler.yaml，保存后 kubelet 自动重建",
+      "level_3": "👀 image 行改为 `registry.k8s.io/kube-scheduler:v1.31.2`",
+      "level_4": "📝 正确答案：`image: registry.k8s.io/kube-scheduler:v1.31.2`"
+    },
+    "explanation": "镜像版本与 kubeadm 升级不一致是经典坑；看真实清单找线索：kubectl -n kube-system get pod kube-scheduler-<node> -o yaml 或直接 cat 清单。"
+  },
+  {
+    "id": "cka-ts-026",
+    "title": "检查 apiserver 证书有效期",
+    "description": "在控制平面节点上用 openssl 查看 apiserver 证书的起止日期",
+    "exercise_type": "command",
+    "tech_stack": "cka",
+    "weight": "hard",
+    "category": "cka_ts_ctrl",
+    "subcategory": "故障排查",
+    "full_code": "openssl x509 -in /etc/kubernetes/pki/apiserver.crt -noout -dates",
+    "expected": "",
+    "points": [
+      {
+        "id": "cmd",
+        "text": "openssl x509",
+        "category": "command",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "解析 X.509 证书",
+        "fill_type": "text"
+      },
+      {
+        "id": "in",
+        "text": "-in /etc/kubernetes/pki/apiserver.crt",
+        "category": "command_flag",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "证书文件路径",
+        "fill_type": "text"
+      },
+      {
+        "id": "dates",
+        "text": "-noout -dates",
+        "category": "command_flag",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "不输出证书体、只打 notBefore/notAfter",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 证书内容怎么快速看日期",
+      "level_2": "📖 openssl x509 -in <crt> -noout -dates",
+      "level_3": "👀 `-noout -dates`",
+      "level_4": "📝 正确答案：`openssl x509 -in /etc/kubernetes/pki/apiserver.crt -noout -dates`"
+    },
+    "explanation": "与 kubeadm certs check-expiration 互相印证；x509: certificate has expired 报错时先跑这两条，然后 kubeadm certs renew all + 重启静态 Pod。"
+  },
+  {
+    "id": "cka-ts-027",
+    "title": "验证集群内 DNS",
+    "description": "起一次性 busybox 容器解析 kubernetes.default.svc.cluster.local",
+    "exercise_type": "command",
+    "tech_stack": "cka",
+    "weight": "medium",
+    "category": "cka_ts_dns",
+    "subcategory": "故障排查",
+    "full_code": "kubectl run dnstest --image=busybox:1.28 --rm -it --restart=Never -- nslookup kubernetes.default.svc.cluster.local",
+    "expected": "",
+    "points": [
+      {
+        "id": "img",
+        "text": "--image=busybox:1.28",
+        "category": "command_flag",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "busybox 自带 nslookup",
+        "fill_type": "text"
+      },
+      {
+        "id": "lookup",
+        "text": "nslookup kubernetes.default.svc.cluster.local",
+        "category": "command_arg",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "-- 之后的容器内命令",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 解析不到域名时第一步",
+      "level_2": "📖 集群内置名字 kubernetes.default 一定能解析",
+      "level_3": "👀 `-- nslookup kubernetes.default.svc.cluster.local`",
+      "level_4": "📝 正确答案：`kubectl run dnstest --image=busybox:1.28 --rm -it --restart=Never -- nslookup kubernetes.default.svc.cluster.local`"
+    },
+    "explanation": "解析失败链路：Pod resolv.conf（nameserver 是否 kube-dns 的 ClusterIP）→ CoreDNS Pod 状态 → NetworkPolicy 是否拦了 53 端口。"
+  },
+  {
+    "id": "cka-ts-028",
+    "title": "Pod 内验证 Service 连通",
+    "description": "进入 app 容器，curl 访问 prod 命名空间的 web-svc 服务",
+    "exercise_type": "command",
+    "tech_stack": "cka",
+    "weight": "easy",
+    "category": "cka_ts_net",
+    "subcategory": "故障排查",
+    "full_code": "kubectl exec -it app -- curl -s http://web-svc.prod:80",
+    "expected": "",
+    "points": [
+      {
+        "id": "cmd",
+        "text": "kubectl exec",
+        "category": "command",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "容器内执行命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "curl",
+        "text": "curl -s http://web-svc.prod:80",
+        "category": "command_arg",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "-- 之后的容器内命令",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 从集群内部测 Service",
+      "level_2": "📖 exec + curl <svc>.<ns>；-s 静默模式",
+      "level_3": "👀 `kubectl exec -it app -- curl -s http://web-svc.prod:80`",
+      "level_4": "📝 正确答案：`kubectl exec -it app -- curl -s http://web-svc.prod:80`"
+    },
+    "explanation": "连接被拒：Endpoints 空或 targetPort 错；超时：NetworkPolicy/CNI 问题；DNS 失败：CoreDNS 链路问题——三种报错对应三条排查路径。"
+  },
+  {
+    "id": "cka-ts-029",
+    "title": "列出集群全部失败 Pod",
+    "description": "一条命令列出所有命名空间中 phase 为 Failed 的 Pod",
+    "exercise_type": "command",
+    "tech_stack": "cka",
+    "weight": "medium",
+    "category": "cka_ts_pod",
+    "subcategory": "故障排查",
+    "full_code": "kubectl get pods -A --field-selector=status.phase=Failed",
+    "expected": "",
+    "points": [
+      {
+        "id": "flag",
+        "text": "-A",
+        "category": "command_flag",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "全部命名空间",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "--all-namespaces"
+        ]
+      },
+      {
+        "id": "fs",
+        "text": "--field-selector=status.phase=Failed",
+        "category": "command_flag",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "按字段过滤（非标签）",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 按 status 字段过滤而不是标签",
+      "level_2": "📖 --field-selector=status.phase=Failed",
+      "level_3": "👀 `kubectl get pods -A --field-selector=status.phase=Failed`",
+      "level_4": "📝 正确答案：`kubectl get pods -A --field-selector=status.phase=Failed`"
+    },
+    "explanation": "field-selector 走 API 服务端过滤，可用字段包括 status.phase、spec.nodeName 等；Succeeded（Job 已完成）也可同样过滤清理。"
+  },
+  {
+    "id": "cka-ts-030",
+    "title": "排查 ServiceAccount 实际权限",
+    "description": "列出 prod 命名空间 build-bot 这个 ServiceAccount 的全部权限（模拟其身份）",
+    "exercise_type": "command",
+    "tech_stack": "cka",
+    "weight": "hard",
+    "category": "cka_ts_rbac",
+    "subcategory": "故障排查",
+    "full_code": "kubectl auth can-i --list --as=system:serviceaccount:prod:build-bot",
+    "expected": "",
+    "points": [
+      {
+        "id": "flag",
+        "text": "--list",
+        "category": "command_flag",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "列出全部权限而非检查单项",
+        "fill_type": "text"
+      },
+      {
+        "id": "as",
+        "text": "--as=system:serviceaccount:prod:build-bot",
+        "category": "command_flag",
+        "min_weight": "hard",
+        "weight_score": 1,
+        "hint": "SA 的完整身份格式 system:serviceaccount:<ns>:<name>",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 SA 的身份串格式",
+      "level_2": "📖 system:serviceaccount:<namespace>:<name>",
+      "level_3": "👀 `--as=system:serviceaccount:prod:build-bot` + `--list`",
+      "level_4": "📝 正确答案：`kubectl auth can-i --list --as=system:serviceaccount:prod:build-bot`"
+    },
+    "explanation": "应用报 403 时先模拟 SA 身份列权限：缺失就补 Role/RoleBinding（注意 RoleBinding 的命名空间）；group 是 system:serviceaccounts。"
+  }
+]

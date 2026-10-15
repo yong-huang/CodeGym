@@ -397,8 +397,8 @@ func TestE2E_ExerciseListAndVariant(t *testing.T) {
 		PointCount   int    `json:"point_count"`
 	}
 	doJSON(t, "GET", base+"/exercises", nil, &list)
-	if len(list) != 1466 {
-		t.Fatalf("expected 1466 exercises (816 + 180 AWS + 90 Python 进阶 + 200 OpenStack + 180 测试框架), got %d", len(list))
+	if len(list) != 1616 {
+		t.Fatalf("expected 1616 exercises (816 + 180 AWS + 90 Python 进阶 + 200 OpenStack + 180 测试框架 + 150 CKA), got %d", len(list))
 	}
 	var ids []string
 	for _, ex := range list {
@@ -1108,6 +1108,48 @@ func TestE2E_K8sBasics(t *testing.T) {
 	if res.Score != 100 || !res.IsCorrect {
 		t.Errorf("docker dockerfile => score=%v correct=%v", res.Score, res.IsCorrect)
 	}
+
+	// CKA 系列: 五个子库各 30（150 题），命令题 + 配置题 + 等价答案判对
+	var ckaList []struct {
+		ID string `json:"id"`
+	}
+	doJSON(t, "GET", base+"/exercises?tech_stack=cka", nil, &ckaList)
+	if len(ckaList) != 150 {
+		t.Fatalf("cka count = %d, want 150", len(ckaList))
+	}
+	// 命令题：etcd 快照备份（等价答案 --all-namespaces 风格不适用，验证精确匹配）
+	doJSON(t, "POST", base+"/execute", map[string]any{
+		"exercise_id":  "cka-cluster-004",
+		"weight_level": "beginner",
+		"fill_answers": map[string]string{"FILL_cmd": "kubeadm token create", "FILL_flag": "--print-join-command"},
+	}, &res)
+	if res.Score != 100 || !res.IsCorrect {
+		t.Errorf("cka-cluster-004 => score=%v correct=%v", res.Score, res.IsCorrect)
+	}
+	// 配置题：Role 授权
+	doJSON(t, "POST", base+"/execute", map[string]any{
+		"exercise_id":  "cka-cluster-017",
+		"weight_level": "medium",
+		"fill_answers": map[string]string{
+			"FILL_apiv":  "rbac.authorization.k8s.io/v1",
+			"FILL_kind":  "Role",
+			"FILL_res":   "resources: [\"pods\"]",
+			"FILL_verbs": "verbs: [\"get\", \"list\", \"watch\"]",
+			"FILL_ns":    "namespace: dev",
+		},
+	}, &res)
+	if res.Score != 100 || !res.IsCorrect {
+		t.Errorf("cka-cluster-017 => score=%v correct=%v", res.Score, res.IsCorrect)
+	}
+	// 等价答案：get nodes -o wide 接受 -owide（无空格写法）
+	doJSON(t, "POST", base+"/execute", map[string]any{
+		"exercise_id":  "cka-cluster-030",
+		"weight_level": "beginner",
+		"fill_answers": map[string]string{"FILL_cmd": "kubectl get nodes", "FILL_flag": "-owide"},
+	}, &res)
+	if res.Score != 100 || !res.IsCorrect {
+		t.Errorf("cka-cluster-030 acceptable answer => score=%v correct=%v", res.Score, res.IsCorrect)
+	}
 }
 
 func TestE2E_ExportImport(t *testing.T) {
@@ -1130,8 +1172,8 @@ func TestE2E_ExportImport(t *testing.T) {
 	if err := json.NewDecoder(resp.Body).Decode(&exported); err != nil {
 		t.Fatal(err)
 	}
-	if len(exported) != 1466 {
-		t.Fatalf("export count = %d, want 1466", len(exported))
+	if len(exported) != 1616 {
+		t.Fatalf("export count = %d, want 1616", len(exported))
 	}
 
 	// import: delete one exercise, then restore it from the exported blob

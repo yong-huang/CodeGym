@@ -3,6 +3,7 @@ export const TECH_EMOJI: Record<string, string> = {
   datastructure: '🧱',
   javascript: '🟨',
   kubernetes: '☸️',
+  cka: '🎓',
   docker: '🐳',
   sql: '🗄️',
   bigquery: '📊',

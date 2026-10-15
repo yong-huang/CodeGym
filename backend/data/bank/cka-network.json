@@ -1,0 +1,1464 @@
+[
+  {
+    "id": "cka-net-001",
+    "title": "命令行暴露 Service",
+    "description": "为 deployment web 创建 Service web-svc：Service 端口 80，转发到容器端口 8080",
+    "exercise_type": "command",
+    "tech_stack": "cka",
+    "weight": "easy",
+    "category": "cka_svc",
+    "subcategory": "服务网络",
+    "full_code": "kubectl expose deployment web --port=80 --target-port=8080 --name=web-svc",
+    "expected": "",
+    "points": [
+      {
+        "id": "cmd",
+        "text": "kubectl expose",
+        "category": "command",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "为工作负载创建 Service",
+        "fill_type": "text"
+      },
+      {
+        "id": "port",
+        "text": "--port=80",
+        "category": "command_flag",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "Service 自身的端口",
+        "fill_type": "text"
+      },
+      {
+        "id": "tport",
+        "text": "--target-port=8080",
+        "category": "command_flag",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "容器实际监听的端口",
+        "fill_type": "text"
+      },
+      {
+        "id": "name",
+        "text": "--name=web-svc",
+        "category": "command_flag",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "Service 名（缺省与 workload 同名）",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 两个端口的区别",
+      "level_2": "📖 --port 是 Service 端口，--target-port 是容器端口",
+      "level_3": "👀 `--port=80 --target-port=8080`",
+      "level_4": "📝 正确答案：`kubectl expose deployment web --port=80 --target-port=8080 --name=web-svc`"
+    },
+    "explanation": "expose 默认创建 ClusterIP；两者常被写反——Service port 对外，targetPort 对内容器。"
+  },
+  {
+    "id": "cka-net-002",
+    "title": "编写 ClusterIP Service",
+    "description": "Service web-svc：类型 ClusterIP，选标签 app: web 的 Pod，80 → 8080",
+    "exercise_type": "config",
+    "tech_stack": "cka",
+    "weight": "easy",
+    "category": "cka_svc",
+    "subcategory": "服务网络",
+    "full_code": "apiVersion: v1\nkind: Service\nmetadata:\n  name: web-svc\nspec:\n  type: ClusterIP\n  selector:\n    app: web\n  ports:\n  - port: 80\n    targetPort: 8080",
+    "expected": "",
+    "points": [
+      {
+        "id": "kind",
+        "text": "Service",
+        "category": "kind",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "资源类型",
+        "fill_type": "text"
+      },
+      {
+        "id": "type",
+        "text": "type: ClusterIP",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "默认类型：集群内虚拟 IP",
+        "fill_type": "text"
+      },
+      {
+        "id": "sel",
+        "text": "selector:",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "按标签匹配后端 Pod",
+        "fill_type": "text"
+      },
+      {
+        "id": "port",
+        "text": "port: 80",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "Service 端口",
+        "fill_type": "text"
+      },
+      {
+        "id": "tport",
+        "text": "targetPort: 8080",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "容器端口",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 Service 的 spec 四要素：type/selector/ports",
+      "level_2": "📖 selector 匹配 Pod 标签；ports.port 对外，targetPort 对内",
+      "level_3": "👀 `selector:` + `port: 80` + `targetPort: 8080`",
+      "level_4": "📝 正确答案：`type: ClusterIP` / `app: web` / 80 → 8080"
+    },
+    "explanation": "selector 匹配不到任何 Pod 时 Endpoints 为空；ClusterIP 由 service CIDR（kubeadm 默认 10.96.0.0/12）分配。"
+  },
+  {
+    "id": "cka-net-003",
+    "title": "NodePort Service",
+    "description": "Service web-np：NodePort 类型，固定节点端口 30080，80 → 8080",
+    "exercise_type": "config",
+    "tech_stack": "cka",
+    "weight": "easy",
+    "category": "cka_svc",
+    "subcategory": "服务网络",
+    "full_code": "apiVersion: v1\nkind: Service\nmetadata:\n  name: web-np\nspec:\n  type: NodePort\n  selector:\n    app: web\n  ports:\n  - port: 80\n    targetPort: 8080\n    nodePort: 30080",
+    "expected": "",
+    "points": [
+      {
+        "id": "type",
+        "text": "type: NodePort",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "每个节点开一个端口对外",
+        "fill_type": "text"
+      },
+      {
+        "id": "port",
+        "text": "port: 80",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "Service 端口",
+        "fill_type": "text"
+      },
+      {
+        "id": "np",
+        "text": "nodePort: 30080",
+        "category": "config",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "节点端口，范围 30000-32767",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 想从集群外 经节点IP 访问",
+      "level_2": "📖 NodePort 会开节点端口；不指定则自动分配",
+      "level_3": "👀 `type: NodePort` + `nodePort: 30080`",
+      "level_4": "📝 正确答案：`type: NodePort` + `nodePort: 30080`"
+    },
+    "explanation": "nodePort 合法范围 30000-32767，写越界值创建报错；NodePort 底层仍会分配 ClusterIP。"
+  },
+  {
+    "id": "cka-net-004",
+    "title": "LoadBalancer Service",
+    "description": "Service web-lb：LoadBalancer 类型，80 → 8080",
+    "exercise_type": "config",
+    "tech_stack": "cka",
+    "weight": "easy",
+    "category": "cka_svc",
+    "subcategory": "服务网络",
+    "full_code": "apiVersion: v1\nkind: Service\nmetadata:\n  name: web-lb\nspec:\n  type: LoadBalancer\n  selector:\n    app: web\n  ports:\n  - port: 80\n    targetPort: 8080",
+    "expected": "",
+    "points": [
+      {
+        "id": "type",
+        "text": "type: LoadBalancer",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "云负载均衡器类型",
+        "fill_type": "text"
+      },
+      {
+        "id": "port",
+        "text": "port: 80",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "Service 端口",
+        "fill_type": "text"
+      },
+      {
+        "id": "tport",
+        "text": "targetPort: 8080",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "容器端口",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 云环境对外暴露的标准方式",
+      "level_2": "📖 LoadBalancer 在 NodePort 之上叠加云 LB",
+      "level_3": "👀 `type: LoadBalancer`",
+      "level_4": "📝 正确答案：`type: LoadBalancer`"
+    },
+    "explanation": "LoadBalancer 依赖云厂商控制器分配外部 IP；裸金属可用 MetalLB 等实现，未实现时 EXTERNAL-IP 一直 <pending>。"
+  },
+  {
+    "id": "cka-net-005",
+    "title": "Headless Service",
+    "description": "Service db-headless：不分配 ClusterIP，DNS 直接解析出各 Pod IP，端口 3306",
+    "exercise_type": "config",
+    "tech_stack": "cka",
+    "weight": "medium",
+    "category": "cka_svc",
+    "subcategory": "服务网络",
+    "full_code": "apiVersion: v1\nkind: Service\nmetadata:\n  name: db-headless\nspec:\n  clusterIP: None\n  selector:\n    app: db\n  ports:\n  - port: 3306",
+    "expected": "",
+    "points": [
+      {
+        "id": "cip",
+        "text": "clusterIP: None",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "显式设 None 即 headless",
+        "fill_type": "text"
+      },
+      {
+        "id": "port",
+        "text": "port: 3306",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "Service 端口",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 不想要虚拟 IP、想拿到每个 Pod 的 IP",
+      "level_2": "📖 clusterIP: None；DNS 返回所有就绪 Pod 的 A 记录",
+      "level_3": "👀 `clusterIP: None`",
+      "level_4": "📝 正确答案：`clusterIP: None`"
+    },
+    "explanation": "StatefulSet 必配：Pod 间通过 db-0.db-headless.<ns>.svc.cluster.local 互相寻址；客户端自己做负载均衡。"
+  },
+  {
+    "id": "cka-net-006",
+    "title": "ExternalName Service",
+    "description": "Service external-db：把集群内名字 external-db 映射到外部域名 db.example.com",
+    "exercise_type": "config",
+    "tech_stack": "cka",
+    "weight": "easy",
+    "category": "cka_svc",
+    "subcategory": "服务网络",
+    "full_code": "apiVersion: v1\nkind: Service\nmetadata:\n  name: external-db\nspec:\n  type: ExternalName\n  externalName: db.example.com",
+    "expected": "",
+    "points": [
+      {
+        "id": "type",
+        "text": "type: ExternalName",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "纯 DNS CNAME 类型",
+        "fill_type": "text"
+      },
+      {
+        "id": "en",
+        "text": "externalName: db.example.com",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "外部真实域名",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 不代理流量、只做 DNS 别名",
+      "level_2": "📖 type: ExternalName + externalName 指向外部域名",
+      "level_3": "👀 `type: ExternalName` + `externalName: db.example.com`",
+      "level_4": "📝 正确答案：`type: ExternalName` + `externalName: db.example.com`"
+    },
+    "explanation": "没有 selector、没有端口、没有 ClusterIP——kube-dns 返回 CNAME；迁移外部依赖到集群时用它解耦。"
+  },
+  {
+    "id": "cka-net-007",
+    "title": "手动 Endpoints 接入外部服务",
+    "description": "无 selector 的 Service ext-svc（80 端口），用同名 Endpoints 指向 10.240.1.10:80",
+    "exercise_type": "config",
+    "tech_stack": "cka",
+    "weight": "hard",
+    "category": "cka_svc",
+    "subcategory": "服务网络",
+    "full_code": "apiVersion: v1\nkind: Service\nmetadata:\n  name: ext-svc\nspec:\n  ports:\n  - port: 80\n---\napiVersion: v1\nkind: Endpoints\nmetadata:\n  name: ext-svc\nsubsets:\n- addresses:\n  - ip: 10.240.1.10\n  ports:\n  - port: 80",
+    "expected": "",
+    "points": [
+      {
+        "id": "ek",
+        "text": "kind: Endpoints",
+        "category": "kind",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "手动端点对象（与 Service 同名才绑定）",
+        "fill_type": "text"
+      },
+      {
+        "id": "addr",
+        "text": "addresses:",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "后端地址列表",
+        "fill_type": "text"
+      },
+      {
+        "id": "ip",
+        "text": "ip: 10.240.1.10",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "外部服务 IP",
+        "fill_type": "text"
+      },
+      {
+        "id": "port0",
+        "text": "port: 80",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "Service 侧端口",
+        "fill_type": "text"
+      },
+      {
+        "id": "port1",
+        "text": "port: 80",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "Endpoints 侧端口（与 Service 一致）",
+        "fill_type": "text",
+        "occurrence": 1
+      }
+    ],
+    "hints": {
+      "level_1": "💡 Service 没有 selector 时不会自动生成 Endpoints",
+      "level_2": "📖 手建 Endpoints，metadata.name 必须与 Service 完全一致",
+      "level_3": "👀 `kind: Endpoints` + `ip: 10.240.1.10`",
+      "level_4": "📝 正确答案：`kind: Endpoints` 同名 + `addresses: ip: 10.240.1.10`"
+    },
+    "explanation": "这是把集群外数据库接入集群 DNS 的经典手法；新版推荐 EndpointSlice（Endpoints 会自动翻译，考试两者都认）。"
+  },
+  {
+    "id": "cka-net-008",
+    "title": "查看 Service 详情",
+    "description": "查看 web-svc 的端口映射、Endpoints 与事件",
+    "exercise_type": "command",
+    "tech_stack": "cka",
+    "weight": "beginner",
+    "category": "cka_svc",
+    "subcategory": "服务网络",
+    "full_code": "kubectl describe service web-svc",
+    "expected": "",
+    "points": [
+      {
+        "id": "cmd",
+        "text": "kubectl describe service",
+        "category": "command",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "查看资源详情（可缩写 svc）",
+        "fill_type": "text",
+        "acceptable_answers": [
+          "kubectl describe svc"
+        ]
+      },
+      {
+        "id": "name",
+        "text": "web-svc",
+        "category": "command_arg",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "Service 名",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 排查 Service 第一步",
+      "level_2": "📖 describe 能看到 Selector/Type/Port/Endpoints 全貌",
+      "level_3": "👀 `kubectl describe service web-svc`",
+      "level_4": "📝 正确答案：`kubectl describe service web-svc`"
+    },
+    "explanation": "Endpoints: <none> 说明 selector 没匹配到就绪 Pod；describe 是 CKA 排障最高频命令之一。"
+  },
+  {
+    "id": "cka-net-009",
+    "title": "查看 Service 的 Endpoints",
+    "description": "列出 web-svc 当前的后端端点",
+    "exercise_type": "command",
+    "tech_stack": "cka",
+    "weight": "beginner",
+    "category": "cka_svc",
+    "subcategory": "服务网络",
+    "full_code": "kubectl get endpoints web-svc",
+    "expected": "",
+    "points": [
+      {
+        "id": "cmd",
+        "text": "kubectl get endpoints",
+        "category": "command",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "查看端点（缩写 ep）",
+        "fill_type": "text"
+      },
+      {
+        "id": "name",
+        "text": "web-svc",
+        "category": "command_arg",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "与 Service 同名",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 后端 Pod 的真实地址在哪看？",
+      "level_2": "📖 get endpoints 列出 selector 匹配到的就绪 Pod IP:port",
+      "level_3": "👀 `kubectl get endpoints web-svc`",
+      "level_4": "📝 正确答案：`kubectl get endpoints web-svc`"
+    },
+    "explanation": "Endpoints 为空的三种常见原因：selector 标签不匹配 / Pod 未就绪（readiness 失败）/ Service 写错命名空间。"
+  },
+  {
+    "id": "cka-net-010",
+    "title": "本地端口转发调试",
+    "description": "把本地 8080 转发到 Service web 的 80 端口",
+    "exercise_type": "command",
+    "tech_stack": "cka",
+    "weight": "easy",
+    "category": "cka_debug",
+    "subcategory": "服务网络",
+    "full_code": "kubectl port-forward svc/web 8080:80",
+    "expected": "",
+    "points": [
+      {
+        "id": "cmd",
+        "text": "kubectl port-forward",
+        "category": "command",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "端口转发调试命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "map",
+        "text": "8080:80",
+        "category": "command_arg",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "本地端口:目标端口",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 不经 Service 类型、直接本机调试",
+      "level_2": "📖 port-forward svc/<name> <local>:<remote>",
+      "level_3": "👀 `kubectl port-forward svc/web 8080:80`",
+      "level_4": "📝 正确答案：`kubectl port-forward svc/web 8080:80`"
+    },
+    "explanation": "本地 curl localhost:8080 即可验证 Pod；转发走 API 服务器隧道，只用于调试，不用于生产。"
+  },
+  {
+    "id": "cka-net-011",
+    "title": "编写 Ingress 基础规则",
+    "description": "Ingress web-ingress：ingress class nginx，域名 app.example.com 的 / 转发到 web-svc:80",
+    "exercise_type": "config",
+    "tech_stack": "cka",
+    "weight": "medium",
+    "category": "cka_ingress",
+    "subcategory": "服务网络",
+    "full_code": "apiVersion: networking.k8s.io/v1\nkind: Ingress\nmetadata:\n  name: web-ingress\nspec:\n  ingressClassName: nginx\n  rules:\n  - host: app.example.com\n    http:\n      paths:\n      - path: /\n        pathType: Prefix\n        backend:\n          service:\n            name: web-svc\n            port:\n              number: 80",
+    "expected": "",
+    "points": [
+      {
+        "id": "apiv",
+        "text": "networking.k8s.io/v1",
+        "category": "api_version",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "Ingress 的 apiVersion",
+        "fill_type": "text"
+      },
+      {
+        "id": "cls",
+        "text": "ingressClassName: nginx",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "指定 Ingress 控制器类",
+        "fill_type": "text"
+      },
+      {
+        "id": "host",
+        "text": "host: app.example.com",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "七层域名路由",
+        "fill_type": "text"
+      },
+      {
+        "id": "pt",
+        "text": "pathType: Prefix",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "路径匹配类型",
+        "fill_type": "text"
+      },
+      {
+        "id": "bn",
+        "text": "name: web-svc",
+        "category": "config",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "后端 Service 名",
+        "fill_type": "text"
+      },
+      {
+        "id": "num",
+        "text": "number: 80",
+        "category": "config",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "后端 Service 端口",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 v1 版 backend 的写法",
+      "level_2": "📖 backend.service.{name, port.number}（旧版 serviceName/servicePort 已废弃）",
+      "level_3": "👀 `service: name: web-svc / port: number: 80`",
+      "level_4": "📝 正确答案：`ingressClassName: nginx` + backend 指向 `web-svc:80`"
+    },
+    "explanation": "networking.k8s.io/v1 的路径类型必填：Prefix 前缀匹配 / Exact 精确 / ImplementationSpecific 由控制器定；没有 ingressClassName 时使用默认 IngressClass。"
+  },
+  {
+    "id": "cka-net-012",
+    "title": "多路径 Ingress 路由",
+    "description": "域名 shop.example.com：/api 转到 api-svc:8080，/static 转到 static-svc:80",
+    "exercise_type": "config",
+    "tech_stack": "cka",
+    "weight": "medium",
+    "category": "cka_ingress",
+    "subcategory": "服务网络",
+    "full_code": "apiVersion: networking.k8s.io/v1\nkind: Ingress\nmetadata:\n  name: full-ingress\nspec:\n  ingressClassName: nginx\n  rules:\n  - host: shop.example.com\n    http:\n      paths:\n      - path: /api\n        pathType: Prefix\n        backend:\n          service:\n            name: api-svc\n            port:\n              number: 8080\n      - path: /static\n        pathType: Prefix\n        backend:\n          service:\n            name: static-svc\n            port:\n              number: 80",
+    "expected": "",
+    "points": [
+      {
+        "id": "p1",
+        "text": "path: /api",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "第一组路径",
+        "fill_type": "text"
+      },
+      {
+        "id": "b1",
+        "text": "name: api-svc",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "/api 的后端服务",
+        "fill_type": "text"
+      },
+      {
+        "id": "p2",
+        "text": "path: /static",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "第二组路径",
+        "fill_type": "text"
+      },
+      {
+        "id": "b2",
+        "text": "name: static-svc",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "/static 的后端服务",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 一个 host 下多个 paths",
+      "level_2": "📖 paths 列表逐条匹配；较长的路径优先",
+      "level_3": "👀 `path: /api` → `name: api-svc`；`path: /static` → `name: static-svc`",
+      "level_4": "📝 正确答案：/api → api-svc:8080，/static → static-svc:80"
+    },
+    "explanation": "多路径是 CKA 真题常客：照抄结构改 path/service/port 三处即可；注意 backend 是 v1 嵌套写法。"
+  },
+  {
+    "id": "cka-net-013",
+    "title": "Ingress 配置 HTTPS",
+    "description": "为 app.example.com 启用 TLS，证书存放在 secret web-tls 中",
+    "exercise_type": "config",
+    "tech_stack": "cka",
+    "weight": "medium",
+    "category": "cka_ingress",
+    "subcategory": "服务网络",
+    "full_code": "apiVersion: networking.k8s.io/v1\nkind: Ingress\nmetadata:\n  name: tls-ingress\nspec:\n  tls:\n  - hosts:\n    - app.example.com\n    secretName: web-tls\n  rules:\n  - host: app.example.com\n    http:\n      paths:\n      - path: /\n        pathType: Prefix\n        backend:\n          service:\n            name: web-svc\n            port:\n              number: 80",
+    "expected": "",
+    "points": [
+      {
+        "id": "tls",
+        "text": "tls:",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "TLS 配置段",
+        "fill_type": "text"
+      },
+      {
+        "id": "hosts",
+        "text": "hosts:",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "证书覆盖的域名列表",
+        "fill_type": "text"
+      },
+      {
+        "id": "secret",
+        "text": "secretName: web-tls",
+        "category": "config",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "kubernetes.io/tls 类型 Secret",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 TLS 在哪一层终结？",
+      "level_2": "📖 Ingress 控制器终结 TLS，后端仍是普通 HTTP",
+      "level_3": "👀 `tls:` + `secretName: web-tls`",
+      "level_4": "📝 正确答案：`tls: hosts: [app.example.com] secretName: web-tls`"
+    },
+    "explanation": "secret 必须是 kubernetes.io/tls 类型（kubectl create secret tls）；hosts 与 rules.host 保持一致才能命中。"
+  },
+  {
+    "id": "cka-net-014",
+    "title": "检查 CoreDNS 运行状态",
+    "description": "查看 kube-system 里 kube-dns 标签的 Pod（CoreDNS）",
+    "exercise_type": "command",
+    "tech_stack": "cka",
+    "weight": "easy",
+    "category": "cka_dns",
+    "subcategory": "服务网络",
+    "full_code": "kubectl get pods -n kube-system -l k8s-app=kube-dns",
+    "expected": "",
+    "points": [
+      {
+        "id": "ns",
+        "text": "-n kube-system",
+        "category": "command_flag",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "系统组件所在命名空间",
+        "fill_type": "text"
+      },
+      {
+        "id": "sel",
+        "text": "-l k8s-app=kube-dns",
+        "category": "command_flag",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "CoreDNS Pod 的标签",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 集群 DNS 叫什么、跑在哪",
+      "level_2": "📖 CoreDNS Deployment 在 kube-system，Service 名 kube-dns",
+      "level_3": "👀 `-n kube-system -l k8s-app=kube-dns`",
+      "level_4": "📝 正确答案：`kubectl get pods -n kube-system -l k8s-app=kube-dns`"
+    },
+    "explanation": "DNS 解析失败先看 CoreDNS Pod 是否 Running；其配置存在名为 coredns 的 ConfigMap（Corefile）里。"
+  },
+  {
+    "id": "cka-net-015",
+    "title": "CoreDNS 配置解析",
+    "description": "coredns ConfigMap 的 Corefile 中，集群域插件负责哪个域名的解析？（补全该行）",
+    "exercise_type": "config",
+    "tech_stack": "cka",
+    "weight": "hard",
+    "category": "cka_dns",
+    "subcategory": "服务网络",
+    "full_code": "apiVersion: v1\nkind: ConfigMap\nmetadata:\n  name: coredns\n  namespace: kube-system\ndata:\n  Corefile: |\n    .:53 {\n        errors\n        health\n        kubernetes cluster.local in-addr.arpa ip6.arpa {\n           pods insecure\n           forward . /etc/resolv.conf\n           cache 30\n        }\n        forward . /etc/resolv.conf\n        cache 30\n    }",
+    "expected": "",
+    "points": [
+      {
+        "id": "ns",
+        "text": "namespace: kube-system",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "coredns ConfigMap 所在命名空间",
+        "fill_type": "text"
+      },
+      {
+        "id": "cf",
+        "text": "Corefile: |",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "数据键：Corefile（多行文本）",
+        "fill_type": "text"
+      },
+      {
+        "id": "domain",
+        "text": "cluster.local",
+        "category": "config",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "kubernetes 插件声明的集群域",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 集群内 FQDN 的固定后缀",
+      "level_2": "📖 kubernetes 插件列出它权威的域：cluster.local 等",
+      "level_3": "👀 `kubernetes cluster.local ...`",
+      "level_4": "📝 正确答案：`cluster.local`"
+    },
+    "explanation": "默认集群域 cluster.local；修改 Corefile 后重启 CoreDNS Pod 生效；stubDomain 转发、hosts 条目都写在这里。"
+  },
+  {
+    "id": "cka-net-016",
+    "title": "用 busybox 测试 DNS 解析",
+    "description": "启动一次性 busybox:1.28 容器 nslookup 解析 web-svc，跑完即删",
+    "exercise_type": "command",
+    "tech_stack": "cka",
+    "weight": "medium",
+    "category": "cka_dns",
+    "subcategory": "服务网络",
+    "full_code": "kubectl run dns-test --image=busybox:1.28 --rm -it --restart=Never -- nslookup web-svc",
+    "expected": "",
+    "points": [
+      {
+        "id": "img",
+        "text": "--image=busybox:1.28",
+        "category": "command_flag",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "busybox 自带 nslookup（1.28 版为惯例）",
+        "fill_type": "text"
+      },
+      {
+        "id": "rm",
+        "text": "--rm",
+        "category": "command_flag",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "退出后删除 Pod",
+        "fill_type": "text"
+      },
+      {
+        "id": "it",
+        "text": "-it",
+        "category": "command_flag",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "交互式终端",
+        "fill_type": "text"
+      },
+      {
+        "id": "lookup",
+        "text": "nslookup web-svc",
+        "category": "command_arg",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "-- 之后的容器启动命令",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 集群里最常用的 DNS 排查容器",
+      "level_2": "📖 kubectl run + busybox:1.28 + `-- nslookup <svc>`",
+      "level_3": "👀 `kubectl run dns-test --image=busybox:1.28 --rm -it -- nslookup web-svc`",
+      "level_4": "📝 正确答案：`kubectl run dns-test --image=busybox:1.28 --rm -it -- nslookup web-svc`"
+    },
+    "explanation": "-- 之后是容器内执行的命令；短名只在本命名空间可解析，跨命名空间要写 FQDN；镜像固定 1.28 是社区惯例（新版本 nslookup 行为有变化）。"
+  },
+  {
+    "id": "cka-net-017",
+    "title": "跨命名空间访问 Service",
+    "description": "Pod（default 命名空间）访问 data 命名空间的 db 服务，补全其全限定域名",
+    "exercise_type": "config",
+    "tech_stack": "cka",
+    "weight": "medium",
+    "category": "cka_dns",
+    "subcategory": "服务网络",
+    "full_code": "apiVersion: v1\nkind: Pod\nmetadata:\n  name: app\nspec:\n  containers:\n  - name: app\n    image: busybox:1.36\n    command: [\"sh\", \"-c\", \"sleep 3600\"]\n    env:\n    - name: DB_HOST\n      value: db.data.svc.cluster.local",
+    "expected": "",
+    "points": [
+      {
+        "id": "fqdn",
+        "text": "db.data.svc.cluster.local",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "<service>.<namespace>.svc.cluster.local",
+        "fill_type": "text"
+      },
+      {
+        "id": "envn",
+        "text": "name: DB_HOST",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "环境变量名",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 跨命名空间的完整域名格式",
+      "level_2": "📖 <svc>.<ns>.svc.cluster.local",
+      "level_3": "👀 `db.data.svc.cluster.local`",
+      "level_4": "📝 正确答案：`db.data.svc.cluster.local`"
+    },
+    "explanation": "同命名空间可用短名 db；同命名空间还可用 db.<ns>（省 svc.cluster.local，依赖 resolv.conf 的 search 域）；跨命名空间必须全称。"
+  },
+  {
+    "id": "cka-net-018",
+    "title": "默认拒绝所有入站流量",
+    "description": "在 prod 命名空间创建 NetworkPolicy default-deny：选中所有 Pod，拒绝全部 Ingress",
+    "exercise_type": "config",
+    "tech_stack": "cka",
+    "weight": "medium",
+    "category": "cka_netpol",
+    "subcategory": "服务网络",
+    "full_code": "apiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: default-deny\n  namespace: prod\nspec:\n  podSelector: {}\n  policyTypes:\n  - Ingress",
+    "expected": "",
+    "points": [
+      {
+        "id": "kind",
+        "text": "NetworkPolicy",
+        "category": "kind",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "网络策略资源",
+        "fill_type": "text"
+      },
+      {
+        "id": "sel",
+        "text": "podSelector: {}",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "空 selector = 选中命名空间全部 Pod",
+        "fill_type": "text"
+      },
+      {
+        "id": "types",
+        "text": "policyTypes:",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "声明约束的方向",
+        "fill_type": "text"
+      },
+      {
+        "id": "ing",
+        "text": "Ingress",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "入站方向",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 全选 Pod 的 selector 怎么写？",
+      "level_2": "📖 `podSelector: {}` + policyTypes: [Ingress] 且无 ingress 规则 = 全拒",
+      "level_3": "👀 `podSelector: {}` + `policyTypes: Ingress`",
+      "level_4": "📝 正确答案：`podSelector: {}` / `policyTypes:` / `- Ingress`"
+    },
+    "explanation": "选中的 Pod 变成白名单模式：没有匹配规则就拒绝；需要 CNI（Calico/Cilium 等）支持才真正生效，纯 flannel 不执行 NetworkPolicy。"
+  },
+  {
+    "id": "cka-net-019",
+    "title": "只允许指定命名空间访问",
+    "description": "prod 里 app: api 的 Pod 只接受 project=frontend 标签命名空间的 TCP 8080 入站",
+    "exercise_type": "config",
+    "tech_stack": "cka",
+    "weight": "hard",
+    "category": "cka_netpol",
+    "subcategory": "服务网络",
+    "full_code": "apiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: allow-from-frontend\n  namespace: prod\nspec:\n  podSelector:\n    matchLabels:\n      app: api\n  policyTypes:\n  - Ingress\n  ingress:\n  - from:\n    - namespaceSelector:\n        matchLabels:\n          project: frontend\n    ports:\n    - protocol: TCP\n      port: 8080",
+    "expected": "",
+    "points": [
+      {
+        "id": "selapp",
+        "text": "app: api",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "策略保护的 Pod 标签",
+        "fill_type": "text"
+      },
+      {
+        "id": "ing",
+        "text": "ingress:",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "入站规则段",
+        "fill_type": "text"
+      },
+      {
+        "id": "nssel",
+        "text": "namespaceSelector:",
+        "category": "config",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "按命名空间标签过滤来源",
+        "fill_type": "text"
+      },
+      {
+        "id": "proj",
+        "text": "project: frontend",
+        "category": "config",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "目标命名空间的标签",
+        "fill_type": "text"
+      },
+      {
+        "id": "proto",
+        "text": "protocol: TCP",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "协议",
+        "fill_type": "text"
+      },
+      {
+        "id": "port",
+        "text": "port: 8080",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "允许的端口",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 来源过滤两级：namespaceSelector / podSelector",
+      "level_2": "📖 from 里 namespaceSelector 选命名空间，podSelector 选其中的 Pod",
+      "level_3": "👀 `namespaceSelector:` + `project: frontend`",
+      "level_4": "📝 正确答案：`namespaceSelector: matchLabels: project: frontend` + `port: 8080`"
+    },
+    "explanation": "namespaceSelector 依据命名空间上的标签（kubectl label ns frontend project=frontend）；from 中同时写 namespaceSelector+podSelector 是交集语义。"
+  },
+  {
+    "id": "cka-net-020",
+    "title": "限制出站流量",
+    "description": "prod 里 app: api 的 Pod 只允许访问 10.0.0.0/24 的 3306 端口，以及任意命名空间的 53/UDP（DNS）",
+    "exercise_type": "config",
+    "tech_stack": "cka",
+    "weight": "hard",
+    "category": "cka_netpol",
+    "subcategory": "服务网络",
+    "full_code": "apiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: api-egress\n  namespace: prod\nspec:\n  podSelector:\n    matchLabels:\n      app: api\n  policyTypes:\n  - Egress\n  egress:\n  - to:\n    - ipBlock:\n        cidr: 10.0.0.0/24\n    ports:\n    - protocol: TCP\n      port: 3306\n  - to:\n    - namespaceSelector: {}\n    ports:\n    - protocol: UDP\n      port: 53",
+    "expected": "",
+    "points": [
+      {
+        "id": "eg",
+        "text": "Egress",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "出站方向声明",
+        "fill_type": "text"
+      },
+      {
+        "id": "ib",
+        "text": "ipBlock:",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "按网段过滤目标",
+        "fill_type": "text"
+      },
+      {
+        "id": "cidr",
+        "text": "cidr: 10.0.0.0/24",
+        "category": "config",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "目标网段",
+        "fill_type": "text"
+      },
+      {
+        "id": "udp",
+        "text": "protocol: UDP",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "DNS 用 UDP",
+        "fill_type": "text"
+      },
+      {
+        "id": "dns",
+        "text": "port: 53",
+        "category": "config",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "DNS 端口",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 egress 一收紧，DNS 就断",
+      "level_2": "📖 记得放行 53 端口，否则域名解析失败",
+      "level_3": "👀 `ipBlock:` + `cidr: 10.0.0.0/24` + `protocol: UDP` `port: 53`",
+      "level_4": "📝 正确答案：ipBlock cidr 10.0.0.0/24:3306 + 53/UDP（namespaceSelector: {}）"
+    },
+    "explanation": "egress 白名单忘放 DNS(53) 是最高频翻车点，表现为 Pod 内 nslookup 超时；ipBlock 的 except 可再排除子网。"
+  },
+  {
+    "id": "cka-net-021",
+    "title": "检查 CNI 组件",
+    "description": "查看 kube-system 里的 DaemonSet（CNI 插件多以该形式部署）",
+    "exercise_type": "command",
+    "tech_stack": "cka",
+    "weight": "easy",
+    "category": "cka_cni",
+    "subcategory": "服务网络",
+    "full_code": "kubectl get daemonsets -n kube-system",
+    "expected": "",
+    "points": [
+      {
+        "id": "cmd",
+        "text": "kubectl get daemonsets",
+        "category": "command",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "列出 DaemonSet（缩写 ds）",
+        "fill_type": "text"
+      },
+      {
+        "id": "ns",
+        "text": "-n kube-system",
+        "category": "command_flag",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "CNI 组件所在命名空间",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 CNI 以什么形式跑在每个节点？",
+      "level_2": "📖 DaemonSet：Calico-node / kube-flannel / cilium 等",
+      "level_3": "👀 `kubectl get daemonsets -n kube-system`",
+      "level_4": "📝 正确答案：`kubectl get daemonsets -n kube-system`"
+    },
+    "explanation": "节点间 Pod 网络不通时，先看 CNI 的 DaemonSet 是否全部 Running、缺节点没有部署成功。"
+  },
+  {
+    "id": "cka-net-022",
+    "title": "检查 kube-proxy",
+    "description": "查看每个节点上的 kube-proxy Pod",
+    "exercise_type": "command",
+    "tech_stack": "cka",
+    "weight": "easy",
+    "category": "cka_cni",
+    "subcategory": "服务网络",
+    "full_code": "kubectl get pods -n kube-system -l k8s-app=kube-proxy",
+    "expected": "",
+    "points": [
+      {
+        "id": "ns",
+        "text": "-n kube-system",
+        "category": "command_flag",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "系统组件命名空间",
+        "fill_type": "text"
+      },
+      {
+        "id": "sel",
+        "text": "-l k8s-app=kube-proxy",
+        "category": "command_flag",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "kube-proxy 的标签",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 Service 转发规则由谁写？",
+      "level_2": "📖 kube-proxy（DaemonSet）把 Service/Endpoints 写成 iptables/IPVS 规则",
+      "level_3": "👀 `-l k8s-app=kube-proxy`",
+      "level_4": "📝 正确答案：`kubectl get pods -n kube-system -l k8s-app=kube-proxy`"
+    },
+    "explanation": "ClusterIP 不通但 Endpoints 正常时查 kube-proxy；进容器看模式：kubectl logs 或 /etc/kubernetes/manifests 里的 --proxy-mode。"
+  },
+  {
+    "id": "cka-net-023",
+    "title": "查看节点网络接口",
+    "description": "在节点上查看 eth0 接口的 IP 配置",
+    "exercise_type": "command",
+    "tech_stack": "cka",
+    "weight": "medium",
+    "category": "cka_hostnet",
+    "subcategory": "服务网络",
+    "full_code": "ip addr show eth0",
+    "expected": "",
+    "points": [
+      {
+        "id": "cmd",
+        "text": "ip addr show",
+        "category": "command",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "查看网络接口地址",
+        "fill_type": "text"
+      },
+      {
+        "id": "dev",
+        "text": "eth0",
+        "category": "command_arg",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "接口名",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 节点层看 IP 用什么命令？",
+      "level_2": "📖 ip addr show <iface>（ifconfig 已过时）",
+      "level_3": "👀 `ip addr show eth0`",
+      "level_4": "📝 正确答案：`ip addr show eth0`"
+    },
+    "explanation": "CKA「节点宿主网络」考点：多网卡机器 INTERNAL-IP 绑错会导致节点间通信失败；ip -br addr 可获简洁输出。"
+  },
+  {
+    "id": "cka-net-024",
+    "title": "查看节点默认路由",
+    "description": "在节点上查看默认路由",
+    "exercise_type": "command",
+    "tech_stack": "cka",
+    "weight": "medium",
+    "category": "cka_hostnet",
+    "subcategory": "服务网络",
+    "full_code": "ip route show default",
+    "expected": "",
+    "points": [
+      {
+        "id": "cmd",
+        "text": "ip route show",
+        "category": "command",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "查看路由表",
+        "fill_type": "text"
+      },
+      {
+        "id": "dst",
+        "text": "default",
+        "category": "command_arg",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "只看默认路由",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 出向流量走哪个网关",
+      "level_2": "📖 `ip route show default`",
+      "level_3": "👀 `ip route show default`",
+      "level_4": "📝 正确答案：`ip route show default`"
+    },
+    "explanation": "排「节点可达但跨网段丢包」先看默认路由与网关；完整路由表直接 ip route。"
+  },
+  {
+    "id": "cka-net-025",
+    "title": "Service 会话保持",
+    "description": "Service sticky-svc：同一客户端 IP 的请求始终转发到同一 Pod",
+    "exercise_type": "config",
+    "tech_stack": "cka",
+    "weight": "medium",
+    "category": "cka_svc",
+    "subcategory": "服务网络",
+    "full_code": "apiVersion: v1\nkind: Service\nmetadata:\n  name: sticky-svc\nspec:\n  selector:\n    app: web\n  sessionAffinity: ClientIP\n  ports:\n  - port: 80",
+    "expected": "",
+    "points": [
+      {
+        "id": "sa",
+        "text": "sessionAffinity: ClientIP",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "基于客户端 IP 的会话亲和",
+        "fill_type": "text"
+      },
+      {
+        "id": "port",
+        "text": "port: 80",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "Service 端口",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 让同一客户端固定打到同一 Pod",
+      "level_2": "📖 sessionAffinity: ClientIP（默认 None）",
+      "level_3": "👀 `sessionAffinity: ClientIP`",
+      "level_4": "📝 正确答案：`sessionAffinity: ClientIP`"
+    },
+    "explanation": "ClientIP 模式默认粘滞 3 小时（sessionAffinityConfig.clientIP.timeoutSeconds 可调）；无头服务+应用层一致性哈希是另一种思路。"
+  },
+  {
+    "id": "cka-net-026",
+    "title": "NodePort 保留客户端源 IP",
+    "description": "NodePort 服务 web-np 改为只转发给本节点上的 Pod，以保留客户端源 IP",
+    "exercise_type": "config",
+    "tech_stack": "cka",
+    "weight": "medium",
+    "category": "cka_svc",
+    "subcategory": "服务网络",
+    "full_code": "apiVersion: v1\nkind: Service\nmetadata:\n  name: web-np\nspec:\n  type: NodePort\n  externalTrafficPolicy: Local\n  selector:\n    app: web\n  ports:\n  - port: 80\n    nodePort: 30080",
+    "expected": "",
+    "points": [
+      {
+        "id": "etp",
+        "text": "externalTrafficPolicy: Local",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "Local=不跨节点转发，保留源 IP",
+        "fill_type": "text"
+      },
+      {
+        "id": "np",
+        "text": "nodePort: 30080",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "节点端口",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 Cluster 模式会丢什么？",
+      "level_2": "📖 默认 Cluster 会二次转发（SNAT 丢源 IP）；Local 只转发本节点 Pod",
+      "level_3": "👀 `externalTrafficPolicy: Local`",
+      "level_4": "📝 正确答案：`externalTrafficPolicy: Local`"
+    },
+    "explanation": "代价是本节点没有该 Service 的 Pod 时端口不通（流量被丢弃）；应用要真实客户端 IP（审计/限流）时用 Local。"
+  },
+  {
+    "id": "cka-net-027",
+    "title": "集群内验证 Service 连通性",
+    "description": "用 curl 镜像一次性 Pod 访问 http://web-svc:80，跑完即删",
+    "exercise_type": "command",
+    "tech_stack": "cka",
+    "weight": "easy",
+    "category": "cka_debug",
+    "subcategory": "服务网络",
+    "full_code": "kubectl run curl-test --image=curlimages/curl --rm -it -- curl http://web-svc:80",
+    "expected": "",
+    "points": [
+      {
+        "id": "img",
+        "text": "--image=curlimages/curl",
+        "category": "command_flag",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "带 curl 的镜像",
+        "fill_type": "text"
+      },
+      {
+        "id": "curl",
+        "text": "curl http://web-svc:80",
+        "category": "command_arg",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "-- 之后的容器内命令",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 Service 通不通，集群内测最准",
+      "level_2": "📖 kubectl run + curlimages/curl + `-- curl <svc>`",
+      "level_3": "👀 `kubectl run curl-test --image=curlimages/curl --rm -it -- curl http://web-svc:80`",
+      "level_4": "📝 正确答案：`kubectl run curl-test --image=curlimages/curl --rm -it -- curl http://web-svc:80`"
+    },
+    "explanation": "节点/外部访问失败但集群内 curl 成功，问题在 NodePort/防火墙/LB 层；这也是验证 DNS+Service 链路的一步到位方法。"
+  },
+  {
+    "id": "cka-net-028",
+    "title": "命名端口 targetPort 引用",
+    "description": "容器把 8080 端口命名为 http，Service 的 targetPort 直接引用该名字",
+    "exercise_type": "config",
+    "tech_stack": "cka",
+    "weight": "medium",
+    "category": "cka_svc",
+    "subcategory": "服务网络",
+    "full_code": "apiVersion: v1\nkind: Pod\nmetadata:\n  name: web\n  labels:\n    app: web\nspec:\n  containers:\n  - name: web\n    image: nginx:1.25\n    ports:\n    - name: http\n      containerPort: 8080\n---\napiVersion: v1\nkind: Service\nmetadata:\n  name: web-svc\nspec:\n  selector:\n    app: web\n  ports:\n  - name: http\n    port: 80\n    targetPort: http",
+    "expected": "",
+    "points": [
+      {
+        "id": "cpt",
+        "text": "containerPort: 8080",
+        "category": "config",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "容器声明端口",
+        "fill_type": "text"
+      },
+      {
+        "id": "tport",
+        "text": "targetPort: http",
+        "category": "config",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "targetPort 可引用命名端口",
+        "fill_type": "text"
+      },
+      {
+        "id": "port",
+        "text": "port: 80",
+        "category": "config",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "Service 端口",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 targetPort 除了数字还能写什么？",
+      "level_2": "📖 写容器 ports[].name，改容器端口时 Service 不用动",
+      "level_3": "👀 `targetPort: http`",
+      "level_4": "📝 正确答案：`targetPort: http`"
+    },
+    "explanation": "命名端口让端口变更只发生在 Pod 一侧；selector 不变，Service 自动跟随新端口号。"
+  },
+  {
+    "id": "cka-net-029",
+    "title": "查看容器 DNS 配置",
+    "description": "进 Pod app 查看其 /etc/resolv.conf",
+    "exercise_type": "command",
+    "tech_stack": "cka",
+    "weight": "easy",
+    "category": "cka_dns",
+    "subcategory": "服务网络",
+    "full_code": "kubectl exec -it app -- cat /etc/resolv.conf",
+    "expected": "",
+    "points": [
+      {
+        "id": "cmd",
+        "text": "kubectl exec",
+        "category": "command",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "容器内执行命令",
+        "fill_type": "text"
+      },
+      {
+        "id": "it",
+        "text": "-it",
+        "category": "command_flag",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "交互式（cat 可省，但惯例带上）",
+        "fill_type": "text"
+      },
+      {
+        "id": "cat",
+        "text": "cat /etc/resolv.conf",
+        "category": "command_arg",
+        "min_weight": "medium",
+        "weight_score": 1,
+        "hint": "-- 之后的容器内命令",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 容器内 nameserver 指向谁？",
+      "level_2": "📖 resolv.conf 的 nameserver 是 kube-dns 的 ClusterIP",
+      "level_3": "👀 `kubectl exec -it app -- cat /etc/resolv.conf`",
+      "level_4": "📝 正确答案：`kubectl exec -it app -- cat /etc/resolv.conf`"
+    },
+    "explanation": "search 域形如 <ns>.svc.cluster.local svc.cluster.local cluster.local；nameserver 通常是 10.96.0.10——不在则检查 CoreDNS/kubelet clusterDNS 配置。"
+  },
+  {
+    "id": "cka-net-030",
+    "title": "查看 kube-dns 服务",
+    "description": "查看 kube-system 里的 kube-dns Service（CoreDNS 的稳定入口）",
+    "exercise_type": "command",
+    "tech_stack": "cka",
+    "weight": "easy",
+    "category": "cka_dns",
+    "subcategory": "服务网络",
+    "full_code": "kubectl get svc -n kube-system kube-dns",
+    "expected": "",
+    "points": [
+      {
+        "id": "cmd",
+        "text": "kubectl get svc",
+        "category": "command",
+        "min_weight": "beginner",
+        "weight_score": 1,
+        "hint": "列出 Service（缩写）",
+        "fill_type": "text"
+      },
+      {
+        "id": "ns",
+        "text": "-n kube-system",
+        "category": "command_flag",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "命名空间",
+        "fill_type": "text"
+      },
+      {
+        "id": "name",
+        "text": "kube-dns",
+        "category": "command_arg",
+        "min_weight": "easy",
+        "weight_score": 1,
+        "hint": "集群 DNS 服务名",
+        "fill_type": "text"
+      }
+    ],
+    "hints": {
+      "level_1": "💡 集群 DNS 的 ClusterIP 从哪看",
+      "level_2": "📖 `kubectl get svc -n kube-system kube-dns`",
+      "level_3": "👀 `kubectl get svc -n kube-system kube-dns`",
+      "level_4": "📝 正确答案：`kubectl get svc -n kube-system kube-dns`"
+    },
+    "explanation": "kube-dns 的 ClusterIP 由 kubelet 的 clusterDNS 下发给每个 Pod；Service 重建成后 Pod 里 resolv.conf 的 nameserver 才会更新。"
+  }
+]

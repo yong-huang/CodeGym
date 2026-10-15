@@ -34,6 +34,7 @@
 - ⛓️ **Go 并发题库**：50 道专项题，3 个子分类——通信机制（goroutine/WaitGroup/channel/select/缓冲死锁，25 题）、同步与原子（Mutex·RWMutex/Once/atomic/Cond/Pool/数据竞争与并发 map 修复，13 题）、并发模式（生成器/Worker Pool/Fan-in·out/Pipeline/生产者消费者/context/Ticker/优雅关闭，12 题），真实 `go run` 执行判题
 - 🧱 **数据结构系列题库**（60 题，Python 真实执行判题，6 个子分类各 10 题）：数组（双指针/二分/前缀和/差分/滑动窗口）、链表（反转/快慢指针/合并/环检测/两数相加）、栈与队列（括号匹配/逆波兰/最小栈/循环队列/单调栈与单调队列）、哈希表（手写哈希/两数之和/异位词分组/开放寻址/LRU）、树（遍历/BST/翻转/堆/Trie）、图（BFS/DFS/拓扑排序/并查集/岛屿数量/Dijkstra）
 - ☸️ **Kubernetes 题库**：50 道基础题（kubectl 命令补全 + YAML 配置补全），支持别名答案（如 `-A` = `--all-namespaces`）
+- 🎓 **CKA 认证题库**：150 道题，5 个子库各 30 题，按 CNCF CKA 考纲五大域组织——集群架构（kubeadm init/join/升级/etcd 快照备份恢复/证书续期/RBAC Role·Binding/kubeconfig 上下文）、工作负载（Deployment 滚动更新回滚扩缩/HPA/ConfigMap·Secret 注入与挂载/探针/资源限制/init·sidecar/DaemonSet/StatefulSet/Job·CronJob/亲和性污点容忍）、服务网络（Service 四类型/headless/ExternalName/手动 Endpoints/Ingress·TLS/CoreDNS/FQDN/NetworkPolicy 默认拒绝·namespaceSelector·egress/CNI·kube-proxy/节点宿主网络）、存储（PV hostPath·NFS·local/PVC 选择器绑定/StorageClass 动态供给·默认类·WaitForFirstConsumer/在线扩容/volumeMode Block/subPath/回收策略）、故障排查（NotReady 节点/kubelet journalctl/drain·uncordon/crictl/CrashLoopBackOff --previous/事件排序/镜像·探针·OOM·PVC·污点修复/控制平面静态 Pod/openssl 证书/DNS·连通性验证/can-i --list），命令与配置补全、答案匹配判题（支持 `-owide` 等别名）
 - 🗄️ **SQL 题库**：50 道基础题（SELECT/WHERE 排序分页/聚合分组/多表 JOIN/子查询/DML/DDL 与约束……），围绕统一的示例库（员工/部门/商品/客户/订单）出题
 - 📊 **BigQuery 题库**：61 道题，拆两个子库——「SQL 基础」（35 题：通用 SQL 语法）与「BigQuery 特有」（26 题：数组·STRUCT·UNNEST/JSON/窗口·QUALIFY/分区聚类/通配表/INFORMATION_SCHEMA/脚本变量/采样/时间旅行等 BQ 专属），围绕 sales 数据集出题
 - 🚀 **DevOps 题库**：140 道题，拆四个子库——「terraform」（30）、「ansible」（30）、「docker」（50：命令 + Dockerfile/compose）与「prometheus」（30：promtool/HTTP API/PromQL/告警配置，答案匹配判题）
@@ -79,7 +80,7 @@ CODEGYM_ADMIN_TOKEN=$(openssl rand -hex 16) docker compose up -d --build
 
 ```bash
 cd backend
-go run ./cmd/server -addr :8090        # 首次启动自动建库并 seed data/bank 下的全部内置题库（1466 题）
+go run ./cmd/server -addr :8090        # 首次启动自动建库并 seed data/bank 下的全部内置题库（1616 题）
 ```
 
 可选参数：`-db data/codegym.db` 指定数据库文件；`PYTHON_BIN` 指定 Python 解释器；
